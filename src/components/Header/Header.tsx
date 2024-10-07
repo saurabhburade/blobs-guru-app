@@ -1,0 +1,42 @@
+import React from "react";
+import ThemeController from "../ThemeController/ThemeController";
+import Link from "next/link";
+
+type Props = {};
+
+function Header({}: Props) {
+  return (
+    <div className="bg-base-100 p-4 mx-auto px-20 flex justify-between items-center w-full">
+      <div className="font-bold flex items-center gap-2">
+        <img src="/images/logo.svg" width={34} height={34} alt="" />
+        blobsguru
+      </div>
+      <div className="w-fit flex gap-5 items-center">
+        {/* <div className="dropdown ">
+          <div tabIndex={0} role="button" className=" m-1">
+            Blobs
+          </div>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+          >
+            <li>
+              <a>Item 1</a>
+            </li>
+            <li>
+              <a>Item 2</a>
+            </li>
+          </ul>
+        </div> */}
+        <Link href="/">Blob Blocks</Link>
+        <Link href="/"> Blob Transactions</Link>
+        <Link href="/"> Accounts</Link>
+        <Link href="/">Stats</Link>
+
+        <ThemeController />
+      </div>
+    </div>
+  );
+}
+
+export default Header;
