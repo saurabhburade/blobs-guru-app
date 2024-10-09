@@ -32,6 +32,7 @@ const config: Config = {
           "base-200": "#E7E7E8",
           "base-300": "#B2B2B2",
           "primary-content": "#ffffff",
+          "base-content": "#000000",
         },
       },
       {
@@ -42,6 +43,7 @@ const config: Config = {
           "base-200": "#1f2937",
           "base-300": "#4b5563",
           "primary-content": "#000000",
+          "base-content": "#ffffff",
         },
       },
 

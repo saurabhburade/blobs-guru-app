@@ -100,8 +100,9 @@ const Stats = () => {
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className=""></div> */}
-
-      <BlobTransactionDayChart />
+      <div className="bg-base-100 h-full row-span-2 border p-2 border-base-200">
+        <BlobTransactionDayChart />
+      </div>
       <StatCard title="Blob Accounts" value={totalBlobAccounts} />
       <StatCard title="Blob Transactions" value={totalBlobTransactionCount} />
       <StatCard title="Total Blobs" value={totalBlobHashesCount} />

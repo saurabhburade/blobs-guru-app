@@ -4,6 +4,7 @@ import { BLOB_BLOCKS_TOP_QUERY } from "@/lib/apollo/queries";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import { formatBytes } from "@/lib/utils";
+import Link from "next/link";
 type Props = {};
 
 function Blocks({}: Props) {
@@ -25,6 +26,12 @@ function Blocks({}: Props) {
         <BlocksRow />
         <BlocksRow /> */}
       </div>
+      <Link
+        href={"/blocks"}
+        className="flex px-4 py-2 border-t border-base-200 justify-center"
+      >
+        <p className="btn btn-ghost btn-sm">View more blocks</p>
+      </Link>
     </div>
   );
 }
@@ -65,7 +72,10 @@ const BlocksRow = ({ blk }: any) => {
           <Box strokeWidth="1" width={24} height={24} />
         </div>
         <div>
-          <p>{blockNumber}</p>
+          <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
+            {blockNumber}
+          </Link>
+
           <p>{new Date().toLocaleString()}</p>
         </div>
       </div>

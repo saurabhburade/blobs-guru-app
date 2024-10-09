@@ -7,10 +7,12 @@ type Props = {};
 function Header({}: Props) {
   return (
     <div className="bg-base-100 p-4 mx-auto px-20 flex justify-between items-center w-full">
-      <div className="font-bold flex items-center gap-2">
-        <img src="/images/logo.svg" width={34} height={34} alt="" />
-        blobsguru
-      </div>
+      <Link href="/">
+        <div className="font-bold flex items-center gap-2">
+          <img src="/images/logo.svg" width={34} height={34} alt="" />
+          blobsguru
+        </div>
+      </Link>
       <div className="w-fit flex gap-5 items-center">
         {/* <div className="dropdown ">
           <div tabIndex={0} role="button" className=" m-1">
@@ -28,8 +30,8 @@ function Header({}: Props) {
             </li>
           </ul>
         </div> */}
-        <Link href="/">Blob Blocks</Link>
-        <Link href="/"> Blob Transactions</Link>
+        <Link href="/blocks">Blob Blocks</Link>
+        <Link href="/transactions"> Blob Transactions</Link>
         <Link href="/"> Accounts</Link>
         <Link href="/">Stats</Link>
 

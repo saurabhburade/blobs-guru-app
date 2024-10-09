@@ -1,15 +1,34 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { NotepadText } from "lucide-react";
 import { useQuery } from "@apollo/client";
-import { BLOB_TRANSACTIONS_TOP_QUERY } from "@/lib/apollo/queries";
+import {
+  BLOB_BLOCKS_EXPLORER_QUERY,
+  BLOB_TRANSACTIONS_FOR_BLOCK,
+  BLOB_TRANSACTIONS_TOP_QUERY,
+} from "@/lib/apollo/queries";
 import { formatAddress, formatBytes } from "@/lib/utils";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
-type Props = {};
+type Props = {
+  blockNumber: number | string;
+  totalBlobTxns: number;
+};
 
-function Transactions({}: Props) {
-  const { data } = useQuery(BLOB_TRANSACTIONS_TOP_QUERY);
-  console.log(`🚀 ~ file: Transactions.tsx:9 ~ data:`, data?.blobTransactions);
+const LIMIT_PER_PAGE = 10;
+
+function BlockTransactions({ blockNumber, totalBlobTxns }: Props) {
+  const [page, setPage] = useState(1);
+  const { data } = useQuery(BLOB_TRANSACTIONS_FOR_BLOCK, {
+    variables: {
+      skip: LIMIT_PER_PAGE * (page - 1),
+      limit: LIMIT_PER_PAGE,
+      blockNumber,
+    },
+  });
+  const totalPages = useMemo(() => {
+    return totalBlobTxns / LIMIT_PER_PAGE;
+  }, [totalBlobTxns]);
+  console.log(`🚀 ~ file: BlockTransactions.tsx:27 ~ data:`, data);
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
       <div className="flex p-4 border-b border-base-200">
@@ -20,17 +39,38 @@ function Transactions({}: Props) {
           return <TransactionRow key={txn?.id} txn={txn} />;
         })}
       </div>
-      <Link
-        href={"/transactions"}
-        className="flex px-4 py-2 border-t border-base-200 justify-center"
-      >
-        <p className="btn btn-ghost btn-sm">View more transactions</p>
-      </Link>
+      {totalPages > 1 && (
+        <div className="flex px-4 justify-end gap-2  p-4  border-t border-base-200">
+          {page > 1 && (
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={() => {
+                setPage((prev) => {
+                  if (prev > 1) {
+                    return prev - 1;
+                  }
+                  return prev;
+                });
+              }}
+            >
+              Prev
+            </button>
+          )}
+          <button
+            className="btn btn-outline btn-sm"
+            onClick={() => {
+              setPage((prev) => prev + 1);
+            }}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
-export default Transactions;
+export default BlockTransactions;
 
 const TransactionRow = ({ txn }: any) => {
   //       id

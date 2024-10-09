@@ -12,7 +12,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Cell,
 } from "recharts";
 
 // const data = [
@@ -81,10 +80,9 @@ const TriangleBar = (props: {
 
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
-
-export default function BlobTransactionDayChart() {
+export default function BlobSizeDayChart() {
   const { data } = useQuery(BLOB_DAY_DATAS_QUERY);
-  console.log(`🚀 ~ file: BlobTransactionDayChart.tsx:63 ~ data:`, data);
+  console.log(`🚀 ~ file: BlobSizeDayChart.tsx:63 ~ data:`, data);
   const chartData = useMemo(() => {
     const datas = data?.blobsDayDatas?.map((bd: any) => {
       return {
@@ -97,37 +95,28 @@ export default function BlobTransactionDayChart() {
     return datas;
   }, [data?.blobsDayDatas]);
   return (
-    <div className="h-full w-full  row-span-2 ">
+    <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart width={500} height={300} data={chartData}>
-          <Legend
-            verticalAlign="top"
-            content={() => (
-              <span className="text-xs">Last 10 days Blob transactions</span>
-            )}
-          />
-          <Bar
-            dataKey="totalBlobTransactionCount"
-            fill="#8884d8"
-            // @ts-ignore
-            shape={<TriangleBar />}
-          >
-            {chartData?.map((_: any, index: number) => (
-              <Cell key={`cell-${index}`} />
-            ))}
-          </Bar>
-          {/* <Bar
-            dataKey="totalBlobTransactionCount"
-            fill="#8884d8"
-            radius={10}
-            activeBar={<Rectangle fill="#8884d8" radius={10} />}
-          /> */}
+        <BarChart width={500} height={100} data={chartData}>
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
             // @ts-ignore
             content={<CustomTooltipRaw />}
           />
-          <XAxis dataKey="totalBlobTransactionCount" className="text-xs" />
+          <Legend
+            verticalAlign="top"
+            content={() => (
+              <span className="text-xs">Last 10 days Blob size</span>
+            )}
+          />
+          <Bar
+            dataKey="sizeValue"
+            fill="#8884d8"
+            radius={10}
+            // @ts-ignore
+            shape={<TriangleBar />}
+          />
+          <XAxis dataKey="Size" className="text-xs" />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -147,9 +136,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
         className={` bg-base-200 w-1/2 rounded-lg   overflow-hidden text-xs`}
       >
         <div className="p-4 ">
-          <p className=" ">
-            Transactions: {`${payload[0]?.payload?.totalBlobTransactionCount}`}
-          </p>
+          <p className=" ">Size: {`${payload[0]?.payload?.Size}`}</p>
           <p className="  ">Timestamp: {`${payload[0]?.payload?.timestamp}`}</p>
         </div>
       </div>

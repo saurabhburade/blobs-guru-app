@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={""}>
+      <body className={space_grotesk.className}>
         <ThemeProvider>
           <Providers>{children}</Providers>
         </ThemeProvider>
