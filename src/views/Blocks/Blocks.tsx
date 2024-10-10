@@ -1,5 +1,6 @@
 "use client";
 import Header from "@/components/Header/Header";
+import BlocksRowSkeleton from "@/components/Skeletons/BlocksRowSkeleton";
 import {
   BLOB_BLOCKS_EXPLORER_QUERY,
   BLOB_BLOCKS_TOP_FIVE_QUERY,
@@ -16,8 +17,21 @@ import React, { useMemo, useState } from "react";
 type Props = {};
 
 function Blocks({}: Props) {
-  const { data: topBlocks } = useQuery(BLOB_BLOCKS_TOP_FIVE_QUERY);
-  const { data } = useQuery(COLLECTIVE_STAT_QUERY);
+  return (
+    <div>
+      <Header />
+      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+        <BlockStats />
+        <BlocksCubes />
+        <BlocksRows />
+      </div>
+    </div>
+  );
+}
+
+export default Blocks;
+const BlockStats = () => {
+  const { data, loading } = useQuery(COLLECTIVE_STAT_QUERY);
   console.log(`🚀 ~ file: Home.tsx:39 ~ data:`, data?.collectiveData);
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalBlobGas) {
@@ -64,53 +78,87 @@ function Blocks({}: Props) {
     ).toFormat(0);
     return totalBlobHashesCountBn || 0;
   }, [data?.collectiveData?.totalBlobHashesCount]);
+  if (loading) {
+    return (
+      <div className=" lg:h-[10em] grid lg:grid-cols-4 gap-4 lg:gap-10 ">
+        {new Array(4).fill(1).map((num, idx) => {
+          return (
+            <div
+              key={`BlockStats_skeleton_${idx}`}
+              className="border-base-300/50 space-y-3 border w-full h-full rounded-lg p-5 bg-base-100/50"
+            >
+              <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[3em] h-[3em] animate-pulse"></div>
 
+              <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[12em] lg:w-[5em] lg:w-[10em] h-[22px] animate-pulse"></div>
+              <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[15em] lg:w-[5em]  lg:w-[8em] h-[22px] animate-pulse"></div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
   return (
-    <div>
-      <Header />
-      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className=" lg:h-[10em] grid lg:grid-cols-4 gap-4 lg:gap-10 ">
-          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
-            <img
-              src="/images/logox.jpeg"
-              className="rounded-lg"
-              width={40}
-              height={40}
-              alt=""
-            />
-            <p className=""> Total Blobs</p>
-            <p className="text-3xl font-bold"> {totalBlobHashesCount}</p>
-          </div>
-          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
-            <Box strokeWidth="1" width={40} height={40} />
-            <p className=""> Total Blob Blocks</p>
-            <p className="text-3xl font-bold"> {totalBlobBlocks}</p>
-          </div>
-          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
-            <img src="/images/icons/eth.svg" width={28} height={28} alt="" />
-            <p className=""> Total Fees</p>
-            <p className="text-3xl font-bold"> {totalFeesEth}</p>
-          </div>
+    <div className=" lg:h-[10em] grid lg:grid-cols-4 gap-4 lg:gap-10 ">
+      <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
+        <img
+          src="/images/logox.jpeg"
+          className="rounded-lg"
+          width={40}
+          height={40}
+          alt=""
+        />
+        <p className=""> Total Blobs</p>
+        <p className="text-3xl font-bold"> {totalBlobHashesCount}</p>
+      </div>
+      <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
+        <Box strokeWidth="1" width={40} height={40} />
+        <p className=""> Total Blob Blocks</p>
+        <p className="text-3xl font-bold"> {totalBlobBlocks}</p>
+      </div>
+      <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
+        <img src="/images/icons/eth.svg" width={28} height={28} alt="" />
+        <p className=""> Total Fees</p>
+        <p className="text-3xl font-bold"> {totalFeesEth}</p>
+      </div>
 
-          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
-            <Database strokeWidth="1" width={40} height={40} />
+      <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
+        <Database strokeWidth="1" width={40} height={40} />
 
-            <p className=""> Total Data</p>
-            <p className="text-3xl font-bold"> {dataSize}</p>
-          </div>
-        </div>
-        <div className="grid lg:grid-cols-5 gap-4 lg:gap-10 lg:h-[10em] my-4">
-          {topBlocks?.blobBlockDatas?.map((blk: any) => {
-            return <BlocksCube key={blk?.id} blk={blk} />;
-          })}
-        </div>
-        <BlocksRows />
+        <p className=""> Total Data</p>
+        <p className="text-3xl font-bold"> {dataSize}</p>
       </div>
     </div>
   );
-}
+};
+const BlocksCubes = () => {
+  const { data: topBlocks, loading } = useQuery(BLOB_BLOCKS_TOP_FIVE_QUERY);
+  if (loading) {
+    return (
+      <div className="grid lg:grid-cols-5 gap-4 lg:gap-10 lg:h-[10em] my-4">
+        {new Array(5).fill(1).map((num, idx) => {
+          return (
+            <div
+              key={`BlocksCubes_skeleton_${idx}`}
+              className="border-base-300/50 space-y-3 border w-full h-full rounded-lg p-5 bg-base-100/50"
+            >
+              <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[3em] h-[3em] animate-pulse"></div>
 
-export default Blocks;
+              <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[12em] lg:w-[5em] lg:w-[10em] h-[22px] animate-pulse"></div>
+              <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[15em] lg:w-[5em]  lg:w-[8em] h-[22px] animate-pulse"></div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  return (
+    <div className="grid lg:grid-cols-5 gap-4 lg:gap-10 lg:h-[10em] my-4">
+      {topBlocks?.blobBlockDatas?.map((blk: any) => {
+        return <BlocksCube key={blk?.id} blk={blk} />;
+      })}
+    </div>
+  );
+};
 const BlocksCube = ({ blk }: any) => {
   //  id;
   //  blockNumber;
@@ -162,7 +210,7 @@ const BlocksCube = ({ blk }: any) => {
 const LIMIT_PER_PAGE = 10;
 function BlocksRows({}: Props) {
   const [page, setPage] = useState(1);
-  const { data } = useQuery(BLOB_BLOCKS_EXPLORER_QUERY, {
+  const { data, loading } = useQuery(BLOB_BLOCKS_EXPLORER_QUERY, {
     variables: {
       skip: LIMIT_PER_PAGE * (page - 1),
       limit: LIMIT_PER_PAGE,
@@ -175,6 +223,14 @@ function BlocksRows({}: Props) {
         <p>Blob Blocks</p>
       </div>
       <div className="px-4  ">
+        {loading &&
+          new Array(10)?.fill(1)?.map((num, idx) => {
+            return (
+              <BlocksRowSkeleton
+                key={`BlocksRowSkeleton_BlocksRows_Blocks_${idx}`}
+              />
+            );
+          })}
         {data?.blobBlockDatas?.map((blk: any) => {
           return <BlocksRow key={blk?.id} blk={blk} />;
         })}
@@ -213,7 +269,6 @@ function BlocksRows({}: Props) {
     </div>
   );
 }
-
 
 const BlocksRow = ({ blk }: any) => {
   //  id;
