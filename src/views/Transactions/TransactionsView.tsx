@@ -25,9 +25,9 @@ function TransactionsView({}: Props) {
   return (
     <div>
       <Header />
-      <div className="mx-auto p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+      <div className="mx-auto lg:p-20 p-4 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
         <div className="w-full ">
-          <div className="h-[20em]  flex items-stretch gap-4 my-4">
+          <div className="lg:h-[20em]  flex lg:flex-nowrap flex-wrap items-stretch gap-4 my-4">
             <div className="p-5 bg-base-200/30 border   border-base-300/20 w-full h-full rounded-lg">
               <BlobTransactionDayChart />
             </div>
@@ -98,7 +98,7 @@ const TxnStats = () => {
 
   return (
     <div className=" h-fit ">
-      <div className="h-fit  grid grid-cols-4 gap-4">
+      <div className="h-fit  grid lg:grid-cols-4 gap-4">
         <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
           <img
             src="/images/logox.jpeg"
@@ -210,7 +210,7 @@ const TransactionRow = ({ txn }: any) => {
       .toFormat(4);
   }, [txn?.gasUsed, txn?.gasPrice]);
   return (
-    <div className="flex justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+    <div className="grid grid-cols-2 lg:grid-cols-[1fr_0.5fr_1.5fr] items-center lg:flex-nowrap first:border-t-0 border-t py-3 border-base-200 text-sm">
       <div className="flex items-center gap-2">
         <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
           {accountDetails?.logoUri ? (
@@ -232,13 +232,15 @@ const TransactionRow = ({ txn }: any) => {
           <p>{txn?.blobHashesLength} blob</p>
         </div>
       </div>
-      <div>
+      <div className="text-end">
         <p>{totalBlobSize}</p>
         <p>{blobGasEth} ETH</p>
       </div>
-      <div>
-        <p>From : {accountDetails?.name || formatAddress(txn?.from)}</p>
-        <p>{feeEth} ETH</p>
+      <div className="flex my-2  lg:my-0 justify-between  w-full lg:flex-col lg:col-span-1 col-span-2">
+        <p className="lg:text-end">
+          From : {accountDetails?.name || formatAddress(txn?.from)}
+        </p>
+        <p className=" text-end">{feeEth} ETH</p>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ function Home({}: Props) {
   return (
     <div>
       <Header />
-      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 lg:pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
         <div className="lg:h-[30vh] h-[40vh] flex-col flex justify-center gap-4 ">
           <h2 className="lg:text-5xl text-xl font-semibold">Blobs Explorer</h2>
           <div className="join">

@@ -68,8 +68,8 @@ function Blocks({}: Props) {
   return (
     <div>
       <Header />
-      <div className="mx-auto p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className=" h-[10em] grid grid-cols-4 gap-10 ">
+      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+        <div className=" lg:h-[10em] grid lg:grid-cols-4 gap-4 lg:gap-10 ">
           <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
             <img
               src="/images/logox.jpeg"
@@ -99,7 +99,7 @@ function Blocks({}: Props) {
             <p className="text-3xl font-bold"> {dataSize}</p>
           </div>
         </div>
-        <div className="grid grid-cols-5 gap-10 h-[10em] my-4">
+        <div className="grid lg:grid-cols-5 gap-4 lg:gap-10 lg:h-[10em] my-4">
           {topBlocks?.blobBlockDatas?.map((blk: any) => {
             return <BlocksCube key={blk?.id} blk={blk} />;
           })}
@@ -214,6 +214,7 @@ function BlocksRows({}: Props) {
   );
 }
 
+
 const BlocksRow = ({ blk }: any) => {
   //  id;
   //  blockNumber;
@@ -242,7 +243,7 @@ const BlocksRow = ({ blk }: any) => {
   }, [blk?.totalBlobGas]);
 
   return (
-    <div className="flex justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+    <div className="flex flex-wrap gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
       <div className="flex items-center gap-2">
         <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
           <Box strokeWidth="1" width={24} height={24} />
@@ -251,6 +252,7 @@ const BlocksRow = ({ blk }: any) => {
           <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
             {blockNumber}
           </Link>
+
           <p>{new Date().toLocaleString()}</p>
         </div>
       </div>
