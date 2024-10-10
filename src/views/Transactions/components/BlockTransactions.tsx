@@ -10,6 +10,7 @@ import { formatAddress, formatBytes } from "@/lib/utils";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
+import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
 type Props = {
   blockNumber: number | string;
   totalBlobTxns: number;
@@ -19,7 +20,7 @@ const LIMIT_PER_PAGE = 10;
 
 function BlockTransactions({ blockNumber, totalBlobTxns }: Props) {
   const [page, setPage] = useState(1);
-  const { data } = useQuery(BLOB_TRANSACTIONS_FOR_BLOCK, {
+  const { data, loading } = useQuery(BLOB_TRANSACTIONS_FOR_BLOCK, {
     variables: {
       skip: LIMIT_PER_PAGE * (page - 1),
       limit: LIMIT_PER_PAGE,
@@ -36,9 +37,18 @@ function BlockTransactions({ blockNumber, totalBlobTxns }: Props) {
         <p>Blob Transactions</p>
       </div>
       <div className="px-4  ">
-        {data?.blobTransactions?.map((txn: any) => {
-          return <TransactionRow key={txn?.id} txn={txn} />;
-        })}
+        {loading &&
+          new Array(10)?.fill(1)?.map((num, idx) => {
+            return (
+              <TransactionRowSkeleton
+                key={`TransactionRowSkeleton_Block_Txns_${idx}`}
+              />
+            );
+          })}
+        {!loading &&
+          data?.blobTransactions?.map((txn: any) => {
+            return <TransactionRow key={txn?.id} txn={txn} />;
+          })}
       </div>
       {totalPages > 1 && (
         <div className="flex px-4 justify-end gap-2  p-4  border-t border-base-200">

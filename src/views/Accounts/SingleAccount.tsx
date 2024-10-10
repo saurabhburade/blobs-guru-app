@@ -30,6 +30,7 @@ import AccountStatCard from "./components/AccountStatCard";
 import DayTxnsBlobAccountChart from "./components/DayTxnsBlobAccountChart";
 import DayHashesBlobAccountChart from "./components/DayHashesBlobAccountChart";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
+import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
 
 type Props = {
   account: string;
@@ -70,7 +71,7 @@ export default SingleAccount;
 const LIMIT_PER_PAGE = 10;
 function TxnRows({ account }: { account: string }) {
   const [page, setPage] = useState(1);
-  const { data } = useQuery(BLOB_TRANSACTIONS_ACCOUNT_QUERY, {
+  const { data, loading } = useQuery(BLOB_TRANSACTIONS_ACCOUNT_QUERY, {
     variables: {
       skip: LIMIT_PER_PAGE * (page - 1),
       limit: LIMIT_PER_PAGE,
@@ -84,9 +85,18 @@ function TxnRows({ account }: { account: string }) {
         <p>Blob Transactions</p>
       </div>
       <div className="px-4  ">
-        {data?.blobTransactions?.map((txn: any) => {
-          return <TransactionRow key={txn?.id} txn={txn} />;
-        })}
+        {loading &&
+          new Array(10)?.fill(1)?.map((num, idx) => {
+            return (
+              <TransactionRowSkeleton
+                key={`TransactionRowSkeleton_SINGLE_ACCOUNT_${idx}`}
+              />
+            );
+          })}
+        {!loading &&
+          data?.blobTransactions?.map((txn: any) => {
+            return <TransactionRow key={txn?.id} txn={txn} />;
+          })}
         {/* <BlocksRow />
         <BlocksRow />
         <BlocksRow />

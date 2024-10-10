@@ -16,6 +16,7 @@ import React, { useMemo, useState } from "react";
 import BlobTransactionDayChart from "../Home/components/BlobTransactionDayChart";
 import BlobSizeDayChart from "./components/BlobSizeDayChart";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
+import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
 
 type Props = {};
 
@@ -133,7 +134,7 @@ const TxnStats = () => {
 };
 function TxnRows({}: Props) {
   const [page, setPage] = useState(1);
-  const { data } = useQuery(BLOB_TRANSACTIONS_EXPLORER_QUERY, {
+  const { data, loading } = useQuery(BLOB_TRANSACTIONS_EXPLORER_QUERY, {
     variables: {
       skip: LIMIT_PER_PAGE * (page - 1),
       limit: LIMIT_PER_PAGE,
@@ -146,9 +147,18 @@ function TxnRows({}: Props) {
         <p>Blob Transactions</p>
       </div>
       <div className="px-4  ">
-        {data?.blobTransactions?.map((txn: any) => {
-          return <TransactionRow key={txn?.id} txn={txn} />;
-        })}
+        {loading &&
+          new Array(10)?.fill(1)?.map((num, idx) => {
+            return (
+              <TransactionRowSkeleton
+                key={`TransactionRowSkeleton_TRANSACTIONS_${idx}`}
+              />
+            );
+          })}
+        {!loading &&
+          data?.blobTransactions?.map((txn: any) => {
+            return <TransactionRow key={txn?.id} txn={txn} />;
+          })}
         {/* <BlocksRow />
         <BlocksRow />
         <BlocksRow />
