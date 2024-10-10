@@ -26,6 +26,7 @@ import Echart from "./components/TopAccountsChart";
 import TopAccountsChart from "./components/TopAccountsChart";
 import AccountStatCard from "./components/AccountStatCard";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
+import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
 
 type Props = {};
 
@@ -59,7 +60,7 @@ export default AccountsView;
 
 const LIMIT_PER_PAGE = 10;
 const TxnStats = () => {
-  const { data } = useQuery(COLLECTIVE_STAT_QUERY);
+  const { data, loading } = useQuery(COLLECTIVE_STAT_QUERY);
   console.log(`🚀 ~ file: Home.tsx:39 ~ data:`, data?.collectiveData);
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalBlobGas) {
@@ -106,7 +107,27 @@ const TxnStats = () => {
     ).toFormat(0);
     return totalBlobHashesCountBn || 0;
   }, [data?.collectiveData?.totalBlobHashesCount]);
+  if (loading) {
+    return (
+      <div className=" h-fit ">
+        <div className="h-fit  grid lg:grid-cols-4 gap-4">
+          {new Array(4).fill(1).map((num, idx) => {
+            return (
+              <div
+                key={`BlocksCubes_skeleton_${idx}`}
+                className="border-base-300/50 space-y-3 border w-full h-full rounded-lg p-5 bg-base-100/50"
+              >
+                <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[3em] h-[3em] animate-pulse"></div>
 
+                <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[12em] lg:w-[12em] lg:w-[10em] h-[22px] animate-pulse"></div>
+                <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[15em] lg:w-[12em]  lg:w-[8em] h-[22px] animate-pulse"></div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className=" h-fit ">
       <div className="h-fit  grid lg:grid-cols-4 gap-4">
@@ -172,7 +193,7 @@ const TopAccountsStats = () => {
 };
 function AccountRows({}: Props) {
   const [page, setPage] = useState(1);
-  const { data } = useQuery(BLOB_ACCOUNTS_EXPLORER_QUERY, {
+  const { data, loading } = useQuery(BLOB_ACCOUNTS_EXPLORER_QUERY, {
     variables: {
       skip: LIMIT_PER_PAGE * (page - 1),
       limit: LIMIT_PER_PAGE,
@@ -185,6 +206,14 @@ function AccountRows({}: Props) {
         <p>Blob Accounts</p>
       </div>
       <div className="px-4  ">
+        {loading &&
+          new Array(10)?.fill(1)?.map((num, idx) => {
+            return (
+              <TransactionRowSkeleton
+                key={`TransactionRowSkeleton_ACCOUNTS_${idx}`}
+              />
+            );
+          })}
         {data?.accounts?.map((acc: any) => {
           return <AccountRow key={acc?.id} acc={acc} />;
         })}

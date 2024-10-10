@@ -49,7 +49,7 @@ export default TransactionsView;
 
 const LIMIT_PER_PAGE = 10;
 const TxnStats = () => {
-  const { data } = useQuery(COLLECTIVE_STAT_QUERY);
+  const { data, loading } = useQuery(COLLECTIVE_STAT_QUERY);
   console.log(`🚀 ~ file: Home.tsx:39 ~ data:`, data?.collectiveData);
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalBlobGas) {
@@ -96,7 +96,27 @@ const TxnStats = () => {
     ).toFormat(0);
     return totalBlobHashesCountBn || 0;
   }, [data?.collectiveData?.totalBlobHashesCount]);
+  if (loading) {
+    return (
+      <div className=" h-fit ">
+        <div className="h-fit  grid lg:grid-cols-4 gap-4">
+          {new Array(4).fill(1).map((num, idx) => {
+            return (
+              <div
+                key={`BlocksCubes_skeleton_${idx}`}
+                className="border-base-300/50 space-y-3 border w-full h-full rounded-lg p-5 bg-base-100/50"
+              >
+                <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[3em] h-[3em] animate-pulse"></div>
 
+                <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[12em] lg:w-[12em] lg:w-[10em] h-[22px] animate-pulse"></div>
+                <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[15em] lg:w-[12em]  lg:w-[8em] h-[22px] animate-pulse"></div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className=" h-fit ">
       <div className="h-fit  grid lg:grid-cols-4 gap-4">
