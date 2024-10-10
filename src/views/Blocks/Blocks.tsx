@@ -70,7 +70,7 @@ function Blocks({}: Props) {
       <Header />
       <div className="mx-auto p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
         <div className=" h-[10em] grid grid-cols-4 gap-10 ">
-          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-200/20">
+          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
             <img
               src="/images/logox.jpeg"
               className="rounded-lg"
@@ -81,18 +81,18 @@ function Blocks({}: Props) {
             <p className=""> Total Blobs</p>
             <p className="text-3xl font-bold"> {totalBlobHashesCount}</p>
           </div>
-          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-200/20">
+          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
             <Box strokeWidth="1" width={40} height={40} />
             <p className=""> Total Blob Blocks</p>
             <p className="text-3xl font-bold"> {totalBlobBlocks}</p>
           </div>
-          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-200/20">
+          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
             <img src="/images/icons/eth.svg" width={28} height={28} alt="" />
             <p className=""> Total Fees</p>
             <p className="text-3xl font-bold"> {totalFeesEth}</p>
           </div>
 
-          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-200/20">
+          <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
             <Database strokeWidth="1" width={40} height={40} />
 
             <p className=""> Total Data</p>

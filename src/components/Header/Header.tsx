@@ -32,7 +32,7 @@ function Header({}: Props) {
         </div> */}
         <Link href="/blocks">Blob Blocks</Link>
         <Link href="/transactions"> Blob Transactions</Link>
-        <Link href="/"> Accounts</Link>
+        <Link href="/accounts"> Accounts</Link>
         <Link href="/">Stats</Link>
 
         <ThemeController />

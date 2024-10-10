@@ -1,142 +1,80 @@
 "use client";
 import Header from "@/components/Header/Header";
 import {
+  BLOB_ACCOUNT_SINGLE_QUERY,
+  BLOB_ACCOUNTS_EXPLORER_QUERY,
   BLOB_BLOCKS_EXPLORER_QUERY,
   BLOB_BLOCKS_TOP_FIVE_QUERY,
   BLOB_BLOCKS_TOP_QUERY,
+  BLOB_TRANSACTIONS_ACCOUNT_QUERY,
   BLOB_TRANSACTIONS_EXPLORER_QUERY,
   COLLECTIVE_STAT_QUERY,
+  TOP_BLOB_ACCOUNTS_QUERY,
+  TOP_FIVE_BLOB_ACCOUNTS_QUERY,
 } from "@/lib/apollo/queries";
 import { formatAddress, formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
-import { Box, Database, NotepadText } from "lucide-react";
+import { Box, Database, NotepadText, User } from "lucide-react";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 import BlobTransactionDayChart from "../Home/components/BlobTransactionDayChart";
-import BlobSizeDayChart from "./components/BlobSizeDayChart";
+import BlobSizeDayChart from "./components/TopBlobAccountsChart";
+import TopBlobAccountsChart from "./components/TopBlobAccountsChart";
+import BlobAccountsDayChart from "./components/BlobAccountsDayChart";
+import TopAccountsByBlobHashes from "./components/TopAccountsByBlobHashes";
+import BlobHashesDayChart from "./components/BlobHashesDayChart";
+import Echart from "./components/TopAccountsChart";
+import TopAccountsChart from "./components/TopAccountsChart";
+import AccountStatCard from "./components/AccountStatCard";
+import DayTxnsBlobAccountChart from "./components/DayTxnsBlobAccountChart";
+import DayHashesBlobAccountChart from "./components/DayHashesBlobAccountChart";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 
-type Props = {};
+type Props = {
+  account: string;
+};
 
-function TransactionsView({}: Props) {
-  // const { data } = useQuery(BLOB_TRANSACTIONS_EXPLORER_QUERY);
+function SingleAccount({ account }: Props) {
+  // const account = "0x2c169dfe5fbba12957bdd0ba47d9cedbfe260ca7";
+  const { data } = useQuery(BLOB_ACCOUNT_SINGLE_QUERY, {
+    variables: {
+      address: account,
+    },
+  });
 
+  console.log(`🚀 ~ file: SingleAccount.tsx:42 ~ data:`, data);
   return (
     <div>
       <Header />
       <div className="mx-auto p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className="w-full ">
+        <div className="w-full space-y-4 ">
+          <AccountStatCard acc={data?.account} />
           <div className="h-[20em]  flex items-stretch gap-4 my-4">
             <div className="p-5 bg-base-200/30 border   border-base-300/20 w-full h-full rounded-lg">
-              <BlobTransactionDayChart />
+              <DayTxnsBlobAccountChart account={account} />
             </div>
             <div className="p-5 bg-base-200/30 border border-base-300/20 w-full h-full rounded-lg">
               {/* <BlobTransactionDayChart /> */}
-              <BlobSizeDayChart />
+              <DayHashesBlobAccountChart account={account} />
             </div>
           </div>
-          <TxnStats />
         </div>
-        <TxnRows />
+        <TxnRows account={account} />
       </div>
     </div>
   );
 }
 
-export default TransactionsView;
-
+export default SingleAccount;
 const LIMIT_PER_PAGE = 10;
-const TxnStats = () => {
-  const { data } = useQuery(COLLECTIVE_STAT_QUERY);
-  console.log(`🚀 ~ file: Home.tsx:39 ~ data:`, data?.collectiveData);
-  const dataSize = useMemo(() => {
-    if (data?.collectiveData?.totalBlobGas) {
-      return formatBytes(Number(data?.collectiveData?.totalBlobGas));
-    }
-    return "0 KB";
-  }, [data?.collectiveData?.totalBlobGas]);
-
-  const totalFeesEth = useMemo(() => {
-    const totalFeeEthBn = new BigNumber(data?.collectiveData?.totalFeeEth)
-      .div(1e18)
-      .toFormat(2);
-    return (totalFeeEthBn || 0) + " ETH";
-  }, [data?.collectiveData?.totalFeeEth]);
-
-  const lastUpdatedBlock = useMemo(() => {
-    const lastUpdatedBlockBn = new BigNumber(
-      data?.collectiveData?.lastUpdatedBlock
-    ).toFormat(0);
-    return lastUpdatedBlockBn || 0;
-  }, [data?.collectiveData?.lastUpdatedBlock]);
-  const totalBlobBlocks = useMemo(() => {
-    const totalBlobBlocksBn = new BigNumber(
-      data?.collectiveData?.totalBlobBlocks
-    ).toFormat(0);
-    return totalBlobBlocksBn || 0;
-  }, [data?.collectiveData?.totalBlobBlocks]);
-
-  const totalBlobAccounts = useMemo(() => {
-    const totalBlobAccountsBn = new BigNumber(
-      data?.collectiveData?.totalBlobAccounts
-    ).toFormat(0);
-    return totalBlobAccountsBn || 0;
-  }, [data?.collectiveData?.totalBlobAccounts]);
-  const totalBlobTransactionCount = useMemo(() => {
-    const totalBlobTransactionCountBn = new BigNumber(
-      data?.collectiveData?.totalBlobTransactionCount
-    ).toFormat(0);
-    return totalBlobTransactionCountBn || 0;
-  }, [data?.collectiveData?.totalBlobTransactionCount]);
-  const totalBlobHashesCount = useMemo(() => {
-    const totalBlobHashesCountBn = new BigNumber(
-      data?.collectiveData?.totalBlobHashesCount
-    ).toFormat(0);
-    return totalBlobHashesCountBn || 0;
-  }, [data?.collectiveData?.totalBlobHashesCount]);
-
-  return (
-    <div className=" h-fit ">
-      <div className="h-fit  grid grid-cols-4 gap-4">
-        <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
-          <img
-            src="/images/logox.jpeg"
-            className="rounded-lg"
-            width={40}
-            height={40}
-            alt=""
-          />
-          <p className=""> Total Blobs</p>
-          <p className="text-3xl font-bold"> {totalBlobHashesCount}</p>
-        </div>
-        <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
-          <NotepadText strokeWidth="1" width={40} height={40} />
-          <p className=""> Total Blob Transactions</p>
-          <p className="text-3xl font-bold"> {totalBlobTransactionCount}</p>
-        </div>
-        <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
-          <img src="/images/icons/eth.svg" width={28} height={28} alt="" />
-          <p className=""> Total Fees</p>
-          <p className="text-3xl font-bold"> {totalFeesEth}</p>
-        </div>
-
-        <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
-          <Database strokeWidth="1" width={40} height={40} />
-
-          <p className=""> Total Data</p>
-          <p className="text-3xl font-bold"> {dataSize}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-function TxnRows({}: Props) {
+function TxnRows({ account }: { account: string }) {
   const [page, setPage] = useState(1);
-  const { data } = useQuery(BLOB_TRANSACTIONS_EXPLORER_QUERY, {
+  const { data } = useQuery(BLOB_TRANSACTIONS_ACCOUNT_QUERY, {
     variables: {
       skip: LIMIT_PER_PAGE * (page - 1),
       limit: LIMIT_PER_PAGE,
+      account,
     },
   });
 

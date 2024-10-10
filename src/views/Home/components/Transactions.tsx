@@ -5,6 +5,7 @@ import { BLOB_TRANSACTIONS_TOP_QUERY } from "@/lib/apollo/queries";
 import { formatAddress, formatBytes } from "@/lib/utils";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
+import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 type Props = {};
 
 function Transactions({}: Props) {
@@ -42,6 +43,8 @@ const TransactionRow = ({ txn }: any) => {
   //   gasUsed
   //   blobGasEth
   //   blobGas
+  const accountDetails = getAccountDetailsFromAddressBook(txn?.from);
+
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(txn?.blobGas));
   }, [txn?.blobGas]);
@@ -58,7 +61,17 @@ const TransactionRow = ({ txn }: any) => {
     <div className="flex justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
       <div className="flex items-center gap-2">
         <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
-          <NotepadText strokeWidth="1" width={24} height={24} />
+          {accountDetails?.logoUri ? (
+            <img
+              src={accountDetails?.logoUri || "/images/logox.jpeg"}
+              className="rounded-lg"
+              width={24}
+              height={24}
+              alt=""
+            />
+          ) : (
+            <NotepadText strokeWidth="1" width={24} height={24} />
+          )}
         </div>
         <div>
           <Link className="text-primary" href={`/transactions/${txn?.id}`}>
@@ -72,7 +85,7 @@ const TransactionRow = ({ txn }: any) => {
         <p>{blobGasEth} ETH</p>
       </div>
       <div>
-        <p>From : {formatAddress(txn?.from)}</p>
+        <p>From : {accountDetails?.name || formatAddress(txn?.from)}</p>
         <p>{feeEth} ETH</p>
       </div>
     </div>
