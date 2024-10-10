@@ -42,7 +42,7 @@ function ThemeController({}: Props) {
             value="dark"
           />
         </li>
-        <li onClick={() => setTheme("black")}>
+        {/* <li onClick={() => setTheme("black")}>
           <input
             type="radio"
             name="theme-dropdown"
@@ -95,7 +95,7 @@ function ThemeController({}: Props) {
             aria-label="pastel"
             value="pastel"
           />
-        </li>
+        </li> */}
       </ul>
     </div>
   );
