@@ -40,7 +40,7 @@ function AccountStatCard({ acc }: any) {
           )}
         </div>
       </div>
-      <div className=" grid grid-cols-2">
+      <div className=" grid lg:grid-cols-2">
         <div className="border-r border-x-base-200/50">
           <div className="flex justify-between items-center p-4">
             <div className="flex items-center gap-2">

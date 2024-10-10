@@ -35,13 +35,13 @@ function AccountsView({}: Props) {
   return (
     <div>
       <Header />
-      <div className="mx-auto p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+      <div className="mx-auto lg:p-20 p-4 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
         <div className="w-full space-y-4 ">
-          <div className="h-[20em]  flex items-stretch gap-4 my-4">
-            <div className="p-5 bg-base-200/30 border   border-base-300/20 w-full h-full rounded-lg">
+          <div className="lg:h-[20em]  flex-wrap lg:flex-nowrap flex items-stretch gap-4 my-4">
+            <div className="p-5 h-[20em] bg-base-200/30 border   border-base-300/20 w-full rounded-lg">
               <TopBlobAccountsChart />
             </div>
-            <div className="p-5 bg-base-200/30 border border-base-300/20 w-full h-full rounded-lg">
+            <div className="p-5  h-[20em] bg-base-200/30 border border-base-300/20 w-full  rounded-lg">
               {/* <BlobTransactionDayChart /> */}
               <BlobHashesDayChart />
             </div>
@@ -109,7 +109,7 @@ const TxnStats = () => {
 
   return (
     <div className=" h-fit ">
-      <div className="h-fit  grid grid-cols-4 gap-4">
+      <div className="h-fit  grid lg:grid-cols-4 gap-4">
         <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
           <img
             src="/images/logox.jpeg"
@@ -162,7 +162,7 @@ const TopAccountsStats = () => {
 
   return (
     <div className=" h-fit ">
-      <div className="h-fit  grid grid-cols-2 gap-4">
+      <div className="h-fit  grid lg:grid-cols-2 gap-4">
         {data?.accounts?.map((acc: any) => {
           return <AccountStatCard key={acc?.id} acc={acc} />;
         })}
@@ -243,8 +243,8 @@ const AccountRow = ({ acc }: any) => {
     return new BigNumber(acc?.totalFeeEth).div(1e18).toFormat(4);
   }, [acc?.totalFeeEth]);
   return (
-    <div className="flex justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
-      <div className="flex items-center gap-2">
+    <div className="flex justify-between flex-wrap gap-4 first:border-t-0 border-t py-3 border-base-200 text-sm">
+      <div className="flex items-center gap-2 ">
         <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
           {accountDetails?.logoUri ? (
             <img
@@ -262,14 +262,34 @@ const AccountRow = ({ acc }: any) => {
           {accountDetails?.name ? (
             <div>
               <p>{accountDetails?.name}</p>
-              <Link className="text-primary" href={`/accounts/${acc?.id}`}>
+              <Link
+                className="text-primary hidden lg:block"
+                href={`/accounts/${acc?.id}`}
+              >
                 {acc?.id}
+              </Link>
+              <Link
+                className="text-primary block lg:hidden"
+                href={`/accounts/${acc?.id}`}
+              >
+                {formatAddress(acc?.id)}
               </Link>
             </div>
           ) : (
-            <Link className="text-primary" href={`/accounts/${acc?.id}`}>
-              {acc?.id}
-            </Link>
+            <>
+              <Link
+                className="text-primary hidden lg:block"
+                href={`/accounts/${acc?.id}`}
+              >
+                {acc?.id}
+              </Link>
+              <Link
+                className="text-primary block lg:hidden"
+                href={`/accounts/${acc?.id}`}
+              >
+                {formatAddress(acc?.id)}
+              </Link>{" "}
+            </>
           )}
         </div>
       </div>
