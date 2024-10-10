@@ -71,27 +71,73 @@ function SingleTransaction({ hash }: Props) {
   return (
     <div>
       <Header />
-      <div className="mx-auto w-full p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className="grid grid-cols-[3fr_1fr] w-full gap-4">
+      <div className="mx-auto w-full p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+        <div className="grid lg:grid-cols-[3fr_1fr] w-full gap-4">
           <div className="border border-base-200  rounded-lg w-full  ">
-            <div className="flex w-full items-center justify-between border-b border-base-200 p-5">
-              <div className=" flex items-center gap-4">
+            <div className="flex flex-wrap w-full items-center justify-between border-b border-base-200 p-5">
+              <div className=" flex items-center gap-4 ">
                 <Box />
-                <p className="text-xl font-bold">
+                <p className="lg:text-xl font-bold">
                   Transaction #{rpcTxn?.blockNumber?.toString()}::
                   {rpcTxn?.transactionIndex}
                 </p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 lg:w-fit justify-center w-full">
                 <button className="btn btn-ghost btn-sm">
                   View on Etherscan
                 </button>
               </div>
             </div>
+            <div className="border border-base-200 h-fit rounded-lg lg:hidden ">
+              <div className=" space-y-5 py-2">
+                <div className=" px-5">
+                  <p className=" font-semibold text-lg">{totalBlobSize}</p>
+
+                  <p className="flex gap-2 items-center">
+                    <span className="">
+                      <Database width={14} />
+                    </span>
+                    Blobs Size
+                  </p>
+                </div>
+                <div className="px-5">
+                  <p className=" font-semibold text-lg">{blobGasEth} ETH</p>
+
+                  <p className="flex gap-2 items-center">
+                    <span className="">
+                      <img
+                        src="/images/icons/eth.svg"
+                        width={14}
+                        className="fill-current"
+                        alt=""
+                      />
+                    </span>
+                    Blob gas
+                  </p>
+                </div>
+                <div className="px-5">
+                  <p className=" font-semibold text-lg">{blobHashesLength}</p>
+
+                  <p className="flex gap-2 items-center">
+                    <span className="">
+                      <SquareDashedBottomCode width={14} />
+                    </span>
+                    Total Blobs
+                  </p>
+                </div>
+              </div>
+            </div>
             <div>
-              <div className="grid grid-cols-[0.75fr_3fr] w-full p-5 border-b  border-base-200">
+              <div className="grid grid-cols-[0.75fr_3fr] gap-4 lg:gap-0 w-full p-5 border-b  border-base-200">
                 <div className="">Transaction Hash</div>
-                <div className=" break-words">{rpcTxn?.hash}</div>
+                <div className=" break-words hidden lg:block">
+                  {rpcTxn?.hash}
+                </div>
+                {rpcTxn?.hash && (
+                  <div className=" break-words lg:hidden block">
+                    {formatAddress(rpcTxn?.hash)}
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-[0.75fr_3fr] w-full p-5">
                 <div className="">Time</div>
@@ -108,11 +154,23 @@ function SingleTransaction({ hash }: Props) {
               </div>
               <div className="grid grid-cols-[0.75fr_3fr] w-full p-5">
                 <div className="">From</div>
-                <div className="">{rpcTxn?.from?.toString()}</div>
+                <div className=" break-words hidden lg:block">
+                  {rpcTxn?.from}
+                </div>
+                {rpcTxn?.from && (
+                  <div className=" break-words lg:hidden block">
+                    {formatAddress(rpcTxn?.from?.toString())}
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-[0.75fr_3fr] w-full p-5">
                 <div className="">To</div>
-                <div className="">{rpcTxn?.to?.toString()}</div>
+                <div className=" break-words hidden lg:block">{rpcTxn?.to}</div>
+                {rpcTxn?.to && (
+                  <div className=" break-words lg:hidden block">
+                    {formatAddress(rpcTxn?.to?.toString())}
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-[0.75fr_3fr] w-full p-5 border-b  border-base-200">
@@ -160,13 +218,13 @@ function SingleTransaction({ hash }: Props) {
               </div>
               <div className="grid grid-cols-[0.75fr_3fr] w-full p-5">
                 <div className="">Input</div>
-                <code className=" p-2 bg-base-200/50 rounded-lg w-[40em] max-h-[20em] overflow-scroll break-words">
+                <code className=" p-2 bg-base-200/50 rounded-lg w-[10] lg:w-[40em] max-h-[20em] overflow-scroll break-words">
                   {rpcTxn?.input?.toString()}
                 </code>
               </div>
             </div>
           </div>
-          <div className="border border-base-200 h-fit rounded-lg">
+          <div className="border border-base-200 h-fit rounded-lg lg:block hidden">
             <div className="p-5 flex items-center gap-4 border-b border-base-200">
               <img
                 src="/images/logox.jpeg"
@@ -243,7 +301,7 @@ const BlobRow = ({ txn, id }: any) => {
   //   blobGas
 
   return (
-    <div className="px-4  flex items-center justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+    <div className="px-4 flex-wrap flex items-center justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
       <div className="flex items-center gap-2">
         <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
           <img
@@ -255,7 +313,8 @@ const BlobRow = ({ txn, id }: any) => {
           />
         </div>
         <div>
-          <p>{id}</p>
+          <p className="lg:block hidden">{id}</p>
+          {id && <p className="lg:hidden block">{formatAddress(id)}</p>}
         </div>
       </div>
       <div className="flex">
