@@ -58,7 +58,7 @@ const TransactionRow = ({ txn }: any) => {
       .toFormat(4);
   }, [txn?.gasUsed, txn?.gasPrice]);
   return (
-    <div className="flex justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+    <div className="grid grid-cols-2 lg:grid-cols-[1fr_0.5fr_1.5fr] items-center lg:flex-nowrap first:border-t-0 border-t py-3 border-base-200 text-sm">
       <div className="flex items-center gap-2">
         <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
           {accountDetails?.logoUri ? (
@@ -80,13 +80,15 @@ const TransactionRow = ({ txn }: any) => {
           <p>{txn?.blobHashesLength} blob</p>
         </div>
       </div>
-      <div>
+      <div className="text-end">
         <p>{totalBlobSize}</p>
         <p>{blobGasEth} ETH</p>
       </div>
-      <div>
-        <p>From : {accountDetails?.name || formatAddress(txn?.from)}</p>
-        <p>{feeEth} ETH</p>
+      <div className="flex my-2  lg:my-0 justify-between  w-full lg:flex-col lg:col-span-1 col-span-2">
+        <p className="lg:text-end">
+          From : {accountDetails?.name || formatAddress(txn?.from)}
+        </p>
+        <p className=" text-end">{feeEth} ETH</p>
       </div>
     </div>
   );

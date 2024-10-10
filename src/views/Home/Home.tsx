@@ -15,19 +15,19 @@ function Home({}: Props) {
   return (
     <div>
       <Header />
-      <div className="mx-auto p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className="h-[30vh] flex-col flex justify-center gap-4 ">
-          <h2 className="text-5xl font-semibold">Blobs Explorer</h2>
+      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 lg:pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+        <div className="lg:h-[30vh] h-[40vh] flex-col flex justify-center gap-4 ">
+          <h2 className="lg:text-5xl text-xl font-semibold">Blobs Explorer</h2>
           <div className="join">
             <input
-              className="input input-bordered outline-none active:outline-none  focus:outline-none join-item w-1/3 "
+              className="input w-full input-bordered outline-none active:outline-none  focus:outline-none join-item lg:w-1/3 "
               placeholder="Search transactions"
             />
             <button className="btn join-item rounded-r-full">Search</button>
           </div>
         </div>
         <Stats />
-        <div className="grid-cols-2 grid gap-8">
+        <div className="lg:grid-cols-2 grid gap-8">
           <Transactions />
           <Blocks />
         </div>
@@ -91,7 +91,7 @@ const Stats = () => {
   }, [data?.collectiveData?.totalBlobHashesCount]);
 
   return (
-    <div className="grid grid-cols-4 gap-0 h-[12em]">
+    <div className="grid lg:grid-cols-4 gap-0  lg:h-[12em]">
       <StatCard title="Block height" value={lastUpdatedBlock} />
       <StatCard title="Total blob data" value={dataSize} />
       <StatCard title="Total Fees" value={totalFeesEth} />
@@ -100,7 +100,7 @@ const Stats = () => {
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className=""></div> */}
-      <div className="bg-base-100 h-full row-span-2 border p-2 border-base-200">
+      <div className="bg-base-100 h-[12em] row-span-2 border p-2 border-base-200">
         <BlobTransactionDayChart />
       </div>
       <StatCard title="Blob Accounts" value={totalBlobAccounts} />

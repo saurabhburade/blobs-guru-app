@@ -66,7 +66,7 @@ const BlocksRow = ({ blk }: any) => {
   }, [blk?.totalBlobGas]);
 
   return (
-    <div className="flex justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+    <div className="flex flex-wrap gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
       <div className="flex items-center gap-2">
         <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
           <Box strokeWidth="1" width={24} height={24} />
