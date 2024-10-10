@@ -48,7 +48,7 @@ const Stats = () => {
   //   totalBlobBlocks
   //   totalBlobAccounts
   //   totalBlobGas
-  const { data } = useQuery(COLLECTIVE_STAT_QUERY);
+  const { data, loading: statsLoading } = useQuery(COLLECTIVE_STAT_QUERY);
   console.log(`🚀 ~ file: Home.tsx:39 ~ data:`, data?.collectiveData);
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalBlobGas) {
@@ -92,30 +92,78 @@ const Stats = () => {
 
   return (
     <div className="grid lg:grid-cols-4 gap-0  lg:h-[12em]">
-      <StatCard title="Block height" value={lastUpdatedBlock} />
-      <StatCard title="Total blob data" value={dataSize} />
-      <StatCard title="Total Fees" value={totalFeesEth} />
+      <StatCard
+        title="Block height"
+        value={lastUpdatedBlock}
+        isLoading={statsLoading}
+      />
+      <StatCard
+        title="Total blob data"
+        value={dataSize}
+        isLoading={statsLoading}
+      />
+      <StatCard
+        title="Total Fees"
+        value={totalFeesEth}
+        isLoading={statsLoading}
+      />
 
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className=""></div> */}
-      <div className="bg-base-100 h-[12em] row-span-2 border p-2 border-base-200">
-        <BlobTransactionDayChart />
-      </div>
-      <StatCard title="Blob Accounts" value={totalBlobAccounts} />
-      <StatCard title="Blob Transactions" value={totalBlobTransactionCount} />
-      <StatCard title="Total Blobs" value={totalBlobHashesCount} />
+      {statsLoading && (
+        <div className="bg-base-100 h-[12em] row-span-2 border p-2 border-base-200 animate-pulse">
+          <div className="h-full w-full bg-base-100  space-y-2 border-base-200 animate-pulse flex justify-between items-end gap-4">
+            <p className=" text-sm opacity-50 h-20 w-8 rounded-full bg-base-200 animate-pulse"></p>
+            <p className=" text-sm opacity-50 h-16 w-8 rounded-full bg-base-200 animate-pulse"></p>
+            <p className=" text-sm opacity-50 h-32 w-8 rounded-full bg-base-200 animate-pulse"></p>
+            <p className=" text-sm opacity-50 h-20 w-8 rounded-full bg-base-200 animate-pulse"></p>
+            <p className=" text-sm opacity-50 h-20 w-8 rounded-full bg-base-200 animate-pulse"></p>
+            <p className=" text-sm opacity-50 h-40 w-8 rounded-full bg-base-200 animate-pulse"></p>
+          </div>
+        </div>
+      )}
+      {!statsLoading && (
+        <div className="bg-base-100 h-[12em] row-span-2 border p-2 border-base-200">
+          <BlobTransactionDayChart />
+        </div>
+      )}
+      <StatCard
+        title="Blob Accounts"
+        value={totalBlobAccounts}
+        isLoading={statsLoading}
+      />
+      <StatCard
+        title="Blob Transactions"
+        value={totalBlobTransactionCount}
+        isLoading={statsLoading}
+      />
+      <StatCard
+        title="Total Blobs"
+        value={totalBlobHashesCount}
+        isLoading={statsLoading}
+      />
     </div>
   );
 };
 const StatCard = ({
   title,
   value,
+  isLoading,
 }: {
   title: string;
   value: string | number | null;
+  isLoading: boolean;
 }) => {
+  if (isLoading) {
+    return (
+      <div className="h-full w-full bg-base-100 border p-4 space-y-2 border-base-200 animate-pulse">
+        <p className=" text-sm opacity-50 h-5 w-20 rounded-full bg-base-200 animate-pulse"></p>
+        <p className=" text-sm opacity-50 h-8 w-32 rounded-full bg-base-200 animate-pulse"></p>
+      </div>
+    );
+  }
   return (
     <div className="h-full w-full bg-base-100 border p-4 space-y-2 border-base-200">
       <p className=" text-sm opacity-50">{title || "Block Height"}</p>
