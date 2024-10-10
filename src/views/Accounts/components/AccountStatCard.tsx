@@ -1,4 +1,3 @@
-
 import * as echarts from "echarts";
 import { Database, NotepadText, User } from "lucide-react";
 import React, { useMemo } from "react";
@@ -11,7 +10,7 @@ import { ACCOUNT_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 
 type Props = {};
 
-function AccountStatCard({ acc }: any) {
+function AccountStatCard({ acc, isLoading }: any) {
   const accountDetails = getAccountDetailsFromAddressBook(acc?.id);
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(acc?.totalBlobGas));
@@ -25,71 +24,104 @@ function AccountStatCard({ acc }: any) {
   return (
     <div className="bg-base-100/50 border-base-300/30 border rounded-lg ">
       <div className="flex gap-2 items-center border-b border-base-200/50  p-4">
-        <img
-          src={accountDetails?.logoUri || "/images/logox.jpeg"}
-          className="rounded-lg"
-          width={40}
-          height={40}
-          alt=""
-        />
-        <div>
-          {accountDetails?.name ? (
-            <p className=""> {accountDetails?.name}</p>
-          ) : (
-            <p className=""> {acc?.id}</p>
-          )}
-        </div>
+        {isLoading && (
+          <>
+            <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[3em] h-[3em] animate-pulse"></div>
+            <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[12em] lg:w-[8em] lg:w-[10em] h-[22px] animate-pulse"></div>
+          </>
+        )}
+        {!isLoading && (
+          <>
+            <img
+              src={accountDetails?.logoUri || "/images/logox.jpeg"}
+              className="rounded-lg"
+              width={40}
+              height={40}
+              alt=""
+            />
+
+            <div>
+              {accountDetails?.name ? (
+                <p className=""> {accountDetails?.name}</p>
+              ) : (
+                <p className=""> {acc?.id}</p>
+              )}
+            </div>
+          </>
+        )}
       </div>
       <div className=" grid lg:grid-cols-2">
-        <div className="border-r border-x-base-200/50">
-          <div className="flex justify-between items-center p-4">
-            <div className="flex items-center gap-2">
-              <img
-                src="/images/logox.jpeg"
-                className="rounded-lg"
-                width={20}
-                height={20}
-                alt=""
-              />
-              <p className=""> Total Blobs</p>
-            </div>
-            <p className="text-xl font-bold">
-              {" "}
-              {new BigNumber(acc?.totalBlobHashesCount)?.toFormat()}
-            </p>
-          </div>
-          <div className="flex justify-between items-center p-4">
-            <div className="flex items-center gap-2">
-              <NotepadText />
-              <p className=""> Blobs Transactions</p>
-            </div>
-            <p className="text-xl font-bold">
-              {" "}
-              {new BigNumber(acc?.totalBlobTransactionCount)?.toFormat()}
-            </p>
-          </div>
-          <div className="flex justify-between items-center p-4">
-            <div className="flex items-center gap-2">
-              <Database />
+        {isLoading && (
+          <div className="border-r border-x-base-200/50">
+            {new Array(4).fill(1)?.map((num, idx) => {
+              return (
+                <div
+                  className="flex justify-between items-center p-4 py-4"
+                  key={`AccountStatCard_${idx}`}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[2em] h-[2em] animate-pulse"></div>
 
-              <p className=""> Blob size</p>
-            </div>
-            <p className="text-xl font-bold"> {totalBlobSize} </p>
+                    <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[12em] lg:w-[8em] lg:w-[10em] h-[22px] animate-pulse"></div>
+                  </div>
+
+                  <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[12em] lg:w-[5em] lg:w-[10em] h-[22px] animate-pulse"></div>
+                </div>
+              );
+            })}
           </div>
-          <div className="flex justify-between items-center p-4">
-            <div className="flex items-center gap-2">
-              <img
-                src="/images/icons/eth.svg"
-                className="rounded-lg"
-                width={20}
-                height={20}
-                alt=""
-              />
-              <p className=""> Blobs fee</p>
+        )}
+        {!isLoading && (
+          <div className="border-r border-x-base-200/50">
+            <div className="flex justify-between items-center p-4">
+              <div className="flex items-center gap-2">
+                <img
+                  src="/images/logox.jpeg"
+                  className="rounded-lg"
+                  width={20}
+                  height={20}
+                  alt=""
+                />
+                <p className=""> Total Blobs</p>
+              </div>
+              <p className="text-xl font-bold">
+                {" "}
+                {new BigNumber(acc?.totalBlobHashesCount)?.toFormat()}
+              </p>
             </div>
-            <p className="text-xl font-bold"> {totalBlobGasEth} ETH</p>
+            <div className="flex justify-between items-center p-4">
+              <div className="flex items-center gap-2">
+                <NotepadText />
+                <p className=""> Blobs Transactions</p>
+              </div>
+              <p className="text-xl font-bold">
+                {" "}
+                {new BigNumber(acc?.totalBlobTransactionCount)?.toFormat()}
+              </p>
+            </div>
+            <div className="flex justify-between items-center p-4">
+              <div className="flex items-center gap-2">
+                <Database />
+
+                <p className=""> Blob size</p>
+              </div>
+              <p className="text-xl font-bold"> {totalBlobSize} </p>
+            </div>
+            <div className="flex justify-between items-center p-4">
+              <div className="flex items-center gap-2">
+                <img
+                  src="/images/icons/eth.svg"
+                  className="rounded-lg"
+                  width={20}
+                  height={20}
+                  alt=""
+                />
+                <p className=""> Blobs fee</p>
+              </div>
+              <p className="text-xl font-bold"> {totalBlobGasEth} ETH</p>
+            </div>
           </div>
-        </div>{" "}
+        )}
         <AccountChart account={acc?.id} />
       </div>
     </div>

@@ -38,7 +38,7 @@ type Props = {
 
 function SingleAccount({ account }: Props) {
   // const account = "0x2c169dfe5fbba12957bdd0ba47d9cedbfe260ca7";
-  const { data } = useQuery(BLOB_ACCOUNT_SINGLE_QUERY, {
+  const { data, loading } = useQuery(BLOB_ACCOUNT_SINGLE_QUERY, {
     variables: {
       address: account,
     },
@@ -50,7 +50,7 @@ function SingleAccount({ account }: Props) {
       <Header />
       <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
         <div className="w-full space-y-4 ">
-          <AccountStatCard acc={data?.account} />
+          <AccountStatCard acc={data?.account} isLoading={loading} />
           <div className="lg:h-[20em] flex-wrap lg:flex-nowrap flex items-stretch gap-4 my-4">
             <div className="p-5 bg-base-200/30 border   border-base-300/20 w-full h-[20em] rounded-lg">
               <DayTxnsBlobAccountChart account={account} />
