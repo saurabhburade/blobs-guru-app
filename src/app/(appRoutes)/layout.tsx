@@ -39,6 +39,34 @@ export default function RootLayout({
         />
         <meta name="apple-mobile-web-app-title" content="Blobs Guru" />
         <link rel="manifest" href="/site.webmanifest" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://blobs.guru/" />
+        <meta
+          property="og:title"
+          content="Ethereum Blobs Explorer: Analyze L2 Transactions & EIP-4844 Data"
+        />
+        <meta
+          property="og:description"
+          content="Unlock the potential of Ethereum blobs. Analyze Layer 2 blob transactions and EIP-4844 data for improved scalability and efficiency."
+        />
+        <meta property="og:image" content="https://blobs.guru/summary.jpeg" />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://blobs.guru/" />
+        <meta
+          property="twitter:title"
+          content="Ethereum Blobs Explorer: Analyze L2 Transactions & EIP-4844 Data"
+        />
+        <meta
+          property="twitter:description"
+          content="Unlock the potential of Ethereum blobs. Analyze Layer 2 blob transactions and EIP-4844 data for improved scalability and efficiency."
+        />
+        <meta
+          property="twitter:image"
+          content="https://blobs.guru/summary.jpeg"
+        />
+
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
           strategy="afterInteractive"
