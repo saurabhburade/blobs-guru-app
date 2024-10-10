@@ -62,10 +62,10 @@ function AccountStatCard({ acc, isLoading }: any) {
                   <div className="flex items-center gap-2">
                     <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[2em] h-[2em] animate-pulse"></div>
 
-                    <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[12em] lg:w-[8em] lg:w-[10em] h-[22px] animate-pulse"></div>
+                    <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[5em] lg:w-[8em] lg:w-[10em] h-[22px] animate-pulse"></div>
                   </div>
 
-                  <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[12em] lg:w-[5em] lg:w-[10em] h-[22px] animate-pulse"></div>
+                  <div className=" bg-base-200/50 flex justify-center rounded-xl items-center  w-[2em] lg:w-[5em] lg:w-[10em] h-[22px] animate-pulse"></div>
                 </div>
               );
             })}
