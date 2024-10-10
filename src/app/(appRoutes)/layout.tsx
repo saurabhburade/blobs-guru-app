@@ -9,7 +9,7 @@ import Script from "next/script";
 export const metadata: Metadata = {
   title: "Ethereum Blobs Explorer: Analyze L2 Transactions & EIP-4844 Data",
   description:
-    "Unlock the potential of Ethereum blobs with our explorer. Analyze Layer 2 transactions and EIP-4844 data for improved scalability and efficiency. Get real-time insights into blockchain activities and the future of decentralized applications. Explore innovative blob technology today!",
+    "Unlock the potential of Ethereum blobs. Analyze Layer 2 blob transactions and EIP-4844 data for improved scalability and efficiency.",
 };
 const space_grotesk = Space_Grotesk({
   subsets: ["latin"],
