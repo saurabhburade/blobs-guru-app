@@ -15,12 +15,12 @@ const space_grotesk = Space_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-const GOOGLE_ANALYTICS_ID = "G-WZGPHNZWNN";
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const GOOGLE_ANALYTICS_ID = "G-WZGPHNZWNN";
   return (
     <html lang="en">
       <head>
@@ -30,7 +30,7 @@ export default function RootLayout({
           href="/favicon-48x48.png"
           sizes="48x48"
         />
-        <link rel="icon" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
 
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
@@ -68,7 +68,11 @@ export default function RootLayout({
           property="twitter:image"
           content="https://blobs.guru/summary.jpeg"
         />
-
+      </head>
+      <body className={space_grotesk.className}>
+        <ThemeProvider>
+          <Providers>{children}</Providers>
+        </ThemeProvider>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
           strategy="afterInteractive"
@@ -81,11 +85,6 @@ export default function RootLayout({
             gtag('config', '${GOOGLE_ANALYTICS_ID}');
           `}
         </Script>
-      </head>
-      <body className={space_grotesk.className}>
-        <ThemeProvider>
-          <Providers>{children}</Providers>
-        </ThemeProvider>
       </body>
     </html>
   );
