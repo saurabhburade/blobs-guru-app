@@ -19,6 +19,11 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.mainnet.taiko.xyz/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0x000000633b68f5d8d3a86593ebb815b4663bcbe0",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/taiko.json",
+
+    l2beatDiscoveryDataUrl:
+      "https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/backend/discovery/arbitrum/ethereum/discovered.json",
   },
   "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f": {
     name: "Scroll",
@@ -27,6 +32,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/scroll.json",
   },
   "0x5050f69a9786f081509234f1a7f4684b5e5b76c9": {
     name: "Base: Batch Sender",
@@ -35,6 +42,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/base.json",
   },
   "0xc1b634853cb333d3ad8663715b08f41a3aec47cc": {
     name: "Arbitrum: Batch Submitter",
@@ -43,6 +52,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/arbitrum.json",
   },
   "0x6887246668a3b87f54deb3b94ba47a6f63f32985": {
     name: "Optimism: Batcher",
@@ -51,6 +62,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/optimism.json",
   },
   "0x2c169dfe5fbba12957bdd0ba47d9cedbfe260ca7": {
     name: "StarkNet: Operator",
@@ -59,6 +72,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/starknet.json",
   },
   "0x0d3250c3d5facb74ac15834096397a3ef790ec99": {
     name: "zkSync Era: Batcher",
@@ -67,6 +82,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/zksync2.json",
   },
   "0x625726c858dbf78c0125436c943bf4b4be9d9033": {
     name: "Zora",
@@ -75,6 +92,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/zora.json",
   },
   "0x99199a22125034c808ff20f377d91187e8050f2e": {
     name: "Mode",
@@ -82,6 +101,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/mode.json",
   },
   "0xa9268341831efa4937537bc3e9eb36dbece83c7e": {
     name: "Linea",
@@ -90,6 +111,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/linea.json",
   },
   "0x415c8893d514f9bc5211d36eeda4183226b84aa7": {
     name: "Blast",
@@ -97,6 +120,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/blast.json",
   },
   "0xc70ae19b5feaa5c19f576e621d2bad9771864fe2": {
     name: "StarkNet (Unknown)",
@@ -105,6 +130,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/starknet.json",
   },
   "0xc94c243f8fb37223f3eb2f7961f7072602a51b8b": {
     name: "Metal L2",
@@ -112,6 +139,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/metal.json",
   },
   "0x41b8cd6791de4d8f9e0eaf7861ac506822adce12": {
     name: "Kroma",
@@ -120,6 +149,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/kroma.json",
   },
   "0xaf1e4f6a47af647f87c0ec814d8032c4a4bff145": {
     name: "Zircuit",
@@ -128,6 +159,8 @@ export const ADDRESS_BOOK: AddressBook = {
     rpc: "https://rpc.scroll.io/",
     tags: ["Optimistic Rollup", "EVM", "Mainnet"],
     address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/zircuit.json",
   },
 };
 export const getAccountDetailsFromAddressBook = (address: string) => {

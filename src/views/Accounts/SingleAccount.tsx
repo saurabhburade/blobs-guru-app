@@ -14,6 +14,7 @@ import {
 } from "@/lib/apollo/queries";
 import { formatAddress, formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
+import { useQuery as useQueryFetch } from "@tanstack/react-query";
 import BigNumber from "bignumber.js";
 import { Box, Database, NotepadText, User } from "lucide-react";
 import Link from "next/link";
@@ -31,6 +32,8 @@ import DayTxnsBlobAccountChart from "./components/DayTxnsBlobAccountChart";
 import DayHashesBlobAccountChart from "./components/DayHashesBlobAccountChart";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
+import axios from "axios";
+import L2BeatCard from "./components/L2Beat/L2BeatCard";
 
 type Props = {
   account: string;
@@ -43,13 +46,23 @@ function SingleAccount({ account }: Props) {
       address: account,
     },
   });
+  const accountDetails = getAccountDetailsFromAddressBook(
+    account?.toLowerCase()
+  );
+  const { data: l2BeatAccountDetails } = useQueryFetch({
+    queryKey: ["l2BeatAccountDetails", account],
+    queryFn: async () => {
+      const d = await axios.get(accountDetails?.l2beatProjectDataUrl);
+      return d?.data;
+    },
+  });
 
-  console.log(`🚀 ~ file: SingleAccount.tsx:42 ~ data:`, data);
   return (
     <div>
       <Header />
       <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
         <div className="w-full space-y-4 ">
+          <L2BeatCard account={account} />
           <AccountStatCard acc={data?.account} isLoading={loading} />
           <div className="lg:h-[20em] flex-wrap lg:flex-nowrap flex items-stretch gap-4 my-4">
             <div className="p-5 bg-base-200/30 border   border-base-300/20 w-full h-[20em] rounded-lg">

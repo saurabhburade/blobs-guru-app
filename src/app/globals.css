@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.recharts-sector {
+  stroke-linejoin: round;
+
+  border-radius: 100px;
+}

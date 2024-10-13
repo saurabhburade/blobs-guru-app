@@ -129,7 +129,7 @@ export default function DayHashesBlobAccountChart({
           />
           <Legend
             verticalAlign="top"
-            content={() => <span className="text-xs">Blob transactions</span>}
+            content={() => <span className="text-xs">Blobs submitted</span>}
           />
           <Bar
             dataKey="hashed"
