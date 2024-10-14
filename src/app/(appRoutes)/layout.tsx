@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import { ThemeProvider } from "next-themes";
 import { Space_Grotesk } from "next/font/google";
 import Script from "next/script";
+import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "Ethereum Blobs Explorer: Analyze L2 Transactions & EIP-4844 Data",
@@ -88,6 +89,7 @@ export default function RootLayout({
             gtag('config', '${GOOGLE_ANALYTICS_ID}');
           `}
         </Script>
+        <Footer />
       </body>
     </html>
   );
