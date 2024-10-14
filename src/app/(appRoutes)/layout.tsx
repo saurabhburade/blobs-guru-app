@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
+import "react-tooltip/dist/react-tooltip.css";
 import "../globals.css";
+
 import { Providers } from "./providers";
 import { ThemeProvider } from "next-themes";
 import { Space_Grotesk } from "next/font/google";

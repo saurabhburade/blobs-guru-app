@@ -1,6 +1,15 @@
 "use client";
 import * as echarts from "echarts";
-import { Database, Link, NotepadText, Shield, User } from "lucide-react";
+import {
+  Cross,
+  Database,
+  Info,
+  Link,
+  NotepadText,
+  Shield,
+  User,
+  X,
+} from "lucide-react";
 import React, { useEffect, useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import { formatAddress, formatBytes } from "@/lib/utils";
@@ -20,6 +29,7 @@ import {
 } from "recharts";
 import { useL2BeatSeries } from "@/hooks/useL2BeatSeries";
 
+import { Tooltip as RTooltip } from "react-tooltip";
 type Props = {};
 
 function L2BeatCard({ account }: any) {
@@ -183,6 +193,65 @@ function L2BeatCard({ account }: any) {
                     {" "}
                     {l2BeatAccountDetails?.stage?.stage}
                   </p>
+                  <a id="clickable">
+                    {" "}
+                    <Info width={24} height={24} className="text-primary" />
+                  </a>
+                  <RTooltip
+                    anchorSelect="#clickable"
+                    clickable
+                    className="!p-0 m-0 !bg-base-100 overflow-hidden  !rounded-lg !text-current !opacity-100"
+                  >
+                    <div className="w-[20em] border border-base-200 !bg-base-100 space-y-2 !rounded-lg !text-current !opacity-100">
+                      <div className="p-4 pb-0 ">
+                        <p>
+                          {" "}
+                          {l2BeatAccountDetails?.stage?.stage} ---{" "}
+                          {getStageName(l2BeatAccountDetails?.stage?.stage)}
+                        </p>
+                      </div>
+                      <hr className=" border-base-200" />
+                      <div className="p-4 pt-0 space-y-2">
+                        <p className="">
+                          Items missing for{" "}
+                          {l2BeatAccountDetails?.stage?.missing?.nextStage}
+                        </p>
+                        <div className="space-y-1">
+                          {l2BeatAccountDetails?.stage?.missing?.requirements?.map(
+                            (r: string) => {
+                              return (
+                                <div
+                                  className="flex items-center gap-4"
+                                  key={r}
+                                >
+                                  <div>
+                                    <X
+                                      width={24}
+                                      height={24}
+                                      className="text-warning"
+                                    />
+                                  </div>
+                                  <p className="text-xs">{r}</p>
+                                </div>
+                              );
+                            }
+                          )}
+                          <div className="flex items-center gap-4 bg-base-200/50 p-4 rounded-lg">
+                            <div>
+                              <Info
+                                width={24}
+                                height={24}
+                                className="text-primary"
+                              />
+                            </div>
+                            <p className="text-xs">
+                              Please mind, stages do not reflect rollup security
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </RTooltip>
                 </div>
               </div>
               <div className=" p-4 bg-base-200/40 h-full rounded-xl space-y-4 ">
@@ -316,6 +385,31 @@ function L2BeatCard({ account }: any) {
 
 export default L2BeatCard;
 
+function getStageName(stage: string) {
+  switch (stage) {
+    case "UnderReview":
+      return "Stage under review";
+    case "Stage 0":
+      return "Full training wheels";
+    case "Stage 1":
+      return "Limited training wheels";
+    case "Stage 2":
+      return "No training wheels";
+    default:
+      return undefined;
+  }
+}
+
+function getColorClassName(stage: string) {
+  switch (stage) {
+    case "Stage 1":
+      return "text-yellow-200";
+    case "Stage 2":
+      return "text-green-400";
+    default:
+      return undefined;
+  }
+}
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const renderCustomizedLabel2 = (props: any) => {
