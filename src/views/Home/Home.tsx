@@ -9,6 +9,7 @@ import { COLLECTIVE_STAT_QUERY } from "@/lib/apollo/queries";
 import { BigNumber } from "bignumber.js";
 import { convertBytes, formatBytes } from "@/lib/utils";
 import BlobTransactionDayChart from "./components/BlobTransactionDayChart";
+import PoweredBy from "./components/PoweredBy";
 type Props = {};
 
 function Home({}: Props) {
@@ -31,6 +32,7 @@ function Home({}: Props) {
           <Transactions />
           <Blocks />
         </div>
+        <PoweredBy />
       </div>
     </div>
   );
