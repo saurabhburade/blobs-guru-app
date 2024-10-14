@@ -135,9 +135,12 @@ const TransactionRow = ({ txn }: any) => {
         <p>{blobGasEth} ETH</p>
       </div>
       <div className="flex my-2  lg:my-0 justify-between  w-full lg:flex-col lg:col-span-1 col-span-2">
-        <p className="lg:text-end">
+        <Link
+          href={`/accounts/${txn?.from}`}
+          className="lg:text-end text-primary"
+        >
           From : {accountDetails?.name || formatAddress(txn?.from)}
-        </p>
+        </Link>
         <p className=" text-end">{feeEth} ETH</p>
       </div>
     </div>

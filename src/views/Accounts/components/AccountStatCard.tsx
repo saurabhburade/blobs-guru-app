@@ -7,6 +7,7 @@ import BigNumber from "bignumber.js";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import { useQuery } from "@apollo/client";
 import { ACCOUNT_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
+import Link from "next/link";
 
 type Props = {};
 
@@ -40,13 +41,13 @@ function AccountStatCard({ acc, isLoading }: any) {
               alt=""
             />
 
-            <div>
+            <Link href={`/accounts/${acc?.id}`}>
               {accountDetails?.name ? (
                 <p className=""> {accountDetails?.name}</p>
               ) : (
                 <p className=""> {acc?.id}</p>
               )}
-            </div>
+            </Link>
           </>
         )}
       </div>
