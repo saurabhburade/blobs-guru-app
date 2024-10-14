@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:https": "NODE_OPTIONS='--inspect' next dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "lint-staged",

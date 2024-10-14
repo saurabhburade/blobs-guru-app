@@ -109,7 +109,7 @@ function L2BeatCard({ account }: any) {
   }
   return (
     <div className="bg-base-100/50 border-base-300/30 border rounded-lg h-full overflow-hidden">
-      <div className="flex gap-2 items-center border-b border-base-200 justify-between p-4">
+      <div className="flex gap-2 flex-wrap items-center border-b border-base-200 justify-between p-4">
         <div className="flex gap-2 items-center  ">
           {isLoading && (
             <>
@@ -133,15 +133,14 @@ function L2BeatCard({ account }: any) {
             </>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {l2BeatAccountDetails?.badges?.map((b: string) => {
             return (
               <img
                 key={`l2BeatAccountDetails__${b}`}
                 src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/images/badges/${b}.png?raw=true`}
                 alt=""
-                width={50}
-                height={50}
+                className="lg:w-[50px] w-[30px] lg:h-[50px] h-[30px]"
               />
             );
           })}
@@ -174,7 +173,7 @@ function L2BeatCard({ account }: any) {
             <div className="flex justify-between items-center p-4 pb-0">
               <p>{l2BeatAccountDetails?.display?.description}</p>
             </div>
-            <div className=" grid grid-cols-4 gap-4 p-4">
+            <div className=" grid grid-cols-2 lg:grid-cols-4 gap-4 p-4">
               <div className=" p-4 bg-base-200/40 h-full rounded-xl space-y-4 ">
                 <div className="flex items-center gap-2">
                   <p className=""> Stage</p>
