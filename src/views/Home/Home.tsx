@@ -10,6 +10,7 @@ import { BigNumber } from "bignumber.js";
 import { convertBytes, formatBytes } from "@/lib/utils";
 import BlobTransactionDayChart from "./components/BlobTransactionDayChart";
 import PoweredBy from "./components/PoweredBy";
+import SearchTxn from "./components/SearchTxn";
 type Props = {};
 
 function Home({}: Props) {
@@ -19,13 +20,7 @@ function Home({}: Props) {
       <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
         <div className="lg:h-[30vh] h-[40vh] flex-col flex justify-center gap-4 ">
           <h2 className="lg:text-5xl text-xl font-semibold">Blobs Explorer</h2>
-          <div className="join">
-            <input
-              className="input w-full input-bordered outline-none active:outline-none  focus:outline-none join-item lg:w-1/3 "
-              placeholder="Search transactions"
-            />
-            <button className="btn join-item rounded-r-full">Search</button>
-          </div>
+          <SearchTxn />
         </div>
         <Stats />
         <div className="lg:grid-cols-2 grid gap-8">

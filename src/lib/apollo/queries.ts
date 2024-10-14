@@ -111,6 +111,7 @@ export const BLOB_TRANSACTIONS_TOP_QUERY = gql`
     }
   }
 `;
+
 export const BLOB_BLOCKS_TOP_QUERY = gql`
   query {
     blobBlockDatas(first: 10, orderBy: blockNumber, orderDirection: desc) {
