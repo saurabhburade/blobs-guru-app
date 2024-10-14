@@ -254,8 +254,59 @@ function L2BeatCard({ account }: any) {
           </div>
         )}
         {!isLoading && (
-          <div className="w-full h-full flex items-center justify-center bg-red-50">
+          <div className="w-full h-full flex items-center justify-center bg-red-50 hidden lg:block">
             <AccountChart account={account} dataPoints={pieChartData} />
+          </div>
+        )}
+        {!isLoading && (
+          <div className="flex flex-col justify-between gap-2 p-4 block lg:hidden">
+            {pieChartData?.map((d) => {
+              const fills = {
+                good: "#4CAF50",
+                bad: "#F44336",
+                warning: "#FF9800",
+              };
+              return (
+                <div
+                  className="collapse collapse-arrow bg-base-100 h-fit"
+                  key={`L2beatcard_pieChartData_${d?.name}`}
+                >
+                  <input type="radio" name="my-accordion-2" />
+                  <div className="collapse-title text-md font-medium">
+                    <div className=" flex  gap-2 justify-between items-center ">
+                      <p className="h-full  ">
+                        {`${d?.name} `} ---- {`${d?.value} `}
+                      </p>
+                      <div
+                        className={` w-fit h-full flex items-center  justify-end gap-2 items-end px-4 text-[10px]`}
+                      >
+                        <span
+                          className={` w-[1.5em] h-[1.5em]  rounded-full flex items-center justify-center `}
+                          // bg-[${payload[0]?.payload?.fill}]
+                          style={{
+                            // @ts-ignore
+                            boxShadow: `0px 0px 12px ${fills[d?.sentiment]}`,
+                          }}
+                        >
+                          <span
+                            className={` w-[1em] h-[1em] rounded-full  duration-1000`}
+                            // bg-[${payload[0]?.payload?.fill}]
+                            style={{
+                              // @ts-ignore
+                              backgroundColor: fills[d?.sentiment],
+                            }}
+                          ></span>
+                        </span>
+                        <p className="capitalize">{d?.sentiment}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="collapse-content">
+                    <p className="text-sm">{d?.description}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
