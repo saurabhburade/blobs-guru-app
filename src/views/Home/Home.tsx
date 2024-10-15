@@ -47,6 +47,18 @@ const Stats = () => {
   //   totalBlobGas
   const { data, loading: statsLoading } = useQuery(COLLECTIVE_STAT_QUERY);
   console.log(`🚀 ~ file: Home.tsx:39 ~ data:`, data?.collectiveData);
+  const blobsPerBlock = useMemo(() => {
+    const blobsPerBlockRaw = new BigNumber(
+      data?.collectiveData?.totalBlobHashesCount
+    )
+      .div(data?.collectiveData?.totalBlobBlocks)
+
+      .toFormat(2);
+    return blobsPerBlockRaw || 0;
+  }, [
+    data?.collectiveData?.totalBlobBlocks,
+    data?.collectiveData?.totalBlobHashesCount,
+  ]);
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalBlobGas) {
       return formatBytes(Number(data?.collectiveData?.totalBlobGas));
@@ -127,11 +139,6 @@ const Stats = () => {
         </div>
       )}
       <StatCard
-        title="Blob Accounts"
-        value={totalBlobAccounts}
-        isLoading={statsLoading}
-      />
-      <StatCard
         title="Blob Transactions"
         value={totalBlobTransactionCount}
         isLoading={statsLoading}
@@ -139,6 +146,11 @@ const Stats = () => {
       <StatCard
         title="Total Blobs"
         value={totalBlobHashesCount}
+        isLoading={statsLoading}
+      />
+      <StatCard
+        title="Blobs per block"
+        value={`${blobsPerBlock?.toString()} blobs/block`}
         isLoading={statsLoading}
       />
     </div>
