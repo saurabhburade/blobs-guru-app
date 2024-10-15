@@ -23,7 +23,7 @@ function AccountStatCard({ acc, isLoading }: any) {
     return new BigNumber(acc?.totalFeeEth).div(1e18).toFormat(4);
   }, [acc?.totalFeeEth]);
   return (
-    <div className="bg-base-100/50 border-base-300/30 border rounded-lg ">
+    <div className="bg-base-100/80 border-base-300/30 border rounded-lg ">
       <div className="flex gap-2 items-center border-b border-base-200/50  p-4">
         {isLoading && (
           <>

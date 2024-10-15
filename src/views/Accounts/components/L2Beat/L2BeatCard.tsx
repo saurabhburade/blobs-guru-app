@@ -30,6 +30,7 @@ import {
 import { useL2BeatSeries } from "@/hooks/useL2BeatSeries";
 
 import { Tooltip as RTooltip } from "react-tooltip";
+import L2BeatTvlStats from "./L2BeatTvlStats";
 type Props = {};
 
 function L2BeatCard({ account }: any) {
@@ -118,7 +119,7 @@ function L2BeatCard({ account }: any) {
     return null;
   }
   return (
-    <div className="bg-base-100/50 border-base-300/30 border rounded-lg h-full overflow-hidden">
+    <div className="bg-base-100/50 border-base-300/30 border rounded-lg h-full ">
       <div className="flex gap-2 flex-wrap items-center border-b border-base-200 justify-between p-4">
         <div className="flex gap-2 items-center  ">
           {isLoading && (
@@ -139,6 +140,7 @@ function L2BeatCard({ account }: any) {
 
               <div>
                 <p className="text-xl">{l2BeatAccountDetails?.display?.name}</p>
+                <p className="text-xs">Source L2BEAT</p>
               </div>
             </>
           )}
@@ -184,7 +186,7 @@ function L2BeatCard({ account }: any) {
               <p>{l2BeatAccountDetails?.display?.description}</p>
             </div>
             <div className=" grid grid-cols-2 lg:grid-cols-4 gap-4 p-4">
-              <div className=" p-4 bg-base-200/40 h-full rounded-xl space-y-4 ">
+              <div className=" p-4 bg-base-200/30 h-full rounded-xl space-y-4 ">
                 <div className="flex items-center gap-2">
                   <p className=""> Stage</p>
                 </div>
@@ -254,7 +256,7 @@ function L2BeatCard({ account }: any) {
                   </RTooltip>
                 </div>
               </div>
-              <div className=" p-4 bg-base-200/40 h-full rounded-xl space-y-4 ">
+              <div className=" p-4 bg-base-200/30 h-full rounded-xl space-y-4 ">
                 <div className="flex items-center gap-2">
                   <p className="">Type</p>
                 </div>
@@ -265,7 +267,7 @@ function L2BeatCard({ account }: any) {
                   </p>
                 </div>
               </div>
-              <div className=" p-4 bg-base-200/40 h-full rounded-xl space-y-4 ">
+              <div className=" p-4 bg-base-200/30 h-full rounded-xl space-y-4 ">
                 <div className="flex items-center gap-2">
                   <p className="">Purpose</p>
                 </div>
@@ -276,7 +278,7 @@ function L2BeatCard({ account }: any) {
                   </p>
                 </div>
               </div>
-              <div className=" p-4 bg-base-200/40 h-full rounded-xl space-y-4 ">
+              <div className=" p-4 bg-base-200/30 h-full rounded-xl space-y-4 ">
                 <div className="flex items-center gap-2">
                   <p className="">Provider</p>
                 </div>
@@ -291,7 +293,7 @@ function L2BeatCard({ account }: any) {
 
             {l2BeatAccountDetails?.milestones &&
               l2BeatAccountDetails?.milestones[0]?.name && (
-                <div className=" p-4 bg-base-200/40 mx-4  rounded-xl space-y-2">
+                <div className=" p-4 bg-base-200/30 mx-4  rounded-xl space-y-2">
                   <div className="flex justify-between">
                     <div className="flex justify-between items-center gap-2">
                       <div>
@@ -379,6 +381,9 @@ function L2BeatCard({ account }: any) {
           </div>
         )}
       </div>
+      {l2BeatAccountDetails && (
+        <L2BeatTvlStats projectId={l2BeatAccountDetails?.id} />
+      )}
     </div>
   );
 }

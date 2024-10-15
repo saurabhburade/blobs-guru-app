@@ -47,3 +47,31 @@ export const useL2BeatSeries = ({
   });
   return d;
 };
+export const useL2BeatTVLSummary = ({
+  duration,
+  projectId,
+}: {
+  duration: string;
+  projectId: string;
+}) => {
+  // https://l2beat.com/api/trpc/tvl.chart,activity.chart,costs.chart?batch=1&input=
+  const d = useQuery({
+    queryKey: ["useL2BeatTVLSummary", duration, projectId],
+    queryFn: async () => {
+      const res = await axios.get(
+        `https://l2beat.com/api/scaling/tvl/${projectId}`,
+        {
+          params: {
+            range: duration,
+          },
+        }
+      );
+      return res.data;
+    },
+    enabled: projectId ? true : false,
+    staleTime: 60000 * 24,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+  return d;
+};
