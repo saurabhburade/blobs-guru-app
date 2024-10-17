@@ -2,6 +2,7 @@ import { http, createConfig } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+export const ETHERSCAN_LINK = "https://etherscan.io";
 export const wagmiconfig = createConfig({
   chains: [mainnet, sepolia],
   transports: {

@@ -19,6 +19,7 @@ import React, { useMemo } from "react";
 import { hexToBigInt } from "viem";
 import { useBlock, useTransaction, useTransactionReceipt } from "wagmi";
 import BlockTransactions from "./components/BlockTransactions";
+import { ETHERSCAN_LINK } from "@/configs/constants";
 
 type Props = {
   blockNumber: number | string;
@@ -99,9 +100,14 @@ function SingleBlock({ blockNumber }: Props) {
                   </button>
                 </Link>
 
-                <button className="btn btn-ghost btn-sm">
+                <Link
+                  href={`${ETHERSCAN_LINK}/block/${Number(blockNumber)}`}
+                  target="_blank"
+                  referrerPolicy="no-referrer"
+                  className="btn btn-ghost btn-sm"
+                >
                   View on Etherscan
-                </button>
+                </Link>
               </div>
             </div>
             <div>

@@ -20,6 +20,7 @@ import React, { useMemo } from "react";
 import { hexToBigInt } from "viem";
 import { useBlock, useTransaction, useTransactionReceipt } from "wagmi";
 import BlockTransactions from "./components/BlockTransactions";
+import { ETHERSCAN_LINK } from "@/configs/constants";
 
 type Props = {
   hash: string;
@@ -83,9 +84,14 @@ function SingleTransaction({ hash }: Props) {
                 </p>
               </div>
               <div className="flex gap-2 lg:w-fit justify-center w-full">
-                <button className="btn btn-ghost btn-sm">
+                <Link
+                  href={`${ETHERSCAN_LINK}/tx/${hash}`}
+                  target="_blank"
+                  referrerPolicy="no-referrer"
+                  className="btn btn-ghost btn-sm"
+                >
                   View on Etherscan
-                </button>
+                </Link>
               </div>
             </div>
             <div className="border border-base-200 h-fit rounded-lg lg:hidden ">
@@ -318,8 +324,15 @@ const BlobRow = ({ txn, id }: any) => {
         </div>
       </div>
       <div className="flex">
-        <button className="btn btn-ghost btn-sm">View on Etherscan</button>{" "}
-        <button className="btn btn-ghost btn-sm">Swarm</button>
+        <Link
+          href={`${ETHERSCAN_LINK}/tx/${txn?.id}#blobs`}
+          target="_blank"
+          referrerPolicy="no-referrer"
+          className="btn btn-ghost btn-sm"
+        >
+          View on Etherscan
+        </Link>{" "}
+        {/* <button className="btn btn-ghost btn-sm">Swarm</button> */}
       </div>
     </div>
   );
