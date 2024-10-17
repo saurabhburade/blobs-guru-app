@@ -59,8 +59,11 @@ function MenuDrawer({}: Props) {
               <Link href="/">Stats</Link>
             </li>
             <hr className="border-base-200" />
-
-            <ThemeController />
+            <li className=" flex justify-between flex-row items-center active:bg-transparent">
+              <p>Theme</p>
+              <ThemeController />
+            </li>
+            <hr className="border-base-200" />
           </ul>
         </div>
       </div>

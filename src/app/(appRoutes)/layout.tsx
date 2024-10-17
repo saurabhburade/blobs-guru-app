@@ -76,7 +76,7 @@ export default function RootLayout({
         />
       </head>
       <body className={space_grotesk.className}>
-        <ThemeProvider>
+        <ThemeProvider enableSystem={false} defaultTheme="dark">
           <Providers>{children}</Providers>
         </ThemeProvider>
         <Script
