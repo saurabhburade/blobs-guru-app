@@ -14,11 +14,7 @@ function ThemeController({}: Props) {
       setMounted(true);
     }
   }, []);
-  console.log(
-    `🚀 ~ file: ThemeController.tsx:10 ~ theme:`,
-    theme,
-    theme === "light" ? "btn-active" : ""
-  );
+
   if (!mounted) {
     return (
       <button className="btn btn-circle btn-sm transition-all  animate-pulse"></button>

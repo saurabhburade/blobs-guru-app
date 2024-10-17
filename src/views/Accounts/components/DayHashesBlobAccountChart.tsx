@@ -96,7 +96,6 @@ export default function DayHashesBlobAccountChart({
     },
   });
 
-  console.log(`🚀 ~ file: DayTxnsBlobAccountChart.tsx:96 ~ data:`, data);
   const chartData = useMemo(() => {
     const datas = data?.accountDayDatas?.map((bd: any) => {
       const formatter = new Intl.DateTimeFormat("en-US", {
@@ -146,13 +145,6 @@ export default function DayHashesBlobAccountChart({
   );
 }
 const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
-  console.log(
-    `🚀 ~ file: BlobSizeDayChart.tsx:99 ~  active, payload, label, rotation:`,
-    active,
-    payload,
-    label,
-    rotation
-  );
   if (active && payload && payload.length) {
     return (
       <div

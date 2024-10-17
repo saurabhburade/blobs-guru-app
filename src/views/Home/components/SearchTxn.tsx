@@ -20,7 +20,7 @@ function SearchTxn({}: Props) {
       hash: hash,
     },
   });
-  console.log(`🚀 ~ file: SearchTxn.tsx:16 ~ data:`, data);
+
   return (
     <div className="dropdown   w-full">
       <div tabIndex={0} role="button" className=" w-full">

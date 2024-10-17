@@ -46,7 +46,7 @@ const Stats = () => {
   //   totalBlobAccounts
   //   totalBlobGas
   const { data, loading: statsLoading } = useQuery(COLLECTIVE_STAT_QUERY);
-  console.log(`🚀 ~ file: Home.tsx:39 ~ data:`, data?.collectiveData);
+
   const blobsPerBlock = useMemo(() => {
     const blobsPerBlockRaw = new BigNumber(
       data?.collectiveData?.totalBlobHashesCount

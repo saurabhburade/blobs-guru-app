@@ -30,7 +30,7 @@ function BlockTransactions({ blockNumber, totalBlobTxns }: Props) {
   const totalPages = useMemo(() => {
     return totalBlobTxns / LIMIT_PER_PAGE;
   }, [totalBlobTxns]);
-  console.log(`🚀 ~ file: BlockTransactions.tsx:27 ~ data:`, data);
+
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
       <div className="flex p-4 border-b border-base-200">

@@ -32,7 +32,7 @@ function Blocks({}: Props) {
 export default Blocks;
 const BlockStats = () => {
   const { data, loading } = useQuery(COLLECTIVE_STAT_QUERY);
-  console.log(`🚀 ~ file: Home.tsx:39 ~ data:`, data?.collectiveData);
+
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalBlobGas) {
       return formatBytes(Number(data?.collectiveData?.totalBlobGas));

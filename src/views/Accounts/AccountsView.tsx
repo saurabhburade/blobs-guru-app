@@ -61,7 +61,7 @@ export default AccountsView;
 const LIMIT_PER_PAGE = 10;
 const TxnStats = () => {
   const { data, loading } = useQuery(COLLECTIVE_STAT_QUERY);
-  console.log(`🚀 ~ file: Home.tsx:39 ~ data:`, data?.collectiveData);
+
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalBlobGas) {
       return formatBytes(Number(data?.collectiveData?.totalBlobGas));
@@ -165,7 +165,7 @@ const TxnStats = () => {
 };
 const TopAccountsStats = () => {
   const { data } = useQuery(TOP_FIVE_BLOB_ACCOUNTS_QUERY);
-  console.log(`🚀 ~ file: BlobSizeDayChart.tsx:63 ~ data:`, data);
+
   const chartData = useMemo(() => {
     const datas = data?.accounts?.map((bd: any) => {
       const totalFeeEth = new BigNumber(bd?.totalFeeEth).div(1e18).toFormat(2);

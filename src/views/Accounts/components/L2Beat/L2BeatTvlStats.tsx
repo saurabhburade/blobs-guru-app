@@ -87,7 +87,6 @@ function L2BeatTvlStats({ projectId }: Props) {
     return null;
   }, [data]);
 
-  console.log(`🚀 ~ file: L2BeatTvlStats.tsx:45 ~ totalData:`, totalData);
   if ((!data && !isLoading) || !totalData || isNaN(totalData?.tvl)) {
     return null;
   }
@@ -163,7 +162,7 @@ export default L2BeatTvlStats;
 const CustomTooltip = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     const [vPayload] = payload;
-    console.log(`🚀 ~ file: L2BeatTvlStats.tsx:131 ~ vPayload:`, vPayload);
+
     const { canonical, native, external, timestamp } = vPayload?.payload;
     const tvl = new BigNumber(canonical)
       .plus(native)

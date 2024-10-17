@@ -35,18 +35,11 @@ function SingleBlock({ blockNumber }: Props) {
     },
   });
   const blockHex = Number(blockNumber)?.toString(16);
-  console.log(`🚀 ~ file: SingleBlock.tsx:25 ~ blockHex:`, blockHex);
+
   const { data: rpcBlock } = useBlock({
     blockNumber: hexToBigInt(`0x${blockHex}`),
   });
-  const { data: rpctxn } = useTransaction({
-    hash: "0xee48346ce9f01fa03f3e96a71669a6100b70ef848454aedce814d17c2fc02546",
-  });
-  const { data: rpctxnRc } = useTransactionReceipt({
-    hash: "0xee48346ce9f01fa03f3e96a71669a6100b70ef848454aedce814d17c2fc02546",
-  });
-  console.log(`🚀 ~ file: SingleBlock.tsx:27 ~ rpcBlock:`, rpcBlock);
-  console.log(`🚀 ~ file: SingleBlock.tsx:44 ~ rpctxn:`, { rpctxn, rpctxnRc });
+
   const feeEth = useMemo(() => {
     return new BigNumber(data?.blobBlockData?.totalFeeEth)
       .div(1e18)
@@ -67,16 +60,7 @@ function SingleBlock({ blockNumber }: Props) {
       Number(data?.blobBlockData?.totalTransactionCount)
     );
   }, [data?.blobBlockData?.totalBlobGas]);
-  console.log(
-    `🚀 ~ file: SingleBlock.tsx:47 ~ percentOfBlobs:`,
-    percentOfBlobs
-  );
 
-  console.log(
-    `🚀 ~ file: SingleBlock.tsx:19 ~ data:`,
-    data?.blobBlockData,
-    rpcBlock
-  );
   return (
     <div>
       <Header />

@@ -84,7 +84,7 @@ const TriangleBar = (props: {
 
 export default function BlobTransactionDayChart() {
   const { data } = useQuery(BLOB_DAY_DATAS_QUERY);
-  console.log(`🚀 ~ file: BlobTransactionDayChart.tsx:63 ~ data:`, data);
+
   const chartData = useMemo(() => {
     const datas = data?.blobsDayDatas?.map((bd: any) => {
       return {
@@ -134,13 +134,6 @@ export default function BlobTransactionDayChart() {
   );
 }
 const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
-  console.log(
-    `🚀 ~ file: BlobSizeDayChart.tsx:99 ~  active, payload, label, rotation:`,
-    active,
-    payload,
-    label,
-    rotation
-  );
   if (active && payload && payload.length) {
     return (
       <div

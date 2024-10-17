@@ -43,12 +43,7 @@ function SingleTransaction({ hash }: Props) {
     // @ts-ignore
     blockNumber: rpcTxn?.blockNumber,
   });
-  console.log(
-    `🚀 ~ file: SingleTransaction.tsx:37 ~ data:`,
-    data,
-    rpcTxn,
-    rpcBlock
-  );
+
   const blobHashesLength = useMemo(() => {
     return Number(data?.blobTransaction?.blobHashesLength);
   }, [data?.blobTransaction?.blobHashesLength]);

@@ -72,12 +72,6 @@ function L2BeatCard({ account }: any) {
   //     });
   //     return resultRaw;
   //   }, [l2BeatSeries]);
-  //   console.log(
-  //     `🚀 ~ file: L2BeatCard.tsx:45 ~ tvlData:`,
-  //     tvlData,
-  //     l2BeatSeries,
-  //     error
-  //   );
 
   const pieChartData = useMemo(() => {
     const riskView = l2BeatAccountDetails?.riskView;

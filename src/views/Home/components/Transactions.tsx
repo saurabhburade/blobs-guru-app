@@ -10,7 +10,7 @@ type Props = {};
 
 function Transactions({}: Props) {
   const { data, loading } = useQuery(BLOB_TRANSACTIONS_TOP_QUERY);
-  console.log(`🚀 ~ file: Transactions.tsx:9 ~ data:`, data?.blobTransactions);
+
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
       <div className="flex p-4 border-b border-base-200">

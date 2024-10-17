@@ -86,7 +86,7 @@ const TriangleBar = (props: {
 };
 export default function TopBlobAccountsChart() {
   const { data } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
-  console.log(`🚀 ~ file: BlobSizeDayChart.tsx:63 ~ data:`, data);
+
   const chartData = useMemo(() => {
     const datas = data?.accounts?.map((bd: any) => {
       return {
@@ -128,13 +128,6 @@ export default function TopBlobAccountsChart() {
   );
 }
 const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
-  console.log(
-    `🚀 ~ file: BlobSizeDayChart.tsx:99 ~  active, payload, label, rotation:`,
-    active,
-    payload,
-    label,
-    rotation
-  );
   if (active && payload && payload.length) {
     return (
       <div

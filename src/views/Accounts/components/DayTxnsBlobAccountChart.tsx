@@ -85,14 +85,17 @@ const TriangleBar = (props: {
 
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
-export default function DayTxnsBlobAccountChart({ account }: { account: string }) {
+export default function DayTxnsBlobAccountChart({
+  account,
+}: {
+  account: string;
+}) {
   const { data } = useQuery(ACCOUNT_DAY_DATAS_QUERY, {
     variables: {
       address: account,
     },
   });
 
-  console.log(`🚀 ~ file: DayTxnsBlobAccountChart.tsx:96 ~ data:`, data);
   const chartData = useMemo(() => {
     const datas = data?.accountDayDatas?.map((bd: any) => {
       const formatter = new Intl.DateTimeFormat("en-US", {
@@ -141,13 +144,6 @@ export default function DayTxnsBlobAccountChart({ account }: { account: string }
   );
 }
 const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
-  console.log(
-    `🚀 ~ file: BlobSizeDayChart.tsx:99 ~  active, payload, label, rotation:`,
-    active,
-    payload,
-    label,
-    rotation
-  );
   if (active && payload && payload.length) {
     return (
       <div

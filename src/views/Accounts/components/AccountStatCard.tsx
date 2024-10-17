@@ -137,7 +137,7 @@ const AccountChart = ({ account }: { account: string }) => {
       address: account,
     },
   });
-  console.log(`🚀 ~ file: AccountStatCard.tsx:102 ~ data:`, data);
+
   const memoOptions = useMemo(() => {
     //     totalBlobTransactionCount
     //   dayStartTimestamp;
