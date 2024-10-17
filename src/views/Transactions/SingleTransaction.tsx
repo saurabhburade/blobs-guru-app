@@ -213,10 +213,6 @@ function SingleTransaction({ hash }: Props) {
                 </div>
               </div> */}
 
-              <div className="grid grid-cols-[0.75fr_3fr] w-full p-5 border-b  border-base-200">
-                <div className="">Gas limit</div>
-                <div className="">{rpcTxn?.gas?.toString()}</div>
-              </div>
               <div className="grid grid-cols-[0.75fr_3fr] w-full p-5">
                 <div className="">Input</div>
                 <code className=" p-2 bg-base-200/50 rounded-lg w-[10] lg:w-[40em] max-h-[20em] overflow-scroll break-words">
