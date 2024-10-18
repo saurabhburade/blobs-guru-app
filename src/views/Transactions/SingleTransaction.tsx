@@ -20,7 +20,10 @@ import React, { useMemo } from "react";
 import { hexToBigInt } from "viem";
 import { useBlock, useTransaction, useTransactionReceipt } from "wagmi";
 import BlockTransactions from "./components/BlockTransactions";
-import { ETHERSCAN_LINK } from "@/configs/constants";
+import {
+  ETHERSCAN_LINK,
+  getAccountDetailsFromAddressBook,
+} from "@/configs/constants";
 
 type Props = {
   hash: string;
@@ -65,6 +68,15 @@ function SingleTransaction({ hash }: Props) {
       .div(1e18)
       .toFormat(4);
   }, [data?.blobTransaction?.gasUsed, data?.blobTransaction?.gasPrice]);
+  const basicDetailsFromAddressMap = useMemo(() => {
+    if (rpcTxn?.from) {
+      const d = getAccountDetailsFromAddressBook(
+        rpcTxn.from?.toString() as string
+      );
+      return d;
+    }
+    return null;
+  }, [rpcTxn?.from]);
   return (
     <div>
       <Header />
@@ -73,7 +85,18 @@ function SingleTransaction({ hash }: Props) {
           <div className="border border-base-200  rounded-lg w-full  ">
             <div className="flex flex-wrap w-full items-center justify-between border-b border-base-200 p-5">
               <div className=" flex items-center gap-4 ">
-                <Box />
+                {" "}
+                {basicDetailsFromAddressMap?.logoUri ? (
+                  <img
+                    src={basicDetailsFromAddressMap?.logoUri}
+                    className="rounded-lg"
+                    width={24}
+                    height={24}
+                    alt=""
+                  />
+                ) : (
+                  <Box />
+                )}
                 {rpcTxnIsLoading && (
                   <div className=" break-words w-[15em]  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
@@ -195,14 +218,21 @@ function SingleTransaction({ hash }: Props) {
                   <div className=" break-words w-[10em] lg:w-[15em]  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
                 {!rpcTxnIsLoading && rpcTxn?.from && (
-                  <div className=" break-words hidden lg:block">
-                    {rpcTxn?.from}
-                  </div>
+                  <Link
+                    href={`/accounts/${rpcTxn?.from}`}
+                    className=" break-words hidden lg:block text-primary"
+                  >
+                    {basicDetailsFromAddressMap?.name || rpcTxn?.from}
+                  </Link>
                 )}
                 {!rpcTxnIsLoading && rpcTxn?.from && (
-                  <div className=" break-words lg:hidden block">
-                    {formatAddress(rpcTxn?.from?.toString())}
-                  </div>
+                  <Link
+                    href={`/accounts/${rpcTxn?.from}`}
+                    className=" break-words lg:hidden block text-primary"
+                  >
+                    {basicDetailsFromAddressMap?.name ||
+                      formatAddress(rpcTxn?.from?.toString())}
+                  </Link>
                 )}
               </div>
               <div className="grid grid-cols-[0.75fr_3fr] w-full p-5">
@@ -230,7 +260,7 @@ function SingleTransaction({ hash }: Props) {
                 )}
                 {!rpcTxnIsLoading &&
                   (rpcTxn?.value || rpcTxn?.value.toString() === "0") && (
-                    <div className=" ">{rpcTxn?.value?.toString()}</div>
+                    <div className=" ">{rpcTxn?.value?.toString()} ETH</div>
                   )}
               </div>
 
