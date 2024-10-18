@@ -1,3 +1,4 @@
+"use client";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 import { formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
@@ -13,51 +14,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
-// const data = [
-//   {
-//     name: "Page A",
-//     uv: 4000,
-//     pv: 2400,
-//     amt: 2400,
-//   },
-//   {
-//     name: "Page B",
-//     uv: 3000,
-//     pv: 1398,
-//     amt: 2210,
-//   },
-//   {
-//     name: "Page C",
-//     uv: 2000,
-//     pv: 9800,
-//     amt: 2290,
-//   },
-//   {
-//     name: "Page D",
-//     uv: 2780,
-//     pv: 3908,
-//     amt: 2000,
-//   },
-//   {
-//     name: "Page E",
-//     uv: 1890,
-//     pv: 4800,
-//     amt: 2181,
-//   },
-//   {
-//     name: "Page F",
-//     uv: 2390,
-//     pv: 3800,
-//     amt: 2500,
-//   },
-//   {
-//     name: "Page G",
-//     uv: 3490,
-//     pv: 4300,
-//     amt: 2100,
-//   },
-// ];
 const getPath = (
   x: number,
   y: number,
@@ -80,29 +36,33 @@ const TriangleBar = (props: {
 
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
-export default function BlobHashesDayChart() {
+export default function BlobSizeChart({ duration }: { duration: number }) {
   const { data } = useQuery(BLOB_DAY_DATAS_QUERY, {
     variables: {
-      duration: 15,
+      duration,
     },
   });
 
   const chartData = useMemo(() => {
-    const datas = data?.blobsDayDatas?.map((bd: any) => {
-      return {
-        ...bd,
-        sizeValue: bd?.totalBlobGas,
-        Size: formatBytes(Number(bd?.totalBlobGas)),
-        timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
-        totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
-      };
-    });
+    const datas = data?.blobsDayDatas
+      ?.map((bd: any) => {
+        return {
+          ...bd,
+          sizeValue: Number(bd?.totalBlobGas),
+          Size: formatBytes(Number(bd?.totalBlobGas)),
+          timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
+          timestamp2: new Date(
+            Number(bd?.dayStartTimestamp) * 1000
+          ).toDateString(),
+        };
+      })
+      ?.reverse();
     return datas;
   }, [data?.blobsDayDatas]);
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart width={500} height={100} data={chartData}>
+        <BarChart width={400} height={400} data={chartData}>
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
             // @ts-ignore
@@ -111,17 +71,30 @@ export default function BlobHashesDayChart() {
           <Legend
             verticalAlign="top"
             content={() => (
-              <span className="text-xs">Last 15 days Blob hashes</span>
+              <span className="text-xs">Last 10 days Blob size</span>
             )}
           />
-          <Bar
-            dataKey="totalBlobHashesCount"
+          {/* <Bar
+            dataKey="sizeValue"
             fill="#8884d8"
             radius={10}
             // @ts-ignore
-            shape={<TriangleBar />}
+            // shape={<TriangleBar />}
+          /> */}
+          <Bar
+            dataKey="sizeValue"
+            fill="#8884d8"
+            radius={10}
+            // @ts-ignore
+            // shape={<TriangleBar />}
           />
-          <XAxis dataKey="totalBlobHashesCount" className="text-xs" />
+          <XAxis
+            dataKey="timestamp2"
+            className="text-[10px] !text-current"
+            angle={0}
+            allowDataOverflow
+            axisLine={false}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

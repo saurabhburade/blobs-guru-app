@@ -1,3 +1,4 @@
+import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import {
   BLOB_DAY_DATAS_QUERY,
   TOP_BLOB_ACCOUNTS_QUERY,
@@ -89,11 +90,14 @@ export default function TopBlobAccountsChart() {
 
   const chartData = useMemo(() => {
     const datas = data?.accounts?.map((bd: any) => {
+      const basicAccountDetail = getAccountDetailsFromAddressBook(bd.id);
       return {
         ...bd,
         sizeValue: bd?.totalBlobGas,
         Size: formatBytes(Number(bd?.totalBlobGas)),
-        formattedAddress: formatAddress(bd?.id),
+        formattedAddress: basicAccountDetail?.name || formatAddress(bd?.id),
+        name: basicAccountDetail?.name || bd?.id,
+        totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
       };
     });
     return datas;
@@ -131,14 +135,14 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className={` bg-base-200 w-1/2 rounded-lg   overflow-hidden text-xs`}
+        className={` bg-base-200 w-[15em] rounded-lg   overflow-hidden text-xs`}
       >
         <div className="p-4 ">
           <p className=" break-words ">
             Transactions : {`${payload[0]?.payload?.totalBlobTransactionCount}`}
           </p>
           <p className=" ">Size: {`${payload[0]?.payload?.Size}`}</p>
-          <p className=" break-words ">Id: {`${payload[0]?.payload?.id}`}</p>
+          <p className=" break-words ">Id: {`${payload[0]?.payload?.name}`}</p>
         </div>
       </div>
     );

@@ -17,13 +17,19 @@ export const COLLECTIVE_STAT_QUERY = gql`
   }
 `;
 export const BLOB_DAY_DATAS_QUERY = gql`
-  query {
-    blobsDayDatas(first: 15) {
+  query BlobsDayDatas($duration: Int) {
+    blobsDayDatas(
+      first: $duration
+      orderBy: dayStartTimestamp
+      orderDirection: desc
+    ) {
       totalBlobTransactionCount
       dayStartTimestamp
       totalBlobGas
       totalBlobAccounts
       totalBlobHashesCount
+      totalBlobGasEth
+      totalFeeEth
     }
   }
 `;
@@ -98,7 +104,7 @@ export const TOP_BLOB_ACCOUNTS_BY_HASHES_QUERY = gql`
 `;
 export const BLOB_TRANSACTIONS_TOP_QUERY = gql`
   query {
-    blobTransactions(first: 10) {
+    blobTransactions(first: 10, orderBy: timestamp, orderDirection: desc) {
       id
       from
       to
@@ -191,7 +197,7 @@ export const BLOB_TRANSACTIONS_FOR_BLOCK = gql`
     blobTransactions(
       first: $limit
       skip: $skip
-      orderBy: index
+      orderBy: timestamp
       orderDirection: desc
       where: { blockNumber: $blockNumber }
     ) {
@@ -212,7 +218,7 @@ export const BLOB_TRANSACTIONS_EXPLORER_QUERY = gql`
     blobTransactions(
       first: $limit
       skip: $skip
-      orderBy: index
+      orderBy: timestamp
       orderDirection: desc
     ) {
       id

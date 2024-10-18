@@ -2,7 +2,7 @@ import * as echarts from "echarts";
 import { Database, NotepadText, User } from "lucide-react";
 import React, { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
-import { formatAddress, formatBytes } from "@/lib/utils";
+import { cn, formatAddress, formatBytes } from "@/lib/utils";
 import BigNumber from "bignumber.js";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import { useQuery } from "@apollo/client";
@@ -11,7 +11,7 @@ import Link from "next/link";
 
 type Props = {};
 
-function AccountStatCard({ acc, isLoading }: any) {
+function AccountStatCard({ acc, isLoading, className }: any) {
   const accountDetails = getAccountDetailsFromAddressBook(acc?.id);
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(acc?.totalBlobGas));
@@ -23,8 +23,13 @@ function AccountStatCard({ acc, isLoading }: any) {
     return new BigNumber(acc?.totalFeeEth).div(1e18).toFormat(4);
   }, [acc?.totalFeeEth]);
   return (
-    <div className="bg-base-100/80 border-base-300/30 border rounded-lg ">
-      <div className="flex gap-2 items-center border-b border-base-200/50  p-4">
+    <div
+      className={cn(
+        "bg-base-100/80 border-base-300/30 border rounded-lg ",
+        className ? className : ""
+      )}
+    >
+      <div className="flex gap-2 items-center border-b border-base-200/50  h-[4em] p-4">
         {isLoading && (
           <>
             <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[3em] h-[3em] animate-pulse"></div>
