@@ -13,6 +13,9 @@ import BigNumber from "bignumber.js";
 import { Box, Database } from "lucide-react";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
+import BlobEthFeeChart from "./components/BlobEthFeeChart";
+import BlobBlocksChart from "./components/BlobBlocksChart";
+import BlobPerBlocksChart from "./components/BlobPerBlocksChart";
 
 type Props = {};
 
@@ -21,6 +24,15 @@ function Blocks({}: Props) {
     <div>
       <Header />
       <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+        <div className="grid lg:grid-cols-2 lg:h-[20em] gap-2">
+          <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
+            <BlobBlocksChart duration={15} />
+          </div>
+
+          <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
+            <BlobPerBlocksChart duration={15} />
+          </div>
+        </div>
         <BlockStats />
         <BlocksCubes />
         <BlocksRows />

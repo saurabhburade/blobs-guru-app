@@ -108,7 +108,7 @@ export default function TopAccountsByBlobHashes() {
           <Legend
             verticalAlign="top"
             content={() => (
-              <span className="text-xs">Last 10 days Blob size</span>
+              <span className="text-xs">Last 15 days Blob size</span>
             )}
           />
           <Bar

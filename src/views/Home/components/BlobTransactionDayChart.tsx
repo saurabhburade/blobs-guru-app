@@ -96,6 +96,11 @@ export default function BlobTransactionDayChart() {
         sizeValue: bd?.totalBlobGas,
         Size: formatBytes(Number(bd?.totalBlobGas)),
         timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
+        timestamp2: new Date(
+          Number(bd?.dayStartTimestamp) * 1000
+        ).toDateString(),
+        totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
+        totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
       };
     });
     return datas;
@@ -107,7 +112,7 @@ export default function BlobTransactionDayChart() {
           <Legend
             verticalAlign="top"
             content={() => (
-              <span className="text-xs">Last 10 days Blob transactions</span>
+              <span className="text-xs">Last 15 days Blob transactions</span>
             )}
           />
           <Bar
@@ -131,7 +136,7 @@ export default function BlobTransactionDayChart() {
             // @ts-ignore
             content={<CustomTooltipRaw />}
           />
-          <XAxis dataKey="totalBlobTransactionCount" className="text-xs" />
+          <XAxis dataKey="timestamp2" className="text-xs" />
         </BarChart>
       </ResponsiveContainer>
     </div>

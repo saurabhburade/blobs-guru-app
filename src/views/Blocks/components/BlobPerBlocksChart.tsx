@@ -1,6 +1,8 @@
+"use client";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 import { formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
+import BigNumber from "bignumber.js";
 import React, { PureComponent, useMemo } from "react";
 import {
   BarChart,
@@ -13,51 +15,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
-// const data = [
-//   {
-//     name: "Page A",
-//     uv: 4000,
-//     pv: 2400,
-//     amt: 2400,
-//   },
-//   {
-//     name: "Page B",
-//     uv: 3000,
-//     pv: 1398,
-//     amt: 2210,
-//   },
-//   {
-//     name: "Page C",
-//     uv: 2000,
-//     pv: 9800,
-//     amt: 2290,
-//   },
-//   {
-//     name: "Page D",
-//     uv: 2780,
-//     pv: 3908,
-//     amt: 2000,
-//   },
-//   {
-//     name: "Page E",
-//     uv: 1890,
-//     pv: 4800,
-//     amt: 2181,
-//   },
-//   {
-//     name: "Page F",
-//     uv: 2390,
-//     pv: 3800,
-//     amt: 2500,
-//   },
-//   {
-//     name: "Page G",
-//     uv: 3490,
-//     pv: 4300,
-//     amt: 2100,
-//   },
-// ];
 const getPath = (
   x: number,
   y: number,
@@ -80,33 +37,45 @@ const TriangleBar = (props: {
 
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
-export default function BlobSizeDayChart() {
+export default function BlobPerBlocksChart({ duration }: { duration: number }) {
   const { data } = useQuery(BLOB_DAY_DATAS_QUERY, {
     variables: {
-      duration: 15,
+      duration,
     },
   });
-
+  // totalBlobTransactionCount;
+  // dayStartTimestamp;
+  // totalBlobGas;
+  // totalBlobAccounts;
+  // totalBlobHashesCount;
   const chartData = useMemo(() => {
-    const datas = data?.blobsDayDatas?.map((bd: any) => {
-      return {
-        ...bd,
-        sizeValue: bd?.totalBlobGas,
-        Size: formatBytes(Number(bd?.totalBlobGas)),
-        timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
-        timestamp2: new Date(
-          Number(bd?.dayStartTimestamp) * 1000
-        ).toDateString(),
-        totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
-        totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
-      };
-    });
+    const datas = data?.blobsDayDatas
+      ?.map((bd: any) => {
+        return {
+          ...bd,
+          sizeValue: Number(bd?.totalFeeEth),
+          sizeValueEth: new BigNumber(Number(bd?.totalFeeEth))
+            .div(1e18)
+            .toFormat(8),
+          Size: formatBytes(Number(bd?.totalBlobGas)),
+          timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
+          timestamp2: new Date(
+            Number(bd?.dayStartTimestamp) * 1000
+          ).toDateString(),
+          totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
+          totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
+          totalBlobBlocks: Number(bd?.totalBlobBlocks),
+          blobsPerBlock:
+            Number(bd?.totalBlobHashesCount) / Number(bd?.totalBlobBlocks),
+        };
+      })
+      ?.reverse();
     return datas;
   }, [data?.blobsDayDatas]);
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart width={500} height={100} data={chartData}>
+        <BarChart width={400} height={400} data={chartData}>
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
             // @ts-ignore
@@ -115,17 +84,25 @@ export default function BlobSizeDayChart() {
           <Legend
             verticalAlign="top"
             content={() => (
-              <span className="text-xs">Last 15 days Blob size</span>
+              <span className="text-xs">
+                Last {duration} days blobs/block
+              </span>
             )}
           />
           <Bar
-            dataKey="sizeValue"
+            dataKey="blobsPerBlock"
             fill="#8884d8"
             radius={10}
             // @ts-ignore
             shape={<TriangleBar />}
           />
-          <XAxis dataKey="timestamp2" className="text-xs" />
+          <XAxis
+            dataKey="timestamp2"
+            className="text-[10px] !text-current"
+            angle={0}
+            allowDataOverflow
+            axisLine={false}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -138,7 +115,10 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
         className={` bg-base-200 w-1/2 rounded-lg   overflow-hidden text-xs`}
       >
         <div className="p-4 ">
-          <p className=" ">Size: {`${payload[0]?.payload?.Size}`}</p>
+          <p className=" ">
+            Blobs per Block :{" "}
+            {`${new BigNumber(payload[0]?.payload?.blobsPerBlock).toFixed(2)}`}
+          </p>
           <p className="  ">Timestamp: {`${payload[0]?.payload?.timestamp}`}</p>
         </div>
       </div>

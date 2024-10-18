@@ -30,6 +30,7 @@ export const BLOB_DAY_DATAS_QUERY = gql`
       totalBlobHashesCount
       totalBlobGasEth
       totalFeeEth
+      totalBlobBlocks
     }
   }
 `;
