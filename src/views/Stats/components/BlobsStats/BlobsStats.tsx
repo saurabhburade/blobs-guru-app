@@ -26,19 +26,19 @@ function BlobsStats({}: Props) {
           </button>
         </div>
       </div>
-      <div className="grid lg:grid-cols-2 lg:h-[20em] ">
-        <div className="border-base-200 border-r p-5">
+      <div className="grid lg:grid-cols-2 lg:h-[20em] h-full ">
+        <div className="border-base-200 border-r p-5 h-[20em]">
           <BlobSizeChart duration={duration} />
         </div>
-        <div className=" p-5">
+        <div className=" p-5 h-[20em]">
           <BlobTxnsChart duration={duration} />
         </div>
       </div>
       <div className="grid lg:grid-cols-2 lg:h-[20em] ">
-        <div className="border-base-200 border-r p-5">
+        <div className="border-base-200 border-r p-5 h-[20em]">
           <BlobHashesChart duration={duration} />
         </div>
-        <div className=" p-5">
+        <div className=" p-5 h-[20em]">
           <BlobEthFeeChart duration={duration} />
         </div>
       </div>
