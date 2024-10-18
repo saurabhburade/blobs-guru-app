@@ -81,7 +81,11 @@ const TriangleBar = (props: {
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
 export default function BlobSizeDayChart() {
-  const { data } = useQuery(BLOB_DAY_DATAS_QUERY);
+  const { data } = useQuery(BLOB_DAY_DATAS_QUERY, {
+    variables: {
+      duration: 15,
+    },
+  });
 
   const chartData = useMemo(() => {
     const datas = data?.blobsDayDatas?.map((bd: any) => {
