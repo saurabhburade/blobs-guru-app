@@ -74,7 +74,12 @@ export const TOP_FIVE_BLOB_ACCOUNTS_QUERY = gql`
 `;
 export const ACCOUNT_DAY_DATAS_QUERY = gql`
   query AccountDayDatas($address: String) {
-    accountDayDatas(first: 15, where: { account: $address }) {
+    accountDayDatas(
+      first: 15
+      orderBy: dayStartTimestamp
+      orderDirection: desc
+      where: { account: $address }
+    ) {
       id
       totalBlobTransactionCount
       dayStartTimestamp

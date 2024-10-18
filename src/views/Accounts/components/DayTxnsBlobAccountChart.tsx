@@ -97,23 +97,30 @@ export default function DayTxnsBlobAccountChart({
   });
 
   const chartData = useMemo(() => {
-    const datas = data?.accountDayDatas?.map((bd: any) => {
-      const formatter = new Intl.DateTimeFormat("en-US", {
-        weekday: "long",
-      });
-      const day = formatter.format(
-        new Date(Number(bd?.dayStartTimestamp) * 1000)
-      );
+    const datas = data?.accountDayDatas
+      ?.map((bd: any) => {
+        const formatter = new Intl.DateTimeFormat("en-US", {
+          weekday: "long",
+        });
+        const day = formatter.format(
+          new Date(Number(bd?.dayStartTimestamp) * 1000)
+        );
 
-      return {
-        ...bd,
-        sizeValue: bd?.totalBlobGas,
-        Size: formatBytes(Number(bd?.totalBlobGas)),
-        formattedAddress: formatAddress(bd?.account?.id),
-        totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
-        timestamp: day,
-      };
-    });
+        return {
+          ...bd,
+          sizeValue: bd?.totalBlobGas,
+          Size: formatBytes(Number(bd?.totalBlobGas)),
+          formattedAddress: formatAddress(bd?.account?.id),
+          totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
+          timestamp: day,
+          timestamp2: new Date(
+            Number(bd?.dayStartTimestamp) * 1000
+          ).toDateString(),
+
+          totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
+        };
+      })
+      ?.reverse();
     return datas;
   }, [data?.accountDayDatas]);
   return (
@@ -137,7 +144,7 @@ export default function DayTxnsBlobAccountChart({
             shape={<TriangleBar />}
             label={{ position: "top", fontSize: "8px" }}
           ></Bar>
-          <XAxis dataKey="timestamp" className="text-xs" />
+          <XAxis dataKey="timestamp2" className="text-xs" />
         </BarChart>
       </ResponsiveContainer>
     </div>
