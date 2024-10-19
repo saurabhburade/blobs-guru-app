@@ -45,13 +45,9 @@ export const TOP_BLOB_ACCOUNTS_QUERY = gql`
       totalBlobTransactionCount
       totalBlobGas
       lastUpdatedBlock
-      totalBlobTransactionCount
       totalBlobGasEth
       totalBlobHashesCount
       totalFeeEth
-      totalFeeEth
-      lastUpdatedBlock
-      totalBlobGas
     }
   }
 `;
