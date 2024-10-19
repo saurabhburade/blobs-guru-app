@@ -38,7 +38,16 @@ function L2BeatTvlStats({ projectId }: Props) {
   const mappedChartValues = useMemo(() => {
     if (data?.data?.chart) {
       const mappedValues = mapChartData(data?.data?.chart);
-      return mappedValues;
+      return mappedValues?.map((v: any) => {
+        const { canonical, native, external, timestamp } = v;
+        const tvl = new BigNumber(canonical).plus(native)?.plus(external);
+
+        return {
+          ...v,
+          tvl: tvl?.toNumber(),
+          tvlFormated: tvl?.toFormat(2),
+        };
+      });
     }
     return null;
   }, [data]);
@@ -255,7 +264,7 @@ const TVLChart = ({ mappedChartValues }: any) => {
         <Tooltip content={CustomTooltip} />
         <Area
           type="monotone"
-          dataKey="external"
+          dataKey="tvl"
           stroke="#8884d8"
           fillOpacity={1}
           stackId="1"

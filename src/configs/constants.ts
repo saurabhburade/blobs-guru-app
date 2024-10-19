@@ -163,6 +163,16 @@ export const ADDRESS_BOOK: AddressBook = {
     l2beatProjectDataUrl:
       "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/zircuit.json",
   },
+  "0xdbbe3d8c2d2b22a2611c5a94a9a12c2fcd49eb29": {
+    name: "World Chain",
+    logoUri:
+      "https://assets.coingecko.com/coins/images/31069/standard/worldcoin.jpeg",
+    rpc: "https://rpc.scroll.io/",
+    tags: ["Optimistic Rollup", "EVM", "Mainnet"],
+    address: "0xdbbe3d8c2d2b22a2611c5a94a9a12c2fcd49eb29",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/world.json",
+  },
 };
 export const getAccountDetailsFromAddressBook = (address: string) => {
   const d = ADDRESS_BOOK[address?.toLowerCase()];

@@ -185,14 +185,16 @@ function L2BeatCard({ account }: any) {
                   <p className=""> Stage</p>
                 </div>
                 <div className="flex justify-between items-center">
-                  <p className="text-xl font-bold">
+                  <p className="text-xl font-bold break-words overflow-hidden">
                     {" "}
                     {l2BeatAccountDetails?.stage?.stage}
                   </p>
-                  <a id="clickable">
-                    {" "}
-                    <Info width={24} height={24} className="text-primary" />
-                  </a>
+                  {getStageName(l2BeatAccountDetails?.stage?.stage) && (
+                    <a id="clickable">
+                      {" "}
+                      <Info width={24} height={24} className="text-primary" />
+                    </a>
+                  )}
                   <RTooltip
                     anchorSelect="#clickable"
                     clickable
@@ -319,7 +321,7 @@ function L2BeatCard({ account }: any) {
           </div>
         )}
         {!isLoading && (
-          <div className="w-full h-full flex items-center justify-center bg-red-50 hidden lg:block">
+          <div className="w-full lg:h-[20em] h-full flex items-center justify-center bg-red-50 hidden lg:block">
             <AccountChart account={account} dataPoints={pieChartData} />
           </div>
         )}
@@ -330,6 +332,7 @@ function L2BeatCard({ account }: any) {
                 good: "#4CAF50",
                 bad: "#F44336",
                 warning: "#FF9800",
+                neutral: "gray",
               };
               return (
                 <div
@@ -599,6 +602,7 @@ const AccountChart = ({
               good: "#4CAF50",
               bad: "#F44336",
               warning: "#FF9800",
+              neutral: "gray",
             };
             return (
               <Cell
