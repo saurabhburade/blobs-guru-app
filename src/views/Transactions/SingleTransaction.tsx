@@ -81,8 +81,8 @@ function SingleTransaction({ hash }: Props) {
     <div>
       <Header />
       <div className="mx-auto w-full p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className="grid lg:grid-cols-[3fr_1fr] w-full gap-4">
-          <div className="border border-base-200  rounded-lg w-full  ">
+        <div className="grid lg:grid-cols-[3fr_1fr] w-full gap-4 ">
+          <div className="border border-base-200  rounded-lg w-full   bg-base-100/70">
             <div className="flex flex-wrap w-full items-center justify-between border-b border-base-200 p-5">
               <div className=" flex items-center gap-4 ">
                 {" "}
@@ -326,7 +326,7 @@ function SingleTransaction({ hash }: Props) {
               </div>
             </div>
           </div>
-          <div className="border border-base-200 h-fit rounded-lg lg:block hidden">
+          <div className="border border-base-200 h-fit rounded-lg lg:block hidden bg-base-100/70">
             <div className="p-5 flex items-center gap-4 border-b border-base-200">
               <img
                 src="/images/logox.jpeg"
@@ -395,7 +395,7 @@ function SingleTransaction({ hash }: Props) {
             </div>
           </div>
         </div>
-        <div className=" bg-base-100 border rounded-lg border-base-200 ">
+        <div className=" bg-base-100 border rounded-lg border-base-200  bg-base-100/70">
           <div className="flex p-4 border-base-200">
             <p>Blobs</p>
           </div>

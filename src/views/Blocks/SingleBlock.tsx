@@ -66,7 +66,7 @@ function SingleBlock({ blockNumber }: Props) {
       <Header />
       <div className="mx-auto w-full lg:p-20 p-4 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
         <div className="grid lg:grid-cols-[3fr_1fr] w-full lg:gap-4">
-          <div className="border border-base-200  rounded-lg w-full  ">
+          <div className="border border-base-200  rounded-lg w-full bg-base-100/70 ">
             <div className="flex flex-wrap lg:flex-nowrap w-full items-center justify-between border-b border-base-200 p-5">
               <div className=" flex items-center gap-4">
                 <Box />
@@ -318,7 +318,7 @@ function SingleBlock({ blockNumber }: Props) {
               </div>
             </div>
           </div>
-          <div className="border border-base-200 h-fit rounded-lg lg:block hidden">
+          <div className="border border-base-200 h-fit rounded-lg lg:block hidden bg-base-100/70">
             <div className="p-5 flex items-center gap-4 border-b border-base-200">
               <img
                 src="/images/logox.jpeg"
