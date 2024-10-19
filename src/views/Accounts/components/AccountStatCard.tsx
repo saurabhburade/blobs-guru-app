@@ -137,7 +137,7 @@ function AccountStatCard({ acc, isLoading, className }: any) {
             </div>
           </div>
         )}
-        <div className="p-5 h-[20em] bg-base-100/50 border   border-base-300/20 w-full rounded-lg">
+        <div className="p-5  bg-base-100/50 border   border-base-300/20 w-full rounded-lg">
           <AccountChart account={acc?.id} />
         </div>
       </div>

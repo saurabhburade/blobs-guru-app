@@ -321,7 +321,7 @@ function L2BeatCard({ account }: any) {
           </div>
         )}
         {!isLoading && (
-          <div className="w-full lg:h-[20em] h-full flex items-center justify-center bg-red-50 hidden lg:block">
+          <div className="w-full lg:min-h-[20em] h-full flex items-center justify-center bg-red-50 hidden lg:block">
             <AccountChart account={account} dataPoints={pieChartData} />
           </div>
         )}
