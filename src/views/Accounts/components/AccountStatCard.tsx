@@ -8,6 +8,15 @@ import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import { useQuery } from "@apollo/client";
 import { ACCOUNT_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 import Link from "next/link";
+import {
+  Area,
+  AreaChart,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 type Props = {};
 
@@ -128,7 +137,9 @@ function AccountStatCard({ acc, isLoading, className }: any) {
             </div>
           </div>
         )}
-        <AccountChart account={acc?.id} />
+        <div className="p-5 h-[20em] bg-base-100/50 border   border-base-300/20 w-full rounded-lg">
+          <AccountChart account={acc?.id} />
+        </div>
       </div>
     </div>
   );
@@ -142,15 +153,7 @@ const AccountChart = ({ account }: { account: string }) => {
       address: account,
     },
   });
-
-  const memoOptions = useMemo(() => {
-    //     totalBlobTransactionCount
-    //   dayStartTimestamp;
-    //   totalBlobTransactionCount;
-    //   totalBlobGas;
-    //   totalGasEth;
-    //   totalBlobHashesCount;
-    //   totalBlobBlocks;
+  const chartData = useMemo(() => {
     const formatter = new Intl.DateTimeFormat("en-US", { weekday: "long" });
     const datas = data?.accountDayDatas?.map((rawData: any) => {
       const day = formatter.format(
@@ -160,92 +163,75 @@ const AccountChart = ({ account }: { account: string }) => {
       return {
         ...rawData,
 
-        sizeValue: rawData?.totalBlobGas,
+        sizeValue: Number(rawData?.totalBlobGas),
         size: formatBytes(Number(rawData?.totalBlobGas)),
         formattedAddress: formatAddress(rawData?.account?.id),
         totalBlobTransactionCount:
           rawData?.totalBlobTransactionCount?.toString(),
         totalGasEth: new BigNumber(rawData?.totalGasEth).div(1e18).toFormat(4),
         timestamp: day,
+        timestamp2: new Date(
+          Number(rawData?.dayStartTimestamp) * 1000
+        ).toDateString(),
       };
     });
-    return {
-      tooltip: {
-        trigger: "axis",
-
-        formatter: ([params]: any) => {
-          return `
-                Blob size :: ${formatBytes(params?.value)}
-                 <br/>
-                                 ${params?.axisValue}
-
-                `;
-        },
-      },
-
-      xAxis: [
-        {
-          type: "category",
-          boundaryGap: false,
-          data: datas?.map((d: any) => d.timestamp),
-          show: false,
-        },
-      ],
-      yAxis: [
-        {
-          type: "value",
-          visible: false,
-          show: false,
-        },
-      ],
-      series: [
-        {
-          name: "Blob Size",
-          type: "line",
-          stack: "Total",
-          label: {
-            show: true,
-            position: "top",
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgb(128, 255, 165,0.4)",
-              },
-              {
-                offset: 1,
-                color: "transparent",
-              },
-            ]),
-          },
-          tooltip: {
-            formatter: function (param: any) {
-              param = param[0];
-              return [
-                "Date: " + param.name + '<hr size=1 style="margin: 3px 0">',
-                "Open: " + param.data[0] + "<br/>",
-                "Close: " + param.data[1] + "<br/>",
-                "Lowest: " + param.data[2] + "<br/>",
-                "Highest: " + param.data[3] + "<br/>",
-              ].join("");
-            },
-          },
-          emphasis: {
-            focus: "series",
-          },
-          data: datas?.map((d: any) => d.totalBlobGas),
-        },
-      ],
-    };
+    return datas;
   }, [data?.accountDayDatas]);
 
   return (
-    <ReactECharts
-      option={memoOptions}
-      style={{ height: "100%", width: "100%" }}
-    />
+    <ResponsiveContainer width={"100%"} height={"100%"}>
+      <AreaChart
+        // width={730}
+        // width={100}
+        // height={100}
+        data={chartData}
+        // margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+      >
+        <defs>
+          <linearGradient id="colorUvAccStatCard" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.3} />
+            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+          </linearGradient>
+          <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        {/* <XAxis dataKey="timestamp2" className="text-xs" axisLine={false} /> */}
+        <Legend
+          verticalAlign="top"
+          content={() => (
+            <span className="text-xs">Last 15 days Blob size</span>
+          )}
+        />
+        <Tooltip content={CustomTooltipRaw} />
+        <Area
+          type="monotone"
+          dataKey="sizeValue"
+          stroke="#8884d8"
+          fillOpacity={1}
+          fill="url(#colorUvAccStatCard)"
+        />
+      </AreaChart>
+    </ResponsiveContainer>
   );
+};
+
+const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        className={` bg-base-200 w-[15em] rounded-lg   overflow-hidden text-xs`}
+      >
+        <div className="p-4 ">
+          <p className=" ">Size: {`${payload[0]?.payload?.size}`}</p>
+          <p className="  ">
+            Timestamp: {`${payload[0]?.payload?.timestamp2}`}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 };
