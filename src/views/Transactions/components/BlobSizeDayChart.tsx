@@ -91,7 +91,7 @@ export default function BlobSizeDayChart() {
     const datas = data?.blobsDayDatas?.map((bd: any) => {
       return {
         ...bd,
-        sizeValue: bd?.totalBlobGas,
+        sizeValue: Number(bd?.totalBlobGas),
         Size: formatBytes(Number(bd?.totalBlobGas)),
         timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
         timestamp2: new Date(
