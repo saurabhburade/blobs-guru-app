@@ -38,6 +38,7 @@ function Header({}: Props) {
         <Link href="/transactions"> Blob Transactions</Link>
         <Link href="/accounts"> Accounts</Link>
         <Link href="/stats">Stats</Link>
+        <Link target="_blank" referrerPolicy="no-referrer" href="https://www.eip4844.com/">EIP 4844</Link>
 
         <ThemeController />
       </div>

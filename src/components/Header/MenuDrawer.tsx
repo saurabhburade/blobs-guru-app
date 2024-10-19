@@ -59,6 +59,16 @@ function MenuDrawer({}: Props) {
               <Link href="/">Stats</Link>
             </li>
             <hr className="border-base-200" />
+            <li className="  ">
+              <Link
+                target="_blank"
+                referrerPolicy="no-referrer"
+                href="https://www.eip4844.com/"
+              >
+                EIP 4844
+              </Link>
+            </li>
+            <hr className="border-base-200" />
             <li className=" flex justify-between flex-row items-center active:bg-transparent">
               <p>Theme</p>
               <ThemeController />
