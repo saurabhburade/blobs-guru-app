@@ -6,6 +6,7 @@ import { formatAddress, formatBytes } from "@/lib/utils";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
+import { timeAgo } from "@/lib/time";
 type Props = {};
 
 function Transactions({}: Props) {
@@ -84,12 +85,12 @@ const TransactionRow = ({ txn }: any) => {
           <Link className="text-primary" href={`/transactions/${txn?.id}`}>
             {formatAddress(txn?.id)}
           </Link>
-          <p>{txn?.blobHashesLength} blob</p>
+          <p>{timeAgo(new Date(Number(txn?.timestamp) * 1000))} </p>
         </div>
       </div>
       <div className="text-end">
         <p>{totalBlobSize}</p>
-        <p>{blobGasEth} ETH</p>
+        <p>{txn?.blobHashesLength} blobs</p>
       </div>
       <div className="flex my-2  lg:my-0 justify-between  w-full lg:flex-col lg:col-span-1 col-span-2">
         <Link

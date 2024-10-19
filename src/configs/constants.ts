@@ -6,7 +6,7 @@ export const ETHERSCAN_LINK = "https://etherscan.io";
 export const wagmiconfig = createConfig({
   chains: [mainnet, sepolia],
   transports: {
-    [mainnet.id]: http(),
+    [mainnet.id]: http("https://cloudflare-eth.com", { batch: true }),
     [sepolia.id]: http(),
   },
 });

@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import { formatBytes } from "@/lib/utils";
 import Link from "next/link";
+import { timeAgo } from "@/lib/time";
 type Props = {};
 
 function Blocks({}: Props) {
@@ -81,7 +82,7 @@ const BlocksRow = ({ blk }: any) => {
             {blockNumber}
           </Link>
 
-          <p>{new Date().toLocaleString()}</p>
+          <p>{timeAgo(new Date(Number(blk?.timestamp) * 1000))} </p>
         </div>
       </div>
       <div>

@@ -7,15 +7,19 @@ import {
   BLOB_BLOCKS_TOP_QUERY,
   COLLECTIVE_STAT_QUERY,
 } from "@/lib/apollo/queries";
-import { formatBytes } from "@/lib/utils";
+import { formatAddress, formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import { Box, Database } from "lucide-react";
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BlobEthFeeChart from "./components/BlobEthFeeChart";
 import BlobBlocksChart from "./components/BlobBlocksChart";
 import BlobPerBlocksChart from "./components/BlobPerBlocksChart";
+import { useClient, usePublicClient } from "wagmi";
+import { hexToBigInt } from "viem";
+import { useBlocksExplorerWithRPCData } from "@/hooks/useBlocksData";
+import { timeAgo } from "@/lib/time";
 
 type Props = {};
 
@@ -34,7 +38,7 @@ function Blocks({}: Props) {
           </div>
         </div>
         <BlockStats />
-        <BlocksCubes />
+        {/* <BlocksCubes /> */}
         <BlocksRows />
       </div>
     </div>
@@ -42,6 +46,7 @@ function Blocks({}: Props) {
 }
 
 export default Blocks;
+
 const BlockStats = () => {
   const { data, loading } = useQuery(COLLECTIVE_STAT_QUERY);
 
@@ -222,17 +227,36 @@ const BlocksCube = ({ blk }: any) => {
 const LIMIT_PER_PAGE = 10;
 function BlocksRows({}: Props) {
   const [page, setPage] = useState(1);
-  const { data, loading } = useQuery(BLOB_BLOCKS_EXPLORER_QUERY, {
-    variables: {
-      skip: LIMIT_PER_PAGE * (page - 1),
-      limit: LIMIT_PER_PAGE,
-    },
+  // const { data, loading } = useQuery(BLOB_BLOCKS_EXPLORER_QUERY, {
+  //   variables: {
+  //     skip: LIMIT_PER_PAGE * (page - 1),
+  //     limit: LIMIT_PER_PAGE,
+  //   },
+  // });
+
+  const { data, loading } = useBlocksExplorerWithRPCData({
+    page,
   });
 
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
       <div className="flex p-4 border-b border-base-200">
         <p>Blob Blocks</p>
+      </div>
+      <div className="hidden xl:grid xl:grid-cols-7 p-4 border-b text-end border-base-200 text-sm items-center">
+        <div className="flex items-center gap-2">
+          {" "}
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <Box strokeWidth="1" width={24} height={24} />
+          </div>{" "}
+          Block #
+        </div>
+        <p>Validator</p>
+        <p>Block Size</p>
+        <p>Blob size</p>
+        <p>Blob txns</p>
+        <p>Blob Fee</p>
+        <p className="text-end">ETH Burn 🔥</p>
       </div>
       <div className="px-4  ">
         {loading &&
@@ -243,7 +267,7 @@ function BlocksRows({}: Props) {
               />
             );
           })}
-        {data?.blobBlockDatas?.map((blk: any) => {
+        {data?.map((blk: any) => {
           return <BlocksRow key={blk?.id} blk={blk} />;
         })}
         {/* <BlocksRow />
@@ -301,6 +325,9 @@ const BlocksRow = ({ blk }: any) => {
   const feeEth = useMemo(() => {
     return new BigNumber(blk?.totalFeeEth).div(1e18).toFormat(4);
   }, [blk?.totalFeeEth]);
+  const blobFeeGwei = useMemo(() => {
+    return new BigNumber(blk?.totalBlobGasEth).div(1e9).toFormat(5);
+  }, [blk?.totalBlobGasEth]);
   const blockNumber = useMemo(() => {
     return new BigNumber(blk?.blockNumber).toFormat(0);
   }, [blk?.blockNumber]);
@@ -308,28 +335,103 @@ const BlocksRow = ({ blk }: any) => {
   const blobSize = useMemo(() => {
     return formatBytes(Number(blk?.totalBlobGas));
   }, [blk?.totalBlobGas]);
-
+  const blockSize = useMemo(() => {
+    return formatBytes(Number(blk?.size));
+  }, [blk?.totalBlobGas]);
+  const ethBurn = useMemo(() => {
+    return new BigNumber(blk?.rpcData?.data?.baseFeePerGas)
+      .multipliedBy(Number(blk?.rpcData?.data?.gasUsed))
+      .div(1e18)
+      .toFormat(5);
+  }, [blk?.rpcData]);
   return (
-    <div className="flex flex-wrap gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
-      <div className="flex items-center gap-2">
-        <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
-          <Box strokeWidth="1" width={24} height={24} />
+    <>
+      <div className="hidden xl:grid xl:grid-cols-7 py-4 border-b border-base-200 text-sm items-center text-end">
+        <div className="flex items-center gap-2 text-start">
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <Box strokeWidth="1" width={24} height={24} />
+          </div>
+          <div>
+            <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
+              {blockNumber}
+            </Link>
+
+            <p>{timeAgo(new Date(Number(blk.timestamp) * 1000))}</p>
+          </div>
+        </div>
+        {blk?.rpcData?.data?.miner ? (
+          <div className="">
+            <p>{formatAddress(blk?.rpcData?.data?.miner)}</p>
+          </div>
+        ) : (
+          <p>-</p>
+        )}
+        <div>
+          <p>{blockSize}</p>
         </div>
         <div>
-          <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
-            {blockNumber}
-          </Link>
+          <p>{blobSize}</p>
+          <p>{blk?.totalBlobHashesCount} blobs</p>
+        </div>
+        <div>
+          <p>{blk?.totalTransactionCount} transactions</p>
+          <p>{blk?.totalBlobTransactionCount} blob tx</p>
+        </div>
+        <div>
+          <p>{blobFeeGwei} gwei</p>
+        </div>
+        {ethBurn && !isNaN(Number(ethBurn)) ? (
+          <div className="">
+            <p>{ethBurn} ETH</p>
+          </div>
+        ) : (
+          <p>-</p>
+        )}
+      </div>
+      <div className="flex flex-wrap xl:hidden gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+        <div className="flex items-center gap-2">
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <Box strokeWidth="1" width={24} height={24} />
+          </div>
+          <div>
+            <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
+              {blockNumber}
+            </Link>
 
-          <p>{new Date().toLocaleString()}</p>
+            <p>{timeAgo(new Date(Number(blk.timestamp) * 1000))}</p>
+          </div>
+        </div>
+        <div>
+          <p>{blobSize}</p>
+          <p>{blk?.totalBlobHashesCount} blobs</p>
+        </div>
+        <div>
+          <p>{blk?.totalTransactionCount} transactions</p>
         </div>
       </div>
-      <div>
-        <p>{blobSize}</p>
-        <p>{blk?.totalBlobHashesCount} blobs</p>
-      </div>
-      <div>
-        <p>{blk?.totalTransactionCount} transactions</p>
-      </div>
-    </div>
+    </>
   );
+  // return (
+  //   <div className="flex flex-wrap gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+  //     <div className="flex items-center gap-2">
+  //       <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+  //         <Box strokeWidth="1" width={24} height={24} />
+  //       </div>
+  //       <div>
+  //         <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
+  //           {blockNumber}
+  //         </Link>
+
+  //         <p>{timeAgo(new Date(Number(blk.timestamp) * 1000))}</p>
+  //       </div>
+  //     </div>
+  //     <div>
+  //       <p>{blobSize}</p>
+  //       <p>{blk?.totalBlobHashesCount} blobs</p>
+  //     </div>
+  //     <div>
+  //       <p>{blk?.totalTransactionCount} transactions</p>
+  //     </div>
+  //   </div>
+  // );
 };

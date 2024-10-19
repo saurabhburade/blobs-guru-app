@@ -116,6 +116,7 @@ export const BLOB_TRANSACTIONS_TOP_QUERY = gql`
       gasUsed
       blobGasEth
       blobGas
+      timestamp
     }
   }
 `;
