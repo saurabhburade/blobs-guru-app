@@ -285,18 +285,18 @@ const TransactionRow = ({ txn }: any) => {
           </div>
         </div>
         {txn?.from ? (
-          <div className="">
+          <Link href={`/accounts/${txn?.from}`} className="">
             {accountDetails?.name ? (
               <div>
-                <p>{accountDetails?.name}</p>
+                <p className="text-primary">{accountDetails?.name}</p>
                 <p>{formatAddress(txn?.from)}</p>
               </div>
             ) : (
               <div>
-                <p>{formatAddress(txn?.from)}</p>
+                <p className="text-primary">{formatAddress(txn?.from)}</p>
               </div>
             )}
-          </div>
+          </Link>
         ) : (
           <p>-</p>
         )}
@@ -313,7 +313,10 @@ const TransactionRow = ({ txn }: any) => {
         </div>
         <div>
           <p>
-            {txn?.blockNumber} : {txn?.index}
+            <span>
+              <Link href={`/blocks/${txn?.from}`} className="text-primary">{txn?.blockNumber}</Link>{" "}
+            </span>{" "}
+            : {txn?.index}
           </p>
         </div>
 
