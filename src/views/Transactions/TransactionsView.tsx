@@ -314,7 +314,12 @@ const TransactionRow = ({ txn }: any) => {
         <div>
           <p>
             <span>
-              <Link href={`/blocks/${txn?.from}`} className="text-primary">{txn?.blockNumber}</Link>{" "}
+              <Link
+                href={`/blocks/${txn?.blockNumber}`}
+                className="text-primary"
+              >
+                {txn?.blockNumber}
+              </Link>{" "}
             </span>{" "}
             : {txn?.index}
           </p>
