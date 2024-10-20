@@ -9,7 +9,9 @@ import { timeAgo } from "@/lib/time";
 type Props = {};
 
 function Blocks({}: Props) {
-  const { data, loading } = useQuery(BLOB_BLOCKS_TOP_QUERY);
+  const { data, loading } = useQuery(BLOB_BLOCKS_TOP_QUERY, {
+    pollInterval: 15_000, // Every 15 sec
+  });
 
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">

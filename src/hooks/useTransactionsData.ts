@@ -19,7 +19,7 @@ export const useTransactionsExplorerWithRPCData = ({
       skip: LIMIT_PER_PAGE * (page - 1),
       limit: LIMIT_PER_PAGE,
     },
-    // pollInterval: 20_000, // Every 10 sec
+    pollInterval: 15_000, // Every 15 sec
   });
   const client = usePublicClient();
 
