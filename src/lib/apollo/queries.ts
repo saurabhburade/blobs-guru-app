@@ -233,6 +233,9 @@ export const BLOB_TRANSACTIONS_EXPLORER_QUERY = gql`
       gasUsed
       blobGasEth
       blobGas
+      timestamp
+      blockNumber
+      index
     }
   }
 `;
