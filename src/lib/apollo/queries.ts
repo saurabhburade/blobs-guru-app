@@ -213,6 +213,9 @@ export const BLOB_TRANSACTIONS_FOR_BLOCK = gql`
       gasUsed
       blobGasEth
       blobGas
+      timestamp
+      blockNumber
+      index
     }
   }
 `;
@@ -244,7 +247,7 @@ export const BLOB_TRANSACTIONS_ACCOUNT_QUERY = gql`
     blobTransactions(
       first: $limit
       skip: $skip
-      orderBy: index
+      orderBy: timestamp
       orderDirection: desc
       where: { from: $account }
     ) {
@@ -257,6 +260,9 @@ export const BLOB_TRANSACTIONS_ACCOUNT_QUERY = gql`
       gasUsed
       blobGasEth
       blobGas
+      timestamp
+      blockNumber
+      index
     }
   }
 `;

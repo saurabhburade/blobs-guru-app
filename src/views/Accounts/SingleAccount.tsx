@@ -34,6 +34,8 @@ import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
 import axios from "axios";
 import L2BeatCard from "./components/L2Beat/L2BeatCard";
+import { useAccountTransactionsWithRPCData } from "@/hooks/useTransactionsData";
+import { timeAgo } from "@/lib/time";
 
 type Props = {
   account: string;
@@ -84,18 +86,30 @@ export default SingleAccount;
 const LIMIT_PER_PAGE = 10;
 function TxnRows({ account }: { account: string }) {
   const [page, setPage] = useState(1);
-  const { data, loading } = useQuery(BLOB_TRANSACTIONS_ACCOUNT_QUERY, {
-    variables: {
-      skip: LIMIT_PER_PAGE * (page - 1),
-      limit: LIMIT_PER_PAGE,
-      account,
-    },
+  const { data, loading } = useAccountTransactionsWithRPCData({
+    page,
+    account,
   });
 
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
       <div className="flex p-4 border-b border-base-200">
         <p>Blob Transactions</p>
+      </div>
+      <div className="hidden xl:grid xl:grid-cols-7 p-4 border-b text-end border-base-200 text-sm items-center">
+        <div className="flex items-center gap-2">
+          {" "}
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <NotepadText strokeWidth="1" width={24} height={24} />
+          </div>{" "}
+          Txn #
+        </div>
+        <p>From</p>
+        <p>To</p>
+        <p>Blob size</p>
+        <p>Position</p>
+        <p>Txn fee</p>
+        <p className="text-end">Blob fee</p>
       </div>
       <div className="px-4  ">
         {loading &&
@@ -107,7 +121,7 @@ function TxnRows({ account }: { account: string }) {
             );
           })}
         {!loading &&
-          data?.blobTransactions?.map((txn: any) => {
+          data?.map((txn: any) => {
             return <TransactionRow key={txn?.id} txn={txn} />;
           })}
         {/* <BlocksRow />
@@ -145,7 +159,6 @@ function TxnRows({ account }: { account: string }) {
     </div>
   );
 }
-
 const TransactionRow = ({ txn }: any) => {
   //       id
   //   from
@@ -157,7 +170,9 @@ const TransactionRow = ({ txn }: any) => {
   //   blobGasEth
   //   blobGas
   const accountDetails = getAccountDetailsFromAddressBook(txn?.from);
-
+  const blobFeeGwei = useMemo(() => {
+    return new BigNumber(txn?.blobGasEth).div(1e9).toFormat(5);
+  }, [txn?.blobGasEth]);
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(txn?.blobGas));
   }, [txn?.blobGas]);
@@ -170,42 +185,125 @@ const TransactionRow = ({ txn }: any) => {
       .div(1e18)
       .toFormat(4);
   }, [txn?.gasUsed, txn?.gasPrice]);
+  const ethBurn = useMemo(() => {
+    return new BigNumber(txn?.rpcData?.data?.baseFeePerGas)
+      .multipliedBy(Number(txn?.rpcData?.data?.gasUsed))
+      .div(1e18)
+      .toFormat(5);
+  }, [txn?.rpcData]);
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-[1fr_0.5fr_1.5fr] items-center lg:flex-nowrap first:border-t-0 border-t py-3 border-base-200 text-sm">
-      <div className="flex items-center gap-2">
-        <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
-          {accountDetails?.logoUri ? (
-            <img
-              src={accountDetails?.logoUri || "/images/logox.jpeg"}
-              className="rounded-lg"
-              width={24}
-              height={24}
-              alt=""
-            />
-          ) : (
-            <NotepadText strokeWidth="1" width={24} height={24} />
-          )}
+    <>
+      <div className="hidden xl:grid xl:grid-cols-7 py-4 border-b border-base-200 text-sm items-center text-end">
+        <div className="flex items-center gap-2 text-start">
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            {accountDetails?.logoUri ? (
+              <img
+                src={accountDetails?.logoUri || "/images/logox.jpeg"}
+                className="rounded-lg"
+                width={24}
+                height={24}
+                alt=""
+              />
+            ) : (
+              <NotepadText strokeWidth="1" width={24} height={24} />
+            )}
+          </div>
+          <div>
+            <Link className="text-primary" href={`/transactions/${txn?.id}`}>
+              {formatAddress(txn?.id)}
+            </Link>
+
+            <p>{timeAgo(new Date(Number(txn?.timestamp) * 1000))}</p>
+          </div>
+        </div>
+        {txn?.from ? (
+          <Link href={`/accounts/${txn?.from}`} className="">
+            {accountDetails?.name ? (
+              <div>
+                <p className="text-primary">{accountDetails?.name}</p>
+                <p>{formatAddress(txn?.from)}</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-primary">{formatAddress(txn?.from)}</p>
+              </div>
+            )}
+          </Link>
+        ) : (
+          <p>-</p>
+        )}
+        {txn?.to ? (
+          <div className="">
+            <p>{formatAddress(txn?.to)}</p>
+          </div>
+        ) : (
+          <p>-</p>
+        )}
+        <div>
+          <p>{totalBlobSize}</p>
+          <p>{txn?.blobHashesLength} blobs</p>
         </div>
         <div>
-          <Link className="text-primary" href={`/transactions/${txn?.id}`}>
-            {formatAddress(txn?.id)}
+          <p>
+            <span>
+              <Link
+                href={`/blocks/${txn?.blockNumber}`}
+                className="text-primary"
+              >
+                {txn?.blockNumber}
+              </Link>{" "}
+            </span>{" "}
+            : {txn?.index}
+          </p>
+        </div>
+
+        <div>
+          <p>{feeEth} ETH</p>
+        </div>
+        {blobFeeGwei && !isNaN(Number(blobFeeGwei)) ? (
+          <div className="">
+            <p>{blobFeeGwei} GWEI</p>
+          </div>
+        ) : (
+          <p>-</p>
+        )}
+      </div>
+      <div className="flex md:grid md:grid-cols-3 flex-wrap xl:hidden gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+        <div className="flex items-center gap-2">
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <NotepadText strokeWidth="1" width={24} height={24} />
+          </div>
+          <div>
+            <Link className="text-primary" href={`/transactions/${txn?.id}`}>
+              {formatAddress(txn?.id)}
+            </Link>
+
+            <p>{timeAgo(new Date(Number(txn.timestamp) * 1000))}</p>
+          </div>
+        </div>
+        <div>
+          <p>{totalBlobSize}</p>
+          <p>{txn?.blobHashesLength} blobs</p>
+        </div>
+        <div className="hidden  md:block xl:hidden text-end">
+          <Link
+            href={`/accounts/${txn?.from}`}
+            className="lg:text-end text-primary"
+          >
+            From : {accountDetails?.name || formatAddress(txn?.from)}
           </Link>
-          <p>{txn?.blobHashesLength} blob</p>
+          <p className=" text-end">{feeEth} ETH</p>
+        </div>
+        <div className="flex my-2 md:hidden  lg:my-0 justify-between  w-full  lg:col-span-1 ">
+          <Link
+            href={`/accounts/${txn?.from}`}
+            className="lg:text-end text-primary"
+          >
+            From : {accountDetails?.name || formatAddress(txn?.from)}
+          </Link>
+          <p className=" text-end">{feeEth} ETH</p>
         </div>
       </div>
-      <div className="text-end">
-        <p>{totalBlobSize}</p>
-        <p>{blobGasEth} ETH</p>
-      </div>
-      <div className="flex my-2  lg:my-0 justify-between  w-full lg:flex-col lg:col-span-1 col-span-2">
-        <Link
-          href={`/accounts/${txn?.from}`}
-          className="lg:text-end text-primary"
-        >
-          From : {accountDetails?.name || formatAddress(txn?.from)}
-        </Link>
-        <p className=" text-end">{feeEth} ETH</p>
-      </div>
-    </div>
+    </>
   );
 };
