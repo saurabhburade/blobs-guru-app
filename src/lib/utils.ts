@@ -168,3 +168,18 @@ export function formatBytes(bytes: number, decimals = 2) {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
+export function formatEthereumValue(wei: number) {
+  const WEI_IN_GWEI = 1_000_000_000;
+  const WEI_IN_ETHER = 1_000_000_000_000_000_000;
+
+  const ether = wei / WEI_IN_ETHER;
+  const gwei = wei / WEI_IN_GWEI;
+  const significance = 10000; // show ETH till 0.0001
+  if (wei * significance >= WEI_IN_ETHER) {
+    return `${ether.toFixed(4)} ETH`;
+  } else if (wei >= WEI_IN_GWEI) {
+    return `${gwei.toFixed(4)} GWEI`;
+  } else {
+    return `${wei} WEI`;
+  }
+}

@@ -12,7 +12,7 @@ import {
   TOP_BLOB_ACCOUNTS_QUERY,
   TOP_FIVE_BLOB_ACCOUNTS_QUERY,
 } from "@/lib/apollo/queries";
-import { formatAddress, formatBytes } from "@/lib/utils";
+import { formatAddress, formatBytes, formatEthereumValue } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import { useQuery as useQueryFetch } from "@tanstack/react-query";
 import BigNumber from "bignumber.js";
@@ -173,6 +173,11 @@ const TransactionRow = ({ txn }: any) => {
   const blobFeeGwei = useMemo(() => {
     return new BigNumber(txn?.blobGasEth).div(1e9).toFormat(5);
   }, [txn?.blobGasEth]);
+  console.log(
+    `🚀 ~ file: SingleAccount.tsx:176 ~ blobGasEth:`,
+    txn?.blobGasEth,
+    blobFeeGwei
+  );
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(txn?.blobGas));
   }, [txn?.blobGas]);
@@ -260,9 +265,9 @@ const TransactionRow = ({ txn }: any) => {
         <div>
           <p>{feeEth} ETH</p>
         </div>
-        {blobFeeGwei && !isNaN(Number(blobFeeGwei)) ? (
+        {blobFeeGwei && !isNaN(Number(txn?.blobGasEth)) ? (
           <div className="">
-            <p>{blobFeeGwei} GWEI</p>
+            <p>{formatEthereumValue(Number(txn?.blobGasEth))}</p>
           </div>
         ) : (
           <p>-</p>

@@ -6,7 +6,7 @@ import {
   BLOB_TRANSACTIONS_FOR_BLOCK,
   BLOB_TRANSACTIONS_TOP_QUERY,
 } from "@/lib/apollo/queries";
-import { formatAddress, formatBytes } from "@/lib/utils";
+import { formatAddress, formatBytes, formatEthereumValue } from "@/lib/utils";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
@@ -198,9 +198,9 @@ const TransactionRow = ({ txn }: any) => {
         <div>
           <p>{feeEth} ETH</p>
         </div>
-        {blobFeeGwei && !isNaN(Number(blobFeeGwei)) ? (
+        {blobFeeGwei && !isNaN(Number(txn?.blobGasEth)) ? (
           <div className="">
-            <p>{blobFeeGwei} GWEI</p>
+            <p>{formatEthereumValue(Number(txn?.blobGasEth))}</p>
           </div>
         ) : (
           <p>-</p>
