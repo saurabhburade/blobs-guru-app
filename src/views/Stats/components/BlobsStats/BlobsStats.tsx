@@ -4,6 +4,7 @@ import BlobTxnsChart from "./BlobTxnsChart";
 import BlobSizeChart from "./BlobSizeChart";
 import BlobHashesChart from "./BlobHashesChart";
 import BlobEthFeeChart from "./BlobEthFeeChart";
+import BlobOnlyEthFeeChart from "./BlobOnlyEthFeeChart";
 
 type Props = {};
 
@@ -40,6 +41,11 @@ function BlobsStats({}: Props) {
         </div>
         <div className=" p-5 h-[20em]">
           <BlobEthFeeChart duration={duration} />
+        </div>
+      </div>
+      <div className="grid lg:grid-cols-2 lg:h-[20em] ">
+        <div className="border-base-200 border-r p-5 h-[20em]">
+          <BlobOnlyEthFeeChart duration={duration} />
         </div>
       </div>
     </div>

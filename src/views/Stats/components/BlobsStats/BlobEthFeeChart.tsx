@@ -73,6 +73,12 @@ export default function BlobEthFeeChart({ duration }: { duration: number }) {
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart width={400} height={400} data={chartData}>
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
             // @ts-ignore
@@ -85,8 +91,8 @@ export default function BlobEthFeeChart({ duration }: { duration: number }) {
             )}
           />
           <Bar
-            dataKey="totalBlobHashesCount"
-            fill="#8884d8"
+            dataKey="sizeValue"
+            fill="url(#colorUv)"
             radius={10}
             // @ts-ignore
             // shape={<TriangleBar />}

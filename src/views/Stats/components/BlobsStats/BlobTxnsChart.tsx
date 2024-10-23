@@ -81,7 +81,7 @@ export default function BlobTxnsChart({ duration }: { duration: number }) {
           />
           <Bar
             dataKey="totalBlobTransactionCount"
-            fill="#8884d8"
+            fill="url(#colorUv)"
             radius={10}
             // @ts-ignore
             // shape={<TriangleBar />}

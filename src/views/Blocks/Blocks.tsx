@@ -7,7 +7,7 @@ import {
   BLOB_BLOCKS_TOP_QUERY,
   COLLECTIVE_STAT_QUERY,
 } from "@/lib/apollo/queries";
-import { formatAddress, formatBytes } from "@/lib/utils";
+import { formatAddress, formatBytes, formatEthereumValue } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import { Box, Database } from "lucide-react";
@@ -17,7 +17,7 @@ import BlobEthFeeChart from "./components/BlobEthFeeChart";
 import BlobBlocksChart from "./components/BlobBlocksChart";
 import BlobPerBlocksChart from "./components/BlobPerBlocksChart";
 import { useClient, usePublicClient } from "wagmi";
-import { hexToBigInt } from "viem";
+import { formatGwei, hexToBigInt } from "viem";
 import { useBlocksExplorerWithRPCData } from "@/hooks/useBlocksData";
 import { timeAgo } from "@/lib/time";
 
@@ -377,9 +377,11 @@ const BlocksRow = ({ blk }: any) => {
           <p>{blk?.totalTransactionCount} transactions</p>
           <p>{blk?.totalBlobTransactionCount} blob tx</p>
         </div>
-        <div>
-          <p>{blobFeeGwei} gwei</p>
-        </div>
+        {
+          <div>
+            <p>{formatEthereumValue(blk?.totalBlobGasEth)} </p>
+          </div>
+        }
         {ethBurn && !isNaN(Number(ethBurn)) ? (
           <div className="">
             <p>{ethBurn} ETH</p>
