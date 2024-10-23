@@ -38,14 +38,54 @@ function L2BeatTvlStats({ projectId }: Props) {
   const mappedChartValues = useMemo(() => {
     if (data?.data?.chart) {
       const mappedValues = mapChartData(data?.data?.chart);
-      return mappedValues?.map((v: any) => {
-        const { canonical, native, external, timestamp } = v;
-        const tvl = new BigNumber(canonical).plus(native)?.plus(external);
+      return mappedValues?.map((v: any, idx: number) => {
+        const prevDayData = mappedValues[idx - 1] || {};
 
+        const { canonical, native, external, timestamp } = v;
+        const {
+          canonical: prevDayDatacanonical = 0,
+          native: prevDayDatanative = 0,
+          external: prevDayDataexternal = 0,
+          timestamp: prevDayDatatimestamp = 0,
+        } = prevDayData;
+        const tvl = new BigNumber(canonical)
+          .plus(native)
+          ?.plus(external)
+          .toNumber();
+        const tvlChart = new BigNumber((canonical / tvl) * canonical)
+          .plus((native / tvl) * native)
+          ?.plus((external / tvl) * external)
+          .toNumber();
+        const formatedTvl = numberFormater.format(tvl);
+        const tvlPrevDay = new BigNumber(prevDayDatacanonical)
+          .plus(prevDayDatanative)
+          ?.plus(prevDayDataexternal)
+          .toNumber();
         return {
-          ...v,
-          tvl: tvl?.toNumber(),
-          tvlFormated: tvl?.toFormat(2),
+          tvl,
+          formatedTvl,
+          tvlPrevDay,
+          tvlChange: ((tvl - tvlPrevDay) / tvlPrevDay) * 100,
+          tvlChart,
+          canonical: canonical,
+          canonicalChart: (canonical / tvl) * canonical,
+          native: native,
+          nativeChart: (native / tvl) * native,
+          externalChart: (external / tvl) * external,
+          external: external,
+          timestamp,
+          canonicalPercent: (canonical / tvl) * 100,
+          nativePercent: (native / tvl) * 100,
+          externalPercent: (external / tvl) * 100,
+          canonicalChange:
+            ((canonical - prevDayDatacanonical) / prevDayDatacanonical) * 100,
+          nativeChange:
+            ((native - prevDayDatanative) / prevDayDatanative) * 100,
+          externalChange:
+            ((external - prevDayDataexternal) / prevDayDataexternal) * 100,
+          today: new Date(timestamp * 1000),
+          yesterday: new Date(prevDayDatatimestamp * 1000),
+          tvlPercent: 100,
         };
       });
     }
@@ -73,13 +113,15 @@ function L2BeatTvlStats({ projectId }: Props) {
         ?.plus(prevDayDataexternal)
         .toNumber();
       return {
-        tvl,
+        tvl: 1 * tvl,
         formatedTvl,
         tvlPrevDay,
         tvlChange: ((tvl - tvlPrevDay) / tvlPrevDay) * 100,
-        canonical,
-        native,
-        external,
+        canonical: (canonical / tvl) * canonical,
+        native: (native / tvl) * native,
+        external: (external / tvl) * external,
+        // native,
+        // external,
         timestamp,
         canonicalPercent: (canonical / tvl) * 100,
         nativePercent: (native / tvl) * 100,
@@ -120,7 +162,7 @@ function L2BeatTvlStats({ projectId }: Props) {
         <div className="grid lg:grid-cols-3 gap-4 py-5">
           <div className=" bg-base-200/30 p-4 space-y-2 rounded-lg">
             <div className="flex items-center gap-2 ">
-              <div className="w-5 h-5 bg-purple-400 rounded-lg border border-base-300"></div>
+              <div className="w-5 h-5 bg-purple-700 rounded-lg border border-base-300"></div>
               <p>Canonical</p>
             </div>
             <p className="text-lg font-bold opacity-70">
@@ -133,7 +175,7 @@ function L2BeatTvlStats({ projectId }: Props) {
           </div>
           <div className=" bg-base-200/30 p-4 space-y-2 rounded-lg">
             <div className="flex items-center gap-2 ">
-              <div className="w-5 h-5 bg-pink-400 rounded-lg border border-base-300"></div>
+              <div className="w-5 h-5 bg-pink-600 rounded-lg border border-base-300"></div>
               <p>Native</p>
             </div>
             <p className="text-lg font-bold opacity-70">
@@ -146,7 +188,7 @@ function L2BeatTvlStats({ projectId }: Props) {
           </div>
           <div className=" bg-base-200/30 p-4 space-y-2 rounded-lg">
             <div className="flex items-center gap-2 ">
-              <div className="w-5 h-5 bg-yellow-400 rounded-lg border border-base-300"></div>
+              <div className="w-5 h-5 bg-yellow-500 rounded-lg border border-base-300"></div>
               <p>External</p>
             </div>
             <p className="text-lg font-bold opacity-70">
@@ -159,7 +201,7 @@ function L2BeatTvlStats({ projectId }: Props) {
           </div>
         </div>
       </div>
-      <div className="px-10 py-5 ">
+      <div className="px-10 py-5 min-h-[15em]">
         <TVLChart mappedChartValues={mappedChartValues} />
       </div>
     </div>
@@ -172,11 +214,20 @@ const CustomTooltip = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     const [vPayload] = payload;
 
-    const { canonical, native, external, timestamp } = vPayload?.payload;
+    const {
+      canonical,
+      native,
+      external,
+      timestamp,
+      canonicalPercent,
+      nativePercent,
+      externalPercent,
+    } = vPayload?.payload;
     const tvl = new BigNumber(canonical)
       .plus(native)
       ?.plus(external)
       .toNumber();
+    console.log(`🚀 ~ file: L2BeatTvlStats.tsx:220 ~ tvl:`, tvl, canonical);
     const formatedTvl = numberFormater.format(tvl);
     return (
       <div
@@ -196,10 +247,10 @@ const CustomTooltip = ({ active, payload, label, rotation }: any) => {
             </div>
             <p className=" font-bold opacity-70 text-lg">$ {formatedTvl}</p>
           </div>
-          <hr />
+          <hr className="border-base-200" />
           <div className="h-full  flex justify-between w-full text-md">
             <div className="flex items-center gap-2 ">
-              <div className="w-3 h-3 bg-purple-400 rounded-lg border border-base-300"></div>
+              <div className="w-3 h-3 bg-purple-700 rounded-lg border border-base-300"></div>
               <p>Canonical</p>
             </div>
             <p className=" font-bold opacity-70">
@@ -209,7 +260,7 @@ const CustomTooltip = ({ active, payload, label, rotation }: any) => {
           </div>
           <div className="h-full  flex justify-between w-full text-md">
             <div className="flex items-center gap-2 ">
-              <div className="w-3 h-3 bg-pink-400 rounded-lg border border-base-300"></div>
+              <div className="w-3 h-3 bg-pink-600 rounded-lg border border-base-300"></div>
               <p>Native</p>
             </div>
             <p className=" font-bold opacity-70">
@@ -219,7 +270,7 @@ const CustomTooltip = ({ active, payload, label, rotation }: any) => {
           </div>
           <div className="h-full  flex justify-between w-full text-md">
             <div className="flex items-center gap-2 ">
-              <div className="w-3 h-3 bg-yellow-400 rounded-lg border border-base-300"></div>
+              <div className="w-3 h-3 bg-yellow-500 rounded-lg border border-base-300"></div>
               <p>External</p>
             </div>
             <p className=" font-bold opacity-70">
@@ -259,32 +310,41 @@ const TVLChart = ({ mappedChartValues }: any) => {
             <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
           </linearGradient>
         </defs>
-
-        <XAxis dataKey="timestampDate" className="text-xs" />
+        <Legend
+          verticalAlign="top"
+          content={() => <span className="text-xs">Chain TVL</span>}
+        />
+        <XAxis dataKey="timestampDate" className="text-xs" axisLine={false} />
         <Tooltip content={CustomTooltip} />
         <Area
           type="monotone"
-          dataKey="tvl"
+          dataKey="tvlChart"
           stroke="#8884d8"
           fillOpacity={1}
-          stackId="1"
-          fill="url(#colorUv)"
-          scale={20}
-        />
-        {/* <Area
-          type="monotone"
-          dataKey="native"
-          stackId="1"
-          stroke="#82ca9d"
-          fill="#82ca9d"
+          fill="none"
+          strokeWidth={2}
         />
         <Area
           type="monotone"
-          dataKey="canonical"
-          stackId="1"
-          stroke="#ffc658"
-          fill="#ffc658"
-        /> */}
+          dataKey="nativeChart"
+          stroke="#be185d"
+          fill="#be185d"
+          strokeWidth={2}
+        />
+        <Area
+          type="monotone"
+          dataKey="canonicalChart"
+          stroke="#7e22ce"
+          fill="#7e22ce"
+          strokeWidth={2}
+        />
+        <Area
+          type="monotone"
+          dataKey="externalChart"
+          stroke="#eab308"
+          fill="#eab308"
+          strokeWidth={2}
+        />
       </AreaChart>
     </ResponsiveContainer>
   );
