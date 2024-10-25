@@ -137,7 +137,7 @@ function AccountStatCard({ acc, isLoading, className }: any) {
             </div>
           </div>
         )}
-        <div className="p-5  bg-base-100/50 border   border-base-300/20 w-full rounded-lg">
+        <div className="p-5  bg-base-100/50    border-base-300/20 w-full ">
           <AccountChart account={acc?.id} />
         </div>
       </div>
@@ -175,7 +175,7 @@ const AccountChart = ({ account }: { account: string }) => {
         ).toDateString(),
       };
     });
-    return datas;
+    return datas?.reverse();
   }, [data?.accountDayDatas]);
 
   return (

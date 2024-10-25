@@ -84,6 +84,7 @@ export const ACCOUNT_DAY_DATAS_QUERY = gql`
       totalGasEth
       totalBlobHashesCount
       totalBlobBlocks
+      totalBlobGasEth
       account {
         id
       }
