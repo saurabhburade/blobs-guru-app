@@ -173,11 +173,7 @@ const TransactionRow = ({ txn }: any) => {
   const blobFeeGwei = useMemo(() => {
     return new BigNumber(txn?.blobGasEth).div(1e9).toFormat(5);
   }, [txn?.blobGasEth]);
-  console.log(
-    `🚀 ~ file: SingleAccount.tsx:176 ~ blobGasEth:`,
-    txn?.blobGasEth,
-    blobFeeGwei
-  );
+
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(txn?.blobGas));
   }, [txn?.blobGas]);

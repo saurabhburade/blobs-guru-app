@@ -227,7 +227,7 @@ const CustomTooltip = ({ active, payload, label, rotation }: any) => {
       .plus(native)
       ?.plus(external)
       .toNumber();
-    console.log(`🚀 ~ file: L2BeatTvlStats.tsx:220 ~ tvl:`, tvl, canonical);
+
     const formatedTvl = numberFormater.format(tvl);
     return (
       <div

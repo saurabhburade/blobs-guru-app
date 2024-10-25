@@ -4,6 +4,8 @@ import PoweredBy from "../Home/components/PoweredBy";
 import StatsOverview from "./components/StatsOverview";
 import BlobsStats from "./components/BlobsStats/BlobsStats";
 import TopAccountsStats from "./components/AccountStats/TopAccountsStats";
+import AccountsBySizePie from "./components/AccountStats/Pies/AccountsBySizePie";
+import AccountPies from "./components/AccountStats/Pies/AccountPies";
 
 type Props = {};
 
@@ -18,6 +20,12 @@ function StatsDataView({}: Props) {
         <div className="bg-base-100 border border-base-200">
           <div className="p-5 border-b border-base-200">Top Accounts</div>
           <TopAccountsStats />
+        </div>
+        <div className="bg-base-100 border border-base-200">
+          <div className="p-5 border-b border-base-200">
+            Account distribution
+          </div>
+          <AccountPies />
         </div>
       </div>
     </div>

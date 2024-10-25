@@ -183,3 +183,67 @@ export function formatEthereumValue(wei: number) {
     return `${wei} WEI`;
   }
 }
+
+interface Account {
+  id: string;
+  totalBlobTransactionCount: string;
+  totalBlobGas: string;
+  lastUpdatedBlock: string;
+  totalBlobGasEth: string;
+  totalBlobHashesCount: string;
+  totalFeeEth: string;
+  __typename: string;
+}
+
+interface OtherAccount {
+  totalBlobTransactionCount: number;
+  totalBlobGas: number;
+  totalBlobGasEth: string;
+  totalBlobHashesCount: number;
+  totalFeeEth: string;
+}
+
+interface Result {
+  topAccounts: Account[];
+  other: OtherAccount;
+}
+
+export function processAccounts(data: Account[]): Account[] {
+  // Sort the accounts by totalBlobGas in descending order using lodash
+  const sortedAccounts = _.orderBy(
+    data,
+    [(account: any) => BigInt(account.totalBlobGas)],
+    ["desc"]
+  );
+
+  // Get the top 5 accounts
+  const topAccounts = _.slice(sortedAccounts, 0, 6);
+
+  // Initialize the "Other" category
+  const other: OtherAccount = {
+    totalBlobTransactionCount: 0,
+    totalBlobGas: 0,
+    totalBlobGasEth: "0",
+    totalBlobHashesCount: 0,
+    totalFeeEth: "0",
+  };
+
+  // Sum the remaining accounts into the "Other" category using lodash
+  const otherAccounts = _.slice(sortedAccounts, 6);
+  _.forEach(otherAccounts, (account: any) => {
+    other.totalBlobTransactionCount += parseInt(
+      account.totalBlobTransactionCount
+    );
+    other.totalBlobGas += parseInt(account.totalBlobGas);
+    other.totalBlobGasEth = (
+      BigInt(other.totalBlobGasEth) + BigInt(account.totalBlobGasEth)
+    ).toString();
+    other.totalBlobHashesCount += parseInt(account.totalBlobHashesCount);
+    other.totalFeeEth = (
+      BigInt(other.totalFeeEth) + BigInt(account.totalFeeEth)
+    ).toString();
+  });
+
+  return [...topAccounts, other];
+  // return { topAccounts, other };
+}
