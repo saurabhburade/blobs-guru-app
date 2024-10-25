@@ -8,7 +8,8 @@ import {
 import { formatAddress, formatBytes, processAccounts } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
-import React, { PureComponent, useEffect, useMemo } from "react";
+import _ from "lodash";
+import React, { PureComponent, useEffect, useMemo, useState } from "react";
 import {
   PieChart,
   Pie,
@@ -73,9 +74,22 @@ export default function AccountsBySizePie({ collectiveData }: any) {
         basicAccountDetail,
       };
     });
+    const allExceptLast = _.slice(datas, 0, -1);
+    const sorted = _.orderBy(
+      allExceptLast,
+      [(account) => parseInt(account.totalBlobGas)],
+      ["desc"]
+    );
 
-    return datas;
+    // Add the last item back to the sorted array
+    const lastItem = _.last(datas);
+
+    return [...sorted, lastItem];
   }, [data?.accounts, collectiveData]);
+  const [active, setActive] = useState(-1);
+  const onPieEnter = (_: any, index: number) => {
+    setActive(index);
+  };
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
       <div className="grid lg:grid-cols-[1fr_2fr] w-full h-full ">
@@ -98,6 +112,15 @@ export default function AccountsBySizePie({ collectiveData }: any) {
               dataKey="percent"
               cornerRadius={5}
               stroke="0"
+              activeIndex={active}
+              activeShape={renderActiveShape}
+              onMouseEnter={onPieEnter}
+              // cornerRadius={5}
+              onMouseLeave={() => setActive(-1)}
+              onMouseOut={() => setActive(-1)}
+              onMouseOutCapture={() => setActive(-1)}
+              onTouchEnd={() => setActive(-1)}
+              onTouchCancel={() => setActive(-1)}
             >
               {chartData?.map((entry, index) => (
                 <Cell
@@ -118,6 +141,9 @@ export default function AccountsBySizePie({ collectiveData }: any) {
             <div
               key={`account-row-${entry?.id}`}
               className="p-2 hover:bg-base-200/50 rounded-lg flex justify-between  items-center"
+              onMouseEnter={() => {
+                setActive(index);
+              }}
             >
               <div className="flex items-center gap-2">
                 {entry?.basicAccountDetail?.logoUri ? (
@@ -162,4 +188,58 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   }
 
   return null;
+};
+const renderActiveShape = (props: any) => {
+  const RADIAN = Math.PI / 180;
+  const {
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill,
+    payload,
+    percent,
+    value,
+    amount,
+  } = props;
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+  const sx = cx + (outerRadius + 10) * cos;
+  const sy = cy + (outerRadius + 10) * sin;
+  const mx = cx + (outerRadius + 30) * cos;
+  const my = cy + (outerRadius + 30) * sin;
+  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  const ey = my;
+  const textAnchor = cos >= 0 ? "start" : "end";
+
+  return (
+    <g>
+      {/* <text x={cx} y={cy} dy={8} textAnchor="middle" fill={"blue"}>
+        {payload.name}
+      </text> */}
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        cornerRadius={5}
+        opacity={0.8}
+        fill={fill}
+      />
+      <Sector
+        cx={cx}
+        cy={cy}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        innerRadius={outerRadius + 6}
+        outerRadius={outerRadius + 10}
+        fill={fill}
+      />
+    </g>
+  );
 };
