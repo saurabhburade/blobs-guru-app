@@ -48,6 +48,21 @@ export const TOP_BLOB_ACCOUNTS_QUERY = gql`
       totalBlobGasEth
       totalBlobHashesCount
       totalFeeEth
+      totalBlobBlocks
+    }
+  }
+`;
+export const TOP_BLOB_ACCOUNTS_BLOCK_PAGE_QUERY = gql`
+  query {
+    accounts(first: 10, orderBy: totalBlobBlocks, orderDirection: desc) {
+      id
+      totalBlobTransactionCount
+      totalBlobGas
+      lastUpdatedBlock
+      totalBlobGasEth
+      totalBlobHashesCount
+      totalFeeEth
+      totalBlobBlocks
     }
   }
 `;

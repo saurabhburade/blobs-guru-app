@@ -192,6 +192,7 @@ interface Account {
   totalBlobGasEth: string;
   totalBlobHashesCount: string;
   totalFeeEth: string;
+  totalBlobBlocks?: string;
   __typename: string;
 }
 
@@ -201,6 +202,7 @@ interface OtherAccount {
   totalBlobGasEth: string;
   totalBlobHashesCount: number;
   totalFeeEth: string;
+  totalBlobBlocks?: string;
 }
 
 interface Result {
@@ -226,6 +228,7 @@ export function processAccounts(data: Account[]): Account[] {
     totalBlobGasEth: "0",
     totalBlobHashesCount: 0,
     totalFeeEth: "0",
+    totalBlobBlocks: "0",
   };
 
   // Sum the remaining accounts into the "Other" category using lodash
@@ -242,7 +245,17 @@ export function processAccounts(data: Account[]): Account[] {
     other.totalFeeEth = (
       BigInt(other.totalFeeEth) + BigInt(account.totalFeeEth)
     ).toString();
+    if (account?.totalBlobBlocks && other?.totalBlobBlocks) {
+      console.log(
+        `🚀 ~ file: utils.ts:249 ~ account?.totalBlobBlocks:`,
+        account?.totalBlobBlocks
+      );
+      other.totalBlobBlocks = (
+        BigInt(other?.totalBlobBlocks) + BigInt(account?.totalBlobBlocks)
+      ).toString();
+    }
   });
+  console.log(`🚀 ~ file: utils.ts:262 ~ other:`, other);
 
   return [...topAccounts, other];
   // return { topAccounts, other };
