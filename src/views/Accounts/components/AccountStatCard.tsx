@@ -1,5 +1,12 @@
 import * as echarts from "echarts";
-import { Database, NotepadText, User } from "lucide-react";
+import {
+  Coins,
+  Database,
+  DollarSign,
+  NotepadText,
+  Receipt,
+  User,
+} from "lucide-react";
 import React, { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import { cn, formatAddress, formatBytes } from "@/lib/utils";
@@ -28,8 +35,15 @@ function AccountStatCard({ acc, isLoading, className }: any) {
   const totalBlobGasEth = useMemo(() => {
     return new BigNumber(acc?.totalBlobGasEth).div(1e18).toFormat(4);
   }, [acc?.totalBlobGasEth]);
-  const totalFeeEth = useMemo(() => {
-    return new BigNumber(acc?.totalFeeEth).div(1e18).toFormat(4);
+  const totalBlobGasUSD = useMemo(() => {
+    return new BigNumber(acc?.totalBlobGasUSD).div(1e18).toFormat(2);
+  }, [acc?.totalBlobGasUSD]);
+  const costPerKb = useMemo(() => {
+    return new BigNumber(Number(acc?.totalBlobGasUSD))
+      .div(Number(acc?.totalBlobGas))
+      .div(1e18)
+      .multipliedBy(1024)
+      .toFormat(6);
   }, [acc?.totalFeeEth]);
   return (
     <div
@@ -104,7 +118,7 @@ function AccountStatCard({ acc, isLoading, className }: any) {
                 {new BigNumber(acc?.totalBlobHashesCount)?.toFormat()}
               </p>
             </div>
-            <div className="flex justify-between items-center p-4">
+            <div className="flex justify-between items-center  py-3 p-4">
               <div className="flex items-center gap-2">
                 <NotepadText />
                 <p className=""> Blobs Transactions</p>
@@ -114,7 +128,7 @@ function AccountStatCard({ acc, isLoading, className }: any) {
                 {new BigNumber(acc?.totalBlobTransactionCount)?.toFormat()}
               </p>
             </div>
-            <div className="flex justify-between items-center p-4">
+            <div className="flex justify-between items-center py-3 p-4">
               <div className="flex items-center gap-2">
                 <Database />
 
@@ -122,7 +136,7 @@ function AccountStatCard({ acc, isLoading, className }: any) {
               </div>
               <p className="text-xl font-bold"> {totalBlobSize} </p>
             </div>
-            <div className="flex justify-between items-center p-4">
+            <div className="flex justify-between items-center py-3 p-4">
               <div className="flex items-center gap-2">
                 <img
                   src="/images/icons/eth.svg"
@@ -134,6 +148,20 @@ function AccountStatCard({ acc, isLoading, className }: any) {
                 <p className=""> Blobs fee</p>
               </div>
               <p className="text-xl font-bold"> {totalBlobGasEth} ETH</p>
+            </div>
+            <div className="flex justify-between items-center  p-4">
+              <div className="flex items-center gap-2">
+                <DollarSign />
+                <p className=""> Blobs fee</p>
+              </div>
+              <p className="text-xl font-bold"> {totalBlobGasUSD} USD</p>
+            </div>
+            <div className="flex justify-between items-center  p-4">
+              <div className="flex items-center gap-2">
+                <DollarSign />
+                <p className=""> Fee per KiB</p>
+              </div>
+              <p className="text-xl font-bold"> {costPerKb} USD</p>
             </div>
           </div>
         )}

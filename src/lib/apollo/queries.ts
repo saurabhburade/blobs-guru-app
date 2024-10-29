@@ -40,6 +40,7 @@ export const TOP_BLOB_ACCOUNTS_QUERY = gql`
       first: 15
       orderBy: totalBlobTransactionCount
       orderDirection: desc
+      where: { type: 1 }
     ) {
       id
       totalBlobTransactionCount
@@ -54,7 +55,12 @@ export const TOP_BLOB_ACCOUNTS_QUERY = gql`
 `;
 export const TOP_BLOB_ACCOUNTS_BLOCK_PAGE_QUERY = gql`
   query {
-    accounts(first: 10, orderBy: totalBlobBlocks, orderDirection: desc) {
+    accounts(
+      first: 10
+      orderBy: totalBlobBlocks
+      orderDirection: desc
+      where: { type: 1 }
+    ) {
       id
       totalBlobTransactionCount
       totalBlobGas
@@ -68,7 +74,12 @@ export const TOP_BLOB_ACCOUNTS_BLOCK_PAGE_QUERY = gql`
 `;
 export const TOP_FIVE_BLOB_ACCOUNTS_QUERY = gql`
   query {
-    accounts(first: 4, orderBy: totalBlobHashesCount, orderDirection: desc) {
+    accounts(
+      first: 4
+      orderBy: totalBlobGasEth
+      orderDirection: desc
+      where: { type: 1 }
+    ) {
       id
 
       totalBlobGas
@@ -77,7 +88,7 @@ export const TOP_FIVE_BLOB_ACCOUNTS_QUERY = gql`
       totalBlobGasEth
       totalBlobHashesCount
       totalFeeEth
-
+      totalBlobGasUSD
       lastUpdatedBlock
       totalBlobGas
     }
@@ -86,6 +97,7 @@ export const TOP_FIVE_BLOB_ACCOUNTS_QUERY = gql`
 export const ACCOUNT_DAY_DATAS_QUERY = gql`
   query AccountDayDatas($address: String) {
     accountDayDatas(
+      skip: 1
       first: 15
       orderBy: dayStartTimestamp
       orderDirection: desc
@@ -112,6 +124,7 @@ export const TOP_BLOB_ACCOUNTS_BY_HASHES_QUERY = gql`
       first: 15
       orderBy: totalBlobTransactionCount
       orderDirection: desc
+      where: { type: 1 }
     ) {
       id
       totalBlobTransactionCount
@@ -323,6 +336,7 @@ export const BLOB_ACCOUNTS_EXPLORER_QUERY = gql`
       skip: $skip
       orderBy: totalBlobHashesCount
       orderDirection: desc
+      where: { type: 1 }
     ) {
       id
       totalBlobGas
@@ -344,6 +358,7 @@ export const BLOB_ACCOUNT_SINGLE_QUERY = gql`
       totalBlobGasEth
       totalBlobHashesCount
       totalFeeEth
+      totalBlobGasUSD
     }
   }
 `;
