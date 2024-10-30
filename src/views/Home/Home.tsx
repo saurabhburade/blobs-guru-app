@@ -11,6 +11,7 @@ import { convertBytes, formatBytes } from "@/lib/utils";
 import BlobTransactionDayChart from "./components/BlobTransactionDayChart";
 import PoweredBy from "./components/PoweredBy";
 import SearchTxn from "./components/SearchTxn";
+import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
 type Props = {};
 
 function Home({}: Props) {
@@ -48,10 +49,13 @@ const Stats = () => {
   const { data, loading: statsLoading } = useQuery(COLLECTIVE_STAT_QUERY);
 
   const blobsPerBlock = useMemo(() => {
+    const totalBlk = new BigNumber(
+      Number(data?.collectiveData?.lastUpdatedBlock)
+    ).minus(Number(SYNC_START_BLOCK));
     const blobsPerBlockRaw = new BigNumber(
       data?.collectiveData?.totalBlobHashesCount
     )
-      .div(data?.collectiveData?.totalBlobBlocks)
+      .div(totalBlk)
 
       .toFormat(2);
     return blobsPerBlockRaw || 0;
@@ -98,9 +102,40 @@ const Stats = () => {
     ).toFormat(0);
     return totalBlobHashesCountBn || 0;
   }, [data?.collectiveData?.totalBlobHashesCount]);
+  const costPerKb = useMemo(() => {
+    return new BigNumber(Number(data?.collectiveData?.totalBlobGasUSD))
+      .div(Number(data?.collectiveData?.totalBlobGas))
+      .div(1e18)
+      .multipliedBy(1024)
+      .toFormat(6)
+      .concat(" USD/KiB");
+  }, [data?.collectiveData?.totalBlobGasUSD]);
+  const blobsPerSec = useMemo(() => {
+    const blkTime = new BigNumber(
+      Number(data?.collectiveData?.lastUpdatedBlock)
+    )
+      .minus(Number(SYNC_START_BLOCK))
+      .multipliedBy(BLOCK_DURATION_SEC);
+    return new BigNumber(data?.collectiveData?.totalBlobHashesCount)
+      .div(blkTime)
+      .toFormat(4)
+      .concat(" blobs/sec");
+  }, [data?.collectiveData?.totalBlobGasUSD]);
+  const dataPerSec = useMemo(() => {
+    const blkTime = new BigNumber(
+      Number(data?.collectiveData?.lastUpdatedBlock)
+    )
+      .minus(Number(SYNC_START_BLOCK))
+      .multipliedBy(BLOCK_DURATION_SEC);
+    return new BigNumber(Number(data?.collectiveData?.totalBlobGas))
+      .div(blkTime)
+      .div(1024)
+      .toFormat(2)
 
+      .concat(" KiB/sec");
+  }, [data?.collectiveData?.totalBlobGasUSD]);
   return (
-    <div className="grid lg:grid-cols-4 gap-0  lg:h-[12em]">
+    <div className="grid lg:grid-cols-4 gap-0  lg:h-[20em]">
       <StatCard
         title="Block height"
         value={lastUpdatedBlock}
@@ -122,7 +157,7 @@ const Stats = () => {
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className=""></div> */}
       {statsLoading && (
-        <div className="bg-base-100 h-[12em] row-span-2 border p-2 border-base-200 animate-pulse">
+        <div className="bg-base-100 h-[20em] row-span-3 border p-2 border-base-200 animate-pulse">
           <div className="h-full w-full bg-base-100  space-y-2 border-base-200 animate-pulse flex justify-between items-end gap-4">
             <p className=" text-sm opacity-50 h-20 w-8 rounded-full bg-base-200 animate-pulse"></p>
             <p className=" text-sm opacity-50 h-16 w-8 rounded-full bg-base-200 animate-pulse"></p>
@@ -134,7 +169,7 @@ const Stats = () => {
         </div>
       )}
       {!statsLoading && (
-        <div className="bg-base-100 h-[12em] row-span-2 border p-2 border-base-200">
+        <div className="bg-base-100 h-[20em] row-span-3 border p-2 border-base-200">
           <BlobTransactionDayChart />
         </div>
       )}
@@ -151,6 +186,21 @@ const Stats = () => {
       <StatCard
         title="Blobs per block"
         value={`${blobsPerBlock?.toString()} blobs/block`}
+        isLoading={statsLoading}
+      />
+      <StatCard
+        title="Fee per KiB"
+        value={costPerKb}
+        isLoading={statsLoading}
+      />
+      <StatCard
+        title="Blobs per sec"
+        value={blobsPerSec}
+        isLoading={statsLoading}
+      />
+      <StatCard
+        title="Data per sec"
+        value={`${dataPerSec?.toString()}`}
         isLoading={statsLoading}
       />
     </div>

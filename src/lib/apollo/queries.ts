@@ -13,6 +13,7 @@ export const COLLECTIVE_STAT_QUERY = gql`
       totalBlobBlocks
       totalBlobAccounts
       totalBlobGas
+      totalBlobGasUSD
     }
   }
 `;

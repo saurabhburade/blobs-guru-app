@@ -13,6 +13,8 @@ export const wagmiconfig = createConfig({
 interface AddressBook {
   [address: string]: any;
 }
+export const SYNC_START_BLOCK = 19426947;
+export const BLOCK_DURATION_SEC = 12;
 export const ADDRESS_BOOK: AddressBook = {
   "0x000000633b68f5d8d3a86593ebb815b4663bcbe0": {
     name: "Taikobeat Proposer",
