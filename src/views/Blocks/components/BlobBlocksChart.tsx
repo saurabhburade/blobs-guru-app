@@ -1,5 +1,6 @@
 "use client";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
+import { formatDateDDMM } from "@/lib/time";
 import { formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
@@ -59,9 +60,9 @@ export default function BlobBlocksChart({ duration }: { duration: number }) {
             .toFormat(8),
           Size: formatBytes(Number(bd?.totalBlobGas)),
           timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
-          timestamp2: new Date(
-            Number(bd?.dayStartTimestamp) * 1000
-          ).toDateString(),
+          timestamp2: formatDateDDMM(
+            new Date(Number(bd?.dayStartTimestamp) * 1000)
+          ),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
           totalBlobBlocks: Number(bd?.totalBlobBlocks),

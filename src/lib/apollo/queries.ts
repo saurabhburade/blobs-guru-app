@@ -32,9 +32,24 @@ export const BLOB_DAY_DATAS_QUERY = gql`
       totalBlobGasEth
       totalFeeEth
       totalBlobBlocks
+      avgEthPrice
+      totalBlobGasUSD
     }
   }
 `;
+export const ETH_PRICE_DAY_DATAS_QUERY = gql`
+  query BlobsDayDatas($duration: Int) {
+    blobsDayDatas(
+      first: $duration
+      orderBy: dayStartTimestamp
+      orderDirection: desc
+    ) {
+      avgEthPrice
+      dayStartTimestamp
+    }
+  }
+`;
+
 export const TOP_BLOB_ACCOUNTS_QUERY = gql`
   query {
     accounts(
@@ -77,7 +92,7 @@ export const TOP_FIVE_BLOB_ACCOUNTS_QUERY = gql`
   query {
     accounts(
       first: 4
-      orderBy: totalBlobGasEth
+      orderBy: totalBlobGas
       orderDirection: desc
       where: { type: 1 }
     ) {
@@ -91,7 +106,6 @@ export const TOP_FIVE_BLOB_ACCOUNTS_QUERY = gql`
       totalFeeEth
       totalBlobGasUSD
       lastUpdatedBlock
-      totalBlobGas
     }
   }
 `;

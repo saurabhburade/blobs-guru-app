@@ -1,7 +1,7 @@
 "use client";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 import { formatDateDDMM } from "@/lib/time";
-import { formatBytes } from "@/lib/utils";
+import { formatBytes, formatEthereumValue } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import React, { PureComponent, useMemo } from "react";
@@ -15,6 +15,9 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  AreaChart,
+  Area,
+  ReferenceArea,
 } from "recharts";
 const getPath = (
   x: number,
@@ -38,7 +41,11 @@ const TriangleBar = (props: {
 
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
-export default function BlobPerBlocksChart({ duration }: { duration: number }) {
+export default function BlobOnlyEthUSDFeeChart({
+  duration,
+}: {
+  duration: number;
+}) {
   const { data } = useQuery(BLOB_DAY_DATAS_QUERY, {
     variables: {
       duration,
@@ -54,7 +61,7 @@ export default function BlobPerBlocksChart({ duration }: { duration: number }) {
       ?.map((bd: any) => {
         return {
           ...bd,
-          sizeValue: Number(bd?.totalFeeEth),
+          sizeValue: Number(bd?.totalBlobGas),
           sizeValueEth: new BigNumber(Number(bd?.totalFeeEth))
             .div(1e18)
             .toFormat(8),
@@ -65,9 +72,15 @@ export default function BlobPerBlocksChart({ duration }: { duration: number }) {
           ),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
-          totalBlobBlocks: Number(bd?.totalBlobBlocks),
-          blobsPerBlock:
-            Number(bd?.totalBlobHashesCount) / Number(bd?.totalBlobBlocks),
+          totalBlobGasEth: Number(bd?.totalBlobGasEth),
+          totalBlobGasUSD: Number(bd?.totalBlobGasUSD),
+          totalBlobGasUSDF: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e18)
+            .toFormat(2),
+          costPerKiB: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e19)
+            .div(Number(bd?.totalBlobGas))
+            .multipliedBy(1024),
         };
       })
       ?.reverse();
@@ -76,7 +89,7 @@ export default function BlobPerBlocksChart({ duration }: { duration: number }) {
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart width={400} height={400} data={chartData}>
+        <AreaChart width={400} height={400} data={chartData}>
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
             // @ts-ignore
@@ -85,16 +98,21 @@ export default function BlobPerBlocksChart({ duration }: { duration: number }) {
           <Legend
             verticalAlign="top"
             content={() => (
-              <span className="text-xs">Last {duration} days blobs/block</span>
+              <span className="text-xs">
+                Last {duration} days Blobs fee [USD]
+              </span>
             )}
           />
-          <Bar
-            dataKey="blobsPerBlock"
-            fill="#8884d8"
-            radius={10}
-            // @ts-ignore
-            shape={<TriangleBar />}
-          />
+
+          <Area
+            type="monotone"
+            dataKey="totalBlobGasUSD"
+            stroke="#8884d8"
+            fillOpacity={1}
+            strokeWidth={2}
+            fill="url(#colorUvAccStatCard)"
+          ></Area>
+
           <XAxis
             dataKey="timestamp2"
             className="text-[10px] !text-current"
@@ -102,23 +120,25 @@ export default function BlobPerBlocksChart({ duration }: { duration: number }) {
             allowDataOverflow
             axisLine={false}
           />
-        </BarChart>
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   );
 }
+
 const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className={` bg-base-200 w-1/2 rounded-lg   overflow-hidden text-xs`}
+        className={` bg-base-200 w-[15em] rounded-lg   overflow-hidden text-xs`}
       >
         <div className="p-4 ">
           <p className=" ">
-            Blobs per Block :{" "}
-            {`${new BigNumber(payload[0]?.payload?.blobsPerBlock).toFixed(2)}`}
+            Blobs fee : $ {`${payload[0]?.payload?.totalBlobGasUSDF}`}{" "}
           </p>
-          <p className="  ">Timestamp: {`${payload[0]?.payload?.timestamp}`}</p>
+          <p className="  ">
+            Timestamp: {`${payload[0]?.payload?.timestamp2}`}
+          </p>
         </div>
       </div>
     );

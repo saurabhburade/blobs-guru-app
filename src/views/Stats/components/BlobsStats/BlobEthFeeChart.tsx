@@ -1,5 +1,6 @@
 "use client";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
+import { formatDateDDMM } from "@/lib/time";
 import { formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
@@ -59,9 +60,9 @@ export default function BlobEthFeeChart({ duration }: { duration: number }) {
             .toFormat(8),
           Size: formatBytes(Number(bd?.totalBlobGas)),
           timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
-          timestamp2: new Date(
-            Number(bd?.dayStartTimestamp) * 1000
-          ).toDateString(),
+          timestamp2: formatDateDDMM(
+            new Date(Number(bd?.dayStartTimestamp) * 1000)
+          ),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
         };
@@ -120,7 +121,9 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
             Blob tx fee :{" "}
             {`${new BigNumber(payload[0]?.payload?.sizeValueEth)}`} ETH
           </p>
-          <p className="  ">Timestamp: {`${payload[0]?.payload?.timestamp}`}</p>
+          <p className="  ">
+            Timestamp: {`${payload[0]?.payload?.timestamp2}`}
+          </p>
         </div>
       </div>
     );

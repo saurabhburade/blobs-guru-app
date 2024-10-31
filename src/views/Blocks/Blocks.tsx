@@ -7,7 +7,12 @@ import {
   BLOB_BLOCKS_TOP_QUERY,
   COLLECTIVE_STAT_QUERY,
 } from "@/lib/apollo/queries";
-import { formatAddress, formatBytes, formatEthereumValue } from "@/lib/utils";
+import {
+  cn,
+  formatAddress,
+  formatBytes,
+  formatEthereumValue,
+} from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import { Box, Database } from "lucide-react";
@@ -21,6 +26,7 @@ import { formatGwei, hexToBigInt } from "viem";
 import { useBlocksExplorerWithRPCData } from "@/hooks/useBlocksData";
 import { timeAgo } from "@/lib/time";
 import RecentBlocksChart from "./components/RecentBlocksChart";
+import ETHPriceDayChart from "../Stats/components/ETHPriceDayChart";
 
 type Props = {};
 
@@ -28,9 +34,19 @@ function Blocks({}: Props) {
   return (
     <div>
       <Header />
-      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
+      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-2 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+        {/* <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
           <RecentBlocksChart duration={90} />
+        </div> */}
+        <div className="grid lg:grid-cols-2 lg:h-[20em] gap-2">
+          <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
+            {/* <HeatMap /> */}
+            <ETHPriceDayChart duration={90} />
+          </div>
+
+          <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
+            <RecentBlocksChart duration={90} />
+          </div>
         </div>
         <div className="grid lg:grid-cols-2 lg:h-[20em] gap-2">
           <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
@@ -41,7 +57,7 @@ function Blocks({}: Props) {
             <BlobPerBlocksChart duration={15} />
           </div>
         </div>
-        <BlockStats />
+        {/* <BlockStats /> */}
         {/* <BlocksCubes /> */}
         <BlocksRows />
       </div>
@@ -50,7 +66,28 @@ function Blocks({}: Props) {
 }
 
 export default Blocks;
-
+// const HeatMap = () => {
+//   return (
+//     <div className="w-full h-full">
+//       <div className="grid gap-2 grid-cols-[repeat(20,minmax(0,1fr))] grid-rows-7 ">
+//         {new Array(180).fill(1).map((v, idx) => {
+//           const randomOpacity = Math.floor(Math.random() * 101);
+//           return (
+//             <p
+//               className={cn("w-5 h-5 bg-primary rounded-lg")}
+//               style={{
+//                 opacity: `${randomOpacity}%`,
+//               }}
+//               key={`DUMMY_HEAT_${idx}`}
+//             >
+//               {idx}
+//             </p>
+//           );
+//         })}
+//       </div>
+//     </div>
+//   );
+// };
 const BlockStats = () => {
   const { data, loading } = useQuery(COLLECTIVE_STAT_QUERY);
 

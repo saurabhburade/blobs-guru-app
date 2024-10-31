@@ -1,5 +1,6 @@
 "use client";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
+import { formatDateDDMM } from "@/lib/time";
 import { formatBytes, formatEthereumValue } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
@@ -66,12 +67,17 @@ export default function BlobOnlyEthFeeChart({
             .toFormat(8),
           Size: formatBytes(Number(bd?.totalBlobGas)),
           timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
-          timestamp2: new Date(
-            Number(bd?.dayStartTimestamp) * 1000
-          ).toDateString(),
+          timestamp2: formatDateDDMM(
+            new Date(Number(bd?.dayStartTimestamp) * 1000)
+          ),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
           totalBlobGasEth: Number(bd?.totalBlobGasEth),
+          costPerKiB: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e19)
+            .div(Number(bd?.totalBlobGas))
+            .multipliedBy(1024)
+            .toFormat(5),
         };
       })
       ?.reverse();
@@ -119,14 +125,19 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className={` bg-base-200 w-1/2 rounded-lg   overflow-hidden text-xs`}
+        className={` bg-base-200 w-[18em] rounded-lg   overflow-hidden text-sm`}
       >
         <div className="p-4 ">
           <p className=" ">
             Blobs fee :{" "}
             {`${formatEthereumValue(Number(payload[0]?.payload?.totalBlobGasEth))}`}{" "}
           </p>
-          <p className="  ">Timestamp: {`${payload[0]?.payload?.timestamp}`}</p>
+          <p className=" ">
+            Cost per KiB : ${`${payload[0]?.payload?.costPerKiB}`}{" "}
+          </p>
+          <p className="  ">
+            Timestamp: {`${payload[0]?.payload?.timestamp2}`}
+          </p>
         </div>
       </div>
     );
