@@ -41,11 +41,7 @@ const TriangleBar = (props: {
 
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
-export default function BlobOnlyEthFeeChart({
-  duration,
-}: {
-  duration: number;
-}) {
+export default function BlobCostChart({ duration }: { duration: number }) {
   const { data } = useQuery(BLOB_DAY_DATAS_QUERY, {
     variables: {
       duration,
@@ -61,7 +57,7 @@ export default function BlobOnlyEthFeeChart({
       ?.map((bd: any) => {
         return {
           ...bd,
-          sizeValue: Number(bd?.totalFeeEth),
+          sizeValue: Number(bd?.totalBlobGas),
           sizeValueEth: new BigNumber(Number(bd?.totalFeeEth))
             .div(1e18)
             .toFormat(8),
@@ -73,11 +69,22 @@ export default function BlobOnlyEthFeeChart({
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
           totalBlobGasEth: Number(bd?.totalBlobGasEth),
+          totalBlobGasUSD: Number(bd?.totalBlobGasUSD),
+          totalBlobGasUSDF: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e18)
+            .toFormat(2),
           costPerKiB: new BigNumber(Number(bd?.totalBlobGasUSD))
-            .div(1e19)
+            .div(1e18)
             .div(Number(bd?.totalBlobGas))
-            .multipliedBy(1024)
-            .toFormat(5),
+            .multipliedBy(1024),
+          costPerBlob: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e18)
+            .div(Number(bd?.totalBlobHashesCount))
+            .toNumber(),
+          costPerBlobF: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e18)
+            .div(Number(bd?.totalBlobHashesCount))
+            .toFormat(2),
         };
       })
       ?.reverse();
@@ -95,13 +102,15 @@ export default function BlobOnlyEthFeeChart({
           <Legend
             verticalAlign="top"
             content={() => (
-              <span className="text-xs">Last {duration} days Blobs fee</span>
+              <span className="text-xs">
+                Last {duration} days cost per Blob
+              </span>
             )}
           />
 
           <Area
             type="monotone"
-            dataKey="totalBlobGasEth"
+            dataKey="costPerBlob"
             stroke="#8884d8"
             fillOpacity={1}
             strokeWidth={2}
@@ -125,16 +134,12 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className={` bg-base-200 w-[18em] rounded-lg   overflow-hidden text-sm`}
+        className={` bg-base-200 w-[15em] rounded-lg   overflow-hidden text-xs`}
       >
         <div className="p-4 ">
           <p className=" ">
-            Blobs fee :{" "}
-            {`${formatEthereumValue(Number(payload[0]?.payload?.totalBlobGasEth))}`}{" "}
+            Cost per blob : $ {`${payload[0]?.payload?.costPerBlobF}`}{" "}
           </p>
-          {/* <p className=" ">
-            Cost per KiB : ${`${payload[0]?.payload?.costPerKiB}`}{" "}
-          </p> */}
           <p className="  ">
             Timestamp: {`${payload[0]?.payload?.timestamp2}`}
           </p>

@@ -37,6 +37,26 @@ export const BLOB_DAY_DATAS_QUERY = gql`
     }
   }
 `;
+export const BLOB_HOUR_DATAS_QUERY = gql`
+  query BlobsHourDatas($duration: Int) {
+    blobsHourDatas(
+      first: $duration
+      orderBy: hourStartTimestamp
+      orderDirection: desc
+    ) {
+      totalBlobTransactionCount
+      hourStartTimestamp
+      totalBlobGas
+      totalBlobAccounts
+      totalBlobHashesCount
+      totalBlobGasEth
+      totalFeeEth
+      totalBlobBlocks
+      avgEthPrice
+      totalBlobGasUSD
+    }
+  }
+`;
 export const ETH_PRICE_DAY_DATAS_QUERY = gql`
   query BlobsDayDatas($duration: Int) {
     blobsDayDatas(

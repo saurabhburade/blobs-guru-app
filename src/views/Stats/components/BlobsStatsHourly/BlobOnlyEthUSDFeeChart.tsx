@@ -1,5 +1,8 @@
 "use client";
-import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
+import {
+  BLOB_DAY_DATAS_QUERY,
+  BLOB_HOUR_DATAS_QUERY,
+} from "@/lib/apollo/queries";
 import { formatDateDDMM } from "@/lib/time";
 import { formatBytes, formatEthereumValue } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
@@ -41,12 +44,26 @@ const TriangleBar = (props: {
 
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
-export default function BlobOnlyEthFeeChart({
+const dateFormater = new Intl.DateTimeFormat("en-US", {
+  day: "2-digit",
+  month: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  timeZone: "UTC",
+});
+
+const dayFormater = new Intl.DateTimeFormat("en-US", {
+  hour: "2-digit",
+  minute: "2-digit",
+  timeZone: "UTC",
+});
+export default function BlobOnlyEthUSDFeeChart({
   duration,
 }: {
   duration: number;
 }) {
-  const { data } = useQuery(BLOB_DAY_DATAS_QUERY, {
+  const { data } = useQuery(BLOB_HOUR_DATAS_QUERY, {
     variables: {
       duration,
     },
@@ -57,32 +74,45 @@ export default function BlobOnlyEthFeeChart({
   // totalBlobAccounts;
   // totalBlobHashesCount;
   const chartData = useMemo(() => {
-    const datas = data?.blobsDayDatas
+    const datas = data?.blobsHourDatas
       ?.map((bd: any) => {
         return {
           ...bd,
-          sizeValue: Number(bd?.totalFeeEth),
+          sizeValue: Number(bd?.totalBlobGas),
           sizeValueEth: new BigNumber(Number(bd?.totalFeeEth))
             .div(1e18)
             .toFormat(8),
           Size: formatBytes(Number(bd?.totalBlobGas)),
-          timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
-          timestamp2: formatDateDDMM(
-            new Date(Number(bd?.dayStartTimestamp) * 1000)
+          timestamp: dateFormater.format(
+            new Date(Number(bd?.hourStartTimestamp) * 1000)
+          ),
+          timestamp2: dayFormater.format(
+            new Date(Number(bd?.hourStartTimestamp) * 1000)
           ),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
           totalBlobGasEth: Number(bd?.totalBlobGasEth),
+          totalBlobGasUSD: Number(bd?.totalBlobGasUSD),
+          totalBlobGasUSDF: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e18)
+            .toFormat(2),
           costPerKiB: new BigNumber(Number(bd?.totalBlobGasUSD))
-            .div(1e19)
+            .div(1e18)
             .div(Number(bd?.totalBlobGas))
-            .multipliedBy(1024)
-            .toFormat(5),
+            .multipliedBy(1024),
+          costPerBlob: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e18)
+            .div(Number(bd?.totalBlobHashesCount))
+            .toNumber(),
+          costPerBlobF: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e18)
+            .div(Number(bd?.totalBlobHashesCount))
+            .toFormat(2),
         };
       })
       ?.reverse();
     return datas;
-  }, [data?.blobsDayDatas]);
+  }, [data?.blobsHourDatas]);
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
@@ -95,13 +125,15 @@ export default function BlobOnlyEthFeeChart({
           <Legend
             verticalAlign="top"
             content={() => (
-              <span className="text-xs">Last {duration} days Blobs fee</span>
+              <span className="text-xs">
+                Last {duration} hours Blobs fee [USD]
+              </span>
             )}
           />
 
           <Area
             type="monotone"
-            dataKey="totalBlobGasEth"
+            dataKey="totalBlobGasUSD"
             stroke="#8884d8"
             fillOpacity={1}
             strokeWidth={2}
@@ -125,19 +157,13 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className={` bg-base-200 w-[18em] rounded-lg   overflow-hidden text-sm`}
+        className={` bg-base-200 w-[15em] rounded-lg   overflow-hidden text-xs`}
       >
         <div className="p-4 ">
           <p className=" ">
-            Blobs fee :{" "}
-            {`${formatEthereumValue(Number(payload[0]?.payload?.totalBlobGasEth))}`}{" "}
+            Blobs fee : $ {`${payload[0]?.payload?.totalBlobGasUSDF}`}{" "}
           </p>
-          {/* <p className=" ">
-            Cost per KiB : ${`${payload[0]?.payload?.costPerKiB}`}{" "}
-          </p> */}
-          <p className="  ">
-            Timestamp: {`${payload[0]?.payload?.timestamp2}`}
-          </p>
+          <p className="  ">Timestamp: {`${payload[0]?.payload?.timestamp}`}</p>
         </div>
       </div>
     );
