@@ -1,5 +1,6 @@
 "use client";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
+import { formatDateDDMM } from "@/lib/time";
 import { formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import React, { PureComponent, useMemo } from "react";
@@ -55,9 +56,9 @@ export default function BlobTxnsChart({ duration }: { duration: number }) {
           sizeValue: Number(bd?.totalBlobGas),
           Size: formatBytes(Number(bd?.totalBlobGas)),
           timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
-          timestamp2: new Date(
-            Number(bd?.dayStartTimestamp) * 1000
-          ).toDateString(),
+          timestamp2: formatDateDDMM(
+            new Date(Number(bd?.dayStartTimestamp) * 1000)
+          ),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
         };
       })
@@ -73,12 +74,19 @@ export default function BlobTxnsChart({ duration }: { duration: number }) {
             // @ts-ignore
             content={<CustomTooltipRaw />}
           />
+
           <Legend
             verticalAlign="top"
             content={() => (
               <span className="text-xs">Last {duration} days Blob txns</span>
             )}
           />
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="30%" stopColor="#8884d8" stopOpacity={1} />
+              <stop offset="100%" stopColor="#8884d8" stopOpacity={0.1} />
+            </linearGradient>
+          </defs>
           <Bar
             dataKey="totalBlobTransactionCount"
             fill="url(#colorUv)"
@@ -106,7 +114,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
       >
         <div className="p-4 ">
           <p className=" ">
-            Size: {`${payload[0]?.payload?.totalBlobTransactionCount}`}
+            Transactions: {`${payload[0]?.payload?.totalBlobTransactionCount}`}
           </p>
           <p className="  ">Timestamp: {`${payload[0]?.payload?.timestamp}`}</p>
         </div>
