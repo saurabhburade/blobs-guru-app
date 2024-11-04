@@ -164,7 +164,7 @@ const Stats = () => {
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className=""></div> */}
       {statsLoading && (
-        <div className="bg-base-100  row-span-3 border p-2 border-base-200 animate-pulse">
+        <div className="bg-base-100  row-span-2 border p-2 border-base-200 animate-pulse">
           <div className="h-full w-full bg-base-100  space-y-2 border-base-200 animate-pulse flex justify-between items-end gap-4">
             <p className=" text-sm opacity-50 h-20 w-8 rounded-full bg-base-200 animate-pulse"></p>
             <p className=" text-sm opacity-50 h-16 w-8 rounded-full bg-base-200 animate-pulse"></p>
