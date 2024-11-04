@@ -1,6 +1,8 @@
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
+import { formatDateDDMM } from "@/lib/time";
 import { formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
+import BigNumber from "bignumber.js";
 import React, { PureComponent, useMemo } from "react";
 import {
   BarChart,
@@ -13,6 +15,8 @@ import {
   Legend,
   ResponsiveContainer,
   Cell,
+  Area,
+  AreaChart,
 } from "recharts";
 
 // const data = [
@@ -96,19 +100,66 @@ export default function BlobTransactionDayChart() {
         sizeValue: bd?.totalBlobGas,
         Size: formatBytes(Number(bd?.totalBlobGas)),
         timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
-        timestamp2: new Date(
-          Number(bd?.dayStartTimestamp) * 1000
-        ).toDateString(),
+        timestamp2: formatDateDDMM(
+          new Date(Number(bd?.dayStartTimestamp) * 1000)
+        ),
         totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
         totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
+        mibPerSecF: new BigNumber(Number(bd?.totalBlobGas))
+          .div(1024)
+          .div(1024)
+          .div(86400)
+          .toFormat(4),
+        mibPerSec: new BigNumber(Number(bd?.totalBlobGas))
+          .div(1024)
+          .div(1024)
+          .div(86400)
+
+          .toNumber(),
       };
     });
-    return datas;
+    return datas?.reverse();
   }, [data?.blobsDayDatas]);
   return (
     <div className="h-full w-full  row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart width={500} height={300} data={chartData}>
+        <AreaChart width={500} height={400} data={chartData} margin={{}}>
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <Legend
+            verticalAlign="top"
+            content={() => (
+              <span className="text-xs">Throughput [MiB/sec]</span>
+            )}
+          />
+          <XAxis
+            tickCount={7}
+            dataKey="timestamp2"
+            className="text-xs"
+            axisLine={false}
+            includeHidden={true}
+            angle={45}
+            tickLine={false}
+          />
+          <Tooltip content={CustomTooltipRaw} />
+          <Area
+            type="monotone"
+            dataKey="mibPerSec"
+            stroke="#8884d8"
+            fillOpacity={1}
+            fill="url(#colorUv)"
+            strokeWidth={2}
+          />
+        </AreaChart>
+        {/* <BarChart width={500} height={300} data={chartData}>
           <Legend
             verticalAlign="top"
             content={() => (
@@ -125,19 +176,14 @@ export default function BlobTransactionDayChart() {
               <Cell key={`cell-${index}`} />
             ))}
           </Bar>
-          {/* <Bar
-            dataKey="totalBlobTransactionCount"
-            fill="#8884d8"
-            radius={10}
-            activeBar={<Rectangle fill="#8884d8" radius={10} />}
-          /> */}
+
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
             // @ts-ignore
             content={<CustomTooltipRaw />}
           />
           <XAxis dataKey="timestamp2" className="text-xs" />
-        </BarChart>
+        </BarChart> */}
       </ResponsiveContainer>
     </div>
   );
@@ -146,13 +192,18 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className={` bg-base-200 w-1/2 rounded-lg   overflow-hidden text-xs`}
+        className={` bg-base-200 w-[18em] rounded-lg   overflow-hidden text-xs`}
       >
         <div className="p-4 ">
           <p className=" ">
-            Transactions: {`${payload[0]?.payload?.totalBlobTransactionCount}`}
+            Throughput: {`${payload[0]?.payload?.mibPerSecF} MiB/sec`}
           </p>
-          <p className="  ">Timestamp: {`${payload[0]?.payload?.timestamp}`}</p>
+          <p className=" ">
+            Blobs: {`${payload[0]?.payload?.totalBlobHashesCount}`}
+          </p>
+          <p className="  ">
+            Timestamp: {`${payload[0]?.payload?.timestamp2}`}
+          </p>
         </div>
       </div>
     );
