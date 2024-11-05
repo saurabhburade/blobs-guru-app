@@ -17,6 +17,7 @@ import {
   Cell,
   Area,
   AreaChart,
+  Curve,
 } from "recharts";
 
 // const data = [
@@ -157,7 +158,15 @@ export default function BlobTransactionDayChart() {
             fillOpacity={1}
             fill="url(#colorUv)"
             strokeWidth={2}
-          />
+
+            // TODO: make it generic & reusable
+            strokeDasharray="300 3 10 3  10 3  10 3  10 3  10 3  10 3  10 3  10 1  10 1  10 1 10 1  10 1  10 1  10 1  10 1  10 1  10 1  10 1"
+          >
+            {chartData?.map((_: any, index: number) => (
+              <Curve type={"step"} key={`cell-${index}`} />
+            ))}
+            {/* <Curve type={"step"} /> */}
+          </Area>
         </AreaChart>
         {/* <BarChart width={500} height={300} data={chartData}>
           <Legend
