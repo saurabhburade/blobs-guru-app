@@ -1,4 +1,5 @@
 "use client";
+import ChartLoading from "@/components/Skeletons/ChartLoading";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 import { formatDateDDMM } from "@/lib/time";
 import { formatBytes } from "@/lib/utils";
@@ -38,7 +39,7 @@ const TriangleBar = (props: {
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
 export default function BlobTxnsChart({ duration }: { duration: number }) {
-  const { data } = useQuery(BLOB_DAY_DATAS_QUERY, {
+  const { data, loading } = useQuery(BLOB_DAY_DATAS_QUERY, {
     variables: {
       duration,
     },
@@ -65,6 +66,9 @@ export default function BlobTxnsChart({ duration }: { duration: number }) {
       ?.reverse();
     return datas;
   }, [data?.blobsDayDatas]);
+  if (loading) {
+    return <ChartLoading />;
+  }
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
