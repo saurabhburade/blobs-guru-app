@@ -1,10 +1,11 @@
 "use client";
+import ChartLoading from "@/components/Skeletons/ChartLoading";
 import {
   BLOB_DAY_DATAS_QUERY,
   ETH_PRICE_DAY_DATAS_QUERY,
 } from "@/lib/apollo/queries";
 import { formatDateDDMM } from "@/lib/time";
-import { cn, formatBytes } from "@/lib/utils";
+import { cn, formatBytes, getRandomNumber } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import React, { PureComponent, useMemo } from "react";
@@ -44,7 +45,7 @@ const TriangleBar = (props: {
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
 export default function ETHPriceDayChart({ duration }: { duration: number }) {
-  const { data } = useQuery(ETH_PRICE_DAY_DATAS_QUERY, {
+  const { data, loading } = useQuery(ETH_PRICE_DAY_DATAS_QUERY, {
     variables: {
       duration,
     },
@@ -86,6 +87,9 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
     }
     return 0;
   }, [chartData]);
+  if (loading) {
+    return <ChartLoading />;
+  }
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
@@ -134,7 +138,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
               </div>
             )}
           />
-          <YAxis className="text-xs" axisLine={false} />
+          <YAxis className="text-xs " axisLine={false} />
           <XAxis dataKey={"timestamp2"} className="text-xs" axisLine={false} />
           <Tooltip
             content={CustomTooltipRaw}
