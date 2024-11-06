@@ -29,14 +29,14 @@ BigInt.prototype.toJSON = function (): string {
   return this.toString();
 };
 function SingleBlock({ blockNumber }: Props) {
-  const { data } = useQuery(GET_BLOB_BLOCK, {
+  const { data, loading: blobLoading } = useQuery(GET_BLOB_BLOCK, {
     variables: {
       blockNumber,
     },
   });
   const blockHex = Number(blockNumber)?.toString(16);
 
-  const { data: rpcBlock } = useBlock({
+  const { data: rpcBlock, isLoading: rpcBlockIsLoading } = useBlock({
     blockNumber: hexToBigInt(`0x${blockHex}`),
   });
 
@@ -70,7 +70,14 @@ function SingleBlock({ blockNumber }: Props) {
             <div className="flex flex-wrap lg:flex-nowrap w-full items-center justify-between border-b border-base-200 p-5">
               <div className=" flex items-center gap-4">
                 <Box />
-                <p className="lg:text-xl font-bold">Block #{blockNumberRes}</p>
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-[15em]  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {rpcBlock?.number && (
+                  <p className="lg:text-xl font-bold">
+                    Block #{blockNumberRes}
+                  </p>
+                )}
               </div>
               <div className="flex gap-2 items-center ">
                 <Link href={`/blocks/${Number(blockNumber) - 1}`}>
@@ -106,36 +113,49 @@ function SingleBlock({ blockNumber }: Props) {
                   />
                   <p className="text-md font-bold">Blobs Overview</p>
                 </div>
-                <div className=" space-y-5 py-2">
-                  <div className="flex w-full overflow-hidden px-5 pt-2">
-                    <div
-                      className={cn(
-                        "h-5  bg-pink-500 !rounded-full",
-                        `!w-[${(100 - percentOfBlobs)?.toFixed(0)}%]`
-                      )}
-                      style={{
-                        width: `${(100 - percentOfBlobs)?.toFixed(0)}%`,
-                      }}
-                    ></div>
-                    <div
-                      className={cn(
-                        "h-5  bg-indigo-500 !rounded-full",
 
-                        `!w-[${percentOfBlobs?.toFixed(0)}%]`
-                      )}
-                      style={{
-                        width: `${percentOfBlobs?.toFixed(0)}%`,
-                      }}
-                    ></div>
-                  </div>
+                <div className=" space-y-5 py-2">
+                  {blobLoading && (
+                    <div className="flex w-full overflow-hidden px-5 pt-2">
+                      <div className=" break-words w-full block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>{" "}
+                    </div>
+                  )}
+                  {!blobLoading && (
+                    <div className="flex w-full overflow-hidden px-5 pt-2">
+                      <div
+                        className={cn(
+                          "h-5  bg-pink-500 !rounded-full",
+                          `!w-[${(100 - percentOfBlobs)?.toFixed(0)}%]`
+                        )}
+                        style={{
+                          width: `${(100 - percentOfBlobs)?.toFixed(0)}%`,
+                        }}
+                      ></div>
+                      <div
+                        className={cn(
+                          "h-5  bg-indigo-500 !rounded-full",
+
+                          `!w-[${percentOfBlobs?.toFixed(0)}%]`
+                        )}
+                        style={{
+                          width: `${percentOfBlobs?.toFixed(0)}%`,
+                        }}
+                      ></div>
+                    </div>
+                  )}
                   <div className="flex justify-between border-b px-5 py-2 border-base-200">
                     <div className="">
-                      <p className=" font-semibold text-lg">
-                        {Number(data?.blobBlockData?.totalTransactionCount) -
-                          Number(
-                            data?.blobBlockData?.totalBlobTransactionCount
-                          )}
-                      </p>
+                      {blobLoading && (
+                        <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                      )}
+                      {!blobLoading && data?.blobBlockData && (
+                        <p className=" font-semibold text-lg">
+                          {Number(data?.blobBlockData?.totalTransactionCount) -
+                            Number(
+                              data?.blobBlockData?.totalBlobTransactionCount
+                            )}
+                        </p>
+                      )}
 
                       <p className="flex gap-2 items-center">
                         <span className="">
@@ -145,9 +165,14 @@ function SingleBlock({ blockNumber }: Props) {
                       </p>
                     </div>
                     <div className=" text-end">
-                      <p className=" font-semibold text-lg">
-                        {data?.blobBlockData?.totalBlobTransactionCount}
-                      </p>
+                      {blobLoading && (
+                        <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                      )}
+                      {!blobLoading && data?.blobBlockData && (
+                        <p className=" font-semibold text-lg">
+                          {data?.blobBlockData?.totalBlobTransactionCount}
+                        </p>
+                      )}
 
                       <p className="flex gap-2 items-center">
                         <span className="">
@@ -159,7 +184,12 @@ function SingleBlock({ blockNumber }: Props) {
                   </div>
 
                   <div className=" px-5">
-                    <p className=" font-semibold text-lg">{blobSize}</p>
+                    {blobLoading && (
+                      <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                    )}
+                    {!blobLoading && data?.blobBlockData && (
+                      <p className=" font-semibold text-lg">{blobSize}</p>
+                    )}
 
                     <p className="flex gap-2 items-center">
                       <span className="">
@@ -169,8 +199,12 @@ function SingleBlock({ blockNumber }: Props) {
                     </p>
                   </div>
                   <div className="px-4">
-                    <p className=" font-semibold text-lg">{feeEth} ETH</p>
-
+                    {blobLoading && (
+                      <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                    )}
+                    {!blobLoading && data?.blobBlockData && (
+                      <p className=" font-semibold text-lg">{feeEth} ETH</p>
+                    )}
                     <p className="flex gap-2 items-center">
                       <span className="">
                         <img
@@ -184,9 +218,14 @@ function SingleBlock({ blockNumber }: Props) {
                     </p>
                   </div>
                   <div className="px-4">
-                    <p className=" font-semibold text-lg">
-                      {totalBlobHashesCount}
-                    </p>
+                    {blobLoading && (
+                      <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                    )}
+                    {!blobLoading && data?.blobBlockData && (
+                      <p className=" font-semibold text-lg">
+                        {totalBlobHashesCount}
+                      </p>
+                    )}
 
                     <p className="flex gap-2 items-center">
                       <span className="">
@@ -199,50 +238,91 @@ function SingleBlock({ blockNumber }: Props) {
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 gap-4 lg:gap-0 w-full p-5 border-b  border-base-200">
                 <div className="">Block Hash</div>
-                <div className=" break-words hidden lg:block">
-                  {rpcBlock?.hash}
-                </div>
-                {rpcBlock?.hash && (
+                {!rpcBlockIsLoading && (
+                  <div className=" break-words hidden lg:block">
+                    {rpcBlock?.hash}
+                  </div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.hash && (
                   <div className=" break-words lg:hidden block">
                     {formatAddress(rpcBlock?.hash)}
                   </div>
                 )}
+                {rpcBlockIsLoading && (
+                  <div className=" break-words  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
                 <div className="">Time</div>
-                <div className="">
-                  {" "}
-                  {new Date(
-                    Number(rpcBlock?.timestamp?.toString()) * 1000
-                  ).toLocaleString()}
-                </div>
+                {!rpcBlockIsLoading && (
+                  <div className=" break-words hidden lg:block">
+                    {new Date(
+                      Number(rpcBlock?.timestamp?.toString()) * 1000
+                    ).toLocaleString()}
+                  </div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.hash && (
+                  <div className=" break-words lg:hidden block">
+                    {new Date(
+                      Number(rpcBlock?.timestamp?.toString()) * 1000
+                    ).toLocaleString()}
+                  </div>
+                )}
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
                 <div className="">Transactions </div>
-                <div className="">
-                  <p>Total :: {Number(rpcBlock?.transactions?.length)}</p>
-                  <p>
-                    Blobs ::{" "}
-                    {Number(
-                      data?.blobBlockData?.totalBlobTransactionCount?.toString()
-                    )}
-                  </p>
-                  <p>
-                    Withdraw ::{" "}
-                    {Number(rpcBlock?.withdrawals?.length?.toString())}
-                  </p>
+                <div className="space-y-2">
+                  {rpcBlockIsLoading && (
+                    <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                  )}
+                  {rpcBlockIsLoading && (
+                    <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                  )}
+                  {rpcBlockIsLoading && (
+                    <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                  )}
+                  {!rpcBlockIsLoading && rpcBlock?.transactions && (
+                    <p>Total :: {Number(rpcBlock?.transactions?.length)}</p>
+                  )}
+                  {!rpcBlockIsLoading && data?.blobBlockData && (
+                    <p>
+                      Blobs ::{" "}
+                      {Number(
+                        data?.blobBlockData?.totalBlobTransactionCount?.toString()
+                      )}
+                    </p>
+                  )}
+                  {!rpcBlockIsLoading && rpcBlock?.withdrawals && (
+                    <p>
+                      Withdraw ::{" "}
+                      {Number(rpcBlock?.withdrawals?.length?.toString())}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5 border-b  border-base-200">
                 <div className="">Block Size </div>
-                <div className="">{Number(rpcBlock?.size?.toString())}</div>
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.size && (
+                  <div className="">{Number(rpcBlock?.size?.toString())}</div>
+                )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
                 <div className="">Miner</div>
-                <div className=" break-words hidden lg:block">
-                  {rpcBlock?.miner}
-                </div>
-                {rpcBlock?.miner && (
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.miner && (
+                  <div className=" break-words hidden lg:block">
+                    {rpcBlock?.miner}
+                  </div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.miner && (
                   <div className=" break-words lg:hidden block">
                     {formatAddress(rpcBlock?.miner?.toString())}
                   </div>
@@ -251,10 +331,15 @@ function SingleBlock({ blockNumber }: Props) {
 
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5 border-b  border-base-200">
                 <div className="">Parent hash</div>
-                <div className=" break-words hidden lg:block">
-                  {rpcBlock?.parentHash}
-                </div>
-                {rpcBlock?.parentHash && (
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.parentHash && (
+                  <div className=" break-words hidden lg:block">
+                    {rpcBlock?.parentHash}
+                  </div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.parentHash && (
                   <div className=" break-words lg:hidden block">
                     {formatAddress(rpcBlock?.parentHash?.toString())}
                   </div>
@@ -262,59 +347,88 @@ function SingleBlock({ blockNumber }: Props) {
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] w-full grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-fit p-5">
                 <div className="break-words">Total Difficulty </div>
-                <div className="break-words lg:w-full w-[10em] overflow-hidden">
-                  {new BigNumber(
-                    //   @ts-ignore
-                    rpcBlock?.totalDifficulty
-                  ).toFormat(0)}
-                </div>
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.totalDifficulty && (
+                  <div className="break-words lg:w-full w-[10em] overflow-hidden">
+                    {new BigNumber(
+                      //   @ts-ignore
+                      rpcBlock?.totalDifficulty
+                    ).toFormat(0)}
+                  </div>
+                )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5 align-middle items-center">
                 <div className="">Gas Used</div>
-                <div className="flex gap-2 items-center">
-                  <p>
-                    {rpcBlock?.gasUsed?.toString()}{" "}
-                    <span>
-                      {(
-                        (Number(rpcBlock?.gasUsed?.toString()) * 100) /
-                        Number(rpcBlock?.gasLimit?.toString())
-                      )?.toFixed(2)}{" "}
-                      %
-                    </span>
-                  </p>
-                  <progress
-                    className="progress w-40"
-                    value={rpcBlock?.gasUsed?.toString()}
-                    max={rpcBlock?.gasLimit?.toString()}
-                  ></progress>
-                  {/* <p>{rpcBlock?.gasLimit?.toString()}</p> */}
-                </div>
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!rpcBlockIsLoading &&
+                  rpcBlock?.gasUsed &&
+                  rpcBlock?.gasLimit && (
+                    <div className="flex gap-2 items-center">
+                      <p>
+                        {rpcBlock?.gasUsed?.toString()}{" "}
+                        <span>
+                          {(
+                            (Number(rpcBlock?.gasUsed?.toString()) * 100) /
+                            Number(rpcBlock?.gasLimit?.toString())
+                          )?.toFixed(2)}{" "}
+                          %
+                        </span>
+                      </p>
+                      <progress
+                        className="progress w-40"
+                        value={rpcBlock?.gasUsed?.toString()}
+                        max={rpcBlock?.gasLimit?.toString()}
+                      ></progress>
+                      {/* <p>{rpcBlock?.gasLimit?.toString()}</p> */}
+                    </div>
+                  )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
                 <div className="">Gas limit</div>
-                <div className="">{rpcBlock?.gasLimit?.toString()}</div>
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.gasLimit && (
+                  <div className="">{rpcBlock?.gasLimit?.toString()}</div>
+                )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
                 <div className="">Base Fee Per Gas</div>
-                <div className="">
-                  {/* @ts-ignore */}
-                  {new BigNumber(rpcBlock?.baseFeePerGas?.toString())
-                    ?.div(1e9)
-                    ?.toFormat(8)}{" "}
-                  Gwei
-                </div>
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!rpcBlockIsLoading && rpcBlock?.baseFeePerGas && (
+                  <div className="">
+                    {/* @ts-ignore */}
+                    {new BigNumber(rpcBlock?.baseFeePerGas?.toString())
+                      ?.div(1e9)
+                      ?.toFormat(8)}{" "}
+                    Gwei
+                  </div>
+                )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
                 <div className="">ETH Burn 🔥</div>
-                <div className="">
-                  {/* @ts-ignore */}
-                  {new BigNumber(rpcBlock?.gasUsed?.toString())
-                    // @ts-ignore
-                    .multipliedBy(rpcBlock?.baseFeePerGas)
-                    ?.div(1e18)
-                    ?.toFormat(8)}{" "}
-                  ETH
-                </div>
+                {rpcBlockIsLoading && (
+                  <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!rpcBlockIsLoading &&
+                  rpcBlock?.gasUsed &&
+                  rpcBlock?.baseFeePerGas && (
+                    <div className="">
+                      {/* @ts-ignore */}
+                      {new BigNumber(rpcBlock?.gasUsed?.toString())
+                        // @ts-ignore
+                        .multipliedBy(rpcBlock?.baseFeePerGas)
+                        ?.div(1e18)
+                        ?.toFormat(8)}{" "}
+                      ETH
+                    </div>
+                  )}
               </div>
             </div>
           </div>
@@ -330,33 +444,45 @@ function SingleBlock({ blockNumber }: Props) {
               <p className="text-xl font-bold">Blobs Overview</p>
             </div>
             <div className=" space-y-5 py-2">
-              <div className="flex w-full overflow-hidden px-5 pt-2">
-                <div
-                  className={cn(
-                    "h-5  bg-pink-500 !rounded-full",
-                    `!w-[${(100 - percentOfBlobs)?.toFixed(0)}%]`
-                  )}
-                  style={{
-                    width: `${(100 - percentOfBlobs)?.toFixed(0)}%`,
-                  }}
-                ></div>
-                <div
-                  className={cn(
-                    "h-5  bg-indigo-500 !rounded-full",
+              {blobLoading && (
+                <div className="flex w-full overflow-hidden px-5 pt-2">
+                  <div className=" break-words w-full block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>{" "}
+                </div>
+              )}
+              {!blobLoading && (
+                <div className="flex w-full overflow-hidden px-5 pt-2">
+                  <div
+                    className={cn(
+                      "h-5  bg-pink-500 !rounded-full",
+                      `!w-[${(100 - percentOfBlobs)?.toFixed(0)}%]`
+                    )}
+                    style={{
+                      width: `${(100 - percentOfBlobs)?.toFixed(0)}%`,
+                    }}
+                  ></div>
+                  <div
+                    className={cn(
+                      "h-5  bg-indigo-500 !rounded-full",
 
-                    `!w-[${percentOfBlobs?.toFixed(0)}%]`
-                  )}
-                  style={{
-                    width: `${percentOfBlobs?.toFixed(0)}%`,
-                  }}
-                ></div>
-              </div>
+                      `!w-[${percentOfBlobs?.toFixed(0)}%]`
+                    )}
+                    style={{
+                      width: `${percentOfBlobs?.toFixed(0)}%`,
+                    }}
+                  ></div>
+                </div>
+              )}
               <div className="flex justify-between border-b px-5 py-2 border-base-200">
                 <div className="">
-                  <p className=" font-semibold text-lg">
-                    {Number(data?.blobBlockData?.totalTransactionCount) -
-                      Number(data?.blobBlockData?.totalBlobTransactionCount)}
-                  </p>
+                  {blobLoading && (
+                    <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                  )}
+                  {!blobLoading && data?.blobBlockData && (
+                    <p className=" font-semibold text-lg">
+                      {Number(data?.blobBlockData?.totalTransactionCount) -
+                        Number(data?.blobBlockData?.totalBlobTransactionCount)}
+                    </p>
+                  )}
 
                   <p className="flex gap-2 items-center">
                     <span className="">
@@ -366,9 +492,14 @@ function SingleBlock({ blockNumber }: Props) {
                   </p>
                 </div>
                 <div className=" text-end">
-                  <p className=" font-semibold text-lg">
-                    {data?.blobBlockData?.totalBlobTransactionCount}
-                  </p>
+                  {blobLoading && (
+                    <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                  )}
+                  {!blobLoading && data?.blobBlockData && (
+                    <p className=" font-semibold text-lg">
+                      {data?.blobBlockData?.totalBlobTransactionCount}
+                    </p>
+                  )}
 
                   <p className="flex gap-2 items-center">
                     <span className="">
@@ -380,7 +511,12 @@ function SingleBlock({ blockNumber }: Props) {
               </div>
 
               <div className=" px-5">
-                <p className=" font-semibold text-lg">{blobSize}</p>
+                {blobLoading && (
+                  <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!blobLoading && data?.blobBlockData && (
+                  <p className=" font-semibold text-lg">{blobSize}</p>
+                )}
 
                 <p className="flex gap-2 items-center">
                   <span className="">
@@ -390,7 +526,12 @@ function SingleBlock({ blockNumber }: Props) {
                 </p>
               </div>
               <div className="px-4">
-                <p className=" font-semibold text-lg">{feeEth} ETH</p>
+                {blobLoading && (
+                  <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!blobLoading && data?.blobBlockData && (
+                  <p className=" font-semibold text-lg">{feeEth} ETH</p>
+                )}
 
                 <p className="flex gap-2 items-center">
                   <span className="">
@@ -405,7 +546,14 @@ function SingleBlock({ blockNumber }: Props) {
                 </p>
               </div>
               <div className="px-4">
-                <p className=" font-semibold text-lg">{totalBlobHashesCount}</p>
+                {blobLoading && (
+                  <div className=" break-words w-2/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
+                )}
+                {!blobLoading && data?.blobBlockData && (
+                  <p className=" font-semibold text-lg">
+                    {totalBlobHashesCount}
+                  </p>
+                )}
 
                 <p className="flex gap-2 items-center">
                   <span className="">
