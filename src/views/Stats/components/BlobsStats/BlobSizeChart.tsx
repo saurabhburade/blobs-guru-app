@@ -39,7 +39,7 @@ const TriangleBar = (props: {
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
 export default function BlobSizeChart({ duration }: { duration: number }) {
-  const { data,loading } = useQuery(BLOB_DAY_DATAS_QUERY, {
+  const { data, loading } = useQuery(BLOB_DAY_DATAS_QUERY, {
     variables: {
       duration,
     },
@@ -61,9 +61,9 @@ export default function BlobSizeChart({ duration }: { duration: number }) {
       ?.reverse();
     return datas;
   }, [data?.blobsDayDatas]);
-    if (loading) {
-      return <ChartLoading />;
-    }
+  if (loading) {
+    return <ChartLoading />;
+  }
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
