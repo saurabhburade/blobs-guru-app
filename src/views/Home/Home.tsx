@@ -142,7 +142,7 @@ const Stats = () => {
       .concat(" KiB/sec");
   }, [data?.collectiveData?.totalBlobGasUSD]);
   return (
-    <div className="grid lg:grid-cols-4 gap-0  lg:h-[20em]">
+    <div className="grid lg:grid-cols-4 gap-0  ">
       <StatCard
         title="Block height"
         value={lastUpdatedBlock}
