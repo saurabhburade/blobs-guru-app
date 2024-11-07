@@ -211,7 +211,7 @@ function DAThroughputsChart({
           <p>DA throughput</p>
 
           <div className="flex flex-col justify-center space-y-7 ">
-            <div className="flex gap-2 items-center">
+            {/* <div className="flex gap-2 items-center">
               <img
                 src="/images/eigenda.png"
                 className="rounded-lg w-[30px] h-fit"
@@ -224,7 +224,7 @@ function DAThroughputsChart({
                 }}
               ></div>
               <p className=" text-xs"> {lastHourDataEigen?.valueF} MiB/sec</p>
-            </div>
+            </div> */}
             <div className="flex gap-2 items-center">
               <img
                 src="/images/celestia.webp"
@@ -304,13 +304,13 @@ const CustomTooltip = ({ active, payload, label, rotation }: any) => {
         </div>
         <hr className="border-base-200" />
         <div className="px-4 space-y-3">
-          <div className="h-full  flex justify-between w-full text-md">
+          {/* <div className="h-full  flex justify-between w-full text-md">
             <div className="flex items-center gap-2 ">
               <div className="w-3 h-3 bg-[blue] rounded-lg border border-base-300"></div>
               <p>EigenDA</p>
             </div>
             <p className=" font-bold opacity-70"> {valueEigenF} MiB/sec</p>
-          </div>
+          </div> */}
           <div className="h-full  flex justify-between w-full text-md">
             <div className="flex items-center gap-2 ">
               <div className="w-3 h-3 bg-current rounded-lg border border-base-300"></div>
@@ -354,14 +354,14 @@ const ThroughputChart = ({ mergedData }: any) => {
         <XAxis dataKey="timestamp2" className="text-xs" axisLine={false} />
 
         <Tooltip content={CustomTooltip} />
-        <Area
+        {/* <Area
           type="monotone"
           dataKey="valueEigen"
           stroke="blue"
           fillOpacity={1}
           fill="none"
           strokeWidth={2}
-        />
+        /> */}
         <Area
           type="monotone"
           dataKey="valueCelestia"

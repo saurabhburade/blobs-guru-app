@@ -23,8 +23,16 @@ function ETHBlobsDA({
   lastHourDataEIP4844: any;
 }) {
   return (
-    <div className=" border border-base-300/20 bg-base-100/50  ">
-      <p className="p-5 border-b border-base-300/20">EIP 4844</p>
+    <div className=" border border-base-300/20 bg-base-100/50  rounded-lg">
+      <div className="p-5 border-b border-base-300/20 flex items-center gap-2">
+        <img
+          src="/images/logox.jpeg"
+          className="rounded-lg w-[30px] h-fit"
+          alt=""
+        />
+        <p>EIP 4844</p>
+      </div>
+
       <div className=" flex lg:flex-nowrap flex-wrap items-stretch">
         <div className="p-5  w-full  rounded-lg">
           <div className="grid lg:grid-cols-3 gap-2 h-full text-sm">
@@ -45,12 +53,12 @@ function ETHBlobsDA({
               <CircleGauge className="w-[2em] h-[2em] opacity-90" />
               <p className="opacity-90">Full Throughput</p>
               <p className="text-2xl font-bold">
-                0.064 MiB <span className="text-sm opacity-60">/sec</span>
+                0.0625 MiB <span className="text-sm opacity-60">/sec</span>
               </p>
             </div>
             <div className=" p-4 bg-base-200/30 h-full rounded-xl space-y-2 ">
               <ShieldCheck className="w-[2em] h-[2em] opacity-90" />
-              <p className="opacity-90">DA Verification time *</p>
+              <p className="opacity-90">DA Verification time </p>
               <p className="text-2xl font-bold">900 sec</p>
             </div>
             <div className=" p-4 bg-base-200/30 h-full rounded-xl space-y-2 ">

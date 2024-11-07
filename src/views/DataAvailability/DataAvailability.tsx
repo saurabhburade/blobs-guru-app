@@ -89,7 +89,7 @@ function DataAvailability({}: Props) {
             dEip4844={eip4844Result}
             lastHourDataEIP4844={lastHourDataEIP4844}
           />
-          <EigenDA lastHourDataEigen={lastHourDataEigen} d={eigenResult} />
+          {/* <EigenDA lastHourDataEigen={lastHourDataEigen} d={eigenResult} /> */}
           <CelestiaDA
             lastHourDataCelestia={lastHourDataCelestia}
             d={celestiaResult}

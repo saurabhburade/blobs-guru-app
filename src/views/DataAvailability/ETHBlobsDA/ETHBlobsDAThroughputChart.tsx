@@ -133,7 +133,7 @@ export default function ETHBlobsDAThroughputChart({ data }: { data: any }) {
           <Legend
             verticalAlign="top"
             content={() => (
-              <span className="text-xs">Last 24 hours Blob size</span>
+              <span className="text-xs">Last 24 Hrs throughput [MiB/sec]</span>
             )}
           />
           {/* <Bar

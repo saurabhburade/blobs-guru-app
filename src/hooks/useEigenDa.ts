@@ -13,7 +13,7 @@ export const useEigenDaThroughput = () => {
       );
 
       const r = await axios.get(
-        `https://proxy.cors.sh/https://blobs.eigenda.xyz/api/trpc/metrics.getTimeSeries,metrics.getSummaryStatistics`,
+        `https://blobs.eigenda.xyz/api/trpc/metrics.getTimeSeries,metrics.getSummaryStatistics`,
         {
           params: {
             batch: 1,
