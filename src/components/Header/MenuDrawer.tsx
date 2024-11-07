@@ -56,6 +56,10 @@ function MenuDrawer({}: Props) {
             <hr className="border-base-200" />
 
             <li className="  ">
+              <Link href="/da"> Compare DA</Link>
+            </li>
+            <hr className="border-base-200" />
+            <li className="  ">
               <Link href="/stats">Stats</Link>
             </li>
             <hr className="border-base-200" />

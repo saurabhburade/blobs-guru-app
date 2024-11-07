@@ -35,7 +35,9 @@ function Footer({}: Props) {
           <Link href="/blocks">Blob Blocks</Link>
           <Link href="/transactions"> Blob Transactions</Link>
           <Link href="/accounts"> Accounts</Link>
-          <Link href="/">Stats</Link>
+          <Link href="/stats">Stats</Link>
+
+          <Link href="/da"> Compare DA</Link>
         </div>
       </div>
       <div className="flex p-4 lg:px-20 items-center">
