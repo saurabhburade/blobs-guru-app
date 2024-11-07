@@ -1,4 +1,5 @@
 "use client";
+import ChartLoading from "@/components/Skeletons/ChartLoading";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 import { formatDateDDMM } from "@/lib/time";
 import { formatBytes } from "@/lib/utils";
@@ -39,7 +40,7 @@ const TriangleBar = (props: {
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
 export default function BlobBlocksChart({ duration }: { duration: number }) {
-  const { data } = useQuery(BLOB_DAY_DATAS_QUERY, {
+  const { data, loading } = useQuery(BLOB_DAY_DATAS_QUERY, {
     variables: {
       duration,
     },
@@ -71,6 +72,9 @@ export default function BlobBlocksChart({ duration }: { duration: number }) {
       ?.reverse();
     return datas;
   }, [data?.blobsDayDatas]);
+  if (loading) {
+    return <ChartLoading />;
+  }
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
@@ -80,6 +84,16 @@ export default function BlobBlocksChart({ duration }: { duration: number }) {
             // @ts-ignore
             content={<CustomTooltipRaw />}
           />
+          <defs>
+            <linearGradient id="colorUvAccStatCard" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <Legend
             verticalAlign="top"
             content={() => (
@@ -90,10 +104,10 @@ export default function BlobBlocksChart({ duration }: { duration: number }) {
           />
           <Bar
             dataKey="totalBlobBlocks"
-            fill="#8884d8"
+            fill="url(#colorUv)"
             radius={10}
             // @ts-ignore
-            shape={<TriangleBar />}
+            // shape={<TriangleBar />}
           />
           <XAxis
             dataKey="timestamp2"

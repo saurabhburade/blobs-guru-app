@@ -48,7 +48,7 @@ function AccountsView({}: Props) {
             </div>
           </div>
           <TopAccountsStats />
-          <TxnStats />
+          {/* <TxnStats /> */}
         </div>
         <AccountRows />
       </div>
@@ -164,7 +164,7 @@ const TxnStats = () => {
   );
 };
 const TopAccountsStats = () => {
-  const { data } = useQuery(TOP_FIVE_BLOB_ACCOUNTS_QUERY);
+  const { data, loading } = useQuery(TOP_FIVE_BLOB_ACCOUNTS_QUERY);
 
   const chartData = useMemo(() => {
     const datas = data?.accounts?.map((bd: any) => {
@@ -184,6 +184,10 @@ const TopAccountsStats = () => {
   return (
     <div className=" h-fit ">
       <div className="h-fit  grid lg:grid-cols-2 gap-4">
+        {loading &&
+          new Array(4)?.fill(1)?.map((acc: any, idx: number) => {
+            return <AccountStatCard key={idx} acc={acc} isLoading={true} />;
+          })}
         {data?.accounts?.map((acc: any) => {
           return <AccountStatCard key={acc?.id} acc={acc} />;
         })}

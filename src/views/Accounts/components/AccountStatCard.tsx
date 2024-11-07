@@ -166,7 +166,7 @@ function AccountStatCard({ acc, isLoading, className }: any) {
           </div>
         )}
         <div className="p-5  bg-base-100/50    border-base-300/20 w-full ">
-          <AccountChart account={acc?.id} />
+          {acc?.id && !isLoading && <AccountChart account={acc?.id} />}
         </div>
       </div>
     </div>

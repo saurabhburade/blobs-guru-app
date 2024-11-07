@@ -1,3 +1,4 @@
+import ChartLoading from "@/components/Skeletons/ChartLoading";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import {
   BLOB_DAY_DATAS_QUERY,
@@ -86,7 +87,7 @@ const TriangleBar = (props: {
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
 export default function TopBlobAccountsChart() {
-  const { data } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
+  const { data, loading } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
 
   const chartData = useMemo(() => {
     const datas = data?.accounts?.map((bd: any) => {
@@ -96,12 +97,18 @@ export default function TopBlobAccountsChart() {
         sizeValue: bd?.totalBlobGas,
         Size: formatBytes(Number(bd?.totalBlobGas)),
         formattedAddress: basicAccountDetail?.name || formatAddress(bd?.id),
+        formattedAddressX: basicAccountDetail?.name
+          ? basicAccountDetail?.name?.split(":")[0]?.split(" ")[0]
+          : formatAddress(bd?.id),
         name: basicAccountDetail?.name || bd?.id,
         totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
       };
     });
     return datas;
   }, [data?.accounts]);
+  if (loading) {
+    return <ChartLoading />;
+  }
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
@@ -117,15 +124,28 @@ export default function TopBlobAccountsChart() {
               <span className="text-xs">Top accounts by blob transactions</span>
             )}
           />
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="30%" stopColor="#8884d8" stopOpacity={1} />
+              <stop offset="100%" stopColor="#8884d8" stopOpacity={0.1} />
+            </linearGradient>
+          </defs>
           <Bar
             dataKey="totalBlobTransactionCount"
-            fill="#8884d8"
+            // fill="#8884d8"
+            fill="url(#colorUv)"
             radius={10}
             // @ts-ignore
-            shape={<TriangleBar />}
+            // shape={<TriangleBar />}
             label={{ position: "top", fontSize: "8px" }}
           ></Bar>
-          <XAxis dataKey="formattedAddress" className="text-xs" />
+          <XAxis
+            dataKey="formattedAddressX"
+            className="text-[10px]"
+            axisLine={false}
+            angle={45}
+            tickLine={false}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

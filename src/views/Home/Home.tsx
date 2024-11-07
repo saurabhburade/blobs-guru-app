@@ -77,6 +77,13 @@ const Stats = () => {
     return (totalFeeEthBn || 0) + " ETH";
   }, [data?.collectiveData?.totalFeeEth]);
 
+  const totalBlobFeesUSD = useMemo(() => {
+    const totalBlobFeeBn = new BigNumber(data?.collectiveData?.totalBlobGasUSD)
+      .div(1e18)
+      .toFormat(2);
+    return (totalBlobFeeBn || 0) + " USD";
+  }, [data?.collectiveData?.totalBlobGasUSD]);
+
   const lastUpdatedBlock = useMemo(() => {
     const lastUpdatedBlockBn = new BigNumber(
       data?.collectiveData?.lastUpdatedBlock
@@ -135,7 +142,7 @@ const Stats = () => {
       .concat(" KiB/sec");
   }, [data?.collectiveData?.totalBlobGasUSD]);
   return (
-    <div className="grid lg:grid-cols-4 gap-0  lg:h-[20em]">
+    <div className="grid lg:grid-cols-4 gap-0  ">
       <StatCard
         title="Block height"
         value={lastUpdatedBlock}
@@ -157,7 +164,7 @@ const Stats = () => {
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
       {/* <div className=""></div> */}
       {statsLoading && (
-        <div className="bg-base-100 h-[20em] row-span-3 border p-2 border-base-200 animate-pulse">
+        <div className="bg-base-100  row-span-2 border p-2 border-base-200 animate-pulse">
           <div className="h-full w-full bg-base-100  space-y-2 border-base-200 animate-pulse flex justify-between items-end gap-4">
             <p className=" text-sm opacity-50 h-20 w-8 rounded-full bg-base-200 animate-pulse"></p>
             <p className=" text-sm opacity-50 h-16 w-8 rounded-full bg-base-200 animate-pulse"></p>
@@ -169,7 +176,7 @@ const Stats = () => {
         </div>
       )}
       {!statsLoading && (
-        <div className="bg-base-100 h-[20em] row-span-3 border p-2 border-base-200">
+        <div className="bg-base-100 row-span-2 border p-2 border-base-200">
           <BlobTransactionDayChart />
         </div>
       )}
@@ -181,6 +188,11 @@ const Stats = () => {
       <StatCard
         title="Total Blobs"
         value={totalBlobHashesCount}
+        isLoading={statsLoading}
+      />
+      <StatCard
+        title="Blob fee USD"
+        value={totalBlobFeesUSD}
         isLoading={statsLoading}
       />
       <StatCard

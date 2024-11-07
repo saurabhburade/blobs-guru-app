@@ -19,6 +19,8 @@ import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
 import { useTransactionsExplorerWithRPCData } from "@/hooks/useTransactionsData";
 import { timeAgo } from "@/lib/time";
+import BlobTxnsChart from "../Stats/components/BlobsStats/BlobTxnsChart";
+import BlobSizeChart from "../Stats/components/BlobsStats/BlobSizeChart";
 
 type Props = {};
 
@@ -32,11 +34,11 @@ function TransactionsView({}: Props) {
         <div className="w-full ">
           <div className="lg:h-[20em]  flex lg:flex-nowrap flex-wrap items-stretch gap-4 my-4">
             <div className="p-5 h-[20em] bg-base-100/50 border   border-base-300/20 w-full rounded-lg">
-              <BlobTransactionDayChart />
+              <BlobTxnsChart duration={30} />
             </div>
             <div className="p-5 h-[20em] bg-base-100/50 border border-base-300/20 w-full  rounded-lg">
               {/* <BlobTransactionDayChart /> */}
-              <BlobSizeDayChart />
+              <BlobSizeChart duration={30} />
             </div>
           </div>
           <TxnStats />

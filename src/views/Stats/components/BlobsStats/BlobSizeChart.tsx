@@ -1,5 +1,7 @@
 "use client";
+import ChartLoading from "@/components/Skeletons/ChartLoading";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
+import { formatDateDDMM } from "@/lib/time";
 import { formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import React, { PureComponent, useMemo } from "react";
@@ -37,7 +39,7 @@ const TriangleBar = (props: {
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
 export default function BlobSizeChart({ duration }: { duration: number }) {
-  const { data } = useQuery(BLOB_DAY_DATAS_QUERY, {
+  const { data, loading } = useQuery(BLOB_DAY_DATAS_QUERY, {
     variables: {
       duration,
     },
@@ -51,14 +53,17 @@ export default function BlobSizeChart({ duration }: { duration: number }) {
           sizeValue: Number(bd?.totalBlobGas),
           Size: formatBytes(Number(bd?.totalBlobGas)),
           timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
-          timestamp2: new Date(
-            Number(bd?.dayStartTimestamp) * 1000
-          ).toDateString(),
+          timestamp2: formatDateDDMM(
+            new Date(Number(bd?.dayStartTimestamp) * 1000)
+          ),
         };
       })
       ?.reverse();
     return datas;
   }, [data?.blobsDayDatas]);
+  if (loading) {
+    return <ChartLoading />;
+  }
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
@@ -81,6 +86,13 @@ export default function BlobSizeChart({ duration }: { duration: number }) {
             // @ts-ignore
             // shape={<TriangleBar />}
           /> */}
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="30%" stopColor="#8884d8" stopOpacity={1} />
+              <stop offset="100%" stopColor="#8884d8" stopOpacity={0.1} />
+            </linearGradient>
+          </defs>
+
           <Bar
             dataKey="sizeValue"
             fill="url(#colorUv)"

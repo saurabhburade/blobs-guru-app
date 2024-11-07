@@ -1,10 +1,11 @@
 "use client";
+import ChartLoading from "@/components/Skeletons/ChartLoading";
 import {
   BLOB_BLOCKS_EXPLORER_QUERY,
   BLOB_BLOCKS_EXPLORER_QUERY_BLOCKS_PAGE,
   BLOB_DAY_DATAS_QUERY,
 } from "@/lib/apollo/queries";
-import { formatBytes } from "@/lib/utils";
+import { formatBytes, getRandomNumber } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import React, { PureComponent, useMemo } from "react";
@@ -42,7 +43,7 @@ const TriangleBar = (props: {
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
 export default function RecentBlocksChart({ duration }: { duration: number }) {
-  const { data } = useQuery(BLOB_BLOCKS_EXPLORER_QUERY_BLOCKS_PAGE, {
+  const { data, loading } = useQuery(BLOB_BLOCKS_EXPLORER_QUERY_BLOCKS_PAGE, {
     variables: {
       limit: duration,
       skip: 0,
@@ -76,6 +77,9 @@ export default function RecentBlocksChart({ duration }: { duration: number }) {
       ?.reverse();
     return datas;
   }, [data?.blobBlockDatas]);
+  if (loading) {
+    return <ChartLoading />;
+  }
   return (
     <div className="h-full w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
