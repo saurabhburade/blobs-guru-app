@@ -70,10 +70,10 @@ function SingleBlock({ blockNumber }: Props) {
             <div className="flex flex-wrap lg:flex-nowrap w-full items-center justify-between border-b border-base-200 p-5">
               <div className=" flex items-center gap-4">
                 <Box />
-                {rpcBlockIsLoading && (
+                {blobLoading && (
                   <div className=" break-words w-[15em]  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
-                {rpcBlock?.number && (
+                {!blobLoading && data?.blobBlockData && (
                   <p className="lg:text-xl font-bold">
                     Block #{blockNumberRes}
                   </p>
