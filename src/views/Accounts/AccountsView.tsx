@@ -48,7 +48,7 @@ function AccountsView({}: Props) {
             </div>
           </div>
           <TopAccountsStats />
-          <TxnStats />
+          {/* <TxnStats /> */}
         </div>
         <AccountRows />
       </div>
