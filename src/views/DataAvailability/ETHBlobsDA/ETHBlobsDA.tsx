@@ -29,6 +29,8 @@ function ETHBlobsDA({
           src="/images/logox.jpeg"
           className="rounded-lg w-[30px] h-fit"
           alt=""
+          width={30}
+          height={30}
         />
         <p>EIP 4844</p>
       </div>

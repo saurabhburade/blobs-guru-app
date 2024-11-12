@@ -230,6 +230,8 @@ function DAThroughputsChart({
                 src="/images/celestia.webp"
                 className="rounded-lg w-[30px] h-fit"
                 alt=""
+                width={30}
+                height={30}
               />
               <div
                 className="h-[2.5em]  bg-[green]  rounded-r-lg"
@@ -247,6 +249,8 @@ function DAThroughputsChart({
                 src="/images/logox.jpeg"
                 className="rounded-lg w-[30px] h-fit"
                 alt=""
+                width={30}
+                height={30}
               />
               <div
                 className="h-[2.5em]  bg-current  rounded-r-lg"

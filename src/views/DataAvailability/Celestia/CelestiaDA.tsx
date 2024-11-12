@@ -29,6 +29,8 @@ function CelestiaDA({
           src="/images/celestia.webp"
           className="rounded-lg w-[30px] h-fit"
           alt=""
+          width={30}
+          height={30}
         />
         <p>Celestia</p>
       </div>
