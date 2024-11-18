@@ -34,7 +34,7 @@ function Footer({}: Props) {
         </div> */}
           <Link href="/blocks">Blob Blocks</Link>
           <Link href="/transactions"> Blob Transactions</Link>
-          <Link href="/accounts"> Accounts</Link>
+          <Link href="/accounts"> Rollups</Link>
           <Link href="/stats">Stats</Link>
 
           <Link href="/da"> Compare DA</Link>

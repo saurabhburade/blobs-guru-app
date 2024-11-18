@@ -18,12 +18,12 @@ function StatsDataView({}: Props) {
         {/* <PoweredBy /> */}
         <BlobsStats />
         <div className="bg-base-100 border border-base-200">
-          <div className="p-5 border-b border-base-200">Top Accounts</div>
+          <div className="p-5 border-b border-base-200">Top Rollups</div>
           <TopAccountsStats />
         </div>
         <div className="bg-base-100 border border-base-200">
           <div className="p-5 border-b border-base-200">
-            Account distribution
+            Rollup distribution
           </div>
           <AccountPies />
         </div>

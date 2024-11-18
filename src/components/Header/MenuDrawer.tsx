@@ -51,7 +51,7 @@ function MenuDrawer({}: Props) {
             </li>
             <hr className="border-base-200" />
             <li className="  ">
-              <Link href="/accounts"> Accounts</Link>
+              <Link href="/accounts"> Rollups</Link>
             </li>
             <hr className="border-base-200" />
 

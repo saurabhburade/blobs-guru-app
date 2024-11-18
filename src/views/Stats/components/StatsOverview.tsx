@@ -158,7 +158,7 @@ function StatsOverview({}: Props) {
       />
 
       <StatsOverviewCard
-        title="Blob Accounts"
+        title="Blob Rollups"
         value={totalBlobAccounts}
         isLoading={statsLoading}
       />

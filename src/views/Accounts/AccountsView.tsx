@@ -144,7 +144,7 @@ const TxnStats = () => {
         </div>
         <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
           <User strokeWidth="1" width={40} height={40} />
-          <p className=""> Total Blob Accounts</p>
+          <p className=""> Total Blob Rollups</p>
           <p className="text-3xl font-bold"> {totalBlobAccounts}</p>
         </div>
         <div className="border-base-300/50 space-y-2 border w-full h-full rounded-lg p-5 bg-base-100/50">
