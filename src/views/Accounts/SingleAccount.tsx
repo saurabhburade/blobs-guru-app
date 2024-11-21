@@ -36,6 +36,7 @@ import axios from "axios";
 import L2BeatCard from "./components/L2Beat/L2BeatCard";
 import { useAccountTransactionsWithRPCData } from "@/hooks/useTransactionsData";
 import { timeAgo } from "@/lib/time";
+import AccountDayStats from "./components/AccountStats/AccountDayStats";
 
 type Props = {
   account: string;
@@ -66,15 +67,7 @@ function SingleAccount({ account }: Props) {
         <div className="w-full space-y-4 ">
           <L2BeatCard account={account} />
           <AccountStatCard acc={data?.account} isLoading={loading} />
-          <div className="lg:h-[20em] flex-wrap lg:flex-nowrap flex items-stretch gap-4 my-4">
-            <div className="p-5 bg-base-100/70 border   border-base-300/20 w-full h-[20em] rounded-lg">
-              <DayTxnsBlobAccountChart account={account} />
-            </div>
-            <div className="p-5 bg-base-100/70 border border-base-300/20 w-full h-[20em] rounded-lg">
-              {/* <BlobTransactionDayChart /> */}
-              <DayHashesBlobAccountChart account={account} />
-            </div>
-          </div>
+          <AccountDayStats account={account} />
         </div>
         <TxnRows account={account} />
       </div>

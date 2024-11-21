@@ -56,7 +56,6 @@ function DAThroughputsChart({
       return [];
     }
     const datas = dEigen?.data?.series?.map((bd: any) => {
-      console.log(`🚀 ~ file: DAThroughputsChart dEigen.tsx:59 ~ bd:`, bd);
       return {
         ...bd,
         valueF: new BigNumber(bd?.value).toFormat(4),
@@ -70,10 +69,6 @@ function DAThroughputsChart({
     return datas;
   }, [dEigen?.data]);
   const chartDataCelestia = useMemo(() => {
-    console.log(
-      `🚀 ~ file: DAThroughputsChart.tsx:70 ~ dCelestia:`,
-      dCelestia?.data?.series
-    );
     if (!dCelestia?.data) {
       return [];
     }
@@ -96,10 +91,9 @@ function DAThroughputsChart({
     if (!dEip4844?.blobsHourDatas) {
       return [];
     }
-    console.log(`🚀 ~ file: DAThroughputsChart.tsx:93 ~ bd:`, dEip4844);
+
     const datas = dEip4844?.blobsHourDatas
       ?.map((bd: any) => {
-        console.log(`🚀 ~ file: DAThroughputsChart.tsx:107 ~ bd:`, bd);
         return {
           ...bd,
           sizeValue: Number(bd?.totalBlobGas),
@@ -156,24 +150,13 @@ function DAThroughputsChart({
         chartDataEigen
       );
       const sortedData = _.orderBy(mergedData, ["timestampF"], ["asc"]);
-      console.log(
-        `🚀 ~ file: DAThroughputsChart.tsx:164 ~ sortedData:`,
-        sortedData
-      );
+
       return sortedData;
     }
     return [];
   }, [chartDataCelestia, chartDataEip4844, chartDataEigen]);
-  console.log(`🚀 ~ file: DAThroughputsChart.tsx:165 ~ chartDataCelestia:`, {
-    chartDataCelestia,
-    chartDataEip4844,
-    chartDataEigen,
-  });
+
   const combinedValues = useMemo(() => {
-    console.log(
-      `🚀 ~ file: DAThroughputsChart.tsx:172 ~ lastHourDataCelestia:`,
-      { lastHourDataCelestia, lastHourDataEigen, lastHourDataEIP4844 }
-    );
     if (lastHourDataEIP4844 && lastHourDataCelestia && lastHourDataEigen) {
       const totalThroughput = new BigNumber(lastHourDataCelestia?.value || 0)
         ?.plus(lastHourDataEigen?.value || 0)
@@ -199,10 +182,6 @@ function DAThroughputsChart({
     }
     return {};
   }, [lastHourDataEigen, lastHourDataCelestia, lastHourDataEIP4844]);
-  console.log(
-    `🚀 ~ file: DAThroughputsChart.tsx:171 ~ combinedValues:`,
-    combinedValues
-  );
 
   return (
     <div className="  lg:h-[20em] w-full ">

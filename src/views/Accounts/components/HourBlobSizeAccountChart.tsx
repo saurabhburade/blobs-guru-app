@@ -2,6 +2,7 @@ import ChartLoading from "@/components/Skeletons/ChartLoading";
 import {
   ACCOUNT_DAY_DATAS_QUERY,
   ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY,
+  ACCOUNT_HOUR_DATAS_WITH_DURATION_QUERY,
   BLOB_DAY_DATAS_QUERY,
   TOP_BLOB_ACCOUNTS_QUERY,
 } from "@/lib/apollo/queries";
@@ -90,22 +91,28 @@ const TriangleBar = (props: {
 
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
+const dayFormater = new Intl.DateTimeFormat("en-US", {
+  hour: "2-digit",
+  minute: "2-digit",
+});
 const dateString = new Intl.DateTimeFormat("en-US", {
   timeZoneName: "short",
   weekday: "short",
   day: "2-digit",
   month: "2-digit",
   year: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
 });
 
-export default function DayTxnsBlobAccountChart({
+export default function HourBlobSizeAccountChart({
   account,
   duration,
 }: {
   account: string;
   duration: number;
 }) {
-  const { data, loading } = useQuery(ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY, {
+  const { data, loading } = useQuery(ACCOUNT_HOUR_DATAS_WITH_DURATION_QUERY, {
     variables: {
       address: account,
       duration: duration,
@@ -113,37 +120,41 @@ export default function DayTxnsBlobAccountChart({
   });
 
   const chartData = useMemo(() => {
-    const datas = data?.accountDayDatas
+    const datas = data?.accountHourDatas
       ?.map((bd: any) => {
         const formatter = new Intl.DateTimeFormat("en-US", {
           weekday: "long",
         });
         const day = formatter.format(
-          new Date(Number(bd?.dayStartTimestamp) * 1000)
+          new Date(Number(bd?.hourStartTimestamp) * 1000)
         );
 
         return {
           ...bd,
-          sizeValue: bd?.totalBlobGas,
+          sizeValue: new BigNumber(Number(bd?.totalBlobGas))
+            .div(1024)
+            .div(1024)
+            .toNumber(),
           Size: formatBytes(Number(bd?.totalBlobGas)),
           formattedAddress: formatAddress(bd?.account?.id),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
-
           timestamp: dateString.format(
-            new Date(Number(bd?.dayStartTimestamp) * 1000)
+            new Date(Number(bd?.hourStartTimestamp) * 1000)
           ),
           timestamp2: formatDateDDMM(
-            new Date(Number(bd?.dayStartTimestamp) * 1000)
+            new Date(Number(bd?.hourStartTimestamp) * 1000)
           ),
-
+          timestamp3: dayFormater.format(
+            new Date(Number(bd?.hourStartTimestamp) * 1000)
+          ),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
         };
       })
       ?.reverse();
     return datas;
-  }, [data?.accountDayDatas]);
+  }, [data?.accountHourDatas]);
   const cumulativeData = useMemo(() => {
-    const datas = data?.accountDayDatas
+    const datas = data?.accountHourDatas
       ?.map((bd: any) => {
         return {
           ...bd,
@@ -188,30 +199,29 @@ export default function DayTxnsBlobAccountChart({
       totalBlobHashesCount: new BigNumber(totalBlobHashesCount).toFormat(),
       totalBlobGasUSD: new BigNumber(totalBlobGasUSD).toFormat(),
       totalBlobGasEth: new BigNumber(totalBlobGasEth).toFormat(4),
-      totalBlobTransactionCount: new BigNumber(
-        totalBlobTransactionCount
-      ).toFormat(),
+      totalBlobTransactionCount,
       sizeValue,
       size: formatBytes(size),
     };
-  }, [data?.accountDayDatas]);
+  }, [data?.accountHourDatas]);
   if (loading) {
     return <ChartLoading />;
   }
   return (
     <div className="h-full w-full row-span-2 ">
       <div className="flex justify-between">
-        <p className="text-xs">Blob Transactions </p>
+        <p className="text-xs">Blob Size [MB] </p>
         <p className="text-xs">
-          {cumulativeData?.totalBlobTransactionCount} [{duration} days]
+          {cumulativeData?.size} [{duration} Hrs]
         </p>
       </div>
+
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           width={500}
           height={100}
           data={chartData}
-          margin={{ top: 30, right: 30, left: -20, bottom: 30 }}
+          margin={{ top: 30, right: 30, left: -30, bottom: 30 }}
         >
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -230,15 +240,14 @@ export default function DayTxnsBlobAccountChart({
           />
           {/* <Legend
             verticalAlign="top"
-            content={() => <span className="text-xs">Blob Transactions</span>}
+            content={() =>}
           /> */}
           <Bar
-            dataKey="totalBlobTransactionCount"
+            dataKey="sizeValue"
             fill="url(#colorUv)"
             radius={10}
             // @ts-ignore
             // shape={<TriangleBar />}
-            // label={{ position: "top", fontSize: "8px" }}
           ></Bar>
           <YAxis
             className="text-[10px] !text-current"
@@ -247,7 +256,7 @@ export default function DayTxnsBlobAccountChart({
             tickLine={false}
           />
           <XAxis
-            dataKey="timestamp2"
+            dataKey="timestamp3"
             className="text-[10px] !text-current"
             angle={45}
             tickLine={false}
@@ -275,10 +284,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
           {/* <p className=" break-words ">
             Transactions : {`${payload[0]?.payload?.totalBlobTransactionCount}`}
           </p> */}
-          <p className=" ">
-            Transactions Count:{" "}
-            {`${payload[0]?.payload?.totalBlobTransactionCount}`}
-          </p>
+          <p className=" ">Size: {`${payload[0]?.payload?.Size}`}</p>
         </div>
       </div>
     );

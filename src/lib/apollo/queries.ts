@@ -153,6 +153,54 @@ export const ACCOUNT_DAY_DATAS_QUERY = gql`
     }
   }
 `;
+export const ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
+  query AccountDayDatas($address: String , $duration: Int) {
+    accountDayDatas(
+      first: $duration,
+      orderBy: dayStartTimestamp,
+      orderDirection: desc,
+      where: { account: $address }
+    ) {
+      id
+      totalBlobTransactionCount
+      dayStartTimestamp
+      totalBlobTransactionCount
+      totalBlobGas
+      totalGasEth
+      totalBlobHashesCount
+      totalBlobBlocks
+      totalBlobGasEth
+      totalBlobGasUSD
+      account {
+        id
+      }
+    }
+  }
+`;
+export const ACCOUNT_HOUR_DATAS_WITH_DURATION_QUERY = gql`
+  query AccountHourDatas($address: String , $duration: Int) {
+    accountHourDatas(
+      first: $duration,
+      orderBy: hourStartTimestamp,
+      orderDirection: desc,
+      where: { account: $address }
+    ) {
+      id
+      totalBlobTransactionCount
+      hourStartTimestamp
+      totalBlobTransactionCount
+      totalBlobGas
+      totalGasEth
+      totalBlobHashesCount
+      totalBlobBlocks
+      totalBlobGasEth
+      totalBlobGasUSD
+      account {
+        id
+      }
+    }
+  }
+`;
 export const TOP_BLOB_ACCOUNTS_BY_HASHES_QUERY = gql`
   query {
     accounts(

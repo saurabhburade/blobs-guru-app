@@ -98,7 +98,7 @@ const dateString = new Intl.DateTimeFormat("en-US", {
   year: "2-digit",
 });
 
-export default function DayTxnsBlobAccountChart({
+export default function DayBlobSizeAccountChart({
   account,
   duration,
 }: {
@@ -124,24 +124,29 @@ export default function DayTxnsBlobAccountChart({
 
         return {
           ...bd,
-          sizeValue: bd?.totalBlobGas,
+          sizeValue: new BigNumber(Number(bd?.totalBlobGas))
+            .div(1024)
+            .div(1024)
+            .toNumber(),
           Size: formatBytes(Number(bd?.totalBlobGas)),
           formattedAddress: formatAddress(bd?.account?.id),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
-
           timestamp: dateString.format(
             new Date(Number(bd?.dayStartTimestamp) * 1000)
           ),
+          timestampDay: day,
           timestamp2: formatDateDDMM(
             new Date(Number(bd?.dayStartTimestamp) * 1000)
           ),
-
+          timeDiffSec:
+            Number(new Date().getTime() / 1000) - Number(bd?.dayStartTimestamp),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
         };
       })
       ?.reverse();
     return datas;
   }, [data?.accountDayDatas]);
+
   const cumulativeData = useMemo(() => {
     const datas = data?.accountDayDatas
       ?.map((bd: any) => {
@@ -153,31 +158,10 @@ export default function DayTxnsBlobAccountChart({
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
 
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
-          totalBlobGasEth: new BigNumber(Number(bd?.totalBlobGasEth))
-            .div(1e18)
-            .toNumber(),
-          totalBlobGasEthFormat: new BigNumber(Number(bd?.totalBlobGasEth))
-            .div(1e18)
-            .toFormat(5),
-          totalBlobGasUSDFormat: new BigNumber(Number(bd?.totalBlobGasUSD))
-            .div(1e18)
-            .toFormat(5),
-          totalBlobGasUSD: new BigNumber(Number(bd?.totalBlobGasUSD))
-            .div(1e18)
-            .toNumber(),
-
-          costPerKiB: new BigNumber(Number(bd?.totalBlobGasUSD))
-            .div(1e19)
-            .div(Number(bd?.totalBlobGas))
-            .multipliedBy(1024)
-            .toFormat(5),
         };
       })
       ?.reverse();
     const totalBlobHashesCount = _.sumBy(datas, "totalBlobHashesCount");
-    const totalBlobGasEth = _.sumBy(datas, "totalBlobGasEth");
-    const totalBlobGasUSD = _.sumBy(datas, "totalBlobGasUSD");
-
     const totalBlobTransactionCount = _.sumBy(
       datas,
       "totalBlobTransactionCount"
@@ -185,12 +169,8 @@ export default function DayTxnsBlobAccountChart({
     const sizeValue = _.sumBy(datas, "sizeValue");
     const size = _.sumBy(datas, "totalBlobGas");
     return {
-      totalBlobHashesCount: new BigNumber(totalBlobHashesCount).toFormat(),
-      totalBlobGasUSD: new BigNumber(totalBlobGasUSD).toFormat(),
-      totalBlobGasEth: new BigNumber(totalBlobGasEth).toFormat(4),
-      totalBlobTransactionCount: new BigNumber(
-        totalBlobTransactionCount
-      ).toFormat(),
+      totalBlobHashesCount,
+      totalBlobTransactionCount,
       sizeValue,
       size: formatBytes(size),
     };
@@ -201,9 +181,9 @@ export default function DayTxnsBlobAccountChart({
   return (
     <div className="h-full w-full row-span-2 ">
       <div className="flex justify-between">
-        <p className="text-xs">Blob Transactions </p>
+        <p className="text-xs">Blob Size [MB]</p>
         <p className="text-xs">
-          {cumulativeData?.totalBlobTransactionCount} [{duration} days]
+          {cumulativeData?.size} [{duration} days]
         </p>
       </div>
       <ResponsiveContainer width="100%" height="100%">
@@ -211,7 +191,7 @@ export default function DayTxnsBlobAccountChart({
           width={500}
           height={100}
           data={chartData}
-          margin={{ top: 30, right: 30, left: -20, bottom: 30 }}
+          margin={{ top: 30, right: 30, left: -30, bottom: 30 }}
         >
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -230,12 +210,13 @@ export default function DayTxnsBlobAccountChart({
           />
           {/* <Legend
             verticalAlign="top"
-            content={() => <span className="text-xs">Blob Transactions</span>}
+            content={() => <span className="text-xs">Blob Size</span>}
           /> */}
           <Bar
-            dataKey="totalBlobTransactionCount"
+            dataKey="sizeValue"
             fill="url(#colorUv)"
             radius={10}
+
             // @ts-ignore
             // shape={<TriangleBar />}
             // label={{ position: "top", fontSize: "8px" }}
@@ -275,10 +256,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
           {/* <p className=" break-words ">
             Transactions : {`${payload[0]?.payload?.totalBlobTransactionCount}`}
           </p> */}
-          <p className=" ">
-            Transactions Count:{" "}
-            {`${payload[0]?.payload?.totalBlobTransactionCount}`}
-          </p>
+          <p className=" ">Size: {`${payload[0]?.payload?.Size}`}</p>
         </div>
       </div>
     );

@@ -57,7 +57,6 @@ export default function AccountsByBlocksPie({ collectiveData }: any) {
       const p = new BigNumber(Number(bd?.totalBlobBlocks))
         .div(Number(collectiveData?.totalBlobBlocks))
         .multipliedBy(100);
-      console.log(`🚀 ~ file: AccountsByBlocksPie.tsx:58 ~ p:`, p);
 
       percentageDiff -= p.toNumber();
       const basicAccountDetail = getAccountDetailsFromAddressBook(bd.id);
