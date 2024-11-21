@@ -103,10 +103,9 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
   }
   return (
     <div className="h-full w-full row-span-2 ">
-      <div className="flex justify-between">
-        <span className="text-xs"></span>
-        <p className="text-2xl font-bold">
-          ETH ${" "}
+      <div className="flex justify-between ">
+        <span className="text-2xl font-bold leading-6">ETH Price</span>
+        <p className="text-2xl leading-6 font-bold">
           {chartData
             ? new BigNumber(chartData?.at(-1)?.avgEthPrice)?.toFormat(2)
             : "0"}{" "}
@@ -130,7 +129,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
           // height={100}
           data={chartData}
           // margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-          margin={{ top: 30, right: 10, left: -25, bottom: 20 }}
+          margin={{ top: 30, right: -25, left: 0, bottom: 20 }}
         >
           <defs>
             <linearGradient id="colorUvAccStatCard" x1="0" y1="0" x2="0" y2="1">
@@ -149,7 +148,12 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             
             )}
           /> */}
-          <YAxis className="text-[10px] " axisLine={false} tickLine={false} />
+          <YAxis
+            className="text-[10px] "
+            axisLine={false}
+            tickLine={false}
+            orientation={"right"}
+          />
           <XAxis
             dataKey={"timestamp2"}
             className="text-[10px] !text-current"
@@ -170,6 +174,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             dataKey="avgEthPrice"
             stroke="#8884d8"
             fillOpacity={1}
+            strokeWidth={2}
             fill="url(#colorUvAccStatCard)"
           />
         </AreaChart>
