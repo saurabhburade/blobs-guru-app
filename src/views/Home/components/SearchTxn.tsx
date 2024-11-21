@@ -26,7 +26,7 @@ function SearchTxn({}: Props) {
       <div tabIndex={0} role="button" className=" w-full">
         <div className="join  w-full">
           <input
-            className="input w-full input-bordered outline-none active:outline-none  focus:outline-none join-item lg:w-1/3 "
+            className="input w-full input-bordered outline-none active:outline-none  focus:outline-none join-item lg:w-2/3 "
             placeholder="Search transactions"
             value={txHash}
             onChange={(e) => {
@@ -48,7 +48,7 @@ function SearchTxn({}: Props) {
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content menu bg-base-100 rounded-box z-[1] lg:w-1/3 p-2 shadow border border-base-200"
+        className="dropdown-content menu bg-base-100 rounded-box z-[1] lg:w-2/3 p-2 shadow border border-base-200"
       >
         {!loading && data?.blobTransaction && (
           <li>

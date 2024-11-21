@@ -44,6 +44,15 @@ const TriangleBar = (props: {
 
   return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
 };
+const dateString = new Intl.DateTimeFormat("en-US", {
+  timeZoneName: "short",
+  weekday: "short",
+  day: "2-digit",
+  month: "2-digit",
+  year: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+});
 export default function ETHPriceDayChart({ duration }: { duration: number }) {
   const { data, loading } = useQuery(ETH_PRICE_DAY_DATAS_QUERY, {
     variables: {
@@ -65,7 +74,9 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             .div(1e18)
             .toFormat(8),
           Size: formatBytes(Number(bd?.totalBlobGas)),
-          timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
+          timestamp: dateString.format(
+            new Date(Number(bd?.dayStartTimestamp) * 1000)
+          ),
           timestamp2: formatDateDDMM(
             new Date(Number(bd?.dayStartTimestamp) * 1000)
           ),
@@ -92,6 +103,26 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
   }
   return (
     <div className="h-full w-full row-span-2 ">
+      <div className="flex justify-between">
+        <span className="text-xs"></span>
+        <p className="text-2xl font-bold">
+          ETH ${" "}
+          {chartData
+            ? new BigNumber(chartData?.at(-1)?.avgEthPrice)?.toFormat(2)
+            : "0"}{" "}
+          <span
+            className={cn(
+              "text-xs",
+              Number(diffPercent) > 0 ? "text-success" : "",
+              Number(diffPercent) < 0 ? "text-error" : "",
+              Number(diffPercent) == 0 ? "text-current opacity-80" : "",
+              isNaN(Number(diffPercent)) ? "text-current opacity-80" : ""
+            )}
+          >
+            {isNaN(Number(diffPercent)) ? 0 : diffPercent}%
+          </span>
+        </p>
+      </div>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           // width={730}
@@ -99,6 +130,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
           // height={100}
           data={chartData}
           // margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          margin={{ top: 30, right: 10, left: -25, bottom: 20 }}
         >
           <defs>
             <linearGradient id="colorUvAccStatCard" x1="0" y1="0" x2="0" y2="1">
@@ -111,35 +143,21 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             </linearGradient>
           </defs>
           {/* <XAxis dataKey="timestamp2" className="text-xs" axisLine={false} /> */}
-          <Legend
+          {/* <Legend
             verticalAlign="top"
             content={() => (
-              <div className="flex justify-between">
-                <span className="text-xs"></span>
-                <p className="text-2xl font-bold">
-                  ETH ${" "}
-                  {chartData
-                    ? new BigNumber(chartData?.at(-1)?.avgEthPrice)?.toFormat(2)
-                    : "0"}{" "}
-                  <span
-                    className={cn(
-                      "text-xs",
-                      Number(diffPercent) > 0 ? "text-success" : "",
-                      Number(diffPercent) < 0 ? "text-error" : "",
-                      Number(diffPercent) == 0 ? "text-current opacity-80" : "",
-                      isNaN(Number(diffPercent))
-                        ? "text-current opacity-80"
-                        : ""
-                    )}
-                  >
-                    {isNaN(Number(diffPercent)) ? 0 : diffPercent}%
-                  </span>
-                </p>
-              </div>
+            
             )}
+          /> */}
+          <YAxis className="text-[10px] " axisLine={false} tickLine={false} />
+          <XAxis
+            dataKey={"timestamp2"}
+            className="text-[10px] !text-current"
+            angle={45}
+            tickLine={false}
+            allowDataOverflow
+            axisLine={false}
           />
-          <YAxis className="text-xs " axisLine={false} />
-          <XAxis dataKey={"timestamp2"} className="text-xs" axisLine={false} />
           <Tooltip
             content={CustomTooltipRaw}
             cursor={{
@@ -161,6 +179,27 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
 }
 const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
+    return (
+      <div
+        className={` bg-base-100 border border-base-200 lg:w-[20em] py-4 space-y-2 rounded-lg h-fit overflow-hidden text-xs`}
+      >
+        <div className="px-4 flex  gap-2 justify-between w-full ">
+          <p className="h-full  flex justify-between w-full">
+            {`${payload[0]?.payload?.timestamp}`}
+          </p>
+        </div>
+        <hr className="border-base-200" />
+        <div className="px-4 space-y-3">
+          {/* <p className=" break-words ">
+            Transactions : {`${payload[0]?.payload?.totalBlobTransactionCount}`}
+          </p> */}
+          <p className=" ">
+            ETH Price :{" "}
+            {`$${new BigNumber(payload[0]?.payload?.avgEthPrice)?.toFormat(2)}`}{" "}
+          </p>
+        </div>
+      </div>
+    );
     return (
       <div
         className={` bg-base-200 w-[15em] rounded-lg   overflow-hidden text-xs`}

@@ -12,6 +12,7 @@ import BlobTransactionDayChart from "./components/BlobTransactionDayChart";
 import PoweredBy from "./components/PoweredBy";
 import SearchTxn from "./components/SearchTxn";
 import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
+import ETHPriceDayChart from "../Stats/components/ETHPriceDayChart";
 type Props = {};
 
 function Home({}: Props) {
@@ -19,9 +20,17 @@ function Home({}: Props) {
     <div>
       <Header />
       <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className="lg:h-[30vh] h-[40vh] flex-col flex justify-center gap-4 ">
-          <h2 className="lg:text-5xl text-xl font-semibold">Blobs Explorer</h2>
-          <SearchTxn />
+        <div className="grid lg:grid-cols-2 w-full">
+          <div className="lg:h-[40vh] h-[40vh] w-full flex-col flex justify-center gap-4 ">
+            <h2 className="lg:text-5xl text-xl font-semibold">
+              Blobs Explorer
+            </h2>
+            <SearchTxn />
+          </div>
+          <div className=" p-5  h-[40vh] w-full  bg-base-100 rounded-lg border-base-200 border">
+            {/* <HeatMap /> */}
+            <ETHPriceDayChart duration={90} />
+          </div>
         </div>
         <Stats />
         <div className="lg:grid-cols-2 grid gap-8">
