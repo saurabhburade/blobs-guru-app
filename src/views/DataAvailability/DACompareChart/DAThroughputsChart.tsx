@@ -334,7 +334,14 @@ const ThroughputChart = ({ mergedData }: any) => {
           verticalAlign="top"
           content={() => <span className="text-xs">DA Compare 24Hrs</span>}
         />
-        <XAxis dataKey="timestamp2" className="text-xs" axisLine={false} />
+        <XAxis
+          dataKey="timestamp2"
+          className="text-[10px] !text-current"
+          angle={45}
+          tickLine={false}
+          allowDataOverflow
+          axisLine={false}
+        />
 
         <Tooltip content={CustomTooltip} />
         {/* <Area

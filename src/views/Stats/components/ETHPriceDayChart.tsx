@@ -81,7 +81,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             new Date(Number(bd?.dayStartTimestamp) * 1000)
           ),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
-          totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
+          totalBlobHashesCount: Number(bd?.totalBlobHashesCount) / 10,
           avgEthPrice: Number(bd?.avgEthPrice),
         };
       })
@@ -103,25 +103,56 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
   }
   return (
     <div className="h-full w-full row-span-2 ">
-      <div className="flex justify-between ">
-        <span className="text-2xl font-bold leading-6">ETH Price</span>
-        <p className="text-2xl leading-6 font-bold">
-          {chartData
-            ? new BigNumber(chartData?.at(-1)?.avgEthPrice)?.toFormat(2)
-            : "0"}{" "}
-          <span
-            className={cn(
-              "text-xs",
-              Number(diffPercent) > 0 ? "text-success" : "",
-              Number(diffPercent) < 0 ? "text-error" : "",
-              Number(diffPercent) == 0 ? "text-current opacity-80" : "",
-              isNaN(Number(diffPercent)) ? "text-current opacity-80" : ""
-            )}
-          >
-            {isNaN(Number(diffPercent)) ? 0 : diffPercent}%
-          </span>
-        </p>
+      <div className="grid grid-cols-2 lg:gap-2 gap-4 lg:grid-cols-3 pb-4 border-b border-base-200">
+        <div className="">
+          <div className=" ">
+            <span className=" font-bold leading-6">ETH Price [1D]</span>
+            <div>
+              <p className=" leading-6 font-bold">
+                {chartData
+                  ? new BigNumber(chartData?.at(-1)?.avgEthPrice)?.toFormat(2)
+                  : "0"}{" "}
+                <span
+                  className={cn(
+                    "text-xs",
+                    Number(diffPercent) > 0 ? "text-success" : "",
+                    Number(diffPercent) < 0 ? "text-error" : "",
+                    Number(diffPercent) == 0 ? "text-current opacity-80" : "",
+                    isNaN(Number(diffPercent)) ? "text-current opacity-80" : ""
+                  )}
+                >
+                  {isNaN(Number(diffPercent)) ? 0 : diffPercent}%
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="">
+          <div className=" ">
+            <span className=" font-bold leading-6">Blobs Count</span>
+            <div>
+              <p className=" leading-6 font-bold">
+                {chartData
+                  ? new BigNumber(
+                      chartData?.at(-1)?.totalBlobHashesCount * 10
+                    )?.toFormat()
+                  : "0"}{" "}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="">
+          <div className=" ">
+            <span className=" font-bold leading-6">Data Size </span>
+            <div>
+              <p className=" leading-6 font-bold">
+                {chartData ? chartData?.at(-1)?.Size : "0"}{" "}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           // width={730}
@@ -129,7 +160,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
           // height={100}
           data={chartData}
           // margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-          margin={{ top: 30, right: -25, left: 0, bottom: 20 }}
+          margin={{ top: 30, right: -25, left: 0, bottom: 80 }}
         >
           <defs>
             <linearGradient id="colorUvAccStatCard" x1="0" y1="0" x2="0" y2="1">
@@ -171,11 +202,23 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
           />
           <Area
             type="monotone"
+            dataKey="totalBlobHashesCount"
+            stroke="currentColor"
+            fill="none"
+            strokeWidth={2}
+            // TODO: make it generic & reusable
+            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
+          />
+          <Area
+            type="monotone"
             dataKey="avgEthPrice"
             stroke="#8884d8"
             fillOpacity={1}
             strokeWidth={2}
-            fill="url(#colorUvAccStatCard)"
+            // fill="url(#colorUvAccStatCard)"
+            fill="none"
+            // TODO: make it generic & reusable
+            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5 `}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -195,28 +238,19 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
         </div>
         <hr className="border-base-200" />
         <div className="px-4 space-y-3">
-          {/* <p className=" break-words ">
-            Transactions : {`${payload[0]?.payload?.totalBlobTransactionCount}`}
-          </p> */}
           <p className=" ">
             ETH Price :{" "}
             {`$${new BigNumber(payload[0]?.payload?.avgEthPrice)?.toFormat(2)}`}{" "}
           </p>
         </div>
-      </div>
-    );
-    return (
-      <div
-        className={` bg-base-200 w-[15em] rounded-lg   overflow-hidden text-xs`}
-      >
-        <div className="p-4 ">
+        <div className="px-4 space-y-3">
           <p className=" ">
-            ETH Price :{" "}
-            {`$${new BigNumber(payload[0]?.payload?.avgEthPrice)?.toFormat(2)}`}{" "}
+            Blobs Count :{" "}
+            {`${new BigNumber(payload[0]?.payload?.totalBlobHashesCount)?.multipliedBy(10)?.toFormat()}`}{" "}
           </p>
-          <p className="  ">
-            Timestamp: {`${payload[0]?.payload?.timestamp2}`}
-          </p>
+        </div>
+        <div className="px-4 space-y-3">
+          <p className=" ">Data Size : {`${payload[0]?.payload?.Size}`} </p>
         </div>
       </div>
     );

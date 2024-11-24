@@ -66,6 +66,9 @@ export const ETH_PRICE_DAY_DATAS_QUERY = gql`
     ) {
       avgEthPrice
       dayStartTimestamp
+      totalBlobHashesCount
+      totalBlobGas
+      totalBlobGasUSD
     }
   }
 `;
@@ -154,11 +157,11 @@ export const ACCOUNT_DAY_DATAS_QUERY = gql`
   }
 `;
 export const ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
-  query AccountDayDatas($address: String , $duration: Int) {
+  query AccountDayDatas($address: String, $duration: Int) {
     accountDayDatas(
-      first: $duration,
-      orderBy: dayStartTimestamp,
-      orderDirection: desc,
+      first: $duration
+      orderBy: dayStartTimestamp
+      orderDirection: desc
       where: { account: $address }
     ) {
       id
@@ -178,11 +181,11 @@ export const ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
   }
 `;
 export const ACCOUNT_HOUR_DATAS_WITH_DURATION_QUERY = gql`
-  query AccountHourDatas($address: String , $duration: Int) {
+  query AccountHourDatas($address: String, $duration: Int) {
     accountHourDatas(
-      first: $duration,
-      orderBy: hourStartTimestamp,
-      orderDirection: desc,
+      first: $duration
+      orderBy: hourStartTimestamp
+      orderDirection: desc
       where: { account: $address }
     ) {
       id
