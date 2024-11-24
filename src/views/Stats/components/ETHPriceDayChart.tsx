@@ -83,6 +83,12 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount) / 10,
           avgEthPrice: Number(bd?.avgEthPrice),
+          totalBlobGasUSD: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e20)
+            .toNumber(),
+          totalBlobGasUSDF: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e18)
+            .toFormat(2),
         };
       })
       ?.reverse();
@@ -98,17 +104,22 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
     }
     return 0;
   }, [chartData]);
+
   if (loading) {
     return <ChartLoading />;
   }
   return (
-    <div className="h-full w-full row-span-2 ">
-      <div className="grid grid-cols-2 lg:gap-2 gap-4 lg:grid-cols-3 pb-4 border-b border-base-200">
+    <div className="w-full h-full h-[25em] lg:h-[18em]  flex justify-between flex-col">
+      <div className="grid grid-cols-2 h-[10em] lg:h-[5em] lg:gap-2 gap-4 lg:grid-cols-[1fr_0.5fr_0.5fr_0.5fr] pb-4 border-b border-base-200">
         <div className="">
           <div className=" ">
-            <span className=" font-bold leading-6">ETH Price [1D]</span>
+            <div className=" w-full h-full font-bold leading-6">
+              <p className=" w-[10px] h-[10px] bg-[#8884d8]"></p>
+              ETH Price [Today]
+            </div>
             <div>
               <p className=" leading-6 font-bold">
+                <span className="font-normal">$</span>{" "}
                 {chartData
                   ? new BigNumber(chartData?.at(-1)?.avgEthPrice)?.toFormat(2)
                   : "0"}{" "}
@@ -129,7 +140,11 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
         </div>
         <div className="">
           <div className=" ">
-            <span className=" font-bold leading-6">Blobs Count</span>
+            <div className=" w-full h-full font-bold leading-6">
+              <p className=" w-[10px] h-[10px] bg-current"></p>
+              Blobs Count
+            </div>
+
             <div>
               <p className=" leading-6 font-bold">
                 {chartData
@@ -143,10 +158,29 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
         </div>
         <div className="">
           <div className=" ">
-            <span className=" font-bold leading-6">Data Size </span>
+            <div className=" w-full h-full font-bold leading-6">
+              <p className=" w-[10px] h-[10px] bg-transparent"></p>
+              Data Size
+            </div>
+
             <div>
               <p className=" leading-6 font-bold">
                 {chartData ? chartData?.at(-1)?.Size : "0"}{" "}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="">
+          <div className=" ">
+            <div className=" w-full h-full font-bold leading-6">
+              <p className=" w-[10px] h-[10px] bg-[orange]"></p>
+              Blob Fees
+            </div>
+
+            <div>
+              <p className=" leading-6 font-bold">
+                <span className="font-normal">$</span>{" "}
+                {chartData ? chartData?.at(-1)?.totalBlobGasUSDF : "0"}{" "}
               </p>
             </div>
           </div>
@@ -160,7 +194,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
           // height={100}
           data={chartData}
           // margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-          margin={{ top: 30, right: -25, left: 0, bottom: 80 }}
+          margin={{ top: 30, right: -25, left: 0, bottom: 10 }}
         >
           <defs>
             <linearGradient id="colorUvAccStatCard" x1="0" y1="0" x2="0" y2="1">
@@ -179,12 +213,12 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             
             )}
           /> */}
-          <YAxis
+          {/* <YAxis
             className="text-[10px] "
             axisLine={false}
             tickLine={false}
             orientation={"right"}
-          />
+          /> */}
           <XAxis
             dataKey={"timestamp2"}
             className="text-[10px] !text-current"
@@ -211,6 +245,15 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
           />
           <Area
             type="monotone"
+            dataKey="totalBlobGasUSD"
+            stroke="orange"
+            fill="none"
+            strokeWidth={2}
+            // TODO: make it generic & reusable
+            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
+          />
+          <Area
+            type="monotone"
             dataKey="avgEthPrice"
             stroke="#8884d8"
             fillOpacity={1}
@@ -218,7 +261,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             // fill="url(#colorUvAccStatCard)"
             fill="none"
             // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5 `}
+            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -251,6 +294,11 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
         </div>
         <div className="px-4 space-y-3">
           <p className=" ">Data Size : {`${payload[0]?.payload?.Size}`} </p>
+        </div>
+        <div className="px-4 space-y-3">
+          <p className=" ">
+            Blob Fee : ${`${payload[0]?.payload?.totalBlobGasUSDF}`}{" "}
+          </p>
         </div>
       </div>
     );

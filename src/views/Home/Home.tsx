@@ -27,7 +27,7 @@ function Home({}: Props) {
             </h2>
             <SearchTxn />
           </div>
-          <div className=" p-3 lg:p-5   h-[40vh] w-full  bg-base-100 rounded-lg border-base-200 border">
+          <div className=" p-3 lg:p-5   w-full  bg-base-100 rounded-lg border-base-200 border">
             {/* <HeatMap /> */}
             <ETHPriceDayChart duration={60} />
           </div>
