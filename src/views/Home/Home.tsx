@@ -13,30 +13,57 @@ import PoweredBy from "./components/PoweredBy";
 import SearchTxn from "./components/SearchTxn";
 import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
 import ETHPriceDayChart from "../Stats/components/ETHPriceDayChart";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import TopAccountsStats from "../Stats/components/AccountStats/TopAccountsStats";
+import AccountPies from "../Stats/components/AccountStats/Pies/AccountPies";
+import AccountsBySizePieHome from "./components/AccountsBySizePieHome";
+import { AccountRows } from "../Accounts/AccountsView";
 type Props = {};
 
 function Home({}: Props) {
+  const { data, loading: statsLoading } = useQuery(COLLECTIVE_STAT_QUERY);
+
   return (
-    <div>
-      <Header />
-      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className="grid lg:grid-cols-2 w-full">
-          <div className="lg:h-[40vh] h-[40vh] w-full flex-col flex justify-center gap-4 ">
-            <h2 className="lg:text-5xl text-xl font-semibold">
-              Blobs Explorer
-            </h2>
+    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="lg:block hidden">
+        <Sidebar />
+      </div>
+      <div className="lg:hidden block">
+        <Header />
+      </div>
+      <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
+        <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
+          <h2 className="lg:text-xl text-xl font-semibold">
+            Ethereum Blobs Explorer
+          </h2>
+          <div className="">
             <SearchTxn />
           </div>
-          <div className=" p-3 lg:p-5   w-full  bg-base-100 rounded-lg border-base-200 border">
-            {/* <HeatMap /> */}
+        </div>
+        {/* <div className="bg-base-100 border border-base-200 ">
+          <AccountsBySizePieHome collectiveData={data?.collectiveData} />
+        </div> */}
+        {/* <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
+          <div className="  lg:h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
+            <p className="text-xs p-3 border-b border-base-200 ">
+              Size Distribution
+            </p>
+
+            <AccountsBySizePieHome collectiveData={data?.collectiveData} />
+          </div>
+
+          <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
             <ETHPriceDayChart duration={60} />
           </div>
+        </div> */}
+        <div className="">
+          <Stats />
         </div>
-        <Stats />
-        <div className="lg:grid-cols-2 grid gap-8">
+        <AccountRows />
+        {/* <div className="lg:grid-cols-2 grid gap-8">
           <Transactions />
           <Blocks />
-        </div>
+        </div> */}
         <PoweredBy />
       </div>
     </div>
@@ -151,7 +178,7 @@ const Stats = () => {
       .concat(" KiB/sec");
   }, [data?.collectiveData?.totalBlobGasUSD]);
   return (
-    <div className="grid lg:grid-cols-4 gap-0  ">
+    <div className="grid lg:grid-cols-4 gap-0 rounded-lg overflow-hidden w-full ">
       <StatCard
         title="Block height"
         value={lastUpdatedBlock}
@@ -185,7 +212,7 @@ const Stats = () => {
         </div>
       )}
       {!statsLoading && (
-        <div className="bg-base-100 row-span-2 border p-2 border-base-200">
+        <div className="bg-base-100 row-span-2 h-[12em] border p-2 border-base-200">
           <BlobTransactionDayChart />
         </div>
       )}
@@ -204,7 +231,7 @@ const Stats = () => {
         value={totalBlobFeesUSD}
         isLoading={statsLoading}
       />
-      <StatCard
+      {/* <StatCard
         title="Blobs per block"
         value={`${blobsPerBlock?.toString()} blobs/block`}
         isLoading={statsLoading}
@@ -223,7 +250,7 @@ const Stats = () => {
         title="Data per sec"
         value={`${dataPerSec?.toString()}`}
         isLoading={statsLoading}
-      />
+      /> */}
     </div>
   );
 };
@@ -245,7 +272,7 @@ const StatCard = ({
     );
   }
   return (
-    <div className="h-full w-full bg-base-100 border p-4 space-y-2 border-base-200">
+    <div className="h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
       <p className=" text-sm opacity-50">{title || "Block Height"}</p>
       <p className=" text-2xl font-semibold">{value || "20,897,924"}</p>
     </div>

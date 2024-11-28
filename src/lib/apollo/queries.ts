@@ -429,8 +429,10 @@ export const BLOB_ACCOUNTS_EXPLORER_QUERY = gql`
       lastUpdatedBlock
       totalBlobTransactionCount
       totalBlobGasEth
+      totalBlobGasUSD
       totalBlobHashesCount
       totalFeeEth
+      totalBlobBlocks
     }
   }
 `;

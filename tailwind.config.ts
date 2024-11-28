@@ -20,7 +20,7 @@ const config: Config = {
       },
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+
   plugins: [require("daisyui")],
   daisyui: {
     themes: [
@@ -39,7 +39,7 @@ const config: Config = {
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
           primary: "#00AAFF",
-          "base-100": "#030303",
+          "base-100": "#101010",
           "base-200": "#1f2937",
           "base-300": "#4b5563",
           "primary-content": "#000000",

@@ -2,8 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+
+html{
+  background:var(--b3);
+}
 .recharts-sector {
   stroke-linejoin: round;
 
   border-radius: 100px;
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Hide scrollbars in WebKit-based browsers (Chrome, Safari) */
+}
+
+* {
+  -ms-overflow-style: none;  /* Hide scrollbars in IE and Edge */
+  scrollbar-width: none; /* Hide scrollbars in Firefox */
 }
