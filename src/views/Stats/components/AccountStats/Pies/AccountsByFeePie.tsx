@@ -81,7 +81,6 @@ export default function AccountsByFeePie({ collectiveData }: any) {
         basicAccountDetail,
       };
     });
-
     const allExceptLast = _.slice(datas, 0, -1);
     const sorted = _.orderBy(
       allExceptLast,
@@ -100,51 +99,50 @@ export default function AccountsByFeePie({ collectiveData }: any) {
   };
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
-      <div className="grid lg:grid-cols-[1fr_2fr] w-full h-full ">
-        <div className="w-[20em] h-[20em] overflow-hidden">
-          <div className="w-[19.5em]   flex flex-col items-center justify-center h-[18.5em]   absolute   rounded-full">
-            <p className="font-semibold">
-              {" "}
-              {formatEthereumValue(Number(collectiveData?.totalBlobGasEth))}
-            </p>
+      <div className="flex  w-full lg:h-[20em] lg:flex-row flex-col-reverse">
+        <div className="lg:w-[45%] h-full relative top-0 flex items-center lg:items-start justify-center">
+          <div className="flex w-full justify-center items-center flex-col ">
+            <div className="  flex flex-col items-center justify-center  absolute   rounded-full">
+              <p className="font-semibold">
+                {" "}
+                {formatEthereumValue(Number(collectiveData?.totalBlobGasEth))}
+              </p>
+            </div>
+            <PieChart width={200} height={200} className=" my-7">
+              <Pie
+                cx={"50%"}
+                cy={"50%"}
+                data={chartData}
+                innerRadius={60}
+                outerRadius={80}
+                fill="#8884d8"
+                paddingAngle={0}
+                dataKey="totalBlobGasEth"
+                cornerRadius={5}
+                stroke="0"
+                activeIndex={active}
+                activeShape={renderActiveShape}
+                onMouseEnter={onPieEnter}
+                // cornerRadius={5}
+                onMouseLeave={() => setActive(-1)}
+                onMouseOut={() => setActive(-1)}
+                onMouseOutCapture={() => setActive(-1)}
+                onTouchEnd={() => setActive(-1)}
+                onTouchCancel={() => setActive(-1)}
+              >
+                {chartData?.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+
+              <Tooltip content={CustomTooltipRaw} />
+            </PieChart>
           </div>
-          <PieChart width={400} height={400} className=" p-0">
-            <Pie
-              cx={150}
-              cy={120}
-              data={chartData}
-              innerRadius={60}
-              outerRadius={80}
-              fill="#8884d8"
-              paddingAngle={0}
-              dataKey="totalBlobGasEth"
-              cornerRadius={5}
-              stroke="0"
-              activeIndex={active}
-              activeShape={renderActiveShape}
-              onMouseEnter={onPieEnter}
-              // cornerRadius={5}
-              onMouseLeave={() => setActive(-1)}
-              onMouseOut={() => setActive(-1)}
-              onMouseOutCapture={() => setActive(-1)}
-              onTouchEnd={() => setActive(-1)}
-              onTouchCancel={() => setActive(-1)}
-            >
-              {chartData?.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Legend
-              verticalAlign="top"
-              content={() => <span className="text-xs px-4">Blob fee</span>}
-            />
-            <Tooltip content={CustomTooltipRaw} />
-          </PieChart>
         </div>
-        <div className="space-y-1 flex flex-col justify-center px-4">
+        <div className=" flex flex-col justify-start lg:px-4 p-2">
           {chartData?.map((entry, index) => (
             <div
               key={`account-row-${entry?.id}`}
@@ -202,7 +200,6 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
 
   return null;
 };
-
 const renderActiveShape = (props: any) => {
   const RADIAN = Math.PI / 180;
   const {

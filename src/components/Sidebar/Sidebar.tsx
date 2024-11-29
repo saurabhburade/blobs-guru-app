@@ -38,7 +38,7 @@ function Sidebar({}: Props) {
               <hr className="border-base-200" />
 
               <li className="  ">
-                <Link href="/blocks"> Size</Link>
+                <Link href="/size"> Size</Link>
               </li>
               <hr className="border-base-200" />
               <li className="  ">

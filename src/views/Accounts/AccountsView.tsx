@@ -28,12 +28,30 @@ import AccountStatCard from "./components/AccountStatCard";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
 import { timeAgo } from "@/lib/time";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import AccountPies from "../Stats/components/AccountStats/Pies/AccountPies";
 
 type Props = {};
 
 function AccountsView({}: Props) {
   // const { data } = useQuery(BLOB_TRANSACTIONS_EXPLORER_QUERY);
-
+  return (
+    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="lg:block hidden">
+        <Sidebar />
+      </div>
+      <div className="lg:hidden block">
+        <Header />
+      </div>
+      <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
+        <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
+          <h2 className="lg:text-xl text-xl font-semibold">L2 Rollups</h2>
+        </div>
+        <AccountPies />
+        <AccountRows />
+      </div>
+    </div>
+  );
   return (
     <div>
       <Header />
