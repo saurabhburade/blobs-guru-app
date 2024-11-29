@@ -42,7 +42,7 @@ function Sidebar({}: Props) {
               </li>
               <hr className="border-base-200" />
               <li className="  ">
-                <Link href="/transactions"> Costs</Link>
+                <Link href="/cost"> Costs</Link>
               </li>
 
               <hr className="border-base-200" />
