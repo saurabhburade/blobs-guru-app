@@ -21,16 +21,26 @@ import { useTransactionsExplorerWithRPCData } from "@/hooks/useTransactionsData"
 import { timeAgo } from "@/lib/time";
 import BlobTxnsChart from "../Stats/components/BlobsStats/BlobTxnsChart";
 import BlobSizeChart from "../Stats/components/BlobsStats/BlobSizeChart";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 type Props = {};
 
 function TransactionsView({}: Props) {
   // const { data } = useQuery(BLOB_TRANSACTIONS_EXPLORER_QUERY);
-
   return (
-    <div>
-      <Header />
-      <div className="mx-auto lg:p-20 p-4 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="lg:block hidden">
+        <Sidebar />
+      </div>
+      <div className="lg:hidden block">
+        <Header />
+      </div>
+      <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
+        <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
+          <h2 className="lg:text-xl text-xl font-semibold">
+            Blob Transactions
+          </h2>
+        </div>
         <div className="w-full ">
           <div className="lg:h-[20em]  flex lg:flex-nowrap flex-wrap items-stretch gap-4 my-4">
             <div className="p-5 h-[20em] bg-base-100/50 border   border-base-300/20 w-full rounded-lg">
