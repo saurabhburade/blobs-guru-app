@@ -36,7 +36,7 @@ function BlobsStats({}: Props) {
           >
             7d
           </button>
-      
+
           <button
             className="btn  btn-sm"
             onClick={() => {
@@ -61,7 +61,7 @@ function BlobsStats({}: Props) {
       {showHourly && <BlobsStatsHourly duration={24} />}
       {!showHourly && (
         <>
-          <div className="grid lg:grid-cols-2 lg:h-[20em] h-full ">
+          <div className="grid lg:grid-cols-2 lg:h-[20em]  ">
             <div className="border-base-200 border-r p-5 h-[20em]">
               <BlobSizeChart duration={duration} />
             </div>

@@ -29,7 +29,7 @@ function Sidebar({}: Props) {
             <ul className=" menu space-y-2 bg-base-100 lg:border-l border-base-200  text-base-content min-h-full">
               {/* Sidebar content here */}
               <li className="  ">
-                <Link href="/blocks">Summary</Link>
+                <Link href="/">Summary</Link>
               </li>
               <hr className="border-base-200" />
               <li className="  ">
