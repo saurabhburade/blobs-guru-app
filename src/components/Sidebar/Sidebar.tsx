@@ -26,7 +26,7 @@ function Sidebar({}: Props) {
             Ethereum Blobs
           </div>
           <div className="collapse-content ">
-            <ul className=" menu space-y-2 bg-base-100 lg:border-l border-base-200  text-base-content min-h-full">
+            <ul className=" menu space-y-2 bg-base-100  border-base-200  text-base-content min-h-full">
               {/* Sidebar content here */}
               <li className="  ">
                 <Link href="/">Summary</Link>
@@ -48,10 +48,6 @@ function Sidebar({}: Props) {
               <hr className="border-base-200" />
 
               <li className="  ">
-                <Link href="/da"> Compare DA</Link>
-              </li>
-              <hr className="border-base-200" />
-              <li className="  ">
                 <Link href="/stats">Stats</Link>
               </li>
               <hr className="border-base-200" />
@@ -66,6 +62,25 @@ function Sidebar({}: Props) {
               </li>
 
               <hr className="border-base-200" />
+            </ul>
+          </div>
+        </div>
+        <div className="collapse collapse-arrow ">
+          <input type="checkbox" name="my-accordion-2" defaultChecked />
+          <div className="collapse-title text-xl font-medium">
+            Data Availability
+          </div>
+          <div className="collapse-content ">
+            <ul className=" menu space-y-2 bg-base-100  border-base-200  text-base-content min-h-full">
+              {/* Sidebar content here */}
+              <li className="  ">
+                <Link href="/da/list">DA Providers</Link>
+              </li>
+              <hr className="border-base-200" />
+              {/* <li className="  ">
+                <Link href="/accounts">DA Compare </Link>
+              </li>
+              <hr className="border-base-200" /> */}
             </ul>
           </div>
         </div>
