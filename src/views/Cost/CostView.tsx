@@ -51,7 +51,7 @@ function CostView({}: Props) {
             <div className="border-base-200 border-t w-full lg:border-t-0 lg:h-[20em] ">
               <div className="  lg:h-[20em] bg-base-100 rounded-lg ">
                 <p className="text-xs p-3 border-b border-base-200 ">
-                  Blobs Count
+                  Blob Fee [USD]
                 </p>
 
                 <AccountsByFeePieUSD
