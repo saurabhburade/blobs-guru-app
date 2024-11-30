@@ -61,7 +61,7 @@ function CostView({}: Props) {
             </div>
           </div>
         </div>
-        <div className="h-[20em] border border-base-200 rounded-lg p-4">
+        <div className="h-full border border-base-200 rounded-lg p-4">
           <BlobOnlyEthFeeChart duration={30} />
         </div>
         <AccountRows />

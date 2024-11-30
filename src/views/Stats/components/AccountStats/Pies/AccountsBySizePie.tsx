@@ -41,7 +41,7 @@ const COLORS = [
   "#FDBF6F", // Tan
 ];
 export default function AccountsBySizePie({ collectiveData }: any) {
-  const { data } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
+  const { data, loading } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
 
   const chartData = useMemo(() => {
     const processed = processAccounts(data?.accounts);
@@ -135,36 +135,52 @@ export default function AccountsBySizePie({ collectiveData }: any) {
             </PieChart>
           </div>
         </div>
-        <div className=" flex flex-col justify-start lg:px-4 p-2">
-          {chartData?.map((entry, index) => (
-            <div
-              key={`account-row-${entry?.id}`}
-              className="p-2 hover:bg-base-200/50 rounded-lg flex justify-between  items-center"
-              onMouseEnter={() => {
-                setActive(index);
-              }}
-            >
-              <div className="flex items-center gap-2">
-                {entry?.basicAccountDetail?.logoUri ? (
-                  <img
-                    src={entry?.basicAccountDetail?.logoUri}
-                    className="w-[1em] h-[1em]  rounded-lg "
-                  />
-                ) : (
-                  <div className="w-[1em] h-[1em] bg-primary rounded-lg"></div>
-                )}
+        {loading && (
+          <div className=" flex flex-col justify-start lg:px-4 p-2 w-full">
+            {new Array(7)?.fill(1)?.map((entry, index) => (
+              <div
+                key={`account-row-${index}`}
+                className="p-2  w-full grid grid-cols-[0.1fr_1fr_1fr] gap-4  rounded-lg flex justify-between  items-center"
+              >
+                <p className=" size-4 rounded animate-pulse bg-base-200/50"></p>
+                <p className="h-[1.2em] rounded animate-pulse bg-base-200/50"></p>
+                <p className=" h-[1.2em]  rounded animate-pulse bg-base-200/50"></p>
+              </div>
+            ))}
+          </div>
+        )}
+        {!loading && (
+          <div className=" flex flex-col justify-start lg:px-4 p-2">
+            {chartData?.map((entry, index) => (
+              <div
+                key={`account-row-${entry?.id}`}
+                className="p-2 hover:bg-base-200/50 rounded-lg flex justify-between  items-center"
+                onMouseEnter={() => {
+                  setActive(index);
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  {entry?.basicAccountDetail?.logoUri ? (
+                    <img
+                      src={entry?.basicAccountDetail?.logoUri}
+                      className="w-[1em] h-[1em]  rounded-lg "
+                    />
+                  ) : (
+                    <div className="w-[1em] h-[1em] bg-primary rounded-lg"></div>
+                  )}
 
-                <p className="text-sm w-[70%] whitespace-nowrap overflow-hidden overflow-ellipsis">
-                  {entry?.formattedAddress}
+                  <p className="text-sm w-[70%] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    {entry?.formattedAddress}
+                  </p>
+                </div>
+                <p className="text-xs text-end flex gap-2">
+                  <span className="opacity-25"> {entry?.Size}</span>{" "}
+                  <span> {entry?.percentFormat}%</span>
                 </p>
               </div>
-              <p className="text-xs text-end flex gap-2">
-                <span className="opacity-25"> {entry?.Size}</span>{" "}
-                <span> {entry?.percentFormat}%</span>
-              </p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </ResponsiveContainer>
   );

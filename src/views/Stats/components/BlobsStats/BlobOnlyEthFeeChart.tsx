@@ -89,7 +89,7 @@ export default function BlobOnlyEthFeeChart({
     return datas;
   }, [data?.blobsDayDatas]);
   return (
-    <div className="h-full w-full row-span-2 ">
+    <div className="h-[20em] w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart width={400} height={400} data={chartData}>
           <Tooltip

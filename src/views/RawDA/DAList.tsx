@@ -52,41 +52,7 @@ function DAList({}: Props) {
             <p>Upgradeability</p>
             <p>Relayer failure</p>
           </div>
-          {/* <div className="grid grid-cols-7 items-center w-full text-sm border-b border-base-200">
-            <div className="flex gap-2 p-2 h-fit">
-              <img
-                src="/images/eigen-da.png"
-                alt=""
-                className="rounded-lg size-10"
-              />
-              <div>
-                <p>EIP 4844</p>
-                <p>Public Chain</p>
-              </div>
-            </div>
-            <div>Staked Assets</div>
-            <div>DAS</div>
-            <div className="col-span-4 w-full ">
-              <div className="grid grid-cols-4 p-2 bg-base-200/40 border-b border-base-200">
-                <p>No Bridge</p>
-                <p>No Bridge</p>
-                <p>No Bridge</p>
-                <p>No Bridge</p>
-              </div>
-              <div className="grid grid-cols-4 p-2 bg-base-200/40 border-b border-base-200">
-                <p>No Bridge</p>
-                <p>No Bridge</p>
-                <p>No Bridge</p>
-                <p>No Bridge</p>
-              </div>
-              <div className="grid grid-cols-4 p-2 bg-base-200/40 border-b border-base-200">
-                <p>No Bridge</p>
-                <p>No Bridge</p>
-                <p>No Bridge</p>
-                <p>No Bridge</p>
-              </div>
-            </div>
-          </div> */}
+        
           {daList?.map((provider) => {
             return (
               <div
