@@ -203,6 +203,7 @@ interface OtherAccount {
   totalBlobHashesCount: number;
   totalFeeEth: string;
   totalBlobBlocks?: string;
+  totalBlobGasUSD?: string;
 }
 
 interface Result {
@@ -229,6 +230,7 @@ export function processAccounts(data: Account[]): Account[] {
     totalBlobHashesCount: 0,
     totalFeeEth: "0",
     totalBlobBlocks: "0",
+    totalBlobGasUSD: "0",
   };
 
   // Sum the remaining accounts into the "Other" category using lodash
@@ -254,6 +256,11 @@ export function processAccounts(data: Account[]): Account[] {
         BigInt(other?.totalBlobBlocks) + BigInt(account?.totalBlobBlocks)
       ).toString();
     }
+    if (account?.totalBlobGasUSD && other?.totalBlobGasUSD) {
+      other.totalBlobGasUSD = (
+        Number(account?.totalBlobGasUSD) + Number(other?.totalBlobGasUSD)
+      )?.toString();
+    }
   });
   console.log(`🚀 ~ file: utils.ts:262 ~ other:`, other);
 
@@ -267,3 +274,12 @@ export function getRandomNumber(num1: number, num2: number): number {
 
   return Math.random() * (max - min) + min;
 }
+
+
+export const dateTimeString = new Intl.DateTimeFormat("en-US", {
+  timeZoneName: "short",
+  weekday: "short",
+  day: "2-digit",
+  month: "2-digit",
+  year: "2-digit",
+});

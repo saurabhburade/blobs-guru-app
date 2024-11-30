@@ -9,6 +9,12 @@ import AccountsBySizePie from "../Stats/components/AccountStats/Pies/AccountsByS
 import AccountsByBlobsPie from "../Stats/components/AccountStats/Pies/AccountsByBlobsPie";
 import BlobUtilisation from "./components/BlobUtilisation";
 import { AccountRows } from "../Accounts/AccountsView";
+import AccountsByFeePie from "../Stats/components/AccountStats/Pies/AccountsByFeePie";
+import AccountsByFeePieUSD from "../Stats/components/AccountStats/Pies/AccountsByFeePieUSD";
+import BlobCostChart from "../Stats/components/BlobsStats/BlobCostChart";
+
+import BlobOnlyEthUSDFeeChart from "../Stats/components/BlobsStats/BlobOnlyEthUSDFeeChart";
+import BlobOnlyEthFeeChart from "../Stats/components/BlobsStats/BlobOnlyEthFeeChart";
 
 type Props = {};
 
@@ -34,10 +40,10 @@ function CostView({}: Props) {
             <div className="border-base-200 lg:border-r lg:h-[20em]">
               <div className="  lg:h-[20em] bg-base-100 rounded-lg ">
                 <p className="text-xs p-3 border-b border-base-200 ">
-                  Size Distribution
+                  Blob Fee Distribution
                 </p>
 
-                <AccountsBySizePie
+                <AccountsByFeePie
                   collectiveData={collectiveData?.collectiveData}
                 />
               </div>
@@ -48,17 +54,16 @@ function CostView({}: Props) {
                   Blobs Count
                 </p>
 
-                <AccountsByBlobsPie
+                <AccountsByFeePieUSD
                   collectiveData={collectiveData?.collectiveData}
                 />
               </div>
             </div>
           </div>
         </div>
-        <div className="w-full ">
-          <BlobUtilisation />
+        <div className="h-[20em] border border-base-200 rounded-lg p-4">
+          <BlobOnlyEthFeeChart duration={30} />
         </div>
-
         <AccountRows />
       </div>
     </div>

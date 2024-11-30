@@ -1,6 +1,7 @@
 import AccountsView from "@/views/Accounts/AccountsView";
 import Blocks from "@/views/Blocks/Blocks";
-import CostView from "@/views/Cost/SizeView";
+import CostView from "@/views/Cost/CostView";
+
 import SizeView from "@/views/Size/SizeView";
 import TransactionsView from "@/views/Transactions/TransactionsView";
 import Image from "next/image";

@@ -89,6 +89,7 @@ export const TOP_BLOB_ACCOUNTS_QUERY = gql`
       totalBlobHashesCount
       totalFeeEth
       totalBlobBlocks
+      totalBlobGasUSD
     }
   }
 `;
