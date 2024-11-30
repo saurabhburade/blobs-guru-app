@@ -52,27 +52,6 @@ function AccountsView({}: Props) {
       </div>
     </div>
   );
-  return (
-    <div>
-      <Header />
-      <div className="mx-auto lg:p-20 p-4 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className="w-full space-y-4 ">
-          <div className="lg:h-[20em]  flex-wrap lg:flex-nowrap flex items-stretch gap-4 my-4">
-            <div className="p-5 h-[20em] bg-base-100/50 border   border-base-300/20 w-full rounded-lg">
-              <TopBlobAccountsChart />
-            </div>
-            <div className="p-5  h-[20em] bg-base-100/50 border border-base-300/20 w-full  rounded-lg">
-              {/* <BlobTransactionDayChart /> */}
-              <BlobHashesDayChart />
-            </div>
-          </div>
-          <TopAccountsStats />
-          {/* <TxnStats /> */}
-        </div>
-        <AccountRows />
-      </div>
-    </div>
-  );
 }
 
 export default AccountsView;
