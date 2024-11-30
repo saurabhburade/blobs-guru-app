@@ -63,7 +63,7 @@ const BlobUtilisation: React.FC = () => {
           endAngle: -20,
           min: 0,
           max: Number(KB_PER_BLOB) * Number(MAX_BLOBS_TARGET),
-          splitNumber: 10,
+          splitNumber: Number(MAX_BLOBS_TARGET),
           itemStyle: {
             color: "#FFAB91",
           },
@@ -133,8 +133,8 @@ const BlobUtilisation: React.FC = () => {
         <p className="text-xs p-3 border-b border-base-200 w-full">
           Blobs Utilization [Last 10 Blocks]
         </p>{" "}
-        <div className="grid lg:grid-cols-2 w-full h-full lg:h-[20em]">
-          <div className="h-[20em] w-full p-5">
+        <div className="grid lg:grid-cols-2 w-full h-full lg:h-[17em]">
+          <div className="h-[17em] w-full p-5">
             <ReactECharts
               option={memoOption?.option}
               style={{ height: "100%", width: "100%" }}
@@ -154,7 +154,7 @@ const BlobUtilisation: React.FC = () => {
               </p>
             </div>
             <div className="lg:border-l border-base-200 flex flex-col items-center justify-center">
-              <p className="opacity-70"> Avg. Size</p>
+              <p className="opacity-70"> Avg. Size/Block</p>
               <p className="text-2xl font-bold">
                 {memoOption?.averageBlobCount * Number(KB_PER_BLOB)} KiB
               </p>

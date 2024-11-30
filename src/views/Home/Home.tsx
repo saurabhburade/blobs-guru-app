@@ -19,6 +19,7 @@ import AccountPies from "../Stats/components/AccountStats/Pies/AccountPies";
 import AccountsBySizePieHome from "./components/AccountsBySizePieHome";
 import { AccountRows } from "../Accounts/AccountsView";
 import { useDAProvidersRaw } from "@/hooks/useDAProviders";
+import BlobUtilisation from "../Size/components/BlobUtilisation";
 type Props = {};
 
 function Home({}: Props) {
@@ -42,22 +43,19 @@ function Home({}: Props) {
             <SearchTxn />
           </div>
         </div>
+
         {/* <div className="bg-base-100 border border-base-200 ">
           <AccountsBySizePieHome collectiveData={data?.collectiveData} />
         </div> */}
-        {/* <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
-          <div className="  lg:h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
-            <p className="text-xs p-3 border-b border-base-200 ">
-              Size Distribution
-            </p>
+        <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
 
-            <AccountsBySizePieHome collectiveData={data?.collectiveData} />
-          </div>
+            <BlobUtilisation />
 
-          <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
+
+          <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200 border">
             <ETHPriceDayChart duration={60} />
           </div>
-        </div> */}
+        </div>
         <div className="">
           <Stats />
         </div>

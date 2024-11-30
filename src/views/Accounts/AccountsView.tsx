@@ -311,7 +311,12 @@ const AccountRow = ({ acc }: any) => {
           <div>
             {accountDetails?.name ? (
               <div>
-                <p>{accountDetails?.name}</p>
+                <Link
+                  className="text-primary"
+                  href={`/accounts/${acc?.id}`}
+                >
+                  {accountDetails?.name}
+                </Link>
 
                 <Link
                   className="text-primary block lg:hidden"
@@ -341,7 +346,7 @@ const AccountRow = ({ acc }: any) => {
         <p>
           {" "}
           <Link
-            className="text-primary hidden lg:block"
+            className=" hidden lg:block"
             href={`/accounts/${acc?.id}`}
           >
             {formatAddress(acc?.id)}
