@@ -112,6 +112,12 @@ const Stats = () => {
       .toFormat(2);
     return (totalFeeEthBn || 0) + " ETH";
   }, [data?.collectiveData?.totalFeeEth]);
+  const totalBlobFeesEth = useMemo(() => {
+    const totalFeeEthBn = new BigNumber(data?.collectiveData?.totalBlobGasEth)
+      .div(1e18)
+      .toFormat(2);
+    return (totalFeeEthBn || 0) + " ETH";
+  }, [data?.collectiveData?.totalBlobGasEth]);
 
   const totalBlobFeesUSD = useMemo(() => {
     const totalBlobFeeBn = new BigNumber(data?.collectiveData?.totalBlobGasUSD)
@@ -190,8 +196,8 @@ const Stats = () => {
         isLoading={statsLoading}
       />
       <StatCard
-        title="Total Fees"
-        value={totalFeesEth}
+        title="Blob Fees"
+        value={totalBlobFeesEth}
         isLoading={statsLoading}
       />
 
