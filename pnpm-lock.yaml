@@ -8,6 +8,9 @@ dependencies:
   '@apollo/client':
     specifier: ^3.11.8
     version: 3.11.8(@types/react@18.3.11)(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)
+  '@lottiefiles/dotlottie-react':
+    specifier: ^0.9.3
+    version: 0.9.3(react-dom@18.3.1)(react@18.3.1)
   '@tanstack/react-query':
     specifier: ^5.59.0
     version: 5.59.0(react@18.3.1)
@@ -29,12 +32,21 @@ dependencies:
   framer-motion:
     specifier: ^11.11.1
     version: 11.11.1(react-dom@18.3.1)(react@18.3.1)
+  graphql:
+    specifier: ^16.9.0
+    version: 16.9.0
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
+  lottie-react:
+    specifier: ^2.4.0
+    version: 2.4.0(react-dom@18.3.1)(react@18.3.1)
   lucide-react:
     specifier: ^0.447.0
     version: 0.447.0(react@18.3.1)
+  motion-number:
+    specifier: ^0.1.7
+    version: 0.1.7(framer-motion@11.11.1)(react-dom@18.3.1)(react@18.3.1)
   next:
     specifier: 14.2.14
     version: 14.2.14(@babel/core@7.25.7)(react-dom@18.3.1)(react@18.3.1)
@@ -2080,6 +2092,21 @@ packages:
     resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.2.1
+    dev: false
+
+  /@lottiefiles/dotlottie-react@0.9.3(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-x4xQlFFulAF/nG044VNMwaXWk8ehg/KEHXpMxGB+L5gv3qohjxv/I7/erHyfhWY9y6C/VMl+PiWZbT54W8+lUQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@lottiefiles/dotlottie-web': 0.36.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
+
+  /@lottiefiles/dotlottie-web@0.36.1:
+    resolution: {integrity: sha512-KvxOH5Msk0Ivqpgq4p1DGo1IG2XPX4kEVkhssTaOUEvoeCxDLru+DlbUzwG8b5JcJwEBmrAMzCNzCTmn+uMFxQ==}
     dev: false
 
   /@metamask/eth-json-rpc-provider@1.0.1:
@@ -7731,6 +7758,21 @@ packages:
     dependencies:
       js-tokens: 4.0.0
 
+  /lottie-react@2.4.0(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-pDJGj+AQlnlyHvOHFK7vLdsDcvbuqvwPZdMlJ360wrzGFurXeKPr8SiRCjLf3LrNYKANQtSsh5dz9UYQHuqx4w==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      lottie-web: 5.12.2
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
+
+  /lottie-web@5.12.2:
+    resolution: {integrity: sha512-uvhvYPC8kGPjXT3MyKMrL3JitEAmDMp30lVkuq/590Mw9ok6pWcFCwXJveo0t5uqYw1UREQHofD+jVpdjBv8wg==}
+    dev: false
+
   /lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
@@ -8129,6 +8171,18 @@ packages:
       pathe: 1.1.2
       pkg-types: 1.2.1
       ufo: 1.5.4
+    dev: false
+
+  /motion-number@0.1.7(framer-motion@11.11.1)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-WOqZSqimX/OTNoFsz6Hk67r1omeUmtC2jH2x6Zy7/gNVnh98AOTrkINygXLR2xoef8k7iVDoKwk4PUcrxI+bog==}
+    peerDependencies:
+      framer-motion: ^11.3.19
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      framer-motion: 11.11.1(react-dom@18.3.1)(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /motion@10.16.2:

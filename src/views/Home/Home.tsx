@@ -20,6 +20,7 @@ import AccountsBySizePieHome from "./components/AccountsBySizePieHome";
 import { AccountRows } from "../Accounts/AccountsView";
 import { useDAProvidersRaw } from "@/hooks/useDAProviders";
 import BlobUtilisation from "../Size/components/BlobUtilisation";
+import MotionNumber from "motion-number";
 type Props = {};
 
 function Home({}: Props) {
@@ -48,9 +49,7 @@ function Home({}: Props) {
           <AccountsBySizePieHome collectiveData={data?.collectiveData} />
         </div> */}
         <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
-
-            <BlobUtilisation />
-
+          <BlobUtilisation />
 
           <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200 border">
             <ETHPriceDayChart duration={60} />
@@ -82,7 +81,9 @@ const Stats = () => {
   //   totalBlobBlocks
   //   totalBlobAccounts
   //   totalBlobGas
-  const { data, loading: statsLoading } = useQuery(COLLECTIVE_STAT_QUERY);
+  const { data, loading: statsLoading } = useQuery(COLLECTIVE_STAT_QUERY, {
+    pollInterval: 10_000,
+  });
 
   const blobsPerBlock = useMemo(() => {
     const totalBlk = new BigNumber(
@@ -93,7 +94,7 @@ const Stats = () => {
     )
       .div(totalBlk)
 
-      .toFormat(2);
+      .toNumber();
     return blobsPerBlockRaw || 0;
   }, [
     data?.collectiveData?.totalBlobBlocks,
@@ -109,46 +110,47 @@ const Stats = () => {
   const totalFeesEth = useMemo(() => {
     const totalFeeEthBn = new BigNumber(data?.collectiveData?.totalFeeEth)
       .div(1e18)
-      .toFormat(2);
-    return (totalFeeEthBn || 0) + " ETH";
+      .toNumber();
+    return totalFeeEthBn || 0;
   }, [data?.collectiveData?.totalFeeEth]);
   const totalBlobFeesEth = useMemo(() => {
     const totalFeeEthBn = new BigNumber(data?.collectiveData?.totalBlobGasEth)
       .div(1e18)
-      .toFormat(2);
-    return (totalFeeEthBn || 0) + " ETH";
+      .toNumber();
+    return totalFeeEthBn || 0;
   }, [data?.collectiveData?.totalBlobGasEth]);
 
   const totalBlobFeesUSD = useMemo(() => {
     const totalBlobFeeBn = new BigNumber(data?.collectiveData?.totalBlobGasUSD)
       .div(1e18)
-      .toFormat(2);
-    return (totalBlobFeeBn || 0) + " USD";
+      .toNumber();
+    return totalBlobFeeBn || 0;
   }, [data?.collectiveData?.totalBlobGasUSD]);
 
   const lastUpdatedBlock = useMemo(() => {
     const lastUpdatedBlockBn = new BigNumber(
       data?.collectiveData?.lastUpdatedBlock
-    ).toFormat(0);
+    ).toNumber();
+
     return lastUpdatedBlockBn || 0;
   }, [data?.collectiveData?.lastUpdatedBlock]);
 
   const totalBlobAccounts = useMemo(() => {
     const totalBlobAccountsBn = new BigNumber(
       data?.collectiveData?.totalBlobAccounts
-    ).toFormat(0);
+    ).toNumber();
     return totalBlobAccountsBn || 0;
   }, [data?.collectiveData?.totalBlobAccounts]);
   const totalBlobTransactionCount = useMemo(() => {
     const totalBlobTransactionCountBn = new BigNumber(
       data?.collectiveData?.totalBlobTransactionCount
-    ).toFormat(0);
+    ).toNumber();
     return totalBlobTransactionCountBn || 0;
   }, [data?.collectiveData?.totalBlobTransactionCount]);
   const totalBlobHashesCount = useMemo(() => {
     const totalBlobHashesCountBn = new BigNumber(
       data?.collectiveData?.totalBlobHashesCount
-    ).toFormat(0);
+    ).toNumber();
     return totalBlobHashesCountBn || 0;
   }, [data?.collectiveData?.totalBlobHashesCount]);
   const costPerKb = useMemo(() => {
@@ -156,8 +158,7 @@ const Stats = () => {
       .div(Number(data?.collectiveData?.totalBlobGas))
       .div(1e18)
       .multipliedBy(1024)
-      .toFormat(6)
-      .concat(" USD/KiB");
+      .toNumber();
   }, [data?.collectiveData?.totalBlobGasUSD]);
   const blobsPerSec = useMemo(() => {
     const blkTime = new BigNumber(
@@ -167,8 +168,7 @@ const Stats = () => {
       .multipliedBy(BLOCK_DURATION_SEC);
     return new BigNumber(data?.collectiveData?.totalBlobHashesCount)
       .div(blkTime)
-      .toFormat(4)
-      .concat(" blobs/sec");
+      .toNumber();
   }, [data?.collectiveData?.totalBlobGasUSD]);
   const dataPerSec = useMemo(() => {
     const blkTime = new BigNumber(
@@ -179,9 +179,7 @@ const Stats = () => {
     return new BigNumber(Number(data?.collectiveData?.totalBlobGas))
       .div(blkTime)
       .div(1024)
-      .toFormat(2)
-
-      .concat(" KiB/sec");
+      .toNumber();
   }, [data?.collectiveData?.totalBlobGasUSD]);
   return (
     <div className="grid lg:grid-cols-4 gap-0 rounded-lg overflow-hidden w-full ">
@@ -192,13 +190,15 @@ const Stats = () => {
       />
       <StatCard
         title="Total blob data"
-        value={dataSize}
+        value={dataSize?.split(" ")[0]}
         isLoading={statsLoading}
+        after={dataSize?.split(" ")[1]}
       />
       <StatCard
         title="Blob Fees"
         value={totalBlobFeesEth}
         isLoading={statsLoading}
+        after="ETH"
       />
 
       {/* <div className="h-52 w-full bg-base-200 rounded-lg"></div> */}
@@ -236,6 +236,7 @@ const Stats = () => {
         title="Blob fee USD"
         value={totalBlobFeesUSD}
         isLoading={statsLoading}
+        after="USD"
       />
       {/* <StatCard
         title="Blobs per block"
@@ -264,8 +265,10 @@ const StatCard = ({
   title,
   value,
   isLoading,
+  after,
 }: {
   title: string;
+  after?: string;
   value: string | number | null;
   isLoading: boolean;
 }) => {
@@ -280,7 +283,12 @@ const StatCard = ({
   return (
     <div className="h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
       <p className=" text-sm opacity-50">{title || "Block Height"}</p>
-      <p className=" text-2xl font-semibold">{value || "20,897,924"}</p>
+      <MotionNumber
+        className="text-2xl font-bold gap-1"
+        value={value!}
+        last={() => after && <p className="text-2xl font-bold"> {after}</p>}
+      />
+      {/* <p className=" text-2xl font-semibold">{value || "20,897,924"}</p> */}
     </div>
   );
 };

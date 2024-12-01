@@ -12,6 +12,7 @@ import _ from "lodash";
 import { EChartsOption } from "echarts";
 import { KB_PER_BLOB, MAX_BLOBS_TARGET } from "@/configs/constants";
 import BigNumber from "bignumber.js";
+import MotionNumber from "motion-number";
 const labelOption = {
   show: true,
 
@@ -32,8 +33,10 @@ const BlobUtilisation: React.FC = () => {
 
   const memoOption = useMemo(() => {
     let lastblockNumber = 0;
+    if (Number(data?.blobBlockDatas[0]?.blockNumber)) {
+      lastblockNumber = Number(data?.blobBlockDatas[0]?.blockNumber);
+    }
     const datas = data?.blobBlockDatas?.map((bd: any) => {
-      lastblockNumber = Number(bd?.blockNumber);
       return {
         ...bd,
         sizeValue: bd?.totalBlobGas,
@@ -119,7 +122,9 @@ const BlobUtilisation: React.FC = () => {
           },
           data: [
             {
-              value: averageBlobCount * Number(KB_PER_BLOB),
+              value: data?.blobBlockDatas
+                ? averageBlobCount * Number(KB_PER_BLOB)
+                : 0,
             },
           ],
         },
@@ -143,27 +148,38 @@ const BlobUtilisation: React.FC = () => {
           <div className="grid grid-cols-2  h-[15em] lg:h-full border-t lg:border-t-0 border-base-200">
             <div className="flex flex-col items-center justify-center lg:border-l border-b border-base-200 ">
               <p className="opacity-70"> Block Height</p>
-              <p className="text-2xl font-bold">
-                {Number(memoOption?.lastblockNumber) || 0}
-              </p>
+              <MotionNumber
+                className="text-2xl font-bold"
+                value={Number(memoOption?.lastblockNumber) || 0}
+              />
             </div>
             <div className="border-l border-base-200 border-b flex flex-col items-center justify-center">
               <p className="opacity-70"> Space Utilization</p>
-              <p className="text-2xl font-bold">
-                {Number(memoOption?.utilisationPercent) || 0}%
-              </p>
+              <MotionNumber
+                className="text-2xl font-bold gap-2"
+                value={Number(memoOption?.utilisationPercent) / 100 || 0}
+                format={{
+                  style: "percent",
+                  compactDisplay: "long",
+                  minimumFractionDigits: 2,
+                }}
+              />
             </div>
             <div className="lg:border-l border-base-200 flex flex-col items-center justify-center">
               <p className="opacity-70"> Avg. Size/Block</p>
-              <p className="text-2xl font-bold">
-                {memoOption?.averageBlobCount * Number(KB_PER_BLOB)} KiB
-              </p>
+              <MotionNumber
+                className="text-2xl font-bold gap-2"
+                value={memoOption?.averageBlobCount * Number(KB_PER_BLOB) || 0}
+                last={() => <p className="text-2xl font-bold"> KiB</p>}
+              />
             </div>
             <div className="border-l border-base-200 flex flex-col items-center justify-center">
               <p className="opacity-70"> Avg. Blobs/Block</p>
-              <p className="text-2xl font-bold">
-                {Number(memoOption?.averageBlobCount) || 0} BLOBS
-              </p>
+              <MotionNumber
+                className="text-2xl font-bold gap-2"
+                value={Number(memoOption?.averageBlobCount) || 0}
+                last={() => <p className="text-2xl font-bold"> BLOBS</p>}
+              />
             </div>
           </div>
         </div>
