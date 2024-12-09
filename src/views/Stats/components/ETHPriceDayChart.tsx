@@ -109,7 +109,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
     return <ChartLoading />;
   }
   return (
-    <div className="w-full h-full h-[25em] lg:h-[18em]  flex justify-between flex-col">
+    <div className="w-full h-full h-[25em]   flex justify-between flex-col">
       <div className="grid grid-cols-2 h-[10em] lg:h-[5em] lg:gap-2 gap-4 lg:grid-cols-[1fr_0.5fr_0.5fr_0.5fr] pb-4 border-b border-base-200">
         <div className="">
           <div className=" ">
@@ -241,7 +241,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             fill="none"
             strokeWidth={2}
             // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
+            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
           <Area
             type="monotone"
@@ -250,7 +250,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             fill="none"
             strokeWidth={2}
             // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
+            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
           <Area
             type="monotone"
@@ -261,7 +261,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             // fill="url(#colorUvAccStatCard)"
             fill="none"
             // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
+            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
         </AreaChart>
       </ResponsiveContainer>

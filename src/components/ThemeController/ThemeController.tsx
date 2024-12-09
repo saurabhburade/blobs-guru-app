@@ -23,7 +23,7 @@ function ThemeController({}: Props) {
   return (
     <div>
       <button
-        className="btn btn-circle btn-sm transition-all"
+        className="btn btn-circle btn-sm transition-all overflow-hidden"
         onClick={() => {
           if (theme === "light") {
             setTheme("dark");

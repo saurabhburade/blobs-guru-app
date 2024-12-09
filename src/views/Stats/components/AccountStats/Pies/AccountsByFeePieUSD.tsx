@@ -45,7 +45,19 @@ const COLORS = [
   "#E31A1C", // Bright Red
   "#FDBF6F", // Tan
 ];
-export default function AccountsByTransactionPie({ collectiveData }: any) {
+function formatNumber(number: number) {
+  if (number >= 1e9) {
+    return (number / 1e9).toFixed(2) + "B"; // Billions
+  } else if (number >= 1e6) {
+    return (number / 1e6).toFixed(2) + "M"; // Millions
+  } else if (number >= 1e3) {
+    return (number / 1e3).toFixed(2) + "K"; // Thousands
+  } else {
+    return number; // No change for smaller numbers
+  }
+}
+
+export default function AccountsByFeePieUSD({ collectiveData }: any) {
   const { data, loading } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
 
   const chartData = useMemo(() => {
@@ -53,8 +65,8 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
 
     let percentageDiff = 100;
     const datas = processed?.map((bd: any, idx: number) => {
-      const p = new BigNumber(Number(bd?.totalBlobTransactionCount))
-        .div(Number(collectiveData?.totalBlobTransactionCount))
+      const p = new BigNumber(Number(bd?.totalBlobGasUSD))
+        .div(Number(collectiveData?.totalBlobGasUSD))
         .multipliedBy(100);
 
       percentageDiff -= p.toNumber();
@@ -76,18 +88,21 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
           : "Others",
         name: basicAccountDetail?.name || bd?.id || "Others",
         totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
-        totalBlobTransactionCountFormat: new BigNumber(
-          Number(bd?.totalBlobTransactionCount)
-        ).toFormat(),
         totalBlobGasEth: Number(bd?.totalBlobGasEth),
+        totalBlobGasUSD: new BigNumber(Number(bd?.totalBlobGasUSD))
+          .div(1e18)
+          .toNumber(),
         totalBlobGasEthFormat: formatEthereumValue(Number(bd?.totalBlobGasEth)),
+        totalBlobGasUSDFormat: formatNumber(
+          new BigNumber(Number(bd?.totalBlobGasUSD)).div(1e18).toNumber()
+        ),
         basicAccountDetail,
       };
     });
     const allExceptLast = _.slice(datas, 0, -1);
     const sorted = _.orderBy(
       allExceptLast,
-      [(account) => parseInt(account.totalBlobTransactionCount)],
+      [(account) => parseInt(account.totalBlobGasUSD)],
       ["desc"]
     );
 
@@ -102,18 +117,21 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
   };
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
-      <div className="flex  w-full lg:h-[20em] lg:flex-row flex-col-reverse relative top-0">
-        <div className="lg:w-[100%] h-full relative top-0 flex items-center lg:items-start justify-center">
+      <div className="flex  w-full lg:h-[20em] lg:flex-row flex-col-reverse">
+        <div className="lg:w-[45%] h-full relative top-0 flex items-center lg:items-start justify-center">
           <div className="flex w-full justify-center items-center flex-col ">
             <div className="  flex flex-col items-center justify-center  absolute   rounded-full">
               <p className="font-semibold">
                 {" "}
-                {new BigNumber(
-                  Number(collectiveData?.totalBlobTransactionCount)
-                )?.toFormat()}
+                $
+                {formatNumber(
+                  new BigNumber(Number(collectiveData?.totalBlobGasUSD))
+                    ?.div(1e18)
+                    ?.toNumber()
+                )}
               </p>
             </div>
-            <PieChart width={200} height={200} className=" p-0 my-7">
+            <PieChart width={200} height={200} className=" my-7">
               <Pie
                 cx={"50%"}
                 cy={"50%"}
@@ -122,7 +140,7 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
                 outerRadius={80}
                 fill="#8884d8"
                 paddingAngle={0}
-                dataKey="totalBlobTransactionCount"
+                dataKey="totalBlobGasUSD"
                 cornerRadius={5}
                 stroke="0"
                 activeIndex={active}
@@ -162,7 +180,7 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
           </div>
         )}
         {!loading && (
-          <div className=" flex flex-col justify-center px-4">
+          <div className=" flex flex-col justify-start lg:px-4 p-2">
             {chartData?.map((entry, index) => (
               <div
                 key={`account-row-${entry?.id}`}
@@ -175,20 +193,20 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
                   {entry?.basicAccountDetail?.logoUri ? (
                     <img
                       src={entry?.basicAccountDetail?.logoUri}
-                      className="w-[1em] h-[1em] rounded-lg "
+                      className="w-[1em] h-[1em]  rounded-lg "
                     />
                   ) : (
                     <div className="w-[1em] h-[1em] bg-primary rounded-lg"></div>
                   )}
 
-                  <p className="text-sm w-[60%] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                  <p className="text-sm w-[70%] whitespace-nowrap overflow-hidden overflow-ellipsis">
                     {entry?.formattedAddress}
                   </p>
                 </div>
                 <p className="text-xs text-end flex gap-2">
                   <span className="opacity-25">
                     {" "}
-                    {entry?.totalBlobTransactionCountFormat}
+                    {entry?.totalBlobGasUSDFormat}
                   </span>{" "}
                   <span> {entry?.percentFormat}%</span>
                 </p>

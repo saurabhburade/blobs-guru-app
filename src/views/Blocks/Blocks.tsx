@@ -27,17 +27,23 @@ import { useBlocksExplorerWithRPCData } from "@/hooks/useBlocksData";
 import { timeAgo } from "@/lib/time";
 import RecentBlocksChart from "./components/RecentBlocksChart";
 import ETHPriceDayChart from "../Stats/components/ETHPriceDayChart";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 type Props = {};
 
 function Blocks({}: Props) {
   return (
-    <div>
-      <Header />
-      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-2 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        {/* <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
-          <RecentBlocksChart duration={90} />
-        </div> */}
+    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="lg:block hidden">
+        <Sidebar />
+      </div>
+      <div className="lg:hidden block">
+        <Header />
+      </div>
+      <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
+        <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
+          <h2 className="lg:text-xl text-xl font-semibold">Blob Blocks</h2>
+        </div>
         <div className="grid lg:grid-cols-2 lg:h-[20em] gap-2">
           <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200/50 border">
             {/* <HeatMap /> */}
@@ -57,8 +63,6 @@ function Blocks({}: Props) {
             <BlobPerBlocksChart duration={15} />
           </div>
         </div>
-        {/* <BlockStats /> */}
-        {/* <BlocksCubes /> */}
         <BlocksRows />
       </div>
     </div>

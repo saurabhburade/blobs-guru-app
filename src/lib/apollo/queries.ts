@@ -89,6 +89,7 @@ export const TOP_BLOB_ACCOUNTS_QUERY = gql`
       totalBlobHashesCount
       totalFeeEth
       totalBlobBlocks
+      totalBlobGasUSD
     }
   }
 `;
@@ -305,11 +306,13 @@ export const BLOB_BLOCKS_EXPLORER_QUERY_BLOCKS_PAGE = gql`
       blockNumber
       size
       timestamp
+      totalBlobHashesCount
 
       totalBlobGas
     }
   }
 `;
+
 export const GET_BLOB_BLOCK = gql`
   query BlobBlockData($blockNumber: ID) {
     blobBlockData(id: $blockNumber) {
@@ -429,8 +432,10 @@ export const BLOB_ACCOUNTS_EXPLORER_QUERY = gql`
       lastUpdatedBlock
       totalBlobTransactionCount
       totalBlobGasEth
+      totalBlobGasUSD
       totalBlobHashesCount
       totalFeeEth
+      totalBlobBlocks
     }
   }
 `;

@@ -5,12 +5,7 @@ import {
   TOP_BLOB_ACCOUNTS_QUERY,
   TOP_FIVE_BLOB_ACCOUNTS_QUERY,
 } from "@/lib/apollo/queries";
-import {
-  formatAddress,
-  formatBytes,
-  formatEthereumValue,
-  processAccounts,
-} from "@/lib/utils";
+import { formatAddress, formatBytes, processAccounts } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import _ from "lodash";
@@ -45,16 +40,16 @@ const COLORS = [
   "#E31A1C", // Bright Red
   "#FDBF6F", // Tan
 ];
-export default function AccountsByTransactionPie({ collectiveData }: any) {
-  const { data, loading } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
+export default function AccountsBySizePieHome({ collectiveData }: any) {
+  const { data } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
 
   const chartData = useMemo(() => {
     const processed = processAccounts(data?.accounts);
 
     let percentageDiff = 100;
     const datas = processed?.map((bd: any, idx: number) => {
-      const p = new BigNumber(Number(bd?.totalBlobTransactionCount))
-        .div(Number(collectiveData?.totalBlobTransactionCount))
+      const p = new BigNumber(Number(bd?.totalBlobGas))
+        .div(Number(collectiveData?.totalBlobGas))
         .multipliedBy(100);
 
       percentageDiff -= p.toNumber();
@@ -76,18 +71,13 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
           : "Others",
         name: basicAccountDetail?.name || bd?.id || "Others",
         totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
-        totalBlobTransactionCountFormat: new BigNumber(
-          Number(bd?.totalBlobTransactionCount)
-        ).toFormat(),
-        totalBlobGasEth: Number(bd?.totalBlobGasEth),
-        totalBlobGasEthFormat: formatEthereumValue(Number(bd?.totalBlobGasEth)),
         basicAccountDetail,
       };
     });
     const allExceptLast = _.slice(datas, 0, -1);
     const sorted = _.orderBy(
       allExceptLast,
-      [(account) => parseInt(account.totalBlobTransactionCount)],
+      [(account) => parseInt(account.totalBlobGas)],
       ["desc"]
     );
 
@@ -102,18 +92,16 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
   };
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
-      <div className="flex  w-full lg:h-[20em] lg:flex-row flex-col-reverse relative top-0">
-        <div className="lg:w-[100%] h-full relative top-0 flex items-center lg:items-start justify-center">
+      <div className="flex  w-full lg:h-[20em] lg:flex-row flex-col-reverse">
+        <div className="lg:w-[45%] h-full relative top-0 flex items-center lg:items-start justify-center">
           <div className="flex w-full justify-center items-center flex-col ">
             <div className="  flex flex-col items-center justify-center  absolute   rounded-full">
               <p className="font-semibold">
                 {" "}
-                {new BigNumber(
-                  Number(collectiveData?.totalBlobTransactionCount)
-                )?.toFormat()}
+                {formatBytes(Number(collectiveData?.totalBlobGas))}
               </p>
             </div>
-            <PieChart width={200} height={200} className=" p-0 my-7">
+            <PieChart width={200} height={200} className=" my-7">
               <Pie
                 cx={"50%"}
                 cy={"50%"}
@@ -122,7 +110,7 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
                 outerRadius={80}
                 fill="#8884d8"
                 paddingAngle={0}
-                dataKey="totalBlobTransactionCount"
+                dataKey="percent"
                 cornerRadius={5}
                 stroke="0"
                 activeIndex={active}
@@ -147,55 +135,36 @@ export default function AccountsByTransactionPie({ collectiveData }: any) {
             </PieChart>
           </div>
         </div>
-        {loading && (
-          <div className=" flex flex-col justify-start lg:px-4 p-2 w-full">
-            {new Array(7)?.fill(1)?.map((entry, index) => (
-              <div
-                key={`account-row-${index}`}
-                className="p-2  w-full grid grid-cols-[0.1fr_1fr_1fr] gap-4  rounded-lg flex justify-between  items-center"
-              >
-                <p className=" size-4 rounded animate-pulse bg-base-200/50"></p>
-                <p className="h-[1.2em] rounded animate-pulse bg-base-200/50"></p>
-                <p className=" h-[1.2em]  rounded animate-pulse bg-base-200/50"></p>
-              </div>
-            ))}
-          </div>
-        )}
-        {!loading && (
-          <div className=" flex flex-col justify-center px-4">
-            {chartData?.map((entry, index) => (
-              <div
-                key={`account-row-${entry?.id}`}
-                className="p-2 hover:bg-base-200/50 rounded-lg flex justify-between  items-center"
-                onMouseEnter={() => {
-                  setActive(index);
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  {entry?.basicAccountDetail?.logoUri ? (
-                    <img
-                      src={entry?.basicAccountDetail?.logoUri}
-                      className="w-[1em] h-[1em] rounded-lg "
-                    />
-                  ) : (
-                    <div className="w-[1em] h-[1em] bg-primary rounded-lg"></div>
-                  )}
+        <div className=" flex flex-col justify-start lg:px-4 p-2">
+          {chartData?.map((entry, index) => (
+            <div
+              key={`account-row-${entry?.id}`}
+              className="p-2 hover:bg-base-200/50 rounded-lg flex justify-between  items-center"
+              onMouseEnter={() => {
+                setActive(index);
+              }}
+            >
+              <div className="flex items-center gap-2">
+                {entry?.basicAccountDetail?.logoUri ? (
+                  <img
+                    src={entry?.basicAccountDetail?.logoUri}
+                    className="w-[1em] h-[1em]  rounded-lg "
+                  />
+                ) : (
+                  <div className="w-[1em] h-[1em] bg-primary rounded-lg"></div>
+                )}
 
-                  <p className="text-sm w-[60%] whitespace-nowrap overflow-hidden overflow-ellipsis">
-                    {entry?.formattedAddress}
-                  </p>
-                </div>
-                <p className="text-xs text-end flex gap-2">
-                  <span className="opacity-25">
-                    {" "}
-                    {entry?.totalBlobTransactionCountFormat}
-                  </span>{" "}
-                  <span> {entry?.percentFormat}%</span>
+                <p className="text-sm w-[70%] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                  {entry?.formattedAddress}
                 </p>
               </div>
-            ))}
-          </div>
-        )}
+              <p className="text-xs text-end flex gap-2">
+                <span className="opacity-25"> {entry?.Size}</span>{" "}
+                <span> {entry?.percentFormat}%</span>
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </ResponsiveContainer>
   );
@@ -211,9 +180,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
           <p className="  ">
             Account: {`${payload[0]?.payload?.formattedAddress}`}
           </p>
-          <p className=" ">
-            Blob fee : {`${payload[0]?.payload?.totalBlobGasEthFormat}`} ETH
-          </p>
+          <p className=" ">Blob Size : {`${payload[0]?.payload?.Size}`} ETH</p>
         </div>
       </div>
     );

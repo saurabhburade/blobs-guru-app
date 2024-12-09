@@ -37,6 +37,7 @@ import L2BeatCard from "./components/L2Beat/L2BeatCard";
 import { useAccountTransactionsWithRPCData } from "@/hooks/useTransactionsData";
 import { timeAgo } from "@/lib/time";
 import AccountDayStats from "./components/AccountStats/AccountDayStats";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 type Props = {
   account: string;
@@ -59,14 +60,23 @@ function SingleAccount({ account }: Props) {
       return d?.data;
     },
   });
-
   return (
-    <div>
-      <Header />
-      <div className="mx-auto p-4 lg:p-20 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
+    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="lg:block hidden">
+        <Sidebar />
+      </div>
+      <div className="lg:hidden block">
+        <Header />
+      </div>
+      <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
+        <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
+          <h2 className="lg:text-xl text-xl font-semibold">L2 Rollups</h2>
+        </div>
         <div className="w-full space-y-4 ">
           <L2BeatCard account={account} />
-          <AccountStatCard acc={data?.account} isLoading={loading} />
+          <div className="">
+            <AccountStatCard acc={data?.account} isLoading={loading} />
+          </div>
           <AccountDayStats account={account} />
         </div>
         <TxnRows account={account} />

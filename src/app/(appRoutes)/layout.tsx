@@ -91,7 +91,7 @@ export default function RootLayout({
             gtag('config', '${GOOGLE_ANALYTICS_ID}');
           `}
         </Script>
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );

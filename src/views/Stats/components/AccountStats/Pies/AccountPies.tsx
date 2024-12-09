@@ -34,23 +34,51 @@ const AccountPies = () => {
   }, [data?.accounts]);
 
   return (
-    <div className=" h-fit ">
+    <div className=" h-fit border border-base-200 rounded-lg p-1">
       <div className="  grid lg:grid-cols-2 ">
         <div className="border-base-200 border-r lg:h-[20em]">
-          <AccountsBySizePie collectiveData={collectiveData?.collectiveData} />
+          <div className="  lg:h-[20em] bg-base-100 rounded-lg ">
+            <p className="text-xs p-3 border-b border-base-200 ">
+              Size Distribution
+            </p>
+
+            <AccountsBySizePie
+              collectiveData={collectiveData?.collectiveData}
+            />
+          </div>
         </div>
-        <div className="border-base-200 border-t lg:border-t-0 lg:border-r lg:h-[20em] ">
-          <AccountsByBlobsPie collectiveData={collectiveData?.collectiveData} />
+        <div className="border-base-200 border-t w-full lg:border-t-0 lg:h-[20em] ">
+          <div className="  lg:h-[20em] bg-base-100 rounded-lg ">
+            <p className="text-xs p-3 border-b border-base-200 ">
+              Blobs Distribution
+            </p>
+
+            <AccountsByBlobsPie
+              collectiveData={collectiveData?.collectiveData}
+            />
+          </div>
         </div>
       </div>
-      <div className=" border-base-200  grid lg:grid-cols-2 border-t">
-        <div className="border-base-200 border-r lg:h-[20em]">
-          <AccountsByFeePie collectiveData={collectiveData?.collectiveData} />
+      <div className="  grid lg:grid-cols-2 ">
+        <div className="border-base-200 border-t  lg:border-r  lg:h-[20em]">
+          <div className="  lg:h-[20em] bg-base-100 rounded-lg ">
+            <p className="text-xs p-3 border-b border-base-200 ">
+              Fee Distribution
+            </p>
+
+            <AccountsByFeePie collectiveData={collectiveData?.collectiveData} />
+          </div>
         </div>
-        <div className="border-base-200 border-t lg:border-t-0 lg:border-r lg:h-[20em] ">
-          <AccountsByTransactionPie
-            collectiveData={collectiveData?.collectiveData}
-          />
+        <div className="border-base-200 border-t w-full lg:h-[20em] ">
+          <div className="  lg:h-[20em] bg-base-100 rounded-lg ">
+            <p className="text-xs p-3 border-b border-base-200 ">
+              Transactions Distribution
+            </p>
+
+            <AccountsByTransactionPie
+              collectiveData={collectiveData?.collectiveData}
+            />
+          </div>
         </div>
       </div>
     </div>

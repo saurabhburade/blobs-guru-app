@@ -46,7 +46,7 @@ const COLORS = [
   "#FDBF6F", // Tan
 ];
 export default function AccountsByBlobsPie({ collectiveData }: any) {
-  const { data } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
+  const { data, loading } = useQuery(TOP_BLOB_ACCOUNTS_QUERY);
 
   const chartData = useMemo(() => {
     const processed = processAccounts(data?.accounts);
@@ -100,87 +100,102 @@ export default function AccountsByBlobsPie({ collectiveData }: any) {
   };
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
-      <div className="grid lg:grid-cols-[1fr_2fr] w-full h-full ">
-        <div className="w-[20em] h-[20em] overflow-hidden">
-          <div className="w-[19.5em]   flex flex-col items-center justify-center h-[18.5em]   absolute   rounded-full">
-            <p className="font-semibold">
-              {" "}
-              {new BigNumber(
-                Number(collectiveData?.totalBlobHashesCount)
-              ).toFormat()}
-            </p>
-          </div>
-          <PieChart width={400} height={400} className=" p-0">
-            <Pie
-              cx={150}
-              cy={120}
-              data={chartData}
-              innerRadius={60}
-              outerRadius={80}
-              fill="#8884d8"
-              paddingAngle={0}
-              dataKey="totalBlobHashesCount"
-              cornerRadius={5}
-              stroke="0"
-              activeIndex={active}
-              activeShape={renderActiveShape}
-              onMouseEnter={onPieEnter}
-              // cornerRadius={5}
-              onMouseLeave={() => setActive(-1)}
-              onMouseOut={() => setActive(-1)}
-              onMouseOutCapture={() => setActive(-1)}
-              onTouchEnd={() => setActive(-1)}
-              onTouchCancel={() => setActive(-1)}
-            >
-              {chartData?.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
-              ))}
-            </Pie>
-            <Legend
-              verticalAlign="top"
-              content={() => <span className="text-xs px-4">Blobs count</span>}
-            />
-            <Tooltip content={CustomTooltipRaw} />
-          </PieChart>
-        </div>
-        <div className="space-y-1 flex flex-col justify-center px-4">
-          {chartData?.map((entry, index) => (
-            <div
-              key={`account-row-${entry?.id}`}
-              className="p-2 hover:bg-base-200/50 rounded-lg flex justify-between  items-center"
-              onMouseEnter={() => {
-                setActive(index);
-              }}
-            >
-              <div className="flex items-center gap-2">
-                {entry?.basicAccountDetail?.logoUri ? (
-                  <img
-                    src={entry?.basicAccountDetail?.logoUri}
-                    className="w-[1em] h-[1em] rounded-lg "
-                  />
-                ) : (
-                  <div
-                    className="w-[1em] h-[1em]  rounded-lg"
-                    style={{
-                      backgroundColor: COLORS[chartData?.length - 1],
-                    }}
-                  ></div>
-                )}
-
-                <p className="text-sm w-[80%] whitespace-nowrap overflow-hidden overflow-ellipsis">
-                  {entry?.formattedAddress}
-                </p>
-              </div>
-              <p className="text-xs text-end flex gap-2">
-                <span className="opacity-25">
-                  {" "}
-                  {numberFormater.format(entry?.totalBlobTransactionCount)}
-                </span>{" "}
-                <span> {entry?.percentFormat}%</span>
+      <div className="flex  w-full lg:h-[20em] lg:flex-row flex-col-reverse relative top-0">
+        <div className="lg:w-[100%] h-full relative top-0 flex items-center lg:items-start justify-center">
+          <div className="flex w-full justify-center items-center flex-col ">
+            <div className="  flex flex-col items-center justify-center  absolute   rounded-full">
+              <p className="font-semibold">
+                {" "}
+                {new BigNumber(
+                  Number(collectiveData?.totalBlobHashesCount)
+                ).toFormat()}
               </p>
             </div>
-          ))}
+            <PieChart width={200} height={200} className=" p-0 my-7">
+              <Pie
+                cx={"50%"}
+                cy={"50%"}
+                data={chartData}
+                innerRadius={60}
+                outerRadius={80}
+                fill="#8884d8"
+                paddingAngle={0}
+                dataKey="totalBlobHashesCount"
+                cornerRadius={5}
+                stroke="0"
+                activeIndex={active}
+                activeShape={renderActiveShape}
+                onMouseEnter={onPieEnter}
+                // cornerRadius={5}
+                onMouseLeave={() => setActive(-1)}
+                onMouseOut={() => setActive(-1)}
+                onMouseOutCapture={() => setActive(-1)}
+                onTouchEnd={() => setActive(-1)}
+                onTouchCancel={() => setActive(-1)}
+              >
+                {chartData?.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                ))}
+              </Pie>
+
+              <Tooltip content={CustomTooltipRaw} />
+            </PieChart>
+          </div>
         </div>
+        {loading && (
+          <div className=" flex flex-col justify-start lg:px-4 p-2 w-full">
+            {new Array(7)?.fill(1)?.map((entry, index) => (
+              <div
+                key={`account-row-${index}`}
+                className="p-2  w-full grid grid-cols-[0.1fr_1fr_1fr] gap-4  rounded-lg flex justify-between  items-center"
+              >
+                <p className=" size-4 rounded animate-pulse bg-base-200/50"></p>
+                <p className="h-[1.2em] rounded animate-pulse bg-base-200/50"></p>
+                <p className=" h-[1.2em]  rounded animate-pulse bg-base-200/50"></p>
+              </div>
+            ))}
+          </div>
+        )}
+        {!loading && (
+          <div className=" flex flex-col justify-start lg:px-4 p-2">
+            {chartData?.map((entry, index) => (
+              <div
+                key={`account-row-${entry?.id}`}
+                className="p-2 hover:bg-base-200/50 rounded-lg flex justify-between  items-center"
+                onMouseEnter={() => {
+                  setActive(index);
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  {entry?.basicAccountDetail?.logoUri ? (
+                    <img
+                      src={entry?.basicAccountDetail?.logoUri}
+                      className="w-[1em] h-[1em] rounded-lg "
+                    />
+                  ) : (
+                    <div
+                      className="w-[1em] h-[1em]  rounded-lg"
+                      style={{
+                        backgroundColor: COLORS[chartData?.length - 1],
+                      }}
+                    ></div>
+                  )}
+
+                  <p className="text-sm w-[80%] whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    {entry?.formattedAddress}
+                  </p>
+                </div>
+                <p className="text-xs text-end flex gap-2">
+                  <span className="opacity-25">
+                    {" "}
+                    {numberFormater.format(entry?.totalBlobTransactionCount)}
+                  </span>{" "}
+                  <span> {entry?.percentFormat}%</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </ResponsiveContainer>
   );

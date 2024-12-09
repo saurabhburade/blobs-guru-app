@@ -27,29 +27,27 @@ import TopAccountsChart from "./components/TopAccountsChart";
 import AccountStatCard from "./components/AccountStatCard";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
+import { timeAgo } from "@/lib/time";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import AccountPies from "../Stats/components/AccountStats/Pies/AccountPies";
 
 type Props = {};
 
 function AccountsView({}: Props) {
   // const { data } = useQuery(BLOB_TRANSACTIONS_EXPLORER_QUERY);
-
   return (
-    <div>
-      <Header />
-      <div className="mx-auto lg:p-20 p-4 min-h-[90vh] flex flex-col space-y-8 pb-10 bg-gradient-to-b from-transparent via-indigo-500/20">
-        <div className="w-full space-y-4 ">
-          <div className="lg:h-[20em]  flex-wrap lg:flex-nowrap flex items-stretch gap-4 my-4">
-            <div className="p-5 h-[20em] bg-base-100/50 border   border-base-300/20 w-full rounded-lg">
-              <TopBlobAccountsChart />
-            </div>
-            <div className="p-5  h-[20em] bg-base-100/50 border border-base-300/20 w-full  rounded-lg">
-              {/* <BlobTransactionDayChart /> */}
-              <BlobHashesDayChart />
-            </div>
-          </div>
-          <TopAccountsStats />
-          {/* <TxnStats /> */}
+    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="lg:block hidden">
+        <Sidebar />
+      </div>
+      <div className="lg:hidden block">
+        <Header />
+      </div>
+      <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
+        <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
+          <h2 className="lg:text-xl text-xl font-semibold">L2 Rollups</h2>
         </div>
+        <AccountPies />
         <AccountRows />
       </div>
     </div>
@@ -195,7 +193,7 @@ const TopAccountsStats = () => {
     </div>
   );
 };
-function AccountRows({}: Props) {
+export function AccountRows({}: Props) {
   const [page, setPage] = useState(1);
   const { data, loading } = useQuery(BLOB_ACCOUNTS_EXPLORER_QUERY, {
     variables: {
@@ -206,9 +204,18 @@ function AccountRows({}: Props) {
 
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
-      <div className="flex p-4 border-b border-base-200">
-        <p>Blob Accounts</p>
+      {/* <div className="flex p-4 border-b border-base-200 ">
+        <p>Rollups</p>
+      </div> */}
+      <div className="hidden xl:grid xl:grid-cols-7 py-4 px-4  border-b border-base-200 text-sm items-center">
+        <div className="flex items-center gap-2 col-span-2 ">Rollup</div>
+        <p>Address</p>
+        <p>Size</p>
+        <p>Blobs</p>
+        <p>Transactions</p>
+        <p>Fees</p>
       </div>
+
       <div className="px-4  ">
         {loading &&
           new Array(10)?.fill(1)?.map((num, idx) => {
@@ -265,6 +272,7 @@ const AccountRow = ({ acc }: any) => {
   //  totalBlobTransactionCount;
   //  totalBlobGasEth;
   //  totalBlobHashesCount;
+  // totalBlobBlocks;
   const accountDetails = getAccountDetailsFromAddressBook(acc?.id);
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(acc?.totalBlobGas));
@@ -272,9 +280,148 @@ const AccountRow = ({ acc }: any) => {
   const totalBlobGasEth = useMemo(() => {
     return new BigNumber(acc?.totalBlobGasEth).div(1e18).toFormat(4);
   }, [acc?.totalBlobGasEth]);
+  const totalBlobGasEthUSD = useMemo(() => {
+    return new BigNumber(acc?.totalBlobGasUSD).div(1e18).toFormat(0);
+  }, [acc?.totalBlobGasUSD]);
   const totalFeeEth = useMemo(() => {
     return new BigNumber(acc?.totalFeeEth).div(1e18).toFormat(4);
   }, [acc?.totalFeeEth]);
+  const blobsPerBlock = useMemo(() => {
+    return new BigNumber(Number(acc?.totalBlobHashesCount))
+      .div(Number(acc?.totalBlobBlocks))
+      .toFormat(4);
+  }, [acc?.totalBlobHashesCount, acc?.totalBlobBlocks]);
+  return (
+    <>
+      <div className="hidden xl:grid xl:grid-cols-7 py-4 border-b border-base-200 text-sm items-center">
+        <div className="flex items-center gap-2 col-span-2 ">
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            {accountDetails?.logoUri ? (
+              <img
+                src={accountDetails?.logoUri || "/images/logox.jpeg"}
+                className="rounded-lg"
+                width={24}
+                height={24}
+                alt=""
+              />
+            ) : (
+              <User strokeWidth="1" width={24} height={24} />
+            )}
+          </div>
+          <div>
+            {accountDetails?.name ? (
+              <div>
+                <Link
+                  className="text-primary"
+                  href={`/accounts/${acc?.id}`}
+                >
+                  {accountDetails?.name}
+                </Link>
+
+                <Link
+                  className="text-primary block lg:hidden"
+                  href={`/accounts/${acc?.id}`}
+                >
+                  {formatAddress(acc?.id)}
+                </Link>
+              </div>
+            ) : (
+              <>
+                <Link
+                  className="text-primary hidden lg:block"
+                  href={`/accounts/${acc?.id}`}
+                >
+                  {formatAddress(acc?.id)}
+                </Link>
+                <Link
+                  className="text-primary block lg:hidden"
+                  href={`/accounts/${acc?.id}`}
+                >
+                  {formatAddress(acc?.id)}
+                </Link>{" "}
+              </>
+            )}
+          </div>
+        </div>
+        <p>
+          {" "}
+          <Link
+            className=" hidden lg:block"
+            href={`/accounts/${acc?.id}`}
+          >
+            {formatAddress(acc?.id)}
+          </Link>
+        </p>
+        <div>
+          <p>{totalBlobSize}</p>
+        </div>
+        <div>
+          <p>{new BigNumber(acc?.totalBlobHashesCount).toFormat(0)}</p>
+        </div>
+
+        <div>
+          <p>{new BigNumber(acc?.totalBlobTransactionCount).toFormat(0)}</p>
+        </div>
+
+        <div>
+          <p>{totalBlobGasEth} ETH</p>
+          <p>${totalBlobGasEthUSD}</p>
+        </div>
+      </div>
+      <div className="flex md:grid md:grid-cols-3 flex-wrap xl:hidden gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+        <div className="flex items-center gap-2 w-full justify-between">
+          <div className="flex items-center gap-2">
+            <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+              {accountDetails?.logoUri ? (
+                <img
+                  src={accountDetails?.logoUri || "/images/logox.jpeg"}
+                  className="rounded-lg"
+                  width={24}
+                  height={24}
+                  alt=""
+                />
+              ) : (
+                <User strokeWidth="1" width={24} height={24} />
+              )}
+            </div>
+
+            <div>
+              {accountDetails?.name ? (
+                <div>
+                  <p>{accountDetails?.name}</p>
+
+                  <Link
+                    className="text-primary block lg:hidden"
+                    href={`/accounts/${acc?.id}`}
+                  >
+                    {formatAddress(acc?.id)}
+                  </Link>
+                </div>
+              ) : (
+                <>
+                  <Link
+                    className="text-primary hidden lg:block"
+                    href={`/accounts/${acc?.id}`}
+                  >
+                    {formatAddress(acc?.id)}
+                  </Link>
+                  <Link
+                    className="text-primary block lg:hidden"
+                    href={`/accounts/${acc?.id}`}
+                  >
+                    {formatAddress(acc?.id)}
+                  </Link>{" "}
+                </>
+              )}
+            </div>
+          </div>
+          <div className="text-end">
+            <p>{totalBlobSize}</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
   return (
     <div className="flex justify-between flex-wrap gap-4 first:border-t-0 border-t py-3 border-base-200 text-sm">
       <div className="flex items-center gap-2 ">
@@ -299,7 +446,7 @@ const AccountRow = ({ acc }: any) => {
                 className="text-primary hidden lg:block"
                 href={`/accounts/${acc?.id}`}
               >
-                {acc?.id}
+                {formatAddress(acc?.id)}
               </Link>
               <Link
                 className="text-primary block lg:hidden"

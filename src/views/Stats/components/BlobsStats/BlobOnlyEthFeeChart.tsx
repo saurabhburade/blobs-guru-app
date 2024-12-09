@@ -1,7 +1,7 @@
 "use client";
 import { BLOB_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 import { formatDateDDMM } from "@/lib/time";
-import { formatBytes, formatEthereumValue } from "@/lib/utils";
+import { dateTimeString, formatBytes, formatEthereumValue } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import React, { PureComponent, useMemo } from "react";
@@ -66,25 +66,30 @@ export default function BlobOnlyEthFeeChart({
             .div(1e18)
             .toFormat(8),
           Size: formatBytes(Number(bd?.totalBlobGas)),
-          timestamp: new Date(Number(bd?.dayStartTimestamp) * 1000),
+          timestamp: dateTimeString.format(
+            new Date(Number(bd?.dayStartTimestamp) * 1000)
+          ),
           timestamp2: formatDateDDMM(
             new Date(Number(bd?.dayStartTimestamp) * 1000)
           ),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
           totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
           totalBlobGasEth: Number(bd?.totalBlobGasEth),
+          totalBlobGasUSD: Number(bd?.totalBlobGasUSD),
+          totalBlobGasUSDF: new BigNumber(Number(bd?.totalBlobGasUSD))
+            .div(1e18)
+            .toFormat(2),
           costPerKiB: new BigNumber(Number(bd?.totalBlobGasUSD))
             .div(1e19)
             .div(Number(bd?.totalBlobGas))
-            .multipliedBy(1024)
-            .toFormat(5),
+            .multipliedBy(1024),
         };
       })
       ?.reverse();
     return datas;
   }, [data?.blobsDayDatas]);
   return (
-    <div className="h-full w-full row-span-2 ">
+    <div className="h-[20em] w-full row-span-2 ">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart width={400} height={400} data={chartData}>
           <Tooltip
@@ -98,7 +103,16 @@ export default function BlobOnlyEthFeeChart({
               <span className="text-xs">Last {duration} days Blobs fee</span>
             )}
           />
-
+          <defs>
+            <linearGradient id="colorUvAccStatCard" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <Area
             type="monotone"
             dataKey="totalBlobGasEth"
@@ -125,18 +139,24 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className={` bg-base-200 w-[18em] rounded-lg   overflow-hidden text-sm`}
+        className={` bg-base-100 border border-base-200 lg:w-[20em] py-4 space-y-2 rounded-lg h-fit overflow-hidden text-xs`}
       >
-        <div className="p-4 ">
+        <div className="px-4 flex  gap-2 justify-between w-full ">
+          <p className="h-full  flex justify-between w-full">
+            {`${payload[0]?.payload?.timestamp}`}
+          </p>
+        </div>
+        <hr className="border-base-200" />
+        <div className="px-4 space-y-3">
+          {/* <p className=" break-words ">
+            Transactions : {`${payload[0]?.payload?.totalBlobTransactionCount}`}
+          </p> */}
           <p className=" ">
-            Blobs fee :{" "}
+            Fee ETH:{" "}
             {`${formatEthereumValue(Number(payload[0]?.payload?.totalBlobGasEth))}`}{" "}
           </p>
-          {/* <p className=" ">
-            Cost per KiB : ${`${payload[0]?.payload?.costPerKiB}`}{" "}
-          </p> */}
-          <p className="  ">
-            Timestamp: {`${payload[0]?.payload?.timestamp2}`}
+          <p className=" ">
+            Fee USD: ${`${payload[0]?.payload?.totalBlobGasUSDF}`}
           </p>
         </div>
       </div>
