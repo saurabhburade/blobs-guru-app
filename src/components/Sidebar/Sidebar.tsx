@@ -2,6 +2,14 @@ import { div } from "framer-motion/client";
 import Link from "next/link";
 import React from "react";
 import ThemeController from "../ThemeController/ThemeController";
+import { TbBlob } from "react-icons/tb";
+import { TiThSmall } from "react-icons/ti";
+import { LuScroll } from "react-icons/lu";
+import { TbDatabaseShare } from "react-icons/tb";
+import { TbReportMoney } from "react-icons/tb";
+import { IoStatsChart } from "react-icons/io5";
+import { BsUiChecksGrid } from "react-icons/bs";
+import { CiGrid2H } from "react-icons/ci";
 
 type Props = {};
 
@@ -24,33 +32,60 @@ function Sidebar({}: Props) {
           <div className="">
             <div className="collapse collapse-arrow ">
               <input type="checkbox" name="my-accordion-2" defaultChecked />
-              <div className="collapse-title text-xl font-medium">
-                Ethereum Blobs
+              <div className="collapse-title text-xl font-medium ">
+                <div className="flex items-center gap-2">
+                  <TbBlob /> <p>Ethereum Blobs</p>
+                </div>
               </div>
               <div className="collapse-content ">
-                <ul className=" menu space-y-2 bg-base-100  border-base-200  text-base-content min-h-full">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
                   {/* Sidebar content here */}
                   <li className="  ">
-                    <Link href="/">Summary</Link>
+                    <Link href="/">
+                      <span>
+                        <TiThSmall />
+                      </span>
+                      Summary
+                    </Link>
                   </li>
                   <hr className="border-base-200" />
                   <li className="  ">
-                    <Link href="/accounts"> Rollups</Link>
+                    <Link href="/accounts">
+                      <span>
+                        <LuScroll />
+                      </span>
+                      Rollups
+                    </Link>
                   </li>
                   <hr className="border-base-200" />
 
                   <li className="  ">
-                    <Link href="/size"> Size</Link>
+                    <Link href="/size">
+                      <span>
+                        <TbDatabaseShare />
+                      </span>
+                      Size
+                    </Link>
                   </li>
                   <hr className="border-base-200" />
                   <li className="  ">
-                    <Link href="/cost"> Costs</Link>
+                    <Link href="/cost">
+                      <span>
+                        <TbReportMoney />
+                      </span>
+                      Costs
+                    </Link>
                   </li>
 
                   <hr className="border-base-200" />
 
                   <li className="  ">
-                    <Link href="/stats">Stats</Link>
+                    <Link href="/stats">
+                      <span>
+                        <IoStatsChart />
+                      </span>
+                      Stats
+                    </Link>
                   </li>
                   <hr className="border-base-200" />
                   <li className="  ">
@@ -70,13 +105,20 @@ function Sidebar({}: Props) {
             <div className="collapse collapse-arrow ">
               <input type="checkbox" name="my-accordion-2" defaultChecked />
               <div className="collapse-title text-xl font-medium">
-                Data Availability
+                <div className="flex items-center gap-2">
+                  <BsUiChecksGrid /> <p>Data Availability</p>
+                </div>
               </div>
               <div className="collapse-content ">
-                <ul className=" menu space-y-2 bg-base-100  border-base-200  text-base-content min-h-full">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
                   {/* Sidebar content here */}
                   <li className="  ">
-                    <Link href="/da/list">DA Providers</Link>
+                    <Link href="/da/list">
+                      <span>
+                        <CiGrid2H />
+                      </span>
+                      DA Providers
+                    </Link>
                   </li>
                   <hr className="border-base-200" />
                   {/* <li className="  ">
