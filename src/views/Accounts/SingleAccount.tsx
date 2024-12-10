@@ -38,6 +38,8 @@ import { useAccountTransactionsWithRPCData } from "@/hooks/useTransactionsData";
 import { timeAgo } from "@/lib/time";
 import AccountDayStats from "./components/AccountStats/AccountDayStats";
 import Sidebar from "@/components/Sidebar/Sidebar";
+import Footer from "@/components/Footer/Footer";
+import PoweredBy from "../Home/components/PoweredBy";
 
 type Props = {
   account: string;
@@ -80,6 +82,8 @@ function SingleAccount({ account }: Props) {
           <AccountDayStats account={account} />
         </div>
         <TxnRows account={account} />
+        <PoweredBy />
+        <Footer />
       </div>
     </div>
   );

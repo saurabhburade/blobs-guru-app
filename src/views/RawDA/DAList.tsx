@@ -16,6 +16,8 @@ import BlobCostChart from "../Stats/components/BlobsStats/BlobCostChart";
 import BlobOnlyEthUSDFeeChart from "../Stats/components/BlobsStats/BlobOnlyEthUSDFeeChart";
 import BlobOnlyEthFeeChart from "../Stats/components/BlobsStats/BlobOnlyEthFeeChart";
 import { useDAProvidersRaw } from "@/hooks/useDAProviders";
+import PoweredBy from "../Home/components/PoweredBy";
+import Footer from "@/components/Footer/Footer";
 
 type Props = {};
 const fills = {
@@ -52,7 +54,7 @@ function DAList({}: Props) {
             <p>Upgradeability</p>
             <p>Relayer failure</p>
           </div>
-        
+
           {daList?.map((provider) => {
             return (
               <div
@@ -177,6 +179,8 @@ function DAList({}: Props) {
             );
           })}
         </div>
+        <PoweredBy />
+        <Footer />
       </div>
     </div>
   );

@@ -9,6 +9,8 @@ import AccountsBySizePie from "../Stats/components/AccountStats/Pies/AccountsByS
 import AccountsByBlobsPie from "../Stats/components/AccountStats/Pies/AccountsByBlobsPie";
 import BlobUtilisation from "./components/BlobUtilisation";
 import { AccountRows } from "../Accounts/AccountsView";
+import PoweredBy from "../Home/components/PoweredBy";
+import Footer from "@/components/Footer/Footer";
 
 type Props = {};
 
@@ -60,6 +62,8 @@ function SizeView({}: Props) {
         </div>
 
         <AccountRows />
+        <PoweredBy />
+        <Footer />
       </div>
     </div>
   );
