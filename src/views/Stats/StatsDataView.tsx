@@ -8,6 +8,7 @@ import AccountsBySizePie from "./components/AccountStats/Pies/AccountsBySizePie"
 import AccountPies from "./components/AccountStats/Pies/AccountPies";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import BlobUtilisation from "../Size/components/BlobUtilisation";
+import Footer from "@/components/Footer/Footer";
 
 type Props = {};
 
@@ -38,6 +39,8 @@ function StatsDataView({}: Props) {
           </div>
           <AccountPies />
         </div>
+        <PoweredBy />
+        <Footer />
       </div>
     </div>
   );

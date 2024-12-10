@@ -30,6 +30,8 @@ import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleto
 import { timeAgo } from "@/lib/time";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import AccountPies from "../Stats/components/AccountStats/Pies/AccountPies";
+import Footer from "@/components/Footer/Footer";
+import PoweredBy from "../Home/components/PoweredBy";
 
 type Props = {};
 
@@ -49,6 +51,8 @@ function AccountsView({}: Props) {
         </div>
         <AccountPies />
         <AccountRows />
+        <PoweredBy />
+        <Footer />
       </div>
     </div>
   );
@@ -311,10 +315,7 @@ const AccountRow = ({ acc }: any) => {
           <div>
             {accountDetails?.name ? (
               <div>
-                <Link
-                  className="text-primary"
-                  href={`/accounts/${acc?.id}`}
-                >
+                <Link className="text-primary" href={`/accounts/${acc?.id}`}>
                   {accountDetails?.name}
                 </Link>
 
@@ -345,10 +346,7 @@ const AccountRow = ({ acc }: any) => {
         </div>
         <p>
           {" "}
-          <Link
-            className=" hidden lg:block"
-            href={`/accounts/${acc?.id}`}
-          >
+          <Link className=" hidden lg:block" href={`/accounts/${acc?.id}`}>
             {formatAddress(acc?.id)}
           </Link>
         </p>

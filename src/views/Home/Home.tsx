@@ -21,6 +21,7 @@ import { AccountRows } from "../Accounts/AccountsView";
 import { useDAProvidersRaw } from "@/hooks/useDAProviders";
 import BlobUtilisation from "../Size/components/BlobUtilisation";
 import MotionNumber from "motion-number";
+import Footer from "@/components/Footer/Footer";
 type Props = {};
 
 function Home({}: Props) {
@@ -64,6 +65,7 @@ function Home({}: Props) {
           <Blocks />
         </div> */}
         <PoweredBy />
+        <Footer />
       </div>
     </div>
   );

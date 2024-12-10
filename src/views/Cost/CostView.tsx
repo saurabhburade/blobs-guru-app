@@ -15,6 +15,8 @@ import BlobCostChart from "../Stats/components/BlobsStats/BlobCostChart";
 
 import BlobOnlyEthUSDFeeChart from "../Stats/components/BlobsStats/BlobOnlyEthUSDFeeChart";
 import BlobOnlyEthFeeChart from "../Stats/components/BlobsStats/BlobOnlyEthFeeChart";
+import PoweredBy from "../Home/components/PoweredBy";
+import Footer from "@/components/Footer/Footer";
 
 type Props = {};
 
@@ -65,6 +67,8 @@ function CostView({}: Props) {
           <BlobOnlyEthFeeChart duration={30} />
         </div>
         <AccountRows />
+        <PoweredBy />
+        <Footer />
       </div>
     </div>
   );
