@@ -220,6 +220,21 @@ export const TOP_BLOB_ACCOUNTS_BY_HASHES_QUERY = gql`
     }
   }
 `;
+export const SUPERCHAIN_BLOB_ACCOUNTS_QUERY = gql`
+  query Accounts($addresses: [String!]) {
+    accounts(where: { id_in: $addresses }) {
+      id
+      totalBlobTransactionCount
+      totalBlobGas
+      lastUpdatedBlock
+      totalBlobGasEth
+      totalBlobHashesCount
+      totalFeeEth
+      totalBlobBlocks
+      totalBlobGasUSD
+    }
+  }
+`;
 export const BLOB_TRANSACTIONS_TOP_QUERY = gql`
   query {
     blobTransactions(first: 10, orderBy: timestamp, orderDirection: desc) {
