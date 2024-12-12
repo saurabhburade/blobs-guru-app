@@ -99,6 +99,22 @@ function Sidebar({}: Props) {
                   </li>
 
                   <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/superchains">
+                      <span>
+                        <img
+                          src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/optimism.png`}
+                          width={24}
+                          height={24}
+                          alt=""
+                        />
+                      </span>
+                      <span className="font-semibold text-[#ff0420] font-extrabold uppercase font-sans">
+                        SUPERCHAINS
+                      </span>
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
                 </ul>
               </div>
             </div>
