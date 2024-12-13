@@ -10,6 +10,7 @@ import { TbReportMoney } from "react-icons/tb";
 import { IoStatsChart } from "react-icons/io5";
 import { BsUiChecksGrid } from "react-icons/bs";
 import { CiGrid2H } from "react-icons/ci";
+import ImageWithFallback from "../ImageWithFallback";
 
 type Props = {};
 
@@ -112,6 +113,34 @@ function Sidebar({}: Props) {
                       <span className="font-semibold text-[#ff0420] font-extrabold uppercase font-sans">
                         SUPERCHAINS
                       </span>
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                </ul>
+              </div>
+            </div>
+            <div className="collapse collapse-arrow ">
+              <input type="checkbox" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-xl font-medium ">
+                <div className="flex items-center gap-2">
+                  <ImageWithFallback
+                    src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+                    width={24}
+                    height={24}
+                    alt="avail"
+                  />
+                  <p>Avail DA</p>
+                </div>
+              </div>
+              <div className="collapse-content ">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
+                  {/* Sidebar content here */}
+                  <li className="  ">
+                    <Link href="/avail">
+                      <span>
+                        <TiThSmall />
+                      </span>
+                      Summary
                     </Link>
                   </li>
                   <hr className="border-base-200" />
