@@ -166,9 +166,10 @@ function AvailStats({}: Props) {
         value={lastPriceFeed?.ethPrice}
         isLoading={statsLoading}
       />
-      {/* <div className="col-span-4">
-        <p>{new Date(data?.collectiveData?.timestampLast).toString()}</p>
-      </div> */}
+      <div className="lg:col-span-2 h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
+        <p className=" text-sm opacity-50">{"Last update"}</p>
+        <p>{new Date(data?.collectiveData?.timestampLast).toUTCString()}</p>
+      </div>
     </div>
   );
 }
