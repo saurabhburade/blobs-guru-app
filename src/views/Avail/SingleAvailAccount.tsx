@@ -1,17 +1,6 @@
 "use client";
 import Header from "@/components/Header/Header";
-import {
-  BLOB_ACCOUNT_SINGLE_QUERY,
-  BLOB_ACCOUNTS_EXPLORER_QUERY,
-  BLOB_BLOCKS_EXPLORER_QUERY,
-  BLOB_BLOCKS_TOP_FIVE_QUERY,
-  BLOB_BLOCKS_TOP_QUERY,
-  BLOB_TRANSACTIONS_ACCOUNT_QUERY,
-  BLOB_TRANSACTIONS_EXPLORER_QUERY,
-  COLLECTIVE_STAT_QUERY,
-  TOP_BLOB_ACCOUNTS_QUERY,
-  TOP_FIVE_BLOB_ACCOUNTS_QUERY,
-} from "@/lib/apollo/queries";
+
 import { formatAddress, formatBytes, formatEthereumValue } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import { useQuery as useQueryFetch } from "@tanstack/react-query";
@@ -19,11 +8,7 @@ import BigNumber from "bignumber.js";
 import { Box, Database, NotepadText, User } from "lucide-react";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
-import BlobTransactionDayChart from "../Home/components/BlobTransactionDayChart";
-import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
-import axios from "axios";
-import { useAccountTransactionsWithRPCData } from "@/hooks/useTransactionsData";
 import { timeAgo } from "@/lib/time";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import Footer from "@/components/Footer/Footer";
@@ -31,6 +16,8 @@ import PoweredBy from "../Home/components/PoweredBy";
 import AvailAccountStatCard from "./components/AccountStats/AvailAccountStatCard";
 import { AVAIL_ACCOUNT_SINGLE_QUERY } from "@/lib/apollo/queriesAvail";
 import { availClient } from "@/lib/apollo/client";
+import AvailAccountStats from "./components/AccountStats/AvailAccountStats";
+import { useAvailAccountExt } from "@/hooks/useAvailAccountExt";
 
 type Props = {
   account: string;
@@ -43,10 +30,6 @@ function SingleAvailAccount({ account }: Props) {
     },
     client: availClient,
   });
-  console.log(`🚀 ~ file: SingleAvailAccount.tsx:54 ~ data:`, data);
-  const accountDetails = getAccountDetailsFromAddressBook(
-    account?.toLowerCase()
-  );
 
   return (
     <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
@@ -68,6 +51,8 @@ function SingleAvailAccount({ account }: Props) {
             />
           </div>
         </div>
+        <AvailAccountStats account={account} />
+        <TxnRows account={account} />
         <PoweredBy />
         <Footer />
       </div>
@@ -76,3 +61,142 @@ function SingleAvailAccount({ account }: Props) {
 }
 
 export default SingleAvailAccount;
+
+function TxnRows({ account }: { account: string }) {
+  const [page, setPage] = useState(1);
+  const { data: daData, loading } = useAvailAccountExt({
+    account,
+    page,
+  });
+
+  return (
+    <div className=" bg-base-100 border rounded-lg border-base-200">
+      <div className="flex p-4 border-b border-base-200">
+        <p> Extrinsics</p>
+      </div>
+      <div className="hidden xl:grid xl:grid-cols-7 p-4 border-b text-end border-base-200 text-sm items-center">
+        <div className="flex items-center gap-2">
+          {" "}
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <NotepadText strokeWidth="1" width={24} height={24} />
+          </div>{" "}
+          Ext #
+        </div>
+        <p>From</p>
+        <p>Events</p>
+        <p>DA size</p>
+        <p>Position</p>
+        <p>Txn fee</p>
+        <p className="text-end">DA fee</p>
+      </div>
+      <div className="px-4  ">
+        {loading &&
+          new Array(10)?.fill(1)?.map((num, idx) => {
+            return (
+              <TransactionRowSkeleton
+                key={`TransactionRowSkeleton_SINGLE_ACCOUNT_${idx}`}
+              />
+            );
+          })}
+        {!loading &&
+          daData?.map((txn: any) => {
+            return <TransactionRow key={txn?.id} txn={txn} />;
+          })}
+      </div>
+      <div className="flex px-4 justify-end gap-2  p-4  border-t border-base-200">
+        {page > 1 && (
+          <button
+            className="btn btn-outline btn-sm"
+            onClick={() => {
+              setPage((prev) => {
+                if (prev > 1) {
+                  return prev - 1;
+                }
+                return prev;
+              });
+            }}
+          >
+            Prev
+          </button>
+        )}
+        <button
+          className="btn btn-outline btn-sm"
+          onClick={() => {
+            setPage((prev) => prev + 1);
+          }}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const TransactionRow = ({ txn }: any) => {
+  const txFeeAvail = useMemo(() => {
+    return new BigNumber(txn?.fees).toFormat(5);
+  }, [txn?.fees]);
+
+  return (
+    <>
+      <div className="hidden xl:grid xl:grid-cols-7 py-4 border-b border-base-200 text-sm items-center text-end">
+        <div className="flex items-center gap-2 text-start">
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <NotepadText strokeWidth="1" width={24} height={24} />
+          </div>
+          <div>
+            {formatAddress(txn?.id)}
+
+            <p>{timeAgo(new Date(txn?.timestamp))}</p>
+          </div>
+        </div>
+        {txn?.signer ? <p>{formatAddress(txn?.signer)}</p> : <p>-</p>}
+        {txn?.nbEvents ? (
+          <div className="">
+            <p>{txn?.nbEvents}</p>
+          </div>
+        ) : (
+          <p>-</p>
+        )}
+        <div>
+          <p>{formatBytes(txn?.dataSubmission?.byteSize || 0)} </p>
+        </div>
+        <div>
+          <p>
+            <span>{txn?.blockHeight}</span> : {txn?.extrinsicIndex}
+          </p>
+        </div>
+
+        <div>
+          <p>{txFeeAvail} AVAIL</p>
+        </div>
+        <div>
+          <p>{txn?.dataSubmission?.fees || 0} AVAIL </p>
+        </div>
+      </div>
+      <div className="flex md:grid md:grid-cols-3 flex-wrap xl:hidden gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+        <div className="flex items-center gap-2">
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <NotepadText strokeWidth="1" width={24} height={24} />
+          </div>
+          <div>
+            <p>{formatAddress(txn?.id)}</p>
+
+            <p>{timeAgo(new Date(txn?.timestamp))}</p>
+          </div>
+        </div>
+        <div>
+          <p>{formatBytes(txn?.dataSubmission?.byteSize || 0)} </p>
+        </div>
+        <div className="hidden  md:block xl:hidden text-end">
+          <p className="lg:text-end ">From : {formatAddress(txn?.signer)}</p>
+          <p className=" text-end">{txFeeAvail} AVAIL</p>
+        </div>
+        <div className="flex my-2 md:hidden  lg:my-0 justify-between  w-full  lg:col-span-1 ">
+          <p className="lg:text-end ">From : {formatAddress(txn?.signer)}</p>
+          <p className=" text-end">{txFeeAvail} AVAIL</p>
+        </div>
+      </div>
+    </>
+  );
+};

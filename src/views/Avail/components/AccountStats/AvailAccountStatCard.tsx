@@ -31,7 +31,6 @@ import { availClient } from "@/lib/apollo/client";
 
 type Props = {};
 function AvailAccountStatCard({ acc, isLoading, className }: any) {
-  console.log(`🚀 ~ file: AvailAccountStatCard.tsx:44 ~ acc:`, acc);
   const accountDetails = getAccountDetailsFromAddressBook(acc?.id);
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));
@@ -149,7 +148,8 @@ function AvailAccountStatCard({ acc, isLoading, className }: any) {
                 <p className=""> DA Fees</p>
               </div>
               <p className="text-xl font-bold">
-                {new BigNumber(Number(acc?.totalDAFees || 0))?.toFormat()} AVAIL
+                {new BigNumber(Number(acc?.totalDAFees || 0))?.toFormat(4)}{" "}
+                AVAIL
               </p>
             </div>
           </div>
