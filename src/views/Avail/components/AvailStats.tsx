@@ -169,6 +169,11 @@ function AvailStats({}: Props) {
       <div className="lg:col-span-2 h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
         <p className=" text-sm opacity-50">{"Last update"}</p>
         <p>{new Date(data?.collectiveData?.timestampLast).toUTCString()}</p>
+        <progress
+          className="progress progress-info w-3/4 h-1"
+          value={Number(percent)}
+          max="100"
+        ></progress>
       </div>
     </div>
   );

@@ -140,7 +140,12 @@ const AccountRow = ({ acc }: any) => {
               alt=""
             />
           </div>
-          <div>{formatAddress(acc?.id)}</div>
+          <Link
+            className="text-primary hidden lg:block"
+            href={`/avail/${acc?.id}`}
+          >
+            {formatAddress(acc?.id)}
+          </Link>
         </div>
         <p> {formatAddress(acc?.id)}</p>
         <div>

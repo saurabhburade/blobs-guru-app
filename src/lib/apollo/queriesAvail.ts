@@ -48,3 +48,42 @@ export const AVAIL_ACCOUNTS_LIMIT_QUERY = gql`
     }
   }
 `;
+export const AVAIL_ACCOUNT_SINGLE_QUERY = gql`
+  query AccountEntity($address: String!) {
+    accountEntity(id: $address) {
+      id
+      totalByteSize
+      totalFees
+      totalExtrinsicCount
+      totalDAFees
+      endBlock
+      startBlock
+      totalDataSubmissionCount
+      totalFeesUSD
+      totalDAFeesUSD
+      totalFeesAvail
+    }
+  }
+`;
+
+export const AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
+  query AccountDayData($address: String, $duration: Int) {
+    accountDayData(
+      filter: { accountId: { equalTo: $address } }
+      orderBy: TIMESTAMP_LAST_DESC
+      first: $duration
+    ) {
+      totalCount
+      nodes {
+        id
+        totalExtrinsicCount
+        totalFees
+        timestampLast
+        timestampStart
+        totalFeesUSD
+        totalByteSize
+        accountId
+      }
+    }
+  }
+`;
