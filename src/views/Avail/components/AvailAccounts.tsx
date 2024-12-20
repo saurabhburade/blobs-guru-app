@@ -28,9 +28,9 @@ function AvailAccounts({}: Props) {
 
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
-      <div className="hidden xl:grid xl:grid-cols-7 py-4 px-4  border-b border-base-200 text-sm items-center">
-        <div className="flex items-center gap-2 col-span-2 ">Rollup</div>
-        <p>Address</p>
+      <div className="hidden xl:grid xl:grid-cols-6 py-4 px-4  border-b border-base-200 text-sm items-center">
+        <div className="flex items-center gap-2 col-span-2 ">Address</div>
+
         <p>Size</p>
         <p>Data Subs</p>
         <p>Transactions</p>
@@ -126,7 +126,7 @@ const AccountRow = ({ acc }: any) => {
   }, [acc?.totalBlobHashesCount, acc?.totalBlobBlocks]);
   return (
     <>
-      <div className="hidden xl:grid xl:grid-cols-7 py-4 last:border-b-0 border-b border-base-200 text-sm items-center">
+      <div className="hidden xl:grid xl:grid-cols-6 py-4 last:border-b-0 border-b border-base-200 text-sm items-center">
         <div className="flex items-center gap-2 col-span-2 ">
           <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
             <ImageWithFallback
@@ -147,7 +147,7 @@ const AccountRow = ({ acc }: any) => {
             {formatAddress(acc?.id)}
           </Link>
         </div>
-        <p> {formatAddress(acc?.id)}</p>
+
         <div>
           <p>{totalSize}</p>
         </div>
