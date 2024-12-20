@@ -180,7 +180,9 @@ const AccountRow = ({ acc }: any) => {
               />
             </div>
 
-            <div>{formatAddress(acc?.id)}</div>
+            <Link className="text-primary " href={`/avail/${acc?.id}`}>
+              {formatAddress(acc?.id)}
+            </Link>
           </div>
           <div className="text-end">
             <p>{totalSize}</p>
