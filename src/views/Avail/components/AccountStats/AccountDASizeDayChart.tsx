@@ -31,6 +31,10 @@ const dateString = new Intl.DateTimeFormat("en-US", {
   month: "2-digit",
   year: "2-digit",
 });
+const dateString2 = new Intl.DateTimeFormat("en-US", {
+  day: "2-digit",
+  month: "short",
+});
 
 export default function AccountDASizeDayChart({
   account,
@@ -72,6 +76,7 @@ export default function AccountDASizeDayChart({
         ).toFormat(),
         timestamp: day,
         timestampF: dateString.format(new Date(rawData?.timestampStart)),
+        timestamp3: dateString2.format(new Date(rawData?.timestampStart)),
         timestamp2: new Date(rawData?.timestampStart).toDateString(),
       };
     });
@@ -144,12 +149,13 @@ export default function AccountDASizeDayChart({
             tickLine={false}
           />
           <XAxis
-            dataKey="timestamp2"
+            dataKey="timestamp3"
             className="text-[10px] !text-current"
-            angle={45}
+            angle={-60}
             tickLine={false}
             allowDataOverflow
             axisLine={false}
+            tickMargin={10}
           />
         </BarChart>
       </ResponsiveContainer>
