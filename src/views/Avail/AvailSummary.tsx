@@ -45,8 +45,8 @@ function AvailSummary({}: Props) {
             <SearchAccount />
           </div>
         </div>
-        <div className=" bg-base-200/50 p-5 rounded-lg text-sm space-y-2 flex gap-5 items-center justify-between ">
-          <p className=" w-1/2">
+        <div className=" bg-base-200/50 p-5 flex-wrap lg:flex-nowrap rounded-lg text-sm space-y-2 flex gap-5 items-center justify-between ">
+          <p className=" lg:w-1/2">
             Avail is a public blockchain and data availability network combining
             erasure coding, KZG polynomial commitments, and data availability
             sampling.
@@ -90,6 +90,21 @@ function AvailSummary({}: Props) {
             >
               <FaGithub
                 size={24}
+                className=" opacity-70 hover:opacity-90 transition-all cursor-pointer"
+              />
+            </Link>
+            <Link
+              href={
+                "https://l2beat.com/data-availability/projects/avail/no-bridge"
+              }
+              target="_blank"
+              referrerPolicy="no-referrer"
+            >
+              <img
+                src="/images/l2beat.png"
+                width={34}
+                height={34}
+                alt=""
                 className=" opacity-70 hover:opacity-90 transition-all cursor-pointer"
               />
             </Link>
