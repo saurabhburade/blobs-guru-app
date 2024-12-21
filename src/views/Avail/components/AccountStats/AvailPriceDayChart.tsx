@@ -147,7 +147,7 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={chartData}
-          margin={{ top: 30, right: -25, left: 0, bottom: 10 }}
+          margin={{ top: 30, right: 5, left: 0, bottom: 10 }}
         >
           <defs>
             <linearGradient id="colorUvAccStatCard" x1="0" y1="0" x2="0" y2="1">
@@ -182,8 +182,6 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
             stroke="currentColor"
             fill="none"
             strokeWidth={2}
-            // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
           <Area
             type="monotone"
@@ -191,8 +189,6 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
             stroke="orange"
             fill="none"
             strokeWidth={2}
-            // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
           <Area
             type="monotone"
@@ -202,8 +198,6 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
             strokeWidth={2}
             // fill="url(#colorUvAccStatCard)"
             fill="none"
-            // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
         </AreaChart>
       </ResponsiveContainer>
