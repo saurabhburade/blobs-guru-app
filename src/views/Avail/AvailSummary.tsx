@@ -6,6 +6,8 @@ import PoweredBy from "../Home/components/PoweredBy";
 import Footer from "@/components/Footer/Footer";
 import AvailStats from "./components/AvailStats";
 import AvailAccounts from "./components/AvailAccounts";
+import AvailDAUtilisation from "./components/AvailDAUtilisation";
+import AvailPriceDayChart from "./components/AccountStats/AvailPriceDayChart";
 
 type Props = {};
 
@@ -23,6 +25,13 @@ function AvailSummary({}: Props) {
           <img src="/images/avail_logo.png" alt="" className="w-[140px]" />
         </div>
         <div className="w-full space-y-4">
+          <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
+            <AvailDAUtilisation />
+
+            <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200 border">
+              <AvailPriceDayChart duration={60} />
+            </div>
+          </div>
           <AvailStats />
           <AvailAccounts />
           {/* <PoweredBy /> */}

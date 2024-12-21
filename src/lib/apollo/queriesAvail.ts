@@ -161,3 +161,43 @@ export const AVAIL_ACCOUNT_HOUR_DATAS_WITH_DURATION_QUERY = gql`
     }
   }
 `;
+export const AVAIL_BLOCKS_WITH_LIMIT_QUERY = gql`
+  query Block($limit: Int) {
+    blocks(first: $limit, orderBy: TIMESTAMP_DESC) {
+      nodes {
+        id
+        timestamp
+      }
+    }
+  }
+`;
+export const AVAIL_BLOCKS_DA_SUM_QUERY = gql`
+  query DataSubmission($timestamps: [Datetime!]!) {
+    dataSubmissions(first: 20, filter: { timestamp: { in: $timestamps } }) {
+      totalCount
+      aggregates {
+        sum {
+          byteSize
+        }
+      }
+    }
+  }
+`;
+
+export const AVAIL_PRICE_DAY_DATAS_QUERY = gql`
+  query CollectiveDayData($duration: Int) {
+    collectiveDayData(first: $duration, orderBy: ID_DESC) {
+      nodes {
+        id
+        timestampLast
+        timestampStart
+        totalByteSize
+        avgAvailPrice
+        avgEthPrice
+        totalDataSubmissionCount
+        totalDAFees
+        totalDAFeesUSD
+      }
+    }
+  }
+`;

@@ -3,6 +3,8 @@ import { mainnet, sepolia } from "wagmi/chains";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 export const MAX_BLOBS_TARGET = process.env.NEXT_PUBLIC_MAX_BLOBS_TARGET || 6;
+export const MAX_BLOBS_SIZE_TARGET_AVAIL =
+  process.env.NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_AVAIL || 1_048_576 * 2;
 export const KB_PER_BLOB = process.env.NEXT_PUBLIC_KB_PER_BLOB || 128;
 export const ETHERSCAN_LINK = "https://etherscan.io";
 export const wagmiconfig = createConfig({
@@ -187,7 +189,3 @@ export const getAccountDetailsFromAddressBook = (address: string) => {
     address: d,
   };
 };
-
-
-
-
