@@ -23,6 +23,15 @@ function PoweredBy({}: Props) {
         />
         <p className="font-bold">Streamingfast</p>
       </div>
+      <div className="flex items-center gap-3 ">
+        <img
+          src={"/images/subquery-gradient-white.svg"}
+          width={30}
+          height={30}
+          alt=""
+        />
+        <p className="font-bold">SubQyery</p>
+      </div>
       <div className="flex items-center gap-2  ">
         <img src="/images/l2beat.png" width={50} height={50} alt="" />
         <p className="font-bold">L2BEAT</p>

@@ -120,6 +120,7 @@ function AvailSummary({}: Props) {
           </div>
           <AvailStats />
           <AvailAccounts />
+          <PoweredBy />
           <Footer />
         </div>
       </div>
