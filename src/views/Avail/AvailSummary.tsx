@@ -9,6 +9,11 @@ import AvailAccounts from "./components/AvailAccounts";
 import AvailDAUtilisation from "./components/AvailDAUtilisation";
 import AvailPriceDayChart from "./components/AccountStats/AvailPriceDayChart";
 import SearchAccount from "./components/SearchAccount";
+import { Globe } from "lucide-react";
+import { BsTelegram } from "react-icons/bs";
+import { FaGithub, FaXTwitter } from "react-icons/fa6";
+import { FaTelegramPlane } from "react-icons/fa";
+import Link from "next/link";
 
 type Props = {};
 
@@ -28,6 +33,56 @@ function AvailSummary({}: Props) {
             <SearchAccount />
           </div>
         </div>
+        <div className=" bg-base-200/50 p-5 rounded-lg text-sm space-y-2 flex gap-5 items-center justify-between ">
+          <p className=" w-1/2">
+            Avail is a public blockchain and data availability network combining
+            erasure coding, KZG polynomial commitments, and data availability
+            sampling.
+          </p>
+          <div className="flex  items-center gap-3">
+            <Link
+              href={"https://www.availproject.org/"}
+              target="_blank"
+              referrerPolicy="no-referrer"
+            >
+              <Globe
+                width={24}
+                height={24}
+                className=" opacity-70 hover:opacity-90 transition-all cursor-pointer"
+              />
+            </Link>
+            <Link
+              href={"https://x.com/AvailProject"}
+              target="_blank"
+              referrerPolicy="no-referrer"
+            >
+              <FaXTwitter
+                size={24}
+                className=" opacity-70 hover:opacity-90 transition-all cursor-pointer"
+              />
+            </Link>
+            <Link
+              href={"https://t.me/AvailCommunity"}
+              target="_blank"
+              referrerPolicy="no-referrer"
+            >
+              <FaTelegramPlane
+                size={24}
+                className=" opacity-70 hover:opacity-90 transition-all cursor-pointer"
+              />
+            </Link>
+            <Link
+              href={"https://github.com/availproject/"}
+              target="_blank"
+              referrerPolicy="no-referrer"
+            >
+              <FaGithub
+                size={24}
+                className=" opacity-70 hover:opacity-90 transition-all cursor-pointer"
+              />
+            </Link>
+          </div>
+        </div>
         <div className="w-full space-y-4">
           <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
             <AvailDAUtilisation />
@@ -38,7 +93,6 @@ function AvailSummary({}: Props) {
           </div>
           <AvailStats />
           <AvailAccounts />
-          {/* <PoweredBy /> */}
           <Footer />
         </div>
       </div>

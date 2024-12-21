@@ -17,7 +17,7 @@ function AvailStats({}: Props) {
     AVAIL_COLLECTIVE_STAT_QUERY,
     {
       client: availClient,
-      pollInterval: 3_000,
+      pollInterval: 30_000,
     }
   );
   const data = useMemo(() => {
