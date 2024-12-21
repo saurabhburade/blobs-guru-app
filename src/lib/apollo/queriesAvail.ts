@@ -110,6 +110,15 @@ export const AVAIL_ACCOUNT_SINGLE_QUERY = gql`
     }
   }
 `;
+export const AVAIL_ACCOUNT_SEARCH = gql`
+  query AccountEntities($address: String!) {
+    accountEntities(filter: { address: { like: $address } }) {
+      nodes {
+        id
+      }
+    }
+  }
+`;
 
 export const AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
   query AccountDayData($address: String, $duration: Int) {

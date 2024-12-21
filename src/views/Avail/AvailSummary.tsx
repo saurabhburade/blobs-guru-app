@@ -8,6 +8,7 @@ import AvailStats from "./components/AvailStats";
 import AvailAccounts from "./components/AvailAccounts";
 import AvailDAUtilisation from "./components/AvailDAUtilisation";
 import AvailPriceDayChart from "./components/AccountStats/AvailPriceDayChart";
+import SearchAccount from "./components/SearchAccount";
 
 type Props = {};
 
@@ -23,6 +24,9 @@ function AvailSummary({}: Props) {
       <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
         <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
           <img src="/images/avail_logo.png" alt="" className="w-[140px]" />
+          <div className="lg:w-1/2 flex justify-end">
+            <SearchAccount />
+          </div>
         </div>
         <div className="w-full space-y-4">
           <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
