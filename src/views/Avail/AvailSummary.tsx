@@ -14,6 +14,7 @@ import { BsTelegram } from "react-icons/bs";
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
 import { FaTelegramPlane } from "react-icons/fa";
 import Link from "next/link";
+import ImageWithFallback from "@/components/ImageWithFallback";
 
 type Props = {};
 
@@ -28,7 +29,18 @@ function AvailSummary({}: Props) {
       </div>
       <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
         <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
-          <img src="/images/avail_logo.png" alt="" className="w-[140px]" />
+          {/* <img src="/images/avail_logo.png" alt="" className="w-[140px]" /> */}
+          <div className="flex gap-2 items-center">
+            <ImageWithFallback
+              src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+              fallback="/images/avail_logo.png"
+              className="rounded-lg"
+              width={24}
+              height={24}
+              alt=""
+            />
+            <p className="font-bold text-2xl">Avail DA</p>
+          </div>
           <div className="lg:w-1/2 flex justify-end">
             <SearchAccount />
           </div>
