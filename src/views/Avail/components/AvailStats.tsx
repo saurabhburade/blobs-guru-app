@@ -42,7 +42,7 @@ function AvailStats({}: Props) {
     return totalFeeAvailBn || 0;
   }, [data?.collectiveData?.totalFees]);
   const totalDAFees = useMemo(() => {
-    const bn = new BigNumber(data?.collectiveData?.totalDAFees).toFormat(4);
+    const bn = new BigNumber(data?.collectiveData?.totalDAFees).toNumber()
     return bn || 0;
   }, [data?.collectiveData?.totalDAFees]);
   const totalDAFeesUSD = useMemo(() => {
