@@ -1,3 +1,4 @@
+import * as avail from "./avail";
 import * as eigenDA from "./eigenDA";
 import * as celestiaDA from "./celestia";
 import * as espressoDA from "./espressoDA";
@@ -7,6 +8,7 @@ console.log(`🚀 ~ file: list.ts:6 ~ nearDA:`, nearDA);
 
 export const getDARAW = () => {
   const DA_RAW_URLS = [
+    avail.rawData,
     eigenDA.rawData,
     celestiaDA?.rawData,
     espressoDA?.rawData,
