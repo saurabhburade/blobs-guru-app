@@ -51,7 +51,7 @@ export const AVAIL_ACCOUNTS_LIMIT_QUERY = gql`
 export const AVAIL_ACCOUNT_EXT_LIMIT_QUERY = gql`
   query Extrinsics($skip: Int, $limit: Int, $address: String!) {
     extrinsics(
-      orderBy: BLOCK_HEIGHT_DESC
+      orderBy: TIMESTAMP_DESC
       first: $limit
       offset: $skip
       filter: { signer: { equalTo: $address } }
