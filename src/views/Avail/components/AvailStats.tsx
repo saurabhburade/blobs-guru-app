@@ -42,7 +42,7 @@ function AvailStats({}: Props) {
     return totalFeeAvailBn || 0;
   }, [data?.collectiveData?.totalFees]);
   const totalDAFees = useMemo(() => {
-    const bn = new BigNumber(data?.collectiveData?.totalDAFees).toNumber()
+    const bn = new BigNumber(data?.collectiveData?.totalDAFees).toNumber();
     return bn || 0;
   }, [data?.collectiveData?.totalDAFees]);
   const totalDAFeesUSD = useMemo(() => {
@@ -94,7 +94,7 @@ function AvailStats({}: Props) {
     <div className="grid lg:grid-cols-4 gap-0 rounded-lg  w-full ">
       <StatCard title="Last block" value={endBlock} isLoading={statsLoading} />
 
-      <StatCard
+      {/* <StatCard
         title="Total Blocks"
         value={totalBlocksCount}
         isLoading={statsLoading}
@@ -104,7 +104,7 @@ function AvailStats({}: Props) {
         value={endBlock - totalBlocksCount}
         // after={new Date(data?.collectiveData?.timestampLast).toString()}
         isLoading={statsLoading}
-      />
+      /> */}
 
       <StatCard
         title="Txn Fees"
@@ -112,17 +112,17 @@ function AvailStats({}: Props) {
         isLoading={statsLoading}
         after="AVAIL"
       />
-      <StatCard
+      {/* <StatCard
         title="Sync"
         value={percent}
         isLoading={statsLoading}
         after="%"
-      />
-      <StatCard
+      /> */}
+      {/* <StatCard
         title="Target"
         value={blockData?.data?.latest_block}
         isLoading={blockData?.isLoading}
-      />
+      /> */}
       <StatCard
         title="Total data"
         value={dataSize?.split(" ")[0]}
@@ -156,7 +156,7 @@ function AvailStats({}: Props) {
         value={totalDataBlocksCount}
         isLoading={statsLoading}
       />
-      <StatCard
+      {/* <StatCard
         title="Last Avail Price"
         value={lastPriceFeed?.availPrice}
         isLoading={statsLoading}
@@ -165,8 +165,8 @@ function AvailStats({}: Props) {
         title="Last ETH Price"
         value={lastPriceFeed?.ethPrice}
         isLoading={statsLoading}
-      />
-      <div className="lg:col-span-2 h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
+      /> */}
+      {/* <div className="lg:col-span-2 h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
         <p className=" text-sm opacity-50">{"Last update"}</p>
         <p>{new Date(data?.collectiveData?.timestampLast).toUTCString()}</p>
         <progress
@@ -174,7 +174,7 @@ function AvailStats({}: Props) {
           value={Number(percent)}
           max="100"
         ></progress>
-      </div>
+      </div> */}
     </div>
   );
 }
