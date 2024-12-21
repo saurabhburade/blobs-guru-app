@@ -131,7 +131,7 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
           <div className=" ">
             <div className=" w-full h-full font-bold leading-6">
               <p className=" w-[10px] h-[10px] bg-[orange]"></p>
-              Blob Fees
+              DA Fees
             </div>
 
             <div>
