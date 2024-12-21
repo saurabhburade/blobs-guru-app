@@ -163,7 +163,7 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
           <XAxis
             dataKey={"timestamp2"}
             className="text-[10px] !text-current"
-            angle={45}
+            angle={-45}
             tickLine={false}
             allowDataOverflow
             axisLine={false}
