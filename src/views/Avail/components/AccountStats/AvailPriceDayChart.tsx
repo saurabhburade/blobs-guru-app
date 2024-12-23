@@ -25,7 +25,6 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
     },
     client: availClient,
   });
-  console.log(`🚀 ~ file: AvailPriceDayChart.tsx:38 ~ data:`, data);
 
   const chartData = useMemo(() => {
     const datas = data?.collectiveDayData?.nodes

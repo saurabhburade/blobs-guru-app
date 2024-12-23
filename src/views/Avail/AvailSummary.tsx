@@ -114,7 +114,6 @@ function AvailSummary({}: Props) {
         </div>
         <div className="w-full space-y-4">
           <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
-            {/* <AvailDAUtilisation /> */}
             <div className=" p-5 h-[20em] rounded-lg bg-base-200/15">
               <AvailDASizeHourChart duration={24} />
             </div>

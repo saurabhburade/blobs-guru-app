@@ -247,3 +247,21 @@ export const AVAIL_PRICE_DAY_DATAS_QUERY = gql`
     }
   }
 `;
+
+export const AVAIL_BASIC_APP_DATAS_QUERY = gql`
+  query DataSubmission {
+    dataSubmissions(orderBy: APP_ID_DESC) {
+      totalCount
+      groupedAggregates(groupBy: APP_ID) {
+        keys
+        distinctCount {
+          signer
+        }
+        sum {
+          fees
+          byteSize
+        }
+      }
+    }
+  }
+`;

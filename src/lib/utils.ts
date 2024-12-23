@@ -37,16 +37,10 @@ export const formatWrapedText = (
   startChar: number = 4,
   endChar: number = 6
 ) => {
-  if (label?.split(".")?.length == 2) {
-    if (label?.split(".")[0]!.length >= 8) {
-      return `${label.slice(0, startChar)}...${label.slice(-endChar)}`;
-    }
-    return `${label}`;
-  }
-  if (label?.length >= 8) {
+  if (label?.length >= startChar + endChar) {
     return `${label.slice(0, startChar)}...${label.slice(-endChar)}`;
   }
-  return label;
+  return `${label}`;
 };
 
 export const gaEvent = ({ action, category, label, value }: any) => {
@@ -248,10 +242,6 @@ export function processAccounts(data: Account[]): Account[] {
       BigInt(other.totalFeeEth) + BigInt(account.totalFeeEth)
     ).toString();
     if (account?.totalBlobBlocks && other?.totalBlobBlocks) {
-      console.log(
-        `🚀 ~ file: utils.ts:249 ~ account?.totalBlobBlocks:`,
-        account?.totalBlobBlocks
-      );
       other.totalBlobBlocks = (
         BigInt(other?.totalBlobBlocks) + BigInt(account?.totalBlobBlocks)
       ).toString();
@@ -262,7 +252,6 @@ export function processAccounts(data: Account[]): Account[] {
       )?.toString();
     }
   });
-  console.log(`🚀 ~ file: utils.ts:262 ~ other:`, other);
 
   return [...topAccounts, other];
   // return { topAccounts, other };
@@ -274,7 +263,6 @@ export function getRandomNumber(num1: number, num2: number): number {
 
   return Math.random() * (max - min) + min;
 }
-
 
 export const dateTimeString = new Intl.DateTimeFormat("en-US", {
   timeZoneName: "short",
