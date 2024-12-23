@@ -61,7 +61,7 @@ function AvailAccountStatCard({ acc, isLoading, className }: any) {
               className="bg-base-200 p-2 rounded-lg"
             />
 
-            <Link href={`/accounts/${acc?.id}`}>
+            <Link href={`/avail/${acc?.id}`}>
               {accountDetails?.name ? (
                 <p className=""> {accountDetails?.name}</p>
               ) : (
