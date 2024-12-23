@@ -15,6 +15,8 @@ import { FaGithub, FaXTwitter } from "react-icons/fa6";
 import { FaTelegramPlane } from "react-icons/fa";
 import Link from "next/link";
 import ImageWithFallback from "@/components/ImageWithFallback";
+import AvailDASizeDayChart from "./components/AvailStats/AvailDASizeDayChart";
+import AvailDASizeHourChart from "./components/AvailStats/AvailDASizeHourChart";
 
 type Props = {};
 
@@ -45,7 +47,7 @@ function AvailSummary({}: Props) {
             <SearchAccount />
           </div>
         </div>
-        <div className=" bg-base-200/50 p-5 flex-wrap lg:flex-nowrap rounded-lg text-sm space-y-2 flex gap-5 items-center justify-between ">
+        <div className=" bg-base-200/15 p-5 flex-wrap lg:flex-nowrap rounded-lg text-sm space-y-2 flex gap-5 items-center justify-between ">
           <p className=" lg:w-1/2">
             Avail is a public blockchain and data availability network combining
             erasure coding, KZG polynomial commitments, and data availability
@@ -112,9 +114,11 @@ function AvailSummary({}: Props) {
         </div>
         <div className="w-full space-y-4">
           <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
-            <AvailDAUtilisation />
-
-            <div className=" p-5 h-[20em] bg-base-100 rounded-lg border-base-200 border">
+            {/* <AvailDAUtilisation /> */}
+            <div className=" p-5 h-[20em] rounded-lg bg-base-200/15">
+              <AvailDASizeHourChart duration={24} />
+            </div>
+            <div className=" p-5 h-[20em]  rounded-lg bg-base-200/15">
               <AvailPriceDayChart duration={60} />
             </div>
           </div>

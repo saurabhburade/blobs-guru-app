@@ -17,7 +17,7 @@ type Props = {};
 
 function Sidebar({}: Props) {
   return (
-    <div className="border-base-200 lg:border-r  ">
+    <div className="border-base-200 lg:border-r  opacity-80">
       <div className="flex flex-col justify-between h-screen">
         <div className="h-[90vh] overflow-scroll">
           <div className="p-5 flex items-center justify-between hidden lg:flex">

@@ -66,13 +66,13 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
     return <ChartLoading />;
   }
   return (
-    <div className="w-full h-full h-[25em]   flex justify-between flex-col">
-      <div className="grid grid-cols-2 h-[10em] lg:h-[5em] lg:gap-2 gap-4 lg:grid-cols-[1fr_0.5fr_0.5fr_0.5fr] pb-4 border-b border-base-200">
+    <div className="w-full h-full h-[20em]   flex justify-between flex-col">
+      <div className="flex   lg:justify-between lg:flex-nowrap flex-wrap lg:gap-2 gap-4  pb-4 border-b border-base-200">
         <div className="">
           <div className=" ">
-            <div className=" w-full h-full font-bold leading-6">
+            <div className=" w-full h-full text-sm leading-none flex items-center gap-2 ">
               <p className=" w-[10px] h-[10px] bg-[#8884d8]"></p>
-              AVAIL Price [Today]
+              <p className="opacity-80 ">AVAIL Price [Today]</p>
             </div>
             <div>
               <p className=" leading-6 font-bold">
@@ -97,9 +97,9 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
         </div>
         <div className="">
           <div className=" ">
-            <div className=" w-full h-full font-bold leading-6">
+            <div className=" w-full h-full text-sm leading-none flex items-center gap-2 ">
               <p className=" w-[10px] h-[10px] bg-current"></p>
-              Subs Count
+              <p className="opacity-80 ">Subs Count</p>
             </div>
 
             <div>
@@ -113,31 +113,31 @@ export default function AvailPriceDayChart({ duration }: { duration: number }) {
             </div>
           </div>
         </div>
-        <div className="">
-          <div className=" ">
-            <div className=" w-full h-full font-bold leading-6">
-              <p className=" w-[10px] h-[10px] bg-transparent"></p>
-              Data Size
-            </div>
 
-            <div>
-              <p className=" leading-6 font-bold">
-                {chartData ? chartData?.at(-1)?.size : "0"}{" "}
-              </p>
-            </div>
-          </div>
-        </div>
         <div className="">
           <div className=" ">
-            <div className=" w-full h-full font-bold leading-6">
+            <div className=" w-full h-full  text-sm leading-none flex items-center gap-2 ">
               <p className=" w-[10px] h-[10px] bg-[orange]"></p>
-              DA Fees
+              <p className="opacity-80 ">DA Fees</p>
             </div>
 
             <div>
               <p className=" leading-6 font-bold">
                 <span className="font-normal">$</span>{" "}
                 {chartData ? chartData?.at(-1)?.totalBlobGasUSDF : "0"}{" "}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="">
+          <div className=" ">
+            <div className=" w-full h-full opacity-80 text-sm leading-none flex items-center gap-2 ">
+              Data Size
+            </div>
+
+            <div>
+              <p className=" leading-6 font-bold">
+                {chartData ? chartData?.at(-1)?.size : "0"}{" "}
               </p>
             </div>
           </div>

@@ -119,7 +119,44 @@ export const AVAIL_ACCOUNT_SEARCH = gql`
     }
   }
 `;
-
+export const AVAIL_DAY_DATAS_WITH_DURATION_QUERY = gql`
+  query CollectiveDayData($duration: Int) {
+    collectiveDayData(orderBy: TIMESTAMP_LAST_DESC, first: $duration) {
+      totalCount
+      nodes {
+        id
+        totalExtrinsicCount
+        totalFees
+        timestampLast
+        timestampStart
+        totalByteSize
+        totalDataSubmissionCount
+        totalFeesUSD
+        totalDAFeesUSD
+        totalFeesAvail
+      }
+    }
+  }
+`;
+export const AVAIL_HOUR_DATAS_WITH_DURATION_QUERY = gql`
+  query CollectiveHourData($duration: Int) {
+    collectiveHourData(orderBy: TIMESTAMP_LAST_DESC, first: $duration) {
+      totalCount
+      nodes {
+        id
+        totalExtrinsicCount
+        totalFees
+        timestampLast
+        timestampStart
+        totalByteSize
+        totalDataSubmissionCount
+        totalFeesUSD
+        totalDAFeesUSD
+        totalFeesAvail
+      }
+    }
+  }
+`;
 export const AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
   query AccountDayData($address: String, $duration: Int) {
     accountDayData(
