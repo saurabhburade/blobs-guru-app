@@ -153,8 +153,8 @@ export async function handleAccount(
     accountEntity.endBlock = block.block.header.number.toNumber();
     // logger.info(`New ACCOUNT SAVE::::::  ${JSON.stringify(accountEntity)}`);
     if (type === 1) {
-      accountEntity.appId = accountEntity.id;
-      accountEntity.attachedAppId = accountEntity.id;
+      accountEntity.appId = appRecord!.id;
+      accountEntity.attachedAppId = appRecord!.id;
     }
     await accountEntity.save();
   } catch (error) {
