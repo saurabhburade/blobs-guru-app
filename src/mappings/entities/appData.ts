@@ -70,8 +70,8 @@ export async function handleApp(
     });
 
     // @ts-ignore
-    const appEentry = data?.find((app) => app.id === appId);
-    logger.info(`appKey::: ${JSON.stringify(appEentry)}`);
+    const appEntry = data?.find((app) => app.id === appId);
+    logger.info(`appKey::: ${JSON.stringify(appEntry)}`);
     let appRecord = await AppEntity.get(appId.toString());
     // Handle new app
     if (appRecord === null || appRecord === undefined) {
@@ -82,11 +82,16 @@ export async function handleApp(
       const appNameKey = newAppName
         ? hexToUTF8(newAppName as string)
         : "Unknown";
+
       appRecord = AppEntity.create({
         id: newAppId ? newAppId?.toString() : appId.toString(),
-        name: valueFromArgs ? hexToUTF8(valueFromArgs) : appNameKey,
+        name: valueFromArgs
+          ? hexToUTF8(valueFromArgs)
+          : appEntry
+          ? appEntry?.name
+          : appNameKey,
         owner: newAppOwner ? newAppOwner : ext.signer.toString(),
-        creationRawData: JSON.stringify({ ...raw, appEentry }),
+        creationRawData: JSON.stringify({ ...raw, appEntry }),
         createdAt: block.timestamp,
         timestampCreation: extrinsicRecord.timestamp,
         timestampLast: extrinsicRecord.timestamp,

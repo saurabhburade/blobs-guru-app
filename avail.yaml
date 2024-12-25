@@ -22,7 +22,7 @@ network:
     file: ./dist/chaintypes.js
 dataSources:
   - name: main
-    startBlock: 62150
+    startBlock: 83470
     kind: substrate/Runtime
     mapping:
       file: ./dist/index.js
