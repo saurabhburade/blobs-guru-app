@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import { useQuery as useReactQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useAvailDaAppsDataBasic } from "@/hooks/useAvailDaAppsDataBasic";
+import ImageWithFallback from "@/components/ImageWithFallback";
 
 type Props = {};
 
@@ -99,13 +100,34 @@ function AvailStats({}: Props) {
           return (
             <div
               key={`${app?.id}----${app?.name}--${idx}`}
-              className="p-5 bg-base-200/15 rounded-lg"
+              className="p-5 bg-base-200/15 rounded-lg space-y-3"
             >
               <div className="flex gap-3">
-                <p className="opacity-70">[{app?.id}]</p>
-                <p>{formatWrapedText(app?.name, 6, 9)}</p>
+                <ImageWithFallback
+                  src={
+                    app?.logoUri ||
+                    `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+                  }
+                  width={24}
+                  height={24}
+                  alt=""
+                  className="rounded-lg"
+                />
+                {/* <p className="opacity-70">[{app?.id}]</p> */}
+                {app?.name && <p>{formatWrapedText(app?.name, 6, 9)}</p>}
               </div>
-              <p className="text-lg">{formatBytes(app?.byteSize)}</p>
+              <hr className="border-base-200/50" />
+              <div className="flex gap-2 justify-between">
+                <p className="">Size</p>
+                <p className="">{formatBytes(app?.byteSize)}</p>
+              </div>
+              <div className="flex gap-2 justify-between">
+                <p className="">Fees</p>
+                <p className="">
+                  {new BigNumber(app?.fees).toFormat(2)}{" "}
+                  <span className="">AVAIL</span>
+                </p>
+              </div>
             </div>
           );
         })}

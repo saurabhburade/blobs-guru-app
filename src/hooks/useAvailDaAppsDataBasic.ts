@@ -1,3 +1,4 @@
+import { AVAIL_APP_BOOK } from "@/configs/availProjects";
 import { availClient } from "@/lib/apollo/client";
 import {
   AVAIL_ACCOUNT_EXT_LIMIT_QUERY,
@@ -43,18 +44,21 @@ export const useAvailDaAppsDataBasic = () => {
     },
   });
 
-  const formattedOp = data?.dataSubmissions?.groupedAggregates?.map((agg:any) => {
-    const foundApp = appDatasRes?.find(
-      (app) => Number(app.id) === Number(agg?.keys[0])
-    );
-
-    return {
-      key: agg?.keys[0],
-      ...agg?.sum,
-      distinctCount: agg?.distinctCount,
-      ...foundApp,
-    };
-  });
+  const formattedOp = data?.dataSubmissions?.groupedAggregates?.map(
+    (agg: any) => {
+      const foundApp = appDatasRes?.find(
+        (app) => Number(app.id) === Number(agg?.keys[0])
+      );
+      const appDataFromBook = AVAIL_APP_BOOK[agg?.keys[0]];
+      return {
+        key: agg?.keys[0],
+        ...agg?.sum,
+        distinctCount: agg?.distinctCount,
+        ...foundApp,
+        ...appDataFromBook,
+      };
+    }
+  );
 
   return {
     data: {
