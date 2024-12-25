@@ -90,7 +90,11 @@ export async function handleApp(
           : appEntry
           ? appEntry?.name
           : appNameKey,
-        owner: newAppOwner ? newAppOwner : ext.signer.toString(),
+        owner: newAppOwner
+          ? newAppOwner
+          : appEntry?.owner
+          ? appEntry?.owner
+          : ext.signer.toString(),
         creationRawData: JSON.stringify({ ...raw, appEntry }),
         createdAt: block.timestamp,
         timestampCreation: extrinsicRecord.timestamp,
