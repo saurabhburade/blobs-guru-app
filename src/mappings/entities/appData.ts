@@ -43,6 +43,13 @@ export async function handleApp(
   const nameInspect = formattedInspect.find((x) => x.name === "key");
 
   // const appName = formattedInspect.find((x) => x.name === "name");
+  const keyIndexFromArgs = extrinsicRecord.argsName?.findIndex(
+    (v) => v === "key"
+  );
+  const valueFromArgs =
+    extrinsicRecord.argsValue.length >= keyIndexFromArgs
+      ? extrinsicRecord.argsValue[keyIndexFromArgs]
+      : null;
   const appId = appIdInspect ? Number(appIdInspect.value) : -1;
 
   if (methodData.section === "dataAvailability") {
@@ -77,7 +84,7 @@ export async function handleApp(
         : "Unknown";
       appRecord = AppEntity.create({
         id: newAppId ? newAppId?.toString() : appId.toString(),
-        name: appNameKey,
+        name: valueFromArgs ? hexToUTF8(valueFromArgs) : appNameKey,
         owner: newAppOwner ? newAppOwner : ext.signer.toString(),
         creationRawData: JSON.stringify({ ...raw, appEentry }),
         createdAt: block.timestamp,
