@@ -31,6 +31,7 @@ export const AVAIL_ACCOUNTS_LIMIT_QUERY = gql`
       orderBy: TOTAL_BYTE_SIZE_DESC
       first: $limit
       offset: $skip
+      filter: { type: { equalTo: 0 } }
     ) {
       totalCount
       nodes {
@@ -44,6 +45,76 @@ export const AVAIL_ACCOUNTS_LIMIT_QUERY = gql`
         totalDataSubmissionCount
         totalFeesUSD
         totalDAFeesUSD
+      }
+    }
+  }
+`;
+export const AVAIL_APP_ACCOUNTS_LIMIT_QUERY = gql`
+  query AccountEntities($skip: Int, $limit: Int, $appId: String) {
+    accountEntities(
+      orderBy: TOTAL_BYTE_SIZE_DESC
+      first: $limit
+      offset: $skip
+      filter: { id: { endsWith: $appId } }
+    ) {
+      totalCount
+      nodes {
+        id
+        totalByteSize
+        totalFees
+        totalExtrinsicCount
+        totalDAFees
+        endBlock
+        startBlock
+        totalDataSubmissionCount
+        totalFeesUSD
+        address
+        totalDAFeesUSD
+      }
+    }
+  }
+`;
+export const AVAIL_APPS_LIMIT_QUERY = gql`
+  query AppEntities($skip: Int, $limit: Int) {
+    appEntities(orderBy: TOTAL_BYTE_SIZE_DESC, first: $limit, offset: $skip) {
+      totalCount
+      nodes {
+        id
+        name
+        totalByteSize
+        totalFeesAvail
+        totalExtrinsicCount
+        totalDAFees
+        endBlock
+        startBlock
+        totalDataSubmissionCount
+        totalFeesUSD
+        totalDAFeesUSD
+      }
+    }
+  }
+`;
+export const AVAIL_SINGLE_APP_QUERY = gql`
+  query AppEntity($appId: String!) {
+    appEntity(id: $appId) {
+      id
+      name
+      totalByteSize
+      totalFeesAvail
+      totalExtrinsicCount
+      totalDAFees
+      endBlock
+      startBlock
+      totalDataSubmissionCount
+      totalFeesUSD
+      totalDAFeesUSD
+      appHourData(first: 24) {
+        nodes {
+          id
+          timestampLast
+          timestampStart
+          totalByteSize
+        }
       }
     }
   }
@@ -174,6 +245,30 @@ export const AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
         totalFeesUSD
         totalByteSize
         accountId
+        totalDataSubmissionCount
+        totalFeesUSD
+        totalDAFeesUSD
+        totalFeesAvail
+        amountTotal
+      }
+    }
+  }
+`;
+export const AVAIL_APP_DAY_DATAS_WITH_DURATION_QUERY = gql`
+  query AppDayData($appId: String, $duration: Int) {
+    appDayData(
+      filter: { appId: { equalTo: $appId } }
+      orderBy: TIMESTAMP_LAST_DESC
+      first: $duration
+    ) {
+      totalCount
+      nodes {
+        id
+        totalExtrinsicCount
+        timestampLast
+        timestampStart
+        totalFeesUSD
+        totalByteSize
         totalDataSubmissionCount
         totalFeesUSD
         totalDAFeesUSD

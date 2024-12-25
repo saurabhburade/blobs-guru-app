@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { div } from "framer-motion/client";
 import Link from "next/link";
 import React from "react";
@@ -11,6 +11,8 @@ import { TbReportMoney } from "react-icons/tb";
 import { IoStatsChart } from "react-icons/io5";
 import { BsUiChecksGrid } from "react-icons/bs";
 import { CiGrid2H } from "react-icons/ci";
+import { IoIosApps } from "react-icons/io";
+
 import ImageWithFallback from "../ImageWithFallback";
 
 type Props = {};
@@ -142,6 +144,15 @@ function Sidebar({}: Props) {
                         <TiThSmall />
                       </span>
                       Summary
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/avail/apps">
+                      <span>
+                        <IoIosApps />
+                      </span>
+                      Apps
                     </Link>
                   </li>
                   <hr className="border-base-200" />

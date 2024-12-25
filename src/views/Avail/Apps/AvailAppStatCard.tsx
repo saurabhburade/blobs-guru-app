@@ -12,7 +12,10 @@ import React, { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import { cn, formatAddress, formatBytes } from "@/lib/utils";
 import BigNumber from "bignumber.js";
-import { getAccountDetailsFromAddressBook } from "@/configs/constants";
+import {
+  getAccountDetailsFromAddressBook,
+  getAppDetailsFromAppBook,
+} from "@/configs/constants";
 import { useQuery } from "@apollo/client";
 import { ACCOUNT_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 import Link from "next/link";
@@ -30,8 +33,8 @@ import { AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY } from "@/lib/apollo/querie
 import { availClient } from "@/lib/apollo/client";
 
 type Props = {};
-function AvailAccountStatCard({ acc, isLoading, className }: any) {
-  const accountDetails = getAccountDetailsFromAddressBook(acc?.id);
+function AvailAppStatCard({ acc, isLoading, className, chartData }: any) {
+  const accountDetails = getAppDetailsFromAppBook(acc?.id);
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));
   }, [acc?.totalByteSize]);
@@ -55,19 +58,23 @@ function AvailAccountStatCard({ acc, isLoading, className }: any) {
         )}
         {!isLoading && (
           <>
-            <User
-              width={40}
-              height={40}
-              className="bg-base-200 p-2 rounded-lg"
+            <ImageWithFallback
+              src={
+                accountDetails?.logoUri ||
+                `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+              }
+              width={24}
+              height={24}
+              alt=""
+              className="rounded-lg"
             />
-
-            <Link href={`/avail/${acc?.id}`}>
+            <Link href={`/avail/apps/${acc?.id}`}>
               {accountDetails?.name ? (
                 <p className=""> {accountDetails?.name}</p>
               ) : (
                 <>
-                  <p className="hidden lg:block"> {acc?.id}</p>
-                  <p className="lg:hidden block"> {formatAddress(acc?.id)}</p>
+                  <p className="hidden lg:block"> {acc?.name}</p>
+                  <p className="lg:hidden block"> {formatAddress(acc?.name)}</p>
                 </>
               )}
             </Link>
@@ -154,15 +161,15 @@ function AvailAccountStatCard({ acc, isLoading, className }: any) {
             </div>
           </div>
         )}
-        <div className="p-5  bg-base-100/50    border-base-300/20 w-full ">
+        {/* <div className="p-5  bg-base-100/50    border-base-300/20 w-full ">
           {acc?.id && !isLoading && <AccountExtChart account={acc?.id} />}
-        </div>
+        </div> */}
       </div>
     </div>
   );
 }
 
-export default AvailAccountStatCard;
+export default AvailAppStatCard;
 const dateString = new Intl.DateTimeFormat("en-US", {
   timeZoneName: "short",
   weekday: "short",
@@ -190,9 +197,6 @@ const AccountExtChart = ({ account }: { account: string }) => {
         ...rawData,
 
         sizeValue: Number(rawData?.totalExtrinsicCount),
-        amountTotalF: new BigNumber(rawData?.amountTotal).div(1e18).toFormat(4),
-
-        amountTotal: new BigNumber(rawData?.amountTotal).div(1e18).toNumber(),
         size: formatBytes(Number(rawData?.totalByteSize)),
         formattedAddress: formatAddress(rawData?.accountId),
         totalExtrinsicCount: rawData?.totalExtrinsicCount?.toString(),
@@ -224,13 +228,13 @@ const AccountExtChart = ({ account }: { account: string }) => {
         <Legend
           verticalAlign="top"
           content={() => (
-            <span className="text-xs">Last 15 days balance</span>
+            <span className="text-xs">Last 15 days ext count</span>
           )}
         />
         <Tooltip content={CustomTooltipRaw} />
         <Area
           type="monotone"
-          dataKey="amountTotal"
+          dataKey="sizeValue"
           stroke="#8884d8"
           fillOpacity={1}
           fill="url(#colorUvAccStatCard)"
@@ -254,7 +258,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
         <hr className="border-base-200" />
         <div className="px-4 space-y-3">
           <p className=" ">
-            AVAIL Balance: {`${payload[0]?.payload?.amountTotalF}`}{" "}
+            Ext Count: {`${payload[0]?.payload?.totalExtrinsicCountF}`}{" "}
           </p>
           <p className=" ">
             Fee : {`${payload[0]?.payload?.totalFeeAvail}`} AVAIL

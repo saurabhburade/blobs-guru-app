@@ -190,9 +190,6 @@ const AccountExtChart = ({ account }: { account: string }) => {
         ...rawData,
 
         sizeValue: Number(rawData?.totalExtrinsicCount),
-        amountTotalF: new BigNumber(rawData?.amountTotal).div(1e18).toFormat(4),
-
-        amountTotal: new BigNumber(rawData?.amountTotal).div(1e18).toNumber(),
         size: formatBytes(Number(rawData?.totalByteSize)),
         formattedAddress: formatAddress(rawData?.accountId),
         totalExtrinsicCount: rawData?.totalExtrinsicCount?.toString(),
@@ -224,13 +221,13 @@ const AccountExtChart = ({ account }: { account: string }) => {
         <Legend
           verticalAlign="top"
           content={() => (
-            <span className="text-xs">Last 15 days balance</span>
+            <span className="text-xs">Last 15 days ext count</span>
           )}
         />
         <Tooltip content={CustomTooltipRaw} />
         <Area
           type="monotone"
-          dataKey="amountTotal"
+          dataKey="sizeValue"
           stroke="#8884d8"
           fillOpacity={1}
           fill="url(#colorUvAccStatCard)"
@@ -254,7 +251,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
         <hr className="border-base-200" />
         <div className="px-4 space-y-3">
           <p className=" ">
-            AVAIL Balance: {`${payload[0]?.payload?.amountTotalF}`}{" "}
+            Ext Count: {`${payload[0]?.payload?.totalExtrinsicCountF}`}{" "}
           </p>
           <p className=" ">
             Fee : {`${payload[0]?.payload?.totalFeeAvail}`} AVAIL
