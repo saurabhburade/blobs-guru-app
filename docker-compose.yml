@@ -10,13 +10,12 @@ services:
     volumes:
       - .data/postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: postgres12312331
+      POSTGRES_PASSWORD: postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
-
 
   # subquery-node-evm:
   #   image: subquerynetwork/subql-node-ethereum:latest
@@ -64,7 +63,7 @@ services:
       - --batch-size=100
       - --scale-batch-size
       - --unsafe
-      - --workers=5
+      - --workers=4
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
@@ -86,8 +85,3 @@ services:
     command:
       - --name=multi-chain
       - --playground
-      
-# Optional: Define Docker secrets for more secure management of passwords
-secrets:
-  postgres_password:
-    external: true
