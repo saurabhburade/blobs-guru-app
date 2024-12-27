@@ -5,6 +5,9 @@ import { OneinchABIAbi__factory } from "../../types/contracts";
 import { ORACLE_ADDRESS } from "../helper";
 import { CorrectSubstrateBlock } from "../mappingHandlers";
 import fetch from "node-fetch";
+const ETH_RPC =
+  process.env.ETH_RPC ||
+  "https://lb.drpc.org/ogrpc?network=ethereum&dkey=At2bhbEKA0nUjDj8Pdkc2m37qqBIxBsR768wIlZWwHzR";
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -129,46 +132,40 @@ export async function handleNewPriceMinute({
         false,
       ]);
 
-      const rpcDataEth = await fetch(
-        "https://lb.drpc.org/ogrpc?network=ethereum&dkey=At2bhbEKA0nUjDj8Pdkc2m37qqBIxBsR768wIlZWwHzR",
-        {
-          method: "POST",
-          headers: {},
-          body: JSON.stringify({
-            id: 1,
-            jsonrpc: "2.0",
-            method: "eth_call",
-            params: [
-              {
-                to: ORACLE_ADDRESS,
-                data: encodedEth,
-              },
-              // @ts-ignore
-              `0x${ethBlockContext.height.toString(16)}`,
-            ],
-          }),
-        }
-      );
-      const rpcDataAvail = await fetch(
-        "https://lb.drpc.org/ogrpc?network=ethereum&dkey=At2bhbEKA0nUjDj8Pdkc2m37qqBIxBsR768wIlZWwHzR",
-        {
-          method: "POST",
-          headers: {},
-          body: JSON.stringify({
-            id: 1,
-            jsonrpc: "2.0",
-            method: "eth_call",
-            params: [
-              {
-                to: ORACLE_ADDRESS,
-                data: encodedAvail,
-              },
-              // @ts-ignore
-              `0x${ethBlockContext.height.toString(16)}`,
-            ],
-          }),
-        }
-      );
+      const rpcDataEth = await fetch(ETH_RPC, {
+        method: "POST",
+        headers: {},
+        body: JSON.stringify({
+          id: 1,
+          jsonrpc: "2.0",
+          method: "eth_call",
+          params: [
+            {
+              to: ORACLE_ADDRESS,
+              data: encodedEth,
+            },
+            // @ts-ignore
+            `0x${ethBlockContext.height.toString(16)}`,
+          ],
+        }),
+      });
+      const rpcDataAvail = await fetch(ETH_RPC, {
+        method: "POST",
+        headers: {},
+        body: JSON.stringify({
+          id: 1,
+          jsonrpc: "2.0",
+          method: "eth_call",
+          params: [
+            {
+              to: ORACLE_ADDRESS,
+              data: encodedAvail,
+            },
+            // @ts-ignore
+            `0x${ethBlockContext.height.toString(16)}`,
+          ],
+        }),
+      });
       const ethResultRaw: any = await rpcDataEth.json();
       const availResultRaw: any = await rpcDataAvail.json();
       // if (ethResultRaw) {
