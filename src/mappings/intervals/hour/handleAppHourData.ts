@@ -39,7 +39,7 @@ export async function handleAppHourData(
   if (appHourDataRecord === undefined || appHourDataRecord === null) {
     appHourDataRecord = AppHourData.create({
       id: `${appRecord.id}-hourId-${hourId}`,
-      appId: extrinsicRecord.signer.toString(),
+      appId: appRecord.id,
       totalDataAccountsCount: 0,
       timestampLast: extrinsicRecord.timestamp,
       totalByteSize: 0,
