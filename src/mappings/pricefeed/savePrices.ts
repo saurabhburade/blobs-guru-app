@@ -130,7 +130,7 @@ export async function handleNewPriceMinute({
       ]);
 
       const rpcDataEth = await fetch(
-        "https://lb.drpc.org/ogrpc?network=ethereum&dkey=ArT8p5S52UM0rgz3Qb99bmtcIwWxtHwR75vAuivZK8k9",
+        "https://lb.drpc.org/ogrpc?network=ethereum&dkey=At2bhbEKA0nUjDj8Pdkc2m37qqBIxBsR768wIlZWwHzR",
         {
           method: "POST",
           headers: {},
@@ -150,7 +150,7 @@ export async function handleNewPriceMinute({
         }
       );
       const rpcDataAvail = await fetch(
-        "https://lb.drpc.org/ogrpc?network=ethereum&dkey=ArT8p5S52UM0rgz3Qb99bmtcIwWxtHwR75vAuivZK8k9",
+        "https://lb.drpc.org/ogrpc?network=ethereum&dkey=At2bhbEKA0nUjDj8Pdkc2m37qqBIxBsR768wIlZWwHzR",
         {
           method: "POST",
           headers: {},
