@@ -10,7 +10,7 @@ services:
     volumes:
       - .data/postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: postgres##***098765**##
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -86,3 +86,8 @@ services:
     command:
       - --name=multi-chain
       - --playground
+      
+# Optional: Define Docker secrets for more secure management of passwords
+secrets:
+  postgres_password:
+    external: true
