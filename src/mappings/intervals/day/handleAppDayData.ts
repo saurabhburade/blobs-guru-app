@@ -100,5 +100,7 @@ export async function handleAppDayData(
     appDayDataRecord.totalFeesUSD! + Number(feesUSD);
   appDayDataRecord.lastPriceFeedId = priceFeed.id;
   appDayDataRecord.endBlock = block.block.header.number.toNumber();
+  appDayDataRecord.collectiveDayDataId = dayId?.toString();
+
   await appDayDataRecord.save();
 }

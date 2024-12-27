@@ -249,6 +249,7 @@ type AppDayData @entity {
   avgAvailPrice: Float
   avgEthPrice: Float
   prevDayData: AppDayData
+  collectiveDayData: CollectiveDayData
 }
 type AppHourData @entity {
   id: ID!
@@ -273,6 +274,8 @@ type AppHourData @entity {
   avgEthPrice: Float
   prevHourData: AccountHourData
   app: AppEntity! @index
+  collectiveHourData: CollectiveHourData
+
 }
 
 type DataSubmission @entity {
@@ -331,6 +334,8 @@ type CollectiveDayData @entity {
   avgAvailPrice: Float
   avgEthPrice: Float
   prevDayData: CollectiveDayData
+  appDayDataParticipant: [AppDayData] @derivedFrom(field: "collectiveDayData")
+  accountDayDataParticipant: [AccountDayData] @derivedFrom(field: "collectiveDayData")
 }
 type AccountDayData @entity {
   id: ID!
@@ -366,6 +371,8 @@ type AccountDayData @entity {
   amountTotalRounded: Float
   balanceReserved: Float
   balanceFree: Float
+  collectiveDayData: CollectiveDayData
+
 }
 type AccountHourData @entity {
   id: ID!
@@ -401,6 +408,8 @@ type AccountHourData @entity {
   amountTotalRounded: Float
   balanceReserved: Float
   balanceFree: Float
+  collectiveHourData: CollectiveHourData
+
 }
 
 type CollectiveHourData @entity {
@@ -425,6 +434,8 @@ type CollectiveHourData @entity {
   avgAvailPrice: Float
   avgEthPrice: Float
   prevHourData: CollectiveHourData
+  appHourDataParticipant: [AppHourData] @derivedFrom(field: "collectiveHourData")
+  accountHourDataParticipant: [AccountHourData] @derivedFrom(field: "collectiveHourData")
 }
 
 type AccounToUpdateValue @entity {

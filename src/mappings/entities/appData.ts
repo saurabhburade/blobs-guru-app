@@ -118,6 +118,7 @@ export async function handleApp(
         creationExtId: extrinsicRecord.id,
       });
     }
+
     appRecord.timestampLast = extrinsicRecord.timestamp;
 
     appRecord.updatedAt = extrinsicRecord.timestamp;

@@ -107,5 +107,7 @@ export async function handleAppHourData(
     appHourDataRecord.totalFeesUSD! + Number(feesUSD);
   appHourDataRecord.lastPriceFeedId = priceFeed.id;
   appHourDataRecord.endBlock = block.block.header.number.toNumber();
+  appHourDataRecord.collectiveHourDataId = hourId?.toString();
+
   await appHourDataRecord.save();
 }

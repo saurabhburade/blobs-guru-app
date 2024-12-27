@@ -234,5 +234,7 @@ export async function handleAccountHourData(
     accountHourDataRecord.totalFeesUSD! + Number(feesUSD);
   accountHourDataRecord.lastPriceFeedId = priceFeed.id;
   accountHourDataRecord.endBlock = block.block.header.number.toNumber();
+  accountHourDataRecord.collectiveHourDataId = hourId?.toString();
+
   await accountHourDataRecord.save();
 }

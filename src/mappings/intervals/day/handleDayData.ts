@@ -239,5 +239,7 @@ export async function handleAccountDayData(
     accountDayDataRecord.totalFeesUSD! + Number(feesUSD);
   accountDayDataRecord.lastPriceFeedId = priceFeed.id;
   accountDayDataRecord.endBlock = block.block.header.number.toNumber();
+  accountDayDataRecord.collectiveDayDataId = dayId?.toString();
+
   await accountDayDataRecord.save();
 }
