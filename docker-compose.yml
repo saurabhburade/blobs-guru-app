@@ -16,6 +16,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+      
 
   # subquery-node-evm:
   #   image: subquerynetwork/subql-node-ethereum:latest
