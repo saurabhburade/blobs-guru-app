@@ -10,7 +10,7 @@ services:
     volumes:
       - .data/postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: postgres##***098765**##
+      POSTGRES_PASSWORD: postgres12312331
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
