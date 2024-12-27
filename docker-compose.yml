@@ -63,7 +63,7 @@ services:
       - --batch-size=50
       - --scale-batch-size
       - --unsafe
-      - --workers=20
+      - --workers=14
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
