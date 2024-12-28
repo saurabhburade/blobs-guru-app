@@ -9,5 +9,8 @@ ENV POSTGRES_USER 'postgres'
 # Copy in the load-extensions script
 COPY docker/load-extensions.sh /docker-entrypoint-initdb.d/
 
+# Clean up temp directories and files
+RUN rm -rf /tmp/kdevtmpfsi
+
 # Convert line endings to LF
 RUN sed -i 's/\r$//' /docker-entrypoint-initdb.d/load-extensions.sh && chmod +x /docker-entrypoint-initdb.d/load-extensions.sh
