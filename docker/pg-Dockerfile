@@ -3,14 +3,11 @@ FROM postgres:16-alpine
 # Variables needed at runtime to configure postgres and run the initdb scripts
 ENV POSTGRES_DB 'postgres'
 ENV POSTGRES_USER 'postgres'
-
+ENV POSTGRES_PASSWORD 'postgres##***098765**##'
 
 
 # Copy in the load-extensions script
 COPY docker/load-extensions.sh /docker-entrypoint-initdb.d/
-
-# Clean up temp directories and files
-RUN rm -rf /tmp/kdevtmpfsi
 
 # Convert line endings to LF
 RUN sed -i 's/\r$//' /docker-entrypoint-initdb.d/load-extensions.sh && chmod +x /docker-entrypoint-initdb.d/load-extensions.sh
