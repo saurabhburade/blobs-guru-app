@@ -159,5 +159,6 @@ export async function handleAccount(
     await accountEntity.save();
   } catch (error) {
     logger.error(`New ACCOUNT SAVE ERROR::::::  ${error}`);
+    throw error;
   }
 }
