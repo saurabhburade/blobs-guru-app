@@ -1,6 +1,9 @@
-import type { AccountId, Digest } from '@polkadot/types/interfaces';
+import type { AccountId, Digest } from "@polkadot/types/interfaces";
 
-export function extractAuthor (digest: Digest, sessionValidators: AccountId[] = []): AccountId | undefined {
+export function extractAuthor(
+  digest: Digest,
+  sessionValidators: AccountId[] = []
+): AccountId | undefined {
   const [citem] = digest.logs.filter((e) => e.isConsensus);
   const [pitem] = digest.logs.filter((e) => e.isPreRuntime);
   const [sitem] = digest.logs.filter((e) => e.isSeal);
@@ -27,7 +30,8 @@ export function extractAuthor (digest: Digest, sessionValidators: AccountId[] = 
 
       accountId = engine.extractAuthor(data, sessionValidators);
     }
-  } catch {
+  } catch (err) {
+    throw err;
     // ignore
   }
 

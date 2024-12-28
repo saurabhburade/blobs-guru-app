@@ -314,6 +314,7 @@ export function handleCall(
     // extrinsicRecord.save();
     return extrinsicRecord;
   } catch (err: any) {
+    throw err;
     logger.error(
       `record extrinsic error at : hash(${
         extrinsic.extrinsic.hash
@@ -321,7 +322,6 @@ export function handleCall(
     );
     logger.error("record extrinsic error detail:" + err);
     if (err.sql) logger.error("record extrinsic error sql detail:" + err.sql);
-    throw err;
   }
 }
 

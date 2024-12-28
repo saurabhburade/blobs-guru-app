@@ -193,6 +193,7 @@ export const blockHandler = async (
     //   handleExtension(blockHeader),
     // ]);
   } catch (err) {
+    throw err;
     logger.error("record block error:" + block.block.header.number.toNumber());
     logger.error("record block error detail:" + err);
   }
@@ -372,6 +373,7 @@ export const updateSession = async (blockRecord: Block, digest: Digest) => {
     );
     blockRecord.author = author ? author.toString() : undefined;
   } catch (err) {
+    throw err;
     logger.error("update session error");
     logger.error("update session error detail:" + err);
   }
