@@ -7,7 +7,7 @@
     "build": "subql build",
     "codegen": "subql codegen",
     "start:docker": "docker compose pull && docker compose up --remove-orphans",
-    "dev": "subql codegen && yarn prepack && docker compose pull && docker compose up --remove-orphans",
+    "dev": "export POSTGRES_PASSWORD=postgres##***098765**## && subql codegen && yarn prepack && docker compose pull && docker compose up --remove-orphans",
     "prepack": "rm -rf dist && npm run build",
     "test": "subql build && subql-node-cosmos test"
   },
