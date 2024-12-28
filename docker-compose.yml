@@ -98,8 +98,8 @@ services:
     command: "trivy image --exit-code 1 --severity HIGH,CRITICAL my_image:latest"
     depends_on:
       - postgres
-    networks:
-      - internal_network
+    # networks:
+    #   - internal_network
     entrypoint: /bin/sh -c "sleep 30 && trivy image --exit-code 1 --severity HIGH,CRITICAL my_image:latest"
     restart: "no"  # Don't restart, as we want this only to run once as a scan
 
