@@ -94,7 +94,7 @@ export const updateAccounts = async (addresses: string[], timestamp: Date) => {
       accountsToUpdate,
     };
   } catch (err: any) {
-    throw err;
+
 
     logger.error("Error in update account : " + err.toString());
     if (err.sql)
