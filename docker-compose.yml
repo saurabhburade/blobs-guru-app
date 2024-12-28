@@ -60,7 +60,7 @@ services:
       - -f=app/avail.yaml
       - --allow-schema-migration
       - --unfinalized-blocks=false
-      - --batch-size=40
+      - --batch-size=60
       - --scale-batch-size
       - --unsafe
       - --workers=12
