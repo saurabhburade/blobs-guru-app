@@ -16,8 +16,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    # networks:
-    #   - internal_network
 
   # subquery-node-evm:
   #   image: subquerynetwork/subql-node-ethereum:latest
@@ -72,8 +70,6 @@ services:
       interval: 3s
       timeout: 5s
       retries: 10
-    # networks:
-    #   - internal_network
 
   graphql-engine:
     image: subquerynetwork/subql-query:latest
@@ -89,20 +85,3 @@ services:
     command:
       - --name=multi-chain
       - --playground
-    # networks:
-    #   - internal_network
-
-  # Add Trivy scanning service
-  trivy-scan:
-    image: aquasec/trivy:latest
-    command: "trivy image --exit-code 1 --severity HIGH,CRITICAL my_image:latest"
-    depends_on:
-      - postgres
-    # networks:
-    #   - internal_network
-    entrypoint: /bin/sh -c "sleep 30 && trivy image --exit-code 1 --severity HIGH,CRITICAL my_image:latest"
-    restart: "no"  # Don't restart, as we want this only to run once as a scan
-
-# networks:
-#   internal_network:
-#     driver: bridge
