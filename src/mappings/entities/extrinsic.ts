@@ -2,6 +2,7 @@
 
 import { SubstrateExtrinsic } from "@subql/types";
 import {
+  AccountEntity,
   CollectiveData,
   DataSubmission,
   Extrinsic,
@@ -38,6 +39,7 @@ export async function handleExtrinsics(
 
   const events: Event[] = [];
   const calls: Extrinsic[] = [];
+  const accounts: AccountEntity[] = [];
   const daSubmissions: DataSubmission[] = [];
   const extIdToDetails: {
     [key: number]: {
@@ -155,8 +157,14 @@ export async function handleExtrinsics(
       priceFeed
     );
     calls.push(extrinsicRecord);
+    const accountToUpdate = await handleAccount(
+      extrinsicRecord,
+      substrateExtrinsic,
+      priceFeed
+    );
+    accounts.push(accountToUpdate);
     await Promise.all([
-      await handleAccount(extrinsicRecord, substrateExtrinsic, priceFeed),
+      // await handleAccount(extrinsicRecord, substrateExtrinsic, priceFeed),
       await handleAccountDayData(
         extrinsicRecord,
         substrateExtrinsic,
@@ -242,6 +250,7 @@ export async function handleExtrinsics(
     await handleAccountBalancesBulk(block, priceFeed),
   ]);
   await Promise.all([
+    store.bulkUpdate("AccountEntity", accounts),
     store.bulkCreate("Extrinsic", calls),
     store.bulkCreate("DataSubmission", daSubmissions),
   ]);
