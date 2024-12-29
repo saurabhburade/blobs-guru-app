@@ -186,6 +186,12 @@ export const updateBalanceAccounts = async (
         logger.warn("Error in update account : Balance not found");
       }
     }
+
+    await Promise.all([
+      store.bulkUpdate("AccountBalance", accountsToUpdate),
+      store.bulkUpdate("AccountBalanceDayData", accountsToUpdateDay),
+      store.bulkUpdate("AccountBalanceHourData", accountsToUpdateHour),
+    ]);
   } catch (err: any) {
     throw err;
     logger.error("Error in update account : " + err.toString());
