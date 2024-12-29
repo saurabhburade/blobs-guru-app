@@ -70,11 +70,6 @@ services:
       interval: 3s
       timeout: 5s
       retries: 10
-    cpuset: "0-14"  # Pin the container to cores 0-14 (15 physical cores)
-    deploy:
-      resources:
-        limits:
-          cpus: '15.0'  # Limit to 15 CPU cores (ensure it uses 16 cores)
 
   graphql-engine:
     image: subquerynetwork/subql-query:latest
