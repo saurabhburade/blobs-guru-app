@@ -36,13 +36,13 @@ export const updateBalanceAccounts = async (
 ) => {
   try {
     const blockNumber = block.block.header.number.toNumber();
-    const accountsInDb: AccountBalance[] = await store.getByFields(
-      "AccountBalance",
-      [["accountId", "in", addresses]],
-      {
-        limit: addresses.length,
-      }
-    );
+    // const accountsInDb: AccountBalance[] = await store.getByFields(
+    //   "AccountBalance",
+    //   [["accountId", "in", addresses]],
+    //   {
+    //     limit: addresses.length,
+    //   }
+    // );
 
     // @ts-ignore
     const res = (await (api as any).query.system.account.multi(
@@ -81,7 +81,7 @@ export const updateBalanceAccounts = async (
         const amount = balanceFrozen
           ? (balanceFree - balanceFrozen).toString()
           : balanceFree.toString();
-        let record = accountsInDb.find((x) => x.id === address);
+        let record = await AccountBalance.get(address);
         if (!record) {
           record = AccountBalance.create({
             id: address,
