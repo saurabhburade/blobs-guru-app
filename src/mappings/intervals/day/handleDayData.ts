@@ -96,7 +96,7 @@ export async function handleAccountDayData(
   priceFeed: PriceFeedMinute,
   type: number = 0,
   appRecord?: AppEntity
-) {
+): Promise<AccountDayData> {
   const block = extrinsic.block as CorrectSubstrateBlock;
 
   const blockDate = new Date(Number(block.timestamp.getTime()));
@@ -240,6 +240,6 @@ export async function handleAccountDayData(
   accountDayDataRecord.lastPriceFeedId = priceFeed.id;
   accountDayDataRecord.endBlock = block.block.header.number.toNumber();
   accountDayDataRecord.collectiveDayDataId = dayId?.toString();
-
-  await accountDayDataRecord.save();
+  return accountDayDataRecord;
+  // await accountDayDataRecord.save();
 }

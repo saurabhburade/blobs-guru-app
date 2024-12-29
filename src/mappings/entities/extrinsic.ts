@@ -2,7 +2,9 @@
 
 import { SubstrateExtrinsic } from "@subql/types";
 import {
+  AccountDayData,
   AccountEntity,
+  AccountHourData,
   CollectiveData,
   DataSubmission,
   Extrinsic,
@@ -40,6 +42,8 @@ export async function handleExtrinsics(
   const events: Event[] = [];
   const calls: Extrinsic[] = [];
   const accounts: AccountEntity[] = [];
+  const accountDayDatas: AccountDayData[] = [];
+  const accountHourDatas: AccountHourData[] = [];
   const daSubmissions: DataSubmission[] = [];
   const extIdToDetails: {
     [key: number]: {
@@ -163,18 +167,30 @@ export async function handleExtrinsics(
       priceFeed
     );
     accounts.push(accountToUpdate);
+    const accountDayToUpdate = await handleAccountDayData(
+      extrinsicRecord,
+      substrateExtrinsic,
+      priceFeed
+    );
+    accountDayDatas.push(accountDayToUpdate);
+    const accountHourToUpdate = await handleAccountHourData(
+      extrinsicRecord,
+      substrateExtrinsic,
+      priceFeed
+    );
+    accountHourDatas.push(accountHourToUpdate);
     await Promise.all([
       // await handleAccount(extrinsicRecord, substrateExtrinsic, priceFeed),
-      await handleAccountDayData(
-        extrinsicRecord,
-        substrateExtrinsic,
-        priceFeed
-      ),
-      await handleAccountHourData(
-        extrinsicRecord,
-        substrateExtrinsic,
-        priceFeed
-      ),
+      // await handleAccountDayData(
+      //   extrinsicRecord,
+      //   substrateExtrinsic,
+      //   priceFeed
+      // ),
+      // await handleAccountHourData(
+      //   extrinsicRecord,
+      //   substrateExtrinsic,
+      //   priceFeed
+      // ),
       await handleApp(
         extrinsicRecord,
         substrateExtrinsic,
@@ -251,11 +267,16 @@ export async function handleExtrinsics(
   ]);
   await Promise.all([
     store.bulkUpdate("AccountEntity", accounts),
+    store.bulkUpdate("AccountDayData", accountDayDatas),
+    store.bulkUpdate("AccountHourData", accountHourDatas),
     store.bulkCreate("Extrinsic", calls),
     store.bulkCreate("DataSubmission", daSubmissions),
   ]);
   daSubmissions.length = 0;
   calls.length = 0;
+  accounts.length = 0;
+  accountDayDatas.length = 0;
+  accountHourDatas.length = 0;
 }
 
 export function handleCall(
