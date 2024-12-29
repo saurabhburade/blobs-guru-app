@@ -167,7 +167,7 @@ export const updateBalanceAccounts = async (
         accountHourRecord.endBlock = blockNumber;
         accountHourRecord.lastPriceFeedId = priceFeed.id;
         accountHourRecord.prevHourDataId = houridPrev.toString();
-        Promise.all([
+        await Promise.all([
           await record.save(),
           await accountDayRecord.save(),
           await accountHourRecord.save(),
