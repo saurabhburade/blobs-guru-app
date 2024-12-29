@@ -164,21 +164,27 @@ export async function handleApp(
     await Promise.all([
       await handleAppDayData(extrinsicRecord, extrinsic, priceFeed, appRecord),
       await handleAppHourData(extrinsicRecord, extrinsic, priceFeed, appRecord),
-      await handleAccount(extrinsicRecord, extrinsic, priceFeed, 1, appRecord),
-      await handleAccountDayData(
-        extrinsicRecord,
-        extrinsic,
-        priceFeed,
-        1,
-        appRecord
-      ),
-      await handleAccountHourData(
-        extrinsicRecord,
-        extrinsic,
-        priceFeed,
-        1,
-        appRecord
-      ),
+      await (
+        await handleAccount(extrinsicRecord, extrinsic, priceFeed, 1, appRecord)
+      ).save(),
+      await (
+        await handleAccountDayData(
+          extrinsicRecord,
+          extrinsic,
+          priceFeed,
+          1,
+          appRecord
+        )
+      ).save(),
+      await (
+        await handleAccountHourData(
+          extrinsicRecord,
+          extrinsic,
+          priceFeed,
+          1,
+          appRecord
+        )
+      ).save(),
       await appRecord.save(),
     ]);
   }
