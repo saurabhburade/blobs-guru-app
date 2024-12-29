@@ -53,28 +53,28 @@ export async function handleApp(
   const appId = appIdInspect ? Number(appIdInspect.value) : -1;
 
   if (methodData.section === "dataAvailability") {
-    // @ts-ignore
-    const entries = await api.query.dataAvailability.appKeys.entries();
-
-    const data: ApplicationData[] = entries.map(([key, value]: any) => {
-      const name = key.args[0].toHuman() as string;
-      const appKey = value.toHuman() as {
-        owner: string;
-        id: string | number;
-      };
-      return {
-        name,
-        owner: appKey.owner,
-        id: Number(appKey.id),
-      };
-    });
-
-    // @ts-ignore
-    const appEntry = data?.find((app) => app.id === appId);
-    logger.info(`appKey::: ${JSON.stringify(appEntry)}`);
     let appRecord = await AppEntity.get(appId.toString());
     // Handle new app
     if (appRecord === null || appRecord === undefined) {
+      // @ts-ignore
+      const entries = await api.query.dataAvailability.appKeys.entries();
+
+      const data: ApplicationData[] = entries.map(([key, value]: any) => {
+        const name = key.args[0].toHuman() as string;
+        const appKey = value.toHuman() as {
+          owner: string;
+          id: string | number;
+        };
+        return {
+          name,
+          owner: appKey.owner,
+          id: Number(appKey.id),
+        };
+      });
+
+      // @ts-ignore
+      const appEntry = data?.find((app) => app.id === appId);
+      logger.info(`appKey::: ${JSON.stringify(appEntry)}`);
       const [newAppName = null, newAppOwner = null, newAppId = null] =
         extraDetails!.events && extraDetails!.events?.length > 0
           ? extraDetails!.events[0]
