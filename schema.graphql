@@ -166,14 +166,6 @@ type AccountEntity @entity {
   app: AppEntity
   validator: Boolean
   validatorSessionParticipated: Int
-  amount: String
-  amountFrozen: String
-  amountTotal: String
-  amountRounded: Float
-  amountFrozenRounded: Float
-  amountTotalRounded: Float
-  balanceReserved: Float
-  balanceFree: Float
   createdAt: Date!
   updatedAt: Date!
   timestampCreation: Date! @index
@@ -197,6 +189,7 @@ type AccountEntity @entity {
   accountHourData: [AccountHourData] @derivedFrom(field: "account")
   startBlock: Float
   endBlock: Float
+  accountBalance: AccountBalance @derivedFrom(field: "account")
 }
 type AppEntity @entity {
   id: ID!
@@ -356,21 +349,13 @@ type AccountDayData @entity {
   totalDataAccountsCount: Float
   lastPriceFeed: PriceFeedMinute
   timestampLast: Date! @index
-  timestampStart: Date! 
+  timestampStart: Date!
   startBlock: Float
   endBlock: Float
   avgAvailPrice: Float
   avgEthPrice: Float
   prevDayData: AccountDayData
   account: AccountEntity! @index
-  amount: String
-  amountFrozen: String
-  amountTotal: String
-  amountRounded: Float
-  amountFrozenRounded: Float
-  amountTotalRounded: Float
-  balanceReserved: Float
-  balanceFree: Float
   collectiveDayData: CollectiveDayData
 }
 type AccountHourData @entity {
@@ -392,21 +377,13 @@ type AccountHourData @entity {
   totalDataAccountsCount: Float
   lastPriceFeed: PriceFeedMinute
   timestampLast: Date! @index
-  timestampStart: Date! 
+  timestampStart: Date!
   startBlock: Float
   endBlock: Float
   avgAvailPrice: Float
   avgEthPrice: Float
   prevHourData: AccountHourData
   account: AccountEntity! @index
-  amount: String
-  amountFrozen: String
-  amountTotal: String
-  amountRounded: Float
-  amountFrozenRounded: Float
-  amountTotalRounded: Float
-  balanceReserved: Float
-  balanceFree: Float
   collectiveHourData: CollectiveHourData
 }
 
