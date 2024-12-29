@@ -54,6 +54,11 @@ services:
     volumes:
       - ./:/app
     command:
+      - "taskset"
+      - "-c"
+      - "0-15"  # Pin to cores 0-15
+      - "/bin/sh"
+      - "-c"
       - ${SUB_COMMAND:-} # set SUB_COMMAND env variable to "test" to run tests
       - --multi-chain
       - --db-schema=multi-chain
