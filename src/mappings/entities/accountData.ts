@@ -147,6 +147,7 @@ export async function handleAccount(
     if (type === 1) {
       accountEntity.appId = appRecord!.id;
       accountEntity.attachedAppId = appRecord!.id;
+      await accountEntity.save();
     }
     return accountEntity;
     // await accountEntity.save();

@@ -240,6 +240,9 @@ export async function handleAccountDayData(
   accountDayDataRecord.lastPriceFeedId = priceFeed.id;
   accountDayDataRecord.endBlock = block.block.header.number.toNumber();
   accountDayDataRecord.collectiveDayDataId = dayId?.toString();
+  if (type === 1) {
+    await accountDayDataRecord.save();
+  }
   return accountDayDataRecord;
   // await accountDayDataRecord.save();
 }
