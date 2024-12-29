@@ -275,7 +275,6 @@ type AppHourData @entity {
   prevHourData: AccountHourData
   app: AppEntity! @index
   collectiveHourData: CollectiveHourData
-
 }
 
 type DataSubmission @entity {
@@ -335,7 +334,8 @@ type CollectiveDayData @entity {
   avgEthPrice: Float
   prevDayData: CollectiveDayData
   appDayDataParticipant: [AppDayData] @derivedFrom(field: "collectiveDayData")
-  accountDayDataParticipant: [AccountDayData] @derivedFrom(field: "collectiveDayData")
+  accountDayDataParticipant: [AccountDayData]
+    @derivedFrom(field: "collectiveDayData")
 }
 type AccountDayData @entity {
   id: ID!
@@ -356,7 +356,7 @@ type AccountDayData @entity {
   totalDataAccountsCount: Float
   lastPriceFeed: PriceFeedMinute
   timestampLast: Date! @index
-  timestampStart: Date! @index
+  timestampStart: Date! 
   startBlock: Float
   endBlock: Float
   avgAvailPrice: Float
@@ -372,7 +372,6 @@ type AccountDayData @entity {
   balanceReserved: Float
   balanceFree: Float
   collectiveDayData: CollectiveDayData
-
 }
 type AccountHourData @entity {
   id: ID!
@@ -393,7 +392,7 @@ type AccountHourData @entity {
   totalDataAccountsCount: Float
   lastPriceFeed: PriceFeedMinute
   timestampLast: Date! @index
-  timestampStart: Date! @index
+  timestampStart: Date! 
   startBlock: Float
   endBlock: Float
   avgAvailPrice: Float
@@ -409,7 +408,6 @@ type AccountHourData @entity {
   balanceReserved: Float
   balanceFree: Float
   collectiveHourData: CollectiveHourData
-
 }
 
 type CollectiveHourData @entity {
@@ -434,8 +432,70 @@ type CollectiveHourData @entity {
   avgAvailPrice: Float
   avgEthPrice: Float
   prevHourData: CollectiveHourData
-  appHourDataParticipant: [AppHourData] @derivedFrom(field: "collectiveHourData")
-  accountHourDataParticipant: [AccountHourData] @derivedFrom(field: "collectiveHourData")
+  appHourDataParticipant: [AppHourData]
+    @derivedFrom(field: "collectiveHourData")
+  accountHourDataParticipant: [AccountHourData]
+    @derivedFrom(field: "collectiveHourData")
+}
+
+type AccountBalance @entity {
+  id: ID!
+  account: AccountEntity! @index
+  amount: String
+  amountFrozen: String
+  amountTotal: String
+  amountRounded: Float
+  amountFrozenRounded: Float
+  amountTotalRounded: Float
+  balanceReserved: Float
+  balanceFree: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float
+  endBlock: Float
+  accountBalanceDayData: [AccountBalanceDayData]
+    @derivedFrom(field: "accountBalance")
+  accountBalanceHourData: [AccountBalanceHourData]
+    @derivedFrom(field: "accountBalance")
+}
+type AccountBalanceDayData @entity {
+  id: ID!
+  account: AccountEntity! @index
+  accountBalance: AccountBalance! @index
+  amount: String
+  amountFrozen: String
+  amountTotal: String
+  amountRounded: Float
+  amountFrozenRounded: Float
+  amountTotalRounded: Float
+  balanceReserved: Float
+  balanceFree: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  prevDayData: AccountBalanceDayData
+}
+type AccountBalanceHourData @entity {
+  id: ID!
+  account: AccountEntity! @index
+  accountBalance: AccountBalance! @index
+  amount: String
+  amountFrozen: String
+  amountTotal: String
+  amountRounded: Float
+  amountFrozenRounded: Float
+  amountTotalRounded: Float
+  balanceReserved: Float
+  balanceFree: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  prevHourData: AccountBalanceHourData
 }
 
 type AccounToUpdateValue @entity {

@@ -26,6 +26,7 @@ import {
 } from "../intervals/hour/handleHourData";
 import { handleAccount } from "./accountData";
 import { handleApp } from "./appData";
+import { handleAccountBalancesBulk } from "./balance";
 
 export async function handleExtrinsics(
   block: CorrectSubstrateBlock,
@@ -238,6 +239,7 @@ export async function handleExtrinsics(
       }
     ),
     await collectiveData.save(),
+    await handleAccountBalancesBulk(block, priceFeed),
   ]);
   await Promise.all([
     store.bulkCreate("Extrinsic", calls),
