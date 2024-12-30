@@ -61,10 +61,10 @@ services:
       - -f=app/avail.yaml
       - --allow-schema-migration
       - --unfinalized-blocks=false
-      - --batch-size=40
+      - --batch-size=100
       - --scale-batch-size
       - --unsafe
-      - --workers=10
+      - --workers=4
     cpuset: "0-15" # Pin to cores 0-15 (16 physical cores)
 
     healthcheck:
