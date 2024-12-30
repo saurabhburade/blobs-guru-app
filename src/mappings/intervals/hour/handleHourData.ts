@@ -87,7 +87,7 @@ export async function handleAccountHourData(
   priceFeed: PriceFeedMinute,
   type: number = 0,
   appRecord?: AppEntity
-): Promise<AccountHourData> {
+) {
   const block = extrinsic.block as CorrectSubstrateBlock;
 
   const blockDate = new Date(Number(block.timestamp.getTime()));
@@ -236,9 +236,9 @@ export async function handleAccountHourData(
   accountHourDataRecord.lastPriceFeedId = priceFeed.id;
   accountHourDataRecord.endBlock = block.block.header.number.toNumber();
   accountHourDataRecord.collectiveHourDataId = hourId?.toString();
-  if (type === 1) {
-    await accountHourDataRecord.save();
-  }
-  // await accountHourDataRecord.save();
-  return accountHourDataRecord;
+  // if (type === 1) {
+  //   await accountHourDataRecord.save();
+  // }
+  await accountHourDataRecord.save();
+  // return accountHourDataRecord;
 }

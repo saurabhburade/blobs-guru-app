@@ -18,7 +18,7 @@ export async function handleAccount(
   priceFeed: PriceFeedMinute,
   type: number = 0,
   appRecord?: AppEntity
-): Promise<AccountEntity> {
+) {
   try {
     const block = extrinsic.block as CorrectSubstrateBlock;
     const ext = extrinsic.extrinsic;
@@ -147,10 +147,10 @@ export async function handleAccount(
     if (type === 1) {
       accountEntity.appId = appRecord!.id;
       accountEntity.attachedAppId = appRecord!.id;
-      await accountEntity.save();
+      // await accountEntity.save();
     }
-    return accountEntity;
-    // await accountEntity.save();
+    // return accountEntity;
+    await accountEntity.save();
   } catch (error) {
     logger.error(`New ACCOUNT SAVE ERROR::::::  ${error}`);
     throw error;
