@@ -53,7 +53,7 @@ services:
       DB_PORT: 5432
     volumes:
       - ./:/app
-      
+
     command:
       - ${SUB_COMMAND:-} # set SUB_COMMAND env variable to "test" to run tests
       - --multi-chain
@@ -61,12 +61,11 @@ services:
       - -f=app/avail.yaml
       - --allow-schema-migration
       - --unfinalized-blocks=false
-      - --batch-size=100
+      - --batch-size=40
       - --scale-batch-size
       - --unsafe
       - --workers=10
-    # cpuset: "0-15"  # Pin to cores 0-15 (16 physical cores)
-
+    cpuset: "0-15" # Pin to cores 0-15 (16 physical cores)
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
