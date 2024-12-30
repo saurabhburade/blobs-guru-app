@@ -262,8 +262,8 @@ export async function handleExtrinsics(
         daSize,
       }
     ),
-    await collectiveData.save(),
     await handleAccountBalancesBulk(block, priceFeed),
+    await collectiveData.save(),
   ]);
   await Promise.all([
     store.bulkUpdate("AccountEntity", accounts),

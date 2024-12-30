@@ -488,3 +488,10 @@ type KeyDataRaw @entity {
   id: ID!
   data: String
 }
+type AppLookupBaseData @entity {
+  id: ID!
+  owner: String @index
+  name: String
+  key: Int @index
+  app: AppEntity
+}
