@@ -65,7 +65,7 @@ services:
       - --scale-batch-size
       - --unsafe
       - --workers=4
-    cpuset: "0-15" # Pin to cores 0-15 (16 physical cores)
+    # cpuset: "0-15" # Pin to cores 0-15 (16 physical cores)
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
