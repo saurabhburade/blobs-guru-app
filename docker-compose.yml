@@ -51,6 +51,9 @@ services:
       DB_DATABASE: postgres
       DB_HOST: postgres
       DB_PORT: 5432
+      BATCH_SIZE: ${BATCH_SIZE:-100} # Fallback to 100 if BATCH_SIZE is not set
+      WORKERS_SIZE: ${WORKERS_SIZE:-6} # Fallback to 100 if BATCH_SIZE is not set
+
     volumes:
       - ./:/app
 
@@ -61,10 +64,10 @@ services:
       - -f=app/avail.yaml
       - --allow-schema-migration
       - --unfinalized-blocks=false
-      - --batch-size=100
+      - --batch-size=${BATCH_SIZE:-100}
       - --scale-batch-size
       - --unsafe
-      - --workers=16
+      - --workers=${WORKERS_SIZE:-6}
     # cpuset: "0-15" # Pin to cores 0-15 (16 physical cores)
 
     healthcheck:
