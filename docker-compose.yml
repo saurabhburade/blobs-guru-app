@@ -64,7 +64,7 @@ services:
       - --batch-size=100
       - --scale-batch-size
       - --unsafe
-      - --workers=4
+      - --workers=16
     # cpuset: "0-15" # Pin to cores 0-15 (16 physical cores)
 
     healthcheck:
