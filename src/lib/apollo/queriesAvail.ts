@@ -205,6 +205,16 @@ export const AVAIL_DAY_DATAS_WITH_DURATION_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesAvail
+        appDayDataParticipant {
+          nodes {
+            id
+            appId
+            app {
+              name
+            }
+            totalByteSize
+          }
+        }
       }
     }
   }
@@ -224,6 +234,15 @@ export const AVAIL_HOUR_DATAS_WITH_DURATION_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesAvail
+        appHourDataParticipant {
+          nodes {
+            id
+            app {
+              name
+            }
+            totalByteSize
+          }
+        }
       }
     }
   }
@@ -249,6 +268,23 @@ export const AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesAvail
+      }
+    }
+  }
+`;
+export const AVAIL_BALANCE_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
+  query AccountBalanceDayData($address: String, $duration: Int) {
+    accountBalanceDayData(
+      filter: { accountId: { equalTo: $address } }
+      orderBy: TIMESTAMP_LAST_DESC
+      first: $duration
+    ) {
+      totalCount
+      nodes {
+        id
+        timestampLast
+        timestampStart
+        accountId
         amountTotal
       }
     }

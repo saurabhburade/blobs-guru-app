@@ -20,7 +20,7 @@ function AvailStats({}: Props) {
     AVAIL_COLLECTIVE_STAT_QUERY,
     {
       client: availClient,
-      pollInterval: 30_000,
+      pollInterval: 3_000,
     }
   );
   const data = useMemo(() => {
@@ -139,17 +139,17 @@ function AvailStats({}: Props) {
           isLoading={statsLoading}
         />
 
-        {/* <StatCard
-        title="Total Blocks"
-        value={totalBlocksCount}
-        isLoading={statsLoading}
-      />
-      <StatCard
-        title="Block Error"
-        value={endBlock - totalBlocksCount}
-        // after={new Date(data?.collectiveData?.timestampLast).toString()}
-        isLoading={statsLoading}
-      /> */}
+        <StatCard
+          title="Total Blocks"
+          value={totalBlocksCount}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Block Error"
+          value={endBlock - totalBlocksCount}
+          // after={new Date(data?.collectiveData?.timestampLast).toString()}
+          isLoading={statsLoading}
+        />
 
         <StatCard
           title="Txn Fees"
@@ -157,17 +157,17 @@ function AvailStats({}: Props) {
           isLoading={statsLoading}
           after="AVAIL"
         />
-        {/* <StatCard
-        title="Sync"
-        value={percent}
-        isLoading={statsLoading}
-        after="%"
-      /> */}
-        {/* <StatCard
-        title="Target"
-        value={blockData?.data?.latest_block}
-        isLoading={blockData?.isLoading}
-      /> */}
+        <StatCard
+          title="Sync"
+          value={percent}
+          isLoading={statsLoading}
+          after="%"
+        />
+        <StatCard
+          title="Target"
+          value={blockData?.data?.latest_block}
+          isLoading={blockData?.isLoading}
+        />
         <StatCard
           title="Total data"
           value={dataSize?.split(" ")[0]}
@@ -201,17 +201,17 @@ function AvailStats({}: Props) {
           value={totalDataBlocksCount}
           isLoading={statsLoading}
         />
-        {/* <StatCard
-        title="Last Avail Price"
-        value={lastPriceFeed?.availPrice}
-        isLoading={statsLoading}
-      />
-      <StatCard
-        title="Last ETH Price"
-        value={lastPriceFeed?.ethPrice}
-        isLoading={statsLoading}
-      /> */}
-        {/* <div className="lg:col-span-2 h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
+        <StatCard
+          title="Last Avail Price"
+          value={lastPriceFeed?.availPrice}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Last ETH Price"
+          value={lastPriceFeed?.ethPrice}
+          isLoading={statsLoading}
+        />
+        <div className="lg:col-span-2 h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
         <p className=" text-sm opacity-50">{"Last update"}</p>
         <p>{new Date(data?.collectiveData?.timestampLast).toUTCString()}</p>
         <progress
@@ -219,7 +219,7 @@ function AvailStats({}: Props) {
           value={Number(percent)}
           max="100"
         ></progress>
-      </div> */}
+      </div>
       </div>
     </>
   );

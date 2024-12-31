@@ -17,6 +17,7 @@ import Link from "next/link";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import AvailDASizeDayChart from "./components/AvailStats/AvailDASizeDayChart";
 import AvailDASizeHourChart from "./components/AvailStats/AvailDASizeHourChart";
+import AvailDASizeDayChartHome from "./components/AvailStats/AvailDASizeDayChartHome";
 
 type Props = {};
 
@@ -115,7 +116,7 @@ function AvailSummary({}: Props) {
         <div className="w-full space-y-4">
           <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
             <div className=" p-5 h-[20em] rounded-lg bg-base-200/15">
-              <AvailDASizeHourChart duration={24} />
+              <AvailDASizeDayChartHome duration={60} />
             </div>
             <div className=" p-5 h-[20em]  rounded-lg bg-base-200/15">
               <AvailPriceDayChart duration={60} />
