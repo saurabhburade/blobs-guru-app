@@ -1,50 +1,74 @@
-import {EventRecord} from "@polkadot/types/interfaces"
+import { EventRecord } from "@polkadot/types/interfaces";
 import { SubstrateBlock, SubstrateExtrinsic } from "@subql/types";
 
 function filterExtrinsicEvents(
-    extrinsicIdx: number,
-    events: EventRecord[],
+  extrinsicIdx: number,
+  events: EventRecord[]
 ): EventRecord[] {
-    return events.filter(
-        ({ phase }) =>
-            phase.isApplyExtrinsic && phase.asApplyExtrinsic.eqn(extrinsicIdx),
-    );
+  return events.filter(
+    ({ phase }) =>
+      phase.isApplyExtrinsic && phase.asApplyExtrinsic.eqn(extrinsicIdx)
+  );
 }
 
 export function wrapExtrinsics(
-    wrappedBlock: SubstrateBlock,
+  wrappedBlock: SubstrateBlock
 ): SubstrateExtrinsic[] {
-    return wrappedBlock.block.extrinsics.map((extrinsic, idx) => {
-        const events = filterExtrinsicEvents(idx, wrappedBlock.events);
-        return {
-            idx,
-            extrinsic,
-            block: wrappedBlock,
-            events,
-            success: getExtrinsicSuccess(events),
-        };
-    });
+  return wrappedBlock.block.extrinsics.map((extrinsic, idx) => {
+    const events = filterExtrinsicEvents(idx, wrappedBlock.events);
+    return {
+      idx,
+      extrinsic,
+      block: wrappedBlock,
+      events,
+      success: getExtrinsicSuccess(events),
+    };
+  });
 }
 
 function getExtrinsicSuccess(events: EventRecord[]): boolean {
-    return (
-        events.findIndex((evt) => evt.event.method === 'ExtrinsicSuccess') > -1
-    );
+  return (
+    events.findIndex((evt) => evt.event.method === "ExtrinsicSuccess") > -1
+  );
 }
 
 export const isNumeric = (str: string) => {
-	if (typeof str != "string") return false
-	return !isNaN(str as unknown as number) && !isNaN(parseFloat(str))
-}
+  if (typeof str != "string") return false;
+  return !isNaN(str as unknown as number) && !isNaN(parseFloat(str));
+};
 
-export const roundPrice = (amount : string) => {
-	try{
-		if (!amount || amount.length === 0 || !isNumeric(amount)) throw new Error()
-		const divider = 1000000000000000000
-		const parsedPrice = (parseInt(amount)/divider).toFixed(4)
-	    const roundedPrice = (parseFloat(parsedPrice)*1000)/1000;
-		return roundedPrice
-	}catch{
-		return 0
-	}
+export const roundPrice = (amount: string) => {
+  try {
+    if (!amount || amount.length === 0 || !isNumeric(amount)) throw new Error();
+    const divider = 1000000000000000000;
+    const parsedPrice = (parseInt(amount) / divider).toFixed(4);
+    const roundedPrice = (parseFloat(parsedPrice) * 1000) / 1000;
+    return roundedPrice;
+  } catch {
+    return 0;
+  }
+};
+export function hexToUTF8(hexString: string): string {
+  try {
+    if (hexString.indexOf("0x") === 0) {
+      hexString = hexString.slice(2);
+    }
+
+    const bytes = new Uint8Array(hexString.length / 2);
+
+    for (let index = 0; index < bytes.length; index++) {
+      const start = index * 2;
+      const hexByte = hexString.slice(start, start + 2);
+      const byte = Number.parseInt(hexByte, 16);
+      if (Number.isNaN(byte) || byte < 0)
+        throw new Error(
+          `Invalid byte sequence ("${hexByte}" in "${hexString}").`
+        );
+      bytes[index] = byte;
+    }
+    let result = String.fromCharCode.apply(null, Array.from(bytes));
+    return result.replace(/\0/g, "");
+  } catch (error) {
+    return hexString;
+  }
 }

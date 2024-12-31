@@ -23,6 +23,7 @@ network:
 dataSources:
   - name: main
     startBlock: 1
+
     kind: substrate/Runtime
     mapping:
       file: ./dist/index.js

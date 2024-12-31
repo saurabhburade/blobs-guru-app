@@ -1,6 +1,7 @@
 import { SubstrateExtrinsic } from "@subql/types";
 import {
   AccountHourData,
+  AppEntity,
   CollectiveDayData,
   CollectiveHourData,
   DataSubmission,
@@ -8,6 +9,7 @@ import {
   PriceFeedMinute,
 } from "../../../types";
 import { CorrectSubstrateBlock } from "../../mappingHandlers";
+import { roundPrice } from "../../../utils";
 
 export async function handleHourData(
   block: CorrectSubstrateBlock,
@@ -82,7 +84,9 @@ export async function handleHourData(
 export async function handleAccountHourData(
   extrinsicRecord: Extrinsic,
   extrinsic: Omit<SubstrateExtrinsic, "events" | "success">,
-  priceFeed: PriceFeedMinute
+  priceFeed: PriceFeedMinute,
+  type: number = 0,
+  appRecord?: AppEntity
 ) {
   const block = extrinsic.block as CorrectSubstrateBlock;
 
@@ -93,25 +97,32 @@ export async function handleAccountHourData(
   const hourId = Math.floor(blockDate.getTime() / 3600000); // Divide by milliseconds in an hour
   const prevHourId = hourId - 1; // Divide by milliseconds in an hour
   const ext = extrinsic.extrinsic;
-
+  const id =
+    type === 1
+      ? `${extrinsicRecord.signer.toString()}-hourId-${hourId}-${appRecord!.id}`
+      : `${extrinsicRecord.signer.toString()}-hourId-${hourId}`;
+  const idPrev =
+    type === 1
+      ? `${extrinsicRecord.signer.toString()}-hourId-${prevHourId}-${
+          appRecord!.id
+        }`
+      : `${extrinsicRecord.signer.toString()}-hourId-${prevHourId}`;
   const methodData = ext.method;
   let dataSubmissionSize =
     methodData.args.length > 0 ? methodData.args[0].toString().length / 2 : 0;
-  let accountHourDataRecord = await AccountHourData.get(
-    `${extrinsicRecord.signer.toString()}-hourId-${hourId}`
-  );
+  let accountHourDataRecord = await AccountHourData.get(id);
   const oneMbInBytes = 1_048_576;
   const feesPerMb =
     (extrinsicRecord.feesRounded! / dataSubmissionSize) * oneMbInBytes;
   if (accountHourDataRecord === undefined || accountHourDataRecord === null) {
     accountHourDataRecord = AccountHourData.create({
-      id: `${extrinsicRecord.signer.toString()}-hourId-${hourId}`,
+      id: id,
       accountId: extrinsicRecord.signer.toString(),
 
       timestampLast: extrinsicRecord.timestamp,
       totalByteSize: 0,
       timestampStart: extrinsicRecord.timestamp,
-      prevHourDataId: `${extrinsicRecord.signer.toString()}-hourId-${prevHourId}`,
+      prevHourDataId: idPrev,
       avgAvailPrice: extrinsicRecord.availPrice,
       avgEthPrice: extrinsicRecord.ethPrice,
       totalDAFees: 0,
@@ -127,8 +138,59 @@ export async function handleAccountHourData(
       lastPriceFeedId: priceFeed.id,
       endBlock: 0,
       startBlock: block.block.header.number.toNumber(),
+      type,
     });
   }
+  if (type === 1) {
+    accountHourDataRecord.appId = appRecord!.id;
+    accountHourDataRecord.attachedAppId = appRecord!.id;
+  }
+
+  //  {"nonce":3014,"consumers":0,"providers":1,"sufficients":0,"data":{"free":"0x0000000000001f3f5392a7503702c202","reserved":0,"frozen":0,"flags":"0x80000000000000000000000000000000"}}
+  // @ts-ignore
+  // const { data: balance } = (await // @ts-ignore
+  // (api as any).query.system.account(extrinsicRecord.signer.toString())) as any;
+  // const { feeFrozen, free, miscFrozen, reserved, frozen } = balance;
+
+  // let balanceFrozen: bigint | undefined = undefined;
+  // if (frozen) {
+  //   balanceFrozen = frozen.toBigInt();
+  // } else {
+  //   if (miscFrozen && feeFrozen) {
+  //     const balanceFrozenMisc = miscFrozen.toBigInt();
+  //     const balanceFrozenFee = feeFrozen.toBigInt();
+  //     balanceFrozen =
+  //       balanceFrozenFee > balanceFrozenMisc
+  //         ? balanceFrozenFee
+  //         : balanceFrozenMisc;
+  //   } else if (miscFrozen) {
+  //     balanceFrozen = miscFrozen.toBigInt();
+  //   } else if (feeFrozen) {
+  //     balanceFrozen = feeFrozen.toBigInt();
+  //   }
+  // }
+  // const balanceReserved = reserved.toBigInt();
+  // const balanceFree = free.toBigInt();
+  // const amountFrozen = balanceFrozen ? balanceFrozen.toString() : "0";
+  // const amountTotal = (balanceFree + balanceReserved).toString();
+  // const amount = balanceFrozen
+  //   ? (balanceFree - balanceFrozen).toString()
+  //   : balanceFree.toString();
+  // accountHourDataRecord.amount = amount;
+  // accountHourDataRecord.amountFrozen = amountFrozen;
+  // accountHourDataRecord.amountTotal = amountTotal;
+  // accountHourDataRecord.amountRounded = roundPrice(
+  //   accountHourDataRecord.amount!
+  // );
+  // accountHourDataRecord.amountFrozenRounded = roundPrice(
+  //   accountHourDataRecord.amountFrozen
+  // );
+  // accountHourDataRecord.amountTotalRounded = roundPrice(
+  //   accountHourDataRecord.amountTotal!
+  // );
+  // accountHourDataRecord.balanceFree = Number(balanceFree);
+  // accountHourDataRecord.balanceReserved = Number(balanceReserved);
+
   accountHourDataRecord.timestampLast = extrinsicRecord.timestamp;
 
   accountHourDataRecord.avgAvailPrice =
@@ -173,5 +235,10 @@ export async function handleAccountHourData(
     accountHourDataRecord.totalFeesUSD! + Number(feesUSD);
   accountHourDataRecord.lastPriceFeedId = priceFeed.id;
   accountHourDataRecord.endBlock = block.block.header.number.toNumber();
+  accountHourDataRecord.collectiveHourDataId = hourId?.toString();
+  // if (type === 1) {
+  //   await accountHourDataRecord.save();
+  // }
   await accountHourDataRecord.save();
+  // return accountHourDataRecord;
 }

@@ -161,14 +161,11 @@ type TransferEntity @entity {
 
 type AccountEntity @entity {
   id: ID!
+  type: Int
+  attachedAppId: String
+  app: AppEntity
   validator: Boolean
   validatorSessionParticipated: Int
-  amount: String
-  amountFrozen: String
-  amountTotal: String
-  amountRounded: Float @index
-  amountFrozenRounded: Float @index
-  amountTotalRounded: Float @index
   createdAt: Date!
   updatedAt: Date!
   timestampCreation: Date! @index
@@ -189,20 +186,102 @@ type AccountEntity @entity {
   avgAvailPrice: Float
   avgEthPrice: Float
   accountDayData: [AccountDayData] @derivedFrom(field: "account")
+  accountHourData: [AccountHourData] @derivedFrom(field: "account")
   startBlock: Float
   endBlock: Float
+  accountBalance: AccountBalance @derivedFrom(field: "account")
+}
+type AppEntity @entity {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  creationRawData: String
+  creationExt: Extrinsic
+  timestampCreation: Date! @index
+  owner: String! @index
+  totalByteSize: Int! @index
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  appDayData: [AppDayData] @derivedFrom(field: "app")
+  appHourData: [AppHourData] @derivedFrom(field: "app")
+  startBlock: Float
+  endBlock: Float
+  name: String!
+}
+type AppDayData @entity {
+  id: ID!
+  app: AppEntity! @index
+  totalByteSize: Int! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float
+  endBlock: Float
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  prevDayData: AppDayData
+  collectiveDayData: CollectiveDayData
+}
+type AppHourData @entity {
+  id: ID!
+  totalByteSize: Int! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float
+  endBlock: Float
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  prevHourData: AccountHourData
+  app: AppEntity! @index
+  collectiveHourData: CollectiveHourData
 }
 
 type DataSubmission @entity {
   id: ID!
-  extrinsicId: String!
+  extrinsicIdAttched: String!
   timestamp: Date! @index
   byteSize: Int! @index
   appId: Int! @index
   signer: String! @index
   fees: Float
+  feesUSD: Float
   feesPerMb: Float @index
   priceFeed: PriceFeedMinute
+  extrinsic: Extrinsic
 }
 
 type CollectiveData @entity {
@@ -247,9 +326,15 @@ type CollectiveDayData @entity {
   avgAvailPrice: Float
   avgEthPrice: Float
   prevDayData: CollectiveDayData
+  appDayDataParticipant: [AppDayData] @derivedFrom(field: "collectiveDayData")
+  accountDayDataParticipant: [AccountDayData]
+    @derivedFrom(field: "collectiveDayData")
 }
 type AccountDayData @entity {
   id: ID!
+  type: Int
+  attachedAppId: String
+  app: AppEntity
   totalByteSize: Int! @index
   totalFees: Float
   totalDAFees: Float
@@ -264,16 +349,20 @@ type AccountDayData @entity {
   totalDataAccountsCount: Float
   lastPriceFeed: PriceFeedMinute
   timestampLast: Date! @index
-  timestampStart: Date! @index
+  timestampStart: Date!
   startBlock: Float
   endBlock: Float
   avgAvailPrice: Float
   avgEthPrice: Float
   prevDayData: AccountDayData
   account: AccountEntity! @index
+  collectiveDayData: CollectiveDayData
 }
 type AccountHourData @entity {
   id: ID!
+  type: Int
+  attachedAppId: String
+  app: AppEntity
   totalByteSize: Int! @index
   totalFees: Float
   totalDAFees: Float
@@ -288,13 +377,14 @@ type AccountHourData @entity {
   totalDataAccountsCount: Float
   lastPriceFeed: PriceFeedMinute
   timestampLast: Date! @index
-  timestampStart: Date! @index
+  timestampStart: Date!
   startBlock: Float
   endBlock: Float
   avgAvailPrice: Float
   avgEthPrice: Float
   prevHourData: AccountHourData
   account: AccountEntity! @index
+  collectiveHourData: CollectiveHourData
 }
 
 type CollectiveHourData @entity {
@@ -319,6 +409,70 @@ type CollectiveHourData @entity {
   avgAvailPrice: Float
   avgEthPrice: Float
   prevHourData: CollectiveHourData
+  appHourDataParticipant: [AppHourData]
+    @derivedFrom(field: "collectiveHourData")
+  accountHourDataParticipant: [AccountHourData]
+    @derivedFrom(field: "collectiveHourData")
+}
+
+type AccountBalance @entity {
+  id: ID!
+  account: AccountEntity! @index
+  amount: String
+  amountFrozen: String
+  amountTotal: String
+  amountRounded: Float
+  amountFrozenRounded: Float
+  amountTotalRounded: Float
+  balanceReserved: Float
+  balanceFree: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float
+  endBlock: Float
+  accountBalanceDayData: [AccountBalanceDayData]
+    @derivedFrom(field: "accountBalance")
+  accountBalanceHourData: [AccountBalanceHourData]
+    @derivedFrom(field: "accountBalance")
+}
+type AccountBalanceDayData @entity {
+  id: ID!
+  account: AccountEntity! @index
+  accountBalance: AccountBalance! @index
+  amount: String
+  amountFrozen: String
+  amountTotal: String
+  amountRounded: Float
+  amountFrozenRounded: Float
+  amountTotalRounded: Float
+  balanceReserved: Float
+  balanceFree: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  prevDayData: AccountBalanceDayData
+}
+type AccountBalanceHourData @entity {
+  id: ID!
+  account: AccountEntity! @index
+  accountBalance: AccountBalance! @index
+  amount: String
+  amountFrozen: String
+  amountTotal: String
+  amountRounded: Float
+  amountFrozenRounded: Float
+  amountTotalRounded: Float
+  balanceReserved: Float
+  balanceFree: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  prevHourData: AccountBalanceHourData
 }
 
 type AccounToUpdateValue @entity {
@@ -329,4 +483,15 @@ type BlockError @entity {
   id: ID!
   number: String
   reason: String
+}
+type KeyDataRaw @entity {
+  id: ID!
+  data: String
+}
+type AppLookupBaseData @entity {
+  id: ID!
+  owner: String @index
+  name: String
+  key: Int @index
+  app: AppEntity
 }

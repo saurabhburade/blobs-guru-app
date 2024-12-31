@@ -5,6 +5,9 @@ import { OneinchABIAbi__factory } from "../../types/contracts";
 import { ORACLE_ADDRESS } from "../helper";
 import { CorrectSubstrateBlock } from "../mappingHandlers";
 import fetch from "node-fetch";
+const ETH_RPC =
+  process.env.ETH_RPC ||
+  "https://lb.drpc.org/ogrpc?network=ethereum&dkey=At2bhbEKA0nUjDj8Pdkc2m37qqBIxBsR768wIlZWwHzR";
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -107,11 +110,11 @@ export async function handleNewPriceMinute({
 
     //
   }
-  logger.info(
-    `Expected ETH BLOCK::::::  ${JSON.stringify(ethBlockContext)} AT ${Number(
-      block.timestamp.getTime() / 1000
-    )} ::: Date :: ${blockDate}`
-  );
+  // logger.info(
+  //   `Expected ETH BLOCK::::::  ${JSON.stringify(ethBlockContext)} AT ${Number(
+  //     block.timestamp.getTime() / 1000
+  //   )} ::: Date :: ${blockDate}`
+  // );
   try {
     let priceFeedMinute = await PriceFeedMinute.get(minuteId.toString());
 
@@ -129,46 +132,40 @@ export async function handleNewPriceMinute({
         false,
       ]);
 
-      const rpcDataEth = await fetch(
-        "https://lb.drpc.org/ogrpc?network=ethereum&dkey=ArT8p5S52UM0rgz3Qb99bmtcIwWxtHwR75vAuivZK8k9",
-        {
-          method: "POST",
-          headers: {},
-          body: JSON.stringify({
-            id: 1,
-            jsonrpc: "2.0",
-            method: "eth_call",
-            params: [
-              {
-                to: ORACLE_ADDRESS,
-                data: encodedEth,
-              },
-              // @ts-ignore
-              `0x${ethBlockContext.height.toString(16)}`,
-            ],
-          }),
-        }
-      );
-      const rpcDataAvail = await fetch(
-        "https://lb.drpc.org/ogrpc?network=ethereum&dkey=ArT8p5S52UM0rgz3Qb99bmtcIwWxtHwR75vAuivZK8k9",
-        {
-          method: "POST",
-          headers: {},
-          body: JSON.stringify({
-            id: 1,
-            jsonrpc: "2.0",
-            method: "eth_call",
-            params: [
-              {
-                to: ORACLE_ADDRESS,
-                data: encodedAvail,
-              },
-              // @ts-ignore
-              `0x${ethBlockContext.height.toString(16)}`,
-            ],
-          }),
-        }
-      );
+      const rpcDataEth = await fetch(ETH_RPC, {
+        method: "POST",
+        headers: {},
+        body: JSON.stringify({
+          id: 1,
+          jsonrpc: "2.0",
+          method: "eth_call",
+          params: [
+            {
+              to: ORACLE_ADDRESS,
+              data: encodedEth,
+            },
+            // @ts-ignore
+            `0x${ethBlockContext.height.toString(16)}`,
+          ],
+        }),
+      });
+      const rpcDataAvail = await fetch(ETH_RPC, {
+        method: "POST",
+        headers: {},
+        body: JSON.stringify({
+          id: 1,
+          jsonrpc: "2.0",
+          method: "eth_call",
+          params: [
+            {
+              to: ORACLE_ADDRESS,
+              data: encodedAvail,
+            },
+            // @ts-ignore
+            `0x${ethBlockContext.height.toString(16)}`,
+          ],
+        }),
+      });
       const ethResultRaw: any = await rpcDataEth.json();
       const availResultRaw: any = await rpcDataAvail.json();
       // if (ethResultRaw) {
@@ -185,12 +182,12 @@ export async function handleNewPriceMinute({
         availResultRaw.result
       );
 
-      if (decodedEth) {
-        logger.info(`New ETH Price Feed::::::  ${decodedEth.toString()}`);
-      }
-      if (decodedAvail) {
-        logger.info(`New AVAIL Price Feed::::::  ${decodedAvail.toString()}`);
-      }
+      // if (decodedEth) {
+      //   logger.info(`New ETH Price Feed::::::  ${decodedEth.toString()}`);
+      // }
+      // if (decodedAvail) {
+      //   logger.info(`New AVAIL Price Feed::::::  ${decodedAvail.toString()}`);
+      // }
       const availPrice = Number(decodedAvail.toString()) / 1e6;
       const ethPrice = Number(decodedEth.toString()) / 1e6;
       const availBlock = block.block.header.number.toNumber();
@@ -210,14 +207,14 @@ export async function handleNewPriceMinute({
       });
       priceFeedMinute.availPrice = availPrice;
       priceFeedMinute.ethPrice = ethPrice;
-      logger.info(
-        `SAVING NEW PRICE MINUTE ::::  ${priceFeedMinute.ethPrice.toString()} :: ID:: ${minuteId} :: AT:: ${blockDate}`
-      );
+      // logger.info(
+      //   `SAVING NEW PRICE MINUTE ::::  ${priceFeedMinute.ethPrice.toString()} :: ID:: ${minuteId} :: AT:: ${blockDate}`
+      // );
       await priceFeedMinute.save();
     } else {
-      logger.info(
-        `PRICE ALREADY EXIST ::::  ${priceFeedMinute.ethPrice.toString()} :: ID:: ${minuteId} :: AT:: ${blockDate}`
-      );
+      // logger.info(
+      //   `PRICE ALREADY EXIST ::::  ${priceFeedMinute.ethPrice.toString()} :: ID:: ${minuteId} :: AT:: ${blockDate}`
+      // );
     }
 
     // logger.info(
