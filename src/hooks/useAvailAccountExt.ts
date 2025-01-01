@@ -21,8 +21,11 @@ export const useAvailAccountExt = ({
     pollInterval: 15_000, // Every 15 sec
     client: availClient,
   });
-  const extIds = data?.extrinsics?.nodes?.map(
-    (ext: any) => `${ext?.blockHeight}-${ext?.extrinsicIndex}`
+  const extIds = data?.extrinsics?.nodes?.map((ext: any) => `${ext?.id}`);
+  console.log(
+    `🚀 ~ file: useAvailAccountExt.ts:27 ~ data:`,
+    data?.extrinsics?.nodes,
+    { extIds }
   );
   const { data: daSubs, loading: daSubsloading } = useQuery(
     AVAIL_DA_EXT_FILTER_LIMIT_QUERY,
@@ -37,7 +40,7 @@ export const useAvailAccountExt = ({
   );
   const filteredData = data?.extrinsics?.nodes?.map((ext: any) => {
     const foundDa = daSubs?.dataSubmissions?.nodes?.find(
-      (d: any) => d.extrinsicId === `${ext?.blockHeight}-${ext?.extrinsicIndex}`
+      (d: any) => d.extrinsicId === `${ext?.id}`
     );
     return { ...ext, dataSubmission: foundDa };
   });

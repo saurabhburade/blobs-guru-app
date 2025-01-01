@@ -49,6 +49,7 @@ export const AVAIL_ACCOUNTS_LIMIT_QUERY = gql`
     }
   }
 `;
+
 export const AVAIL_APP_ACCOUNTS_LIMIT_QUERY = gql`
   query AccountEntities($skip: Int, $limit: Int, $appId: String) {
     accountEntities(
@@ -77,6 +78,26 @@ export const AVAIL_APP_ACCOUNTS_LIMIT_QUERY = gql`
 export const AVAIL_APPS_LIMIT_QUERY = gql`
   query AppEntities($skip: Int, $limit: Int) {
     appEntities(orderBy: TOTAL_BYTE_SIZE_DESC, first: $limit, offset: $skip) {
+      totalCount
+      nodes {
+        id
+        name
+        totalByteSize
+        totalFeesAvail
+        totalExtrinsicCount
+        totalDAFees
+        endBlock
+        startBlock
+        totalDataSubmissionCount
+        totalFeesUSD
+        totalDAFeesUSD
+      }
+    }
+  }
+`;
+export const AVAIL_APPS_QUERY = gql`
+  query AppEntities {
+    appEntities(orderBy: TOTAL_BYTE_SIZE_DESC) {
       totalCount
       nodes {
         id
