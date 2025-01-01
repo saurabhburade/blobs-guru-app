@@ -208,6 +208,7 @@ export default function AvailDASizeDayChartHome({
             allowDataOverflow
             axisLine={false}
             tickLine={false}
+            tickFormatter={(v) => formatBytes(v,1)}
           />
           <XAxis
             dataKey="timestamp3"
