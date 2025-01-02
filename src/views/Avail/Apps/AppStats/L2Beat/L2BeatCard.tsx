@@ -115,6 +115,9 @@ function L2BeatCard({ account }: any) {
   if (!l2BeatAccountDetails && !isLoading) {
     return null;
   }
+  if (isLoading) {
+    return null;
+  }
   return (
     <div className="bg-base-100/50 border-base-300/30 border rounded-lg  ">
       <div className="flex gap-2 flex-wrap items-center border-b border-base-200 justify-between p-4">
