@@ -222,7 +222,7 @@ type AppEntity @entity {
 type AppDayData @entity {
   id: ID!
   app: AppEntity! @index
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -246,7 +246,7 @@ type AppDayData @entity {
 }
 type AppHourData @entity {
   id: ID!
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -286,7 +286,7 @@ type DataSubmission @entity {
 
 type CollectiveData @entity {
   id: ID!
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -306,7 +306,7 @@ type CollectiveData @entity {
 }
 type CollectiveDayData @entity {
   id: ID!
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -335,7 +335,7 @@ type AccountDayData @entity {
   type: Int
   attachedAppId: String
   app: AppEntity
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -363,7 +363,7 @@ type AccountHourData @entity {
   type: Int
   attachedAppId: String
   app: AppEntity
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -389,7 +389,7 @@ type AccountHourData @entity {
 
 type CollectiveHourData @entity {
   id: ID!
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -493,5 +493,5 @@ type AppLookupBaseData @entity {
   owner: String @index
   name: String
   key: Int @index
-  app: AppEntity
+  app:AppEntity
 }
