@@ -57,6 +57,9 @@ export const gaEvent = ({ action, category, label, value }: any) => {
 };
 
 export function getColorForIndex(index: number, totalColors: number) {
+  if (index === 0) {
+    return "#00AAFF";
+  }
   // Use a golden ratio conjugate to get more distinguishable colors
   const goldenRatioConjugate = 0.518033; // More precise value
   let hue = index / totalColors + goldenRatioConjugate;
@@ -271,4 +274,3 @@ export const dateTimeString = new Intl.DateTimeFormat("en-US", {
   month: "2-digit",
   year: "2-digit",
 });
-
