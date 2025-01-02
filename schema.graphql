@@ -493,5 +493,5 @@ type AppLookupBaseData @entity {
   owner: String @index
   name: String
   key: Int @index
-  app:AppEntity
+  app: AppEntity
 }
