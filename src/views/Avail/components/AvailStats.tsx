@@ -96,7 +96,7 @@ function AvailStats({}: Props) {
   }, [blockData?.data, endBlock]);
   return (
     <>
-      <div className="grid lg:grid-cols-4  gap-2">
+      <div className="grid lg:grid-cols-4  gap-4">
         {appsData?.formattedOp?.map((app, idx) => {
           return (
             <div
