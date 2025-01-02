@@ -99,13 +99,11 @@ export default function AvailDASizeDayChartHome({
       for (let idx = 0; idx < appList?.length; idx++) {
         const appDayData = appList[idx];
         if (appDayData) {
-          console.log("appDayData 125", appDayData);
           // @ts-ignore
           appDayDatasMap[`${appDayData?.app?.name}`] =
             appDayData?.totalByteSize;
         }
       }
-      console.log("appDayData appDayDataParticipants", appDayDatasMap, appList);
 
       const dayData = datas[index];
       const rawChartData = {
@@ -116,13 +114,11 @@ export default function AvailDASizeDayChartHome({
       chartDataList.push(rawChartData);
     }
     appDayDataParticipants?.map((pList: any) => pList);
-    // console.log(
-    //   `🚀 ~ file: AvailDASizeDayChart.tsx:110 ~ keys:`,
-    //   keysSet,
-    //   _.flatten(keys),
-    //   chartDataList
-    // );
-    return { chartDataList, keys: keysSet };
+
+    return {
+      chartDataList,
+      keys: keysSet,
+    };
   }, [data?.collectiveDayData]);
 
   const cumulativeData = useMemo(() => {
@@ -168,7 +164,7 @@ export default function AvailDASizeDayChartHome({
           width={500}
           height={100}
           data={chartDataFormated?.chartDataList}
-          margin={{ top: 30, right: 30, left: -20, bottom: 30 }}
+          margin={{ top: 30, right: 20, left: -20, bottom: 30 }}
         >
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -191,14 +187,14 @@ export default function AvailDASizeDayChartHome({
             fill="url(#colorUv)"
             radius={10}
           ></Bar> */}
-          {chartDataFormated?.keys?.map((key, idx) => {
+          {chartDataFormated?.keys?.reverse()?.map((key, idx) => {
             return (
               <Bar
                 key={key}
                 dataKey={key}
                 fill={getColorForIndex(idx, chartDataFormated?.keys?.length)}
                 stackId="a"
-                radius={[10, 10, 0, 0]}
+                radius={[0, 0, 0, 0]}
               ></Bar>
             );
           })}
@@ -208,7 +204,10 @@ export default function AvailDASizeDayChartHome({
             allowDataOverflow
             axisLine={false}
             tickLine={false}
-            tickFormatter={(v) => formatBytes(v,1)}
+            tickFormatter={(v) => {
+              const [num, denom] = formatBytes(v, 1).split(" ");
+              return `${Number(num).toFixed(0)} ${denom}`;
+            }}
           />
           <XAxis
             dataKey="timestamp3"
@@ -217,7 +216,7 @@ export default function AvailDASizeDayChartHome({
             tickLine={false}
             allowDataOverflow
             axisLine={false}
-            tickMargin={10}
+            tickMargin={15}
           />
         </BarChart>
       </ResponsiveContainer>
@@ -227,6 +226,7 @@ export default function AvailDASizeDayChartHome({
 const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   // const kv = _.last(_.toPairs(payload[0]?.payload));
   if (active && payload && payload.length) {
+    const sortedPayload = _.orderBy(payload, ["value"], ["desc"]);
     return (
       <>
         <div
@@ -241,7 +241,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
           <div className="px-4 space-y-3">
             {/* <p className=" ">DA Size : {`${payload[0]?.payload?.size}`}</p> */}
 
-            {payload?.map((p: any, idx: any) => {
+            {sortedPayload?.map((p: any, idx: any) => {
               return (
                 <div className="flex items-center gap-2" key={p?.dataKey}>
                   <span

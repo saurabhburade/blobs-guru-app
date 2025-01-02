@@ -116,7 +116,7 @@ function AvailSummary({}: Props) {
         <div className="w-full space-y-4">
           <div className="grid lg:grid-cols-2 lg:h-[20em] gap-4">
             <div className=" p-5 h-[20em] rounded-lg bg-base-200/15">
-              <AvailDASizeDayChartHome duration={60} />
+              <AvailDASizeDayChartHome duration={30} />
             </div>
             <div className=" p-5 h-[20em]  rounded-lg bg-base-200/15">
               <AvailPriceDayChart duration={60} />

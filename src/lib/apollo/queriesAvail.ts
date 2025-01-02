@@ -209,6 +209,26 @@ export const AVAIL_ACCOUNT_SEARCH = gql`
         id
       }
     }
+    appEntities(filter: { address: { like: $address } }) {
+      nodes {
+        id
+      }
+    }
+  }
+`;
+export const AVAIL_SEARCH = gql`
+  query SearchEntities($query: String!) {
+    accountEntities(filter: { address: { includesInsensitive: $query } type:{equalTo:0} } first:2) {
+      nodes {
+        id
+      }
+    }
+    appEntities(filter: { name: { includesInsensitive: $query } }) {
+      nodes {
+        id
+        name
+      }
+    }
   }
 `;
 export const AVAIL_DAY_DATAS_WITH_DURATION_QUERY = gql`
@@ -226,7 +246,7 @@ export const AVAIL_DAY_DATAS_WITH_DURATION_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesAvail
-        appDayDataParticipant {
+        appDayDataParticipant(orderBy: TOTAL_BYTE_SIZE_DESC) {
           nodes {
             id
             appId

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import React, { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
-import { cn, formatAddress, formatBytes } from "@/lib/utils";
+import { cn, formatAddress, formatBytes, formatWrapedText } from "@/lib/utils";
 import BigNumber from "bignumber.js";
 import {
   getAccountDetailsFromAddressBook,
@@ -73,8 +73,7 @@ function AvailAppStatCard({ acc, isLoading, className, chartData }: any) {
                 <p className=""> {accountDetails?.name}</p>
               ) : (
                 <>
-                  <p className="hidden lg:block"> {acc?.name}</p>
-                  <p className="lg:hidden block"> {formatAddress(acc?.name)}</p>
+                  <p className=""> {formatWrapedText(acc?.name)}</p>
                 </>
               )}
             </Link>

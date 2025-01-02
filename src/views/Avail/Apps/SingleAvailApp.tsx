@@ -24,6 +24,7 @@ import { useAvailAccountExt } from "@/hooks/useAvailAccountExt";
 import AvailAppStatCard from "./AvailAppStatCard";
 import AvailAppStats from "./AppStats/AvailAppStats";
 import TopAvailAppAccounts from "./AppStats/TopAvailAppAccounts";
+import L2BeatCard from "./AppStats/L2Beat/L2BeatCard";
 
 type Props = {
   appId: string;
@@ -49,6 +50,8 @@ function SingleAvailApp({ appId }: Props) {
         <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
           <h2 className="lg:text-xl text-xl font-semibold">Avail Apps</h2>
         </div>
+        <L2BeatCard account={appId} />
+
         <div className="w-full space-y-4 ">
           <div className="">
             <AvailAppStatCard acc={data?.appEntity} isLoading={loading} />
