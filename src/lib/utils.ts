@@ -61,7 +61,7 @@ export function getColorForIndex(index: number, totalColors: number) {
     return "#00AAFF";
   }
   // Use a golden ratio conjugate to get more distinguishable colors
-  const goldenRatioConjugate = 0.518033; // More precise value
+  const goldenRatioConjugate = 0.618033; // More precise value
   let hue = index / totalColors + goldenRatioConjugate;
   hue = hue % 1; // Keep the hue within 0-1 range
 
