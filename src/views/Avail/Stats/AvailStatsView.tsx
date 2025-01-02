@@ -42,7 +42,7 @@ function AvailStatsView({}: Props) {
 
         <AvailDAUtilisation />
         <AvailStatsWithDuration />
-        <AvailStats />
+        {/* <AvailStats /> */}
         <PoweredBy />
         <Footer />
       </div>
