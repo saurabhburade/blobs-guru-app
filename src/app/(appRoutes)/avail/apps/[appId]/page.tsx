@@ -1,15 +1,24 @@
-"use client";
 import SingleAvailApp from "@/views/Avail/Apps/SingleAvailApp";
 import SingleAvailAccount from "@/views/Avail/SingleAvailAccount";
-import { useParams } from "next/navigation";
-import React from "react";
+import { Metadata, ResolvingMetadata } from "next";
 
-type Props = {};
+type Props = {
+  params: { appId: string };
+};
 
-function SingleAvailAccPage({}: Props) {
-  const { appId = "" } = useParams();
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const appId = params.appId;
 
-  return <SingleAvailApp appId={appId as string} />;
+  return {
+    title: `Avail App | ${appId}`,
+    description: `Explore Avail DA stats for app id ${appId}`,
+    openGraph: {
+      images: ["/summary-avail.jpeg"],
+    },
+  };
 }
 
-export default SingleAvailAccPage;
+export default function SingleAvailAppPage({ params }: Props) {
+  const { appId } = params;
+  return <SingleAvailApp appId={appId as string} />;
+}
