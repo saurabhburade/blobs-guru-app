@@ -272,6 +272,47 @@ export const AVAIL_DAY_DATAS_WITH_DURATION_QUERY = gql`
               name
             }
             totalByteSize
+            totalExtrinsicCount
+            totalDataSubmissionCount
+            totalFeesUSD
+            totalDAFeesUSD
+            totalFeesAvail
+          }
+        }
+      }
+    }
+  }
+`;
+export const AVAIL_DAY_DATAS_WITH_DURATION_WITH_ACCOUNTS_QUERY = gql`
+  query CollectiveDayData($duration: Int, $limit: Int) {
+    collectiveDayData(orderBy: TIMESTAMP_LAST_DESC, first: $duration) {
+      totalCount
+      nodes {
+        id
+        totalFees
+        timestampLast
+        timestampStart
+        accountDayDataParticipant: accountDayDataParticipant(
+          first: $limit
+          orderBy: TOTAL_EXTRINSIC_COUNT_DESC
+          filter: { type: { equalTo: 0 } }
+        ) {
+          totalCount
+          nodes {
+            totalExtrinsicCount
+            accountId
+          }
+        }
+        accountDayDataParticipantOthers: accountDayDataParticipant(
+          orderBy: TOTAL_EXTRINSIC_COUNT_DESC
+          offset: $limit
+          filter: { type: { equalTo: 0 } }
+        ) {
+          totalCount
+          aggregates {
+            sum {
+              totalExtrinsicCount
+            }
           }
         }
       }

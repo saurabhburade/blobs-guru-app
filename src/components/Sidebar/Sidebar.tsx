@@ -166,6 +166,15 @@ function Sidebar({}: Props) {
                     </Link>
                   </li>
                   <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/avail/stats">
+                      <span>
+                        <IoStatsChart />
+                      </span>
+                      Stats
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
                 </ul>
               </div>
             </div>
