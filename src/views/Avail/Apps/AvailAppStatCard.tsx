@@ -10,9 +10,12 @@ import {
 } from "lucide-react";
 import React, { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
-import { cn, formatAddress, formatBytes } from "@/lib/utils";
+import { cn, formatAddress, formatBytes, formatWrapedText } from "@/lib/utils";
 import BigNumber from "bignumber.js";
-import { getAccountDetailsFromAddressBook } from "@/configs/constants";
+import {
+  getAccountDetailsFromAddressBook,
+  getAppDetailsFromAppBook,
+} from "@/configs/constants";
 import { useQuery } from "@apollo/client";
 import { ACCOUNT_DAY_DATAS_QUERY } from "@/lib/apollo/queries";
 import Link from "next/link";
@@ -26,15 +29,12 @@ import {
   YAxis,
 } from "recharts";
 import ImageWithFallback from "@/components/ImageWithFallback";
-import {
-  AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY,
-  AVAIL_BALANCE_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY,
-} from "@/lib/apollo/queriesAvail";
+import { AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY } from "@/lib/apollo/queriesAvail";
 import { availClient } from "@/lib/apollo/client";
 
 type Props = {};
-function AvailAccountStatCard({ acc, isLoading, className }: any) {
-  const accountDetails = getAccountDetailsFromAddressBook(acc?.id);
+function AvailAppStatCard({ acc, isLoading, className, chartData }: any) {
+  const accountDetails = getAppDetailsFromAppBook(acc?.id);
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));
   }, [acc?.totalByteSize]);
@@ -58,19 +58,22 @@ function AvailAccountStatCard({ acc, isLoading, className }: any) {
         )}
         {!isLoading && (
           <>
-            <User
-              width={40}
-              height={40}
-              className="bg-base-200 p-2 rounded-lg"
+            <ImageWithFallback
+              src={
+                accountDetails?.logoUri ||
+                `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+              }
+              width={24}
+              height={24}
+              alt=""
+              className="rounded-lg"
             />
-
-            <Link href={`/avail/${acc?.id}`}>
+            <Link href={`/avail/apps/${acc?.id}`}>
               {accountDetails?.name ? (
                 <p className=""> {accountDetails?.name}</p>
               ) : (
                 <>
-                  <p className="hidden lg:block"> {acc?.id}</p>
-                  <p className="lg:hidden block"> {formatAddress(acc?.id)}</p>
+                  <p className=""> {formatWrapedText(acc?.name)}</p>
                 </>
               )}
             </Link>
@@ -157,15 +160,15 @@ function AvailAccountStatCard({ acc, isLoading, className }: any) {
             </div>
           </div>
         )}
-        <div className="p-5  bg-base-100/50    border-base-300/20 w-full ">
+        {/* <div className="p-5  bg-base-100/50    border-base-300/20 w-full ">
           {acc?.id && !isLoading && <AccountExtChart account={acc?.id} />}
-        </div>
+        </div> */}
       </div>
     </div>
   );
 }
 
-export default AvailAccountStatCard;
+export default AvailAppStatCard;
 const dateString = new Intl.DateTimeFormat("en-US", {
   timeZoneName: "short",
   weekday: "short",
@@ -176,41 +179,37 @@ const dateString = new Intl.DateTimeFormat("en-US", {
   minute: "2-digit",
 });
 const AccountExtChart = ({ account }: { account: string }) => {
-  const { data } = useQuery(
-    AVAIL_BALANCE_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY,
-    {
-      variables: {
-        address: account,
-        duration: 15,
-      },
-      client: availClient,
-    }
-  );
+  const { data } = useQuery(AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY, {
+    variables: {
+      address: account,
+      duration: 15,
+    },
+    client: availClient,
+  });
 
   const chartData = useMemo(() => {
     const formatter = new Intl.DateTimeFormat("en-US", { weekday: "long" });
-    const datas = data?.accountBalanceDayData?.nodes?.map((rawData: any) => {
+    const datas = data?.accountDayData?.nodes?.map((rawData: any) => {
       const day = formatter.format(new Date(rawData?.timestampStart));
 
       return {
         ...rawData,
 
         sizeValue: Number(rawData?.totalExtrinsicCount),
-        amountTotalF: new BigNumber(rawData?.amountTotal).div(1e18).toFormat(4),
-
-        amountTotal: new BigNumber(rawData?.amountTotal).div(1e18).toNumber(),
-
+        size: formatBytes(Number(rawData?.totalByteSize)),
         formattedAddress: formatAddress(rawData?.accountId),
-
-
-
+        totalExtrinsicCount: rawData?.totalExtrinsicCount?.toString(),
+        totalFeeAvail: new BigNumber(rawData?.totalFees).toFormat(4),
+        totalExtrinsicCountF: new BigNumber(
+          rawData?.totalExtrinsicCount
+        ).toFormat(),
         timestamp: day,
         timestampF: dateString.format(new Date(rawData?.timestampStart)),
         timestamp2: new Date(rawData?.timestampStart).toDateString(),
       };
     });
     return datas?.reverse();
-  }, [data?.accountBalanceDayData]);
+  }, [data?.accountDayData]);
 
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
@@ -227,12 +226,14 @@ const AccountExtChart = ({ account }: { account: string }) => {
         </defs>
         <Legend
           verticalAlign="top"
-          content={() => <span className="text-xs">Last 15 days balance</span>}
+          content={() => (
+            <span className="text-xs">Last 15 days ext count</span>
+          )}
         />
         <Tooltip content={CustomTooltipRaw} />
         <Area
           type="monotone"
-          dataKey="amountTotal"
+          dataKey="sizeValue"
           stroke="#8884d8"
           fillOpacity={1}
           fill="url(#colorUvAccStatCard)"
@@ -256,9 +257,11 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
         <hr className="border-base-200" />
         <div className="px-4 space-y-3">
           <p className=" ">
-            AVAIL Balance: {`${payload[0]?.payload?.amountTotalF}`}{" "}
+            Ext Count: {`${payload[0]?.payload?.totalExtrinsicCountF}`}{" "}
           </p>
-        
+          <p className=" ">
+            Fee : {`${payload[0]?.payload?.totalFeeAvail}`} AVAIL
+          </p>
         </div>
       </div>
     );

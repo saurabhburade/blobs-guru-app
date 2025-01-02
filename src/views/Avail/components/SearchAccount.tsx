@@ -1,7 +1,7 @@
 import ImageWithFallback from "@/components/ImageWithFallback";
 import { availClient } from "@/lib/apollo/client";
-import { AVAIL_ACCOUNT_SEARCH } from "@/lib/apollo/queriesAvail";
-import { formatAddress, formatBytes } from "@/lib/utils";
+import { AVAIL_ACCOUNT_SEARCH, AVAIL_SEARCH } from "@/lib/apollo/queriesAvail";
+import { formatAddress, formatBytes, formatWrapedText } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import { isValidAddress } from "avail-js-sdk";
 
@@ -14,9 +14,10 @@ function SearchAccount({}: Props) {
   const [addressQuery, setAddressQuery] = useState("");
   const [hash, setHash] = useState("");
 
-  const { data, loading, error } = useQuery(AVAIL_ACCOUNT_SEARCH, {
+  const { data, loading, error } = useQuery(AVAIL_SEARCH, {
     variables: {
       address: hash,
+      query: hash,
     },
     client: availClient,
   });
@@ -26,19 +27,19 @@ function SearchAccount({}: Props) {
       <div tabIndex={0} role="button" className=" w-full">
         <div className="join  w-full  ">
           <input
-            className="input w-full input-bordered outline-none active:outline-none  focus:outline-none join-item  "
-            placeholder="Search Account"
+            className="input w-full input-bordered outline-none active:outline-none placeholder:text-sm focus:outline-none join-item  "
+            placeholder="Search Account / App"
             value={addressQuery}
             onChange={(e) => {
               const v = e.target.value;
-              if (v?.length <= 48) {
-                setAddressQuery(v);
-              }
-              if (v?.length === 48 && isValidAddress(v)) {
-                setHash(v);
-              } else {
-                setHash("");
-              }
+              // if (v?.length <= 48) {
+              setAddressQuery(v?.toString());
+              // }
+              // if (v?.length === 48 && isValidAddress(v)) {
+              setHash(v?.toString());
+              // } else {
+              //   setHash("");
+              // }
             }}
           />
           <button className="btn join-item rounded-r-full">Search</button>
@@ -52,7 +53,10 @@ function SearchAccount({}: Props) {
           {data?.accountEntities?.nodes?.map((d: any) => {
             return (
               <li key={d?.id}>
-                <Link href={""} className="w-full hover:!bg-transparent">
+                <Link
+                  href={`/avail/${d?.id}`}
+                  className="w-full hover:!bg-base-200/50"
+                >
                   <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
                     <ImageWithFallback
                       src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
@@ -62,28 +66,42 @@ function SearchAccount({}: Props) {
                       alt=""
                     />
                   </div>
-                  <Link
-                    className="text-primary lg:hidden block"
-                    href={`/avail/${d?.id}`}
-                  >
-                    {formatAddress(d?.id)}
-                  </Link>
-                  <Link
-                    className="text-primary hidden lg:block"
-                    href={`/avail/${d?.id}`}
-                  >
-                    {formatAddress(d?.id)}
-                  </Link>
+                  <p className="text-primary">{formatAddress(d?.id)}</p>
+                </Link>
+              </li>
+            );
+          })}
+          {data?.appEntities?.nodes?.map((d: any) => {
+            return (
+              <li key={d?.id}>
+                <Link
+                  href={`/avail/apps/${d?.id}`}
+                  className="w-full hover:!bg-base-200/50"
+                >
+                  <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+                    <ImageWithFallback
+                      src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+                      className="rounded-lg"
+                      width={24}
+                      height={24}
+                      alt=""
+                    />
+                  </div>
+                  <p className="text-primary">
+                    {formatWrapedText(d?.name, 6, 6)}
+                  </p>
                 </Link>
               </li>
             );
           })}
 
-          {!loading && data?.accountEntities?.nodes?.length <= 0 && (
-            <li>
-              <div className="p-5 hover:!bg-transparent">Invalid account</div>
-            </li>
-          )}
+          {!loading &&
+            data?.accountEntities?.nodes?.length <= 0 &&
+            data?.appEntities?.nodes?.length <= 0 && (
+              <li>
+                <div className="p-5 hover:!bg-transparent">Invalid query</div>
+              </li>
+            )}
           {loading && (
             <li className="hover:!bg-transparent">
               <div className="w-full hover:!bg-transparent">

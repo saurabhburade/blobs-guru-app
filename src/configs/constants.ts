@@ -1,5 +1,6 @@
 import { http, createConfig } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
+import { AVAIL_APP_BOOK } from "./availProjects";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 export const MAX_BLOBS_TARGET = process.env.NEXT_PUBLIC_MAX_BLOBS_TARGET || 6;
@@ -182,6 +183,15 @@ export const ADDRESS_BOOK: AddressBook = {
 };
 export const getAccountDetailsFromAddressBook = (address: string) => {
   const d = ADDRESS_BOOK[address?.toLowerCase()];
+  if (d) {
+    return d;
+  }
+  return {
+    address: d,
+  };
+};
+export const getAppDetailsFromAppBook = (appId: string) => {
+  const d = AVAIL_APP_BOOK[appId?.toLowerCase()];
   if (d) {
     return d;
   }
