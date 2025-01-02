@@ -14,6 +14,7 @@ import { CiGrid2H } from "react-icons/ci";
 import { IoIosApps } from "react-icons/io";
 
 import ImageWithFallback from "../ImageWithFallback";
+import { User } from "lucide-react";
 
 type Props = {};
 
@@ -153,6 +154,15 @@ function Sidebar({}: Props) {
                         <IoIosApps />
                       </span>
                       Apps
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/avail/accounts">
+                      <span>
+                        <User />
+                      </span>
+                      Accounts
                     </Link>
                   </li>
                   <hr className="border-base-200" />

@@ -166,11 +166,8 @@ const AccountRow = ({ acc }: any) => {
           <div className="flex items-center gap-2">
             <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
               <ImageWithFallback
-                src={
-                  accountDetails?.logoUri ||
-                  `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/${acc?.l2beat_slug}.png`
-                }
-                className="rounded-lg"
+                src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+                className="rounded-lg "
                 width={24}
                 height={24}
                 alt=""

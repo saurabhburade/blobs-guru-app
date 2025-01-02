@@ -18,6 +18,8 @@ import ImageWithFallback from "@/components/ImageWithFallback";
 import AvailDASizeDayChart from "./components/AvailStats/AvailDASizeDayChart";
 import AvailDASizeHourChart from "./components/AvailStats/AvailDASizeHourChart";
 import AvailDASizeDayChartHome from "./components/AvailStats/AvailDASizeDayChartHome";
+import BlocksList from "./Blocks/AvailBlocksList";
+import AvailBlocksList from "./Blocks/AvailBlocksList";
 
 type Props = {};
 
@@ -123,7 +125,8 @@ function AvailSummary({}: Props) {
             </div>
           </div>
           <AvailStats />
-          <AvailAccounts />
+          <AvailBlocksList />
+          {/* <AvailAccounts /> */}
           <PoweredBy />
           <Footer />
         </div>

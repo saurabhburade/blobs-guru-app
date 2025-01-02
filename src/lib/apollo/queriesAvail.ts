@@ -170,6 +170,21 @@ export const AVAIL_ACCOUNT_EXT_LIMIT_QUERY = gql`
     }
   }
 `;
+export const AVAIL_BLOCKS_LIMIT_QUERY = gql`
+  query Blocks($skip: Int, $limit: Int) {
+    blocks(orderBy: TIMESTAMP_DESC, first: $limit, offset: $skip) {
+      nodes {
+        nbEvents
+        timestamp
+        id
+        blockFee
+        nbExtrinsics
+        nbEvents
+        availPrice
+      }
+    }
+  }
+`;
 export const AVAIL_DA_EXT_FILTER_LIMIT_QUERY = gql`
   query DataSubmission($extrinsicIds: [String!]!) {
     dataSubmissions(filter: { extrinsicId: { in: $extrinsicIds } }) {
@@ -218,7 +233,10 @@ export const AVAIL_ACCOUNT_SEARCH = gql`
 `;
 export const AVAIL_SEARCH = gql`
   query SearchEntities($query: String!) {
-    accountEntities(filter: { address: { includesInsensitive: $query } type:{equalTo:0} } first:2) {
+    accountEntities(
+      filter: { address: { includesInsensitive: $query }, type: { equalTo: 0 } }
+      first: 2
+    ) {
       nodes {
         id
       }
