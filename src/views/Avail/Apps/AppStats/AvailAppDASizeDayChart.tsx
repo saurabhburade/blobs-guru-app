@@ -6,8 +6,7 @@ import {
 } from "@/lib/apollo/queries";
 import {
   AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY,
-  AVAIL_DAY_DATAS_WITH_DURATION_QUERY,
-  AVAIL_HOUR_DATAS_WITH_DURATION_QUERY,
+  AVAIL_APP_DAY_DATAS_WITH_DURATION_QUERY,
 } from "@/lib/apollo/queriesAvail";
 import { formatDateDDMM } from "@/lib/time";
 import { formatAddress, formatBytes } from "@/lib/utils";
@@ -34,20 +33,23 @@ const dateString = new Intl.DateTimeFormat("en-US", {
   day: "2-digit",
   month: "2-digit",
   year: "2-digit",
-  hour: "numeric",
 });
 const dateString2 = new Intl.DateTimeFormat("en-US", {
-
-  hour:"numeric"
+  day: "2-digit",
+  month: "short",
 });
 
-export default function AvailDASizeHourChart({
+export default function AvailAppDASizeDayChart({
   duration,
+  appId,
 }: {
+  account: string;
+  appId: string;
   duration: number;
 }) {
-  const { data, loading } = useQuery(AVAIL_HOUR_DATAS_WITH_DURATION_QUERY, {
+  const { data, loading } = useQuery(AVAIL_APP_DAY_DATAS_WITH_DURATION_QUERY, {
     variables: {
+      appId: appId,
       duration: duration,
     },
     client: availClient,
@@ -55,7 +57,7 @@ export default function AvailDASizeHourChart({
 
   const chartData = useMemo(() => {
     const formatter = new Intl.DateTimeFormat("en-US", { weekday: "long" });
-    const datas = data?.collectiveHourData?.nodes?.map((rawData: any) => {
+    const datas = data?.appDayData?.nodes?.map((rawData: any) => {
       const day = formatter.format(new Date(rawData?.timestampStart));
 
       return {
@@ -67,7 +69,6 @@ export default function AvailDASizeHourChart({
           Number(rawData?.totalDataSubmissionCount)
         ).toFormat(),
         size: formatBytes(Number(rawData?.totalByteSize)),
-        formattedAddress: formatAddress(rawData?.id),
         totalExtrinsicCount: Number(rawData?.totalExtrinsicCount),
         totalFeeAvail: new BigNumber(rawData?.totalFees).toFormat(4),
         totalExtrinsicCountF: new BigNumber(
@@ -80,21 +81,18 @@ export default function AvailDASizeHourChart({
       };
     });
     return datas?.reverse();
-  }, [data?.collectiveHourData]);
+  }, [data?.appDayData]);
 
   const cumulativeData = useMemo(() => {
     const totalDataSubmissionCount = _.sumBy(
-      data?.collectiveHourData?.nodes,
+      data?.appDayData?.nodes,
       "totalDataSubmissionCount"
     );
     const totalExtCount = _.sumBy(
-      data?.collectiveHourData?.nodes,
+      data?.appDayData?.nodes,
       "totalExtrinsicCount"
     );
-    const totalByteSize = _.sumBy(
-      data?.collectiveHourData?.nodes,
-      "totalByteSize"
-    );
+    const totalByteSize = _.sumBy(data?.appDayData?.nodes, "totalByteSize");
 
     return {
       totalDataSubmissionCountF: new BigNumber(
@@ -106,7 +104,7 @@ export default function AvailDASizeHourChart({
       totalByteSize,
       totalByteSizeF: formatBytes(Number(totalByteSize)),
     };
-  }, [data?.collectiveHourData]);
+  }, [data?.appDayData]);
 
   if (loading) {
     return <ChartLoading />;
@@ -116,7 +114,7 @@ export default function AvailDASizeHourChart({
       <div className="flex justify-between">
         <p className="text-xs">Byte Size </p>
         <p className="text-xs">
-          {cumulativeData?.totalByteSizeF} [{duration} Hours]
+          {cumulativeData?.totalByteSizeF} [{duration} days]
         </p>
       </div>
 
@@ -125,7 +123,7 @@ export default function AvailDASizeHourChart({
           width={500}
           height={100}
           data={chartData}
-          margin={{ top: 30, right: 2, left: 2, bottom:20 }}
+          margin={{ top: 30, right: 30, left: -20, bottom: 30 }}
         >
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -144,12 +142,12 @@ export default function AvailDASizeHourChart({
           />
 
           <Bar dataKey="sizeValue" fill="url(#colorUv)" radius={10}></Bar>
-          {/* <YAxis
+          <YAxis
             className="text-[10px] !text-current"
             allowDataOverflow
             axisLine={false}
             tickLine={false}
-          /> */}
+          />
           <XAxis
             dataKey="timestamp3"
             className="text-[10px] !text-current"
@@ -172,7 +170,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
       >
         <div className="px-4 flex  gap-2 justify-between w-full ">
           <p className="h-full  flex justify-between w-full">
-            {`${payload[0]?.payload?.timestampF}`}
+            {`${payload[0]?.payload?.timestamp2}`}
           </p>
         </div>
         <hr className="border-base-200" />

@@ -26,10 +26,7 @@ import {
   YAxis,
 } from "recharts";
 import ImageWithFallback from "@/components/ImageWithFallback";
-import {
-  AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY,
-  AVAIL_BALANCE_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY,
-} from "@/lib/apollo/queriesAvail";
+import { AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY } from "@/lib/apollo/queriesAvail";
 import { availClient } from "@/lib/apollo/client";
 
 type Props = {};
@@ -176,41 +173,37 @@ const dateString = new Intl.DateTimeFormat("en-US", {
   minute: "2-digit",
 });
 const AccountExtChart = ({ account }: { account: string }) => {
-  const { data } = useQuery(
-    AVAIL_BALANCE_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY,
-    {
-      variables: {
-        address: account,
-        duration: 15,
-      },
-      client: availClient,
-    }
-  );
+  const { data } = useQuery(AVAIL_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY, {
+    variables: {
+      address: account,
+      duration: 15,
+    },
+    client: availClient,
+  });
 
   const chartData = useMemo(() => {
     const formatter = new Intl.DateTimeFormat("en-US", { weekday: "long" });
-    const datas = data?.accountBalanceDayData?.nodes?.map((rawData: any) => {
+    const datas = data?.accountDayData?.nodes?.map((rawData: any) => {
       const day = formatter.format(new Date(rawData?.timestampStart));
 
       return {
         ...rawData,
 
         sizeValue: Number(rawData?.totalExtrinsicCount),
-        amountTotalF: new BigNumber(rawData?.amountTotal).div(1e18).toFormat(4),
-
-        amountTotal: new BigNumber(rawData?.amountTotal).div(1e18).toNumber(),
-
+        size: formatBytes(Number(rawData?.totalByteSize)),
         formattedAddress: formatAddress(rawData?.accountId),
-
-
-
+        totalExtrinsicCount: rawData?.totalExtrinsicCount?.toString(),
+        totalFeeAvail: new BigNumber(rawData?.totalFees).toFormat(4),
+        totalExtrinsicCountF: new BigNumber(
+          rawData?.totalExtrinsicCount
+        ).toFormat(),
         timestamp: day,
         timestampF: dateString.format(new Date(rawData?.timestampStart)),
         timestamp2: new Date(rawData?.timestampStart).toDateString(),
       };
     });
     return datas?.reverse();
-  }, [data?.accountBalanceDayData]);
+  }, [data?.accountDayData]);
 
   return (
     <ResponsiveContainer width={"100%"} height={"100%"}>
@@ -227,12 +220,14 @@ const AccountExtChart = ({ account }: { account: string }) => {
         </defs>
         <Legend
           verticalAlign="top"
-          content={() => <span className="text-xs">Last 15 days balance</span>}
+          content={() => (
+            <span className="text-xs">Last 15 days ext count</span>
+          )}
         />
         <Tooltip content={CustomTooltipRaw} />
         <Area
           type="monotone"
-          dataKey="amountTotal"
+          dataKey="sizeValue"
           stroke="#8884d8"
           fillOpacity={1}
           fill="url(#colorUvAccStatCard)"
@@ -256,9 +251,11 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
         <hr className="border-base-200" />
         <div className="px-4 space-y-3">
           <p className=" ">
-            AVAIL Balance: {`${payload[0]?.payload?.amountTotalF}`}{" "}
+            Ext Count: {`${payload[0]?.payload?.totalExtrinsicCountF}`}{" "}
           </p>
-        
+          <p className=" ">
+            Fee : {`${payload[0]?.payload?.totalFeeAvail}`} AVAIL
+          </p>
         </div>
       </div>
     );

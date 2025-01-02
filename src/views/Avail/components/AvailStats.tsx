@@ -1,7 +1,7 @@
 import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
 import { availClient } from "@/lib/apollo/client";
 import { AVAIL_COLLECTIVE_STAT_QUERY } from "@/lib/apollo/queriesAvail";
-import { formatBytes } from "@/lib/utils";
+import { formatBytes, formatWrapedText } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import MotionNumber from "motion-number";
@@ -9,15 +9,18 @@ import React from "react";
 import { useMemo } from "react";
 import { useQuery as useReactQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useAvailDaAppsDataBasic } from "@/hooks/useAvailDaAppsDataBasic";
+import ImageWithFallback from "@/components/ImageWithFallback";
 
 type Props = {};
 
 function AvailStats({}: Props) {
+  const { data: appsData } = useAvailDaAppsDataBasic();
   const { data: rawData, loading: statsLoading } = useQuery(
     AVAIL_COLLECTIVE_STAT_QUERY,
     {
       client: availClient,
-      pollInterval: 30_000,
+      pollInterval: 3_000,
     }
   );
   const data = useMemo(() => {
@@ -91,82 +94,124 @@ function AvailStats({}: Props) {
     return 0;
   }, [blockData?.data, endBlock]);
   return (
-    <div className="grid lg:grid-cols-4 gap-0 rounded-lg  w-full ">
-      <StatCard title="Last block" value={endBlock} isLoading={statsLoading} />
+    <>
+      <div className="grid lg:grid-cols-4  gap-2">
+        {appsData?.formattedOp?.map((app, idx) => {
+          return (
+            <div
+              key={`${app?.id}----${app?.name}--${idx}`}
+              className="p-5 bg-base-200/15 rounded-lg space-y-3"
+            >
+              <div className="flex gap-3">
+                <ImageWithFallback
+                  src={
+                    app?.logoUri ||
+                    `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+                  }
+                  width={24}
+                  height={24}
+                  alt=""
+                  className="rounded-lg"
+                />
+                {/* <p className="opacity-70">[{app?.id}]</p> */}
+                {app?.name && <p>{formatWrapedText(app?.name, 6, 9)}</p>}
+              </div>
+              <hr className="border-base-200/50" />
+              <div className="flex gap-2 justify-between">
+                <p className="">Size</p>
+                <p className="">{formatBytes(app?.byteSize)}</p>
+              </div>
+              <div className="flex gap-2 justify-between">
+                <p className="">Fees</p>
+                <p className="">
+                  {new BigNumber(app?.fees).toFormat(2)}{" "}
+                  <span className="">AVAIL</span>
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="grid lg:grid-cols-4 gap-0 rounded-lg  w-full ">
+        <StatCard
+          title="Last block"
+          value={endBlock}
+          isLoading={statsLoading}
+        />
 
-      {/* <StatCard
-        title="Total Blocks"
-        value={totalBlocksCount}
-        isLoading={statsLoading}
-      />
-      <StatCard
-        title="Block Error"
-        value={endBlock - totalBlocksCount}
-        // after={new Date(data?.collectiveData?.timestampLast).toString()}
-        isLoading={statsLoading}
-      /> */}
+        <StatCard
+          title="Total Blocks"
+          value={totalBlocksCount}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Block Error"
+          value={endBlock - totalBlocksCount}
+          // after={new Date(data?.collectiveData?.timestampLast).toString()}
+          isLoading={statsLoading}
+        />
 
-      <StatCard
-        title="Txn Fees"
-        value={totalFeesAvail}
-        isLoading={statsLoading}
-        after="AVAIL"
-      />
-      {/* <StatCard
-        title="Sync"
-        value={percent}
-        isLoading={statsLoading}
-        after="%"
-      /> */}
-      {/* <StatCard
-        title="Target"
-        value={blockData?.data?.latest_block}
-        isLoading={blockData?.isLoading}
-      /> */}
-      <StatCard
-        title="Total data"
-        value={dataSize?.split(" ")[0]}
-        isLoading={statsLoading}
-        after={dataSize?.split(" ")[1]}
-      />
+        <StatCard
+          title="Txn Fees"
+          value={totalFeesAvail}
+          isLoading={statsLoading}
+          after="AVAIL"
+        />
+        <StatCard
+          title="Sync"
+          value={percent}
+          isLoading={statsLoading}
+          after="%"
+        />
+        <StatCard
+          title="Target"
+          value={blockData?.data?.latest_block}
+          isLoading={blockData?.isLoading}
+        />
+        <StatCard
+          title="Total data"
+          value={dataSize?.split(" ")[0]}
+          isLoading={statsLoading}
+          after={dataSize?.split(" ")[1]}
+        />
 
-      <StatCard
-        title="Total ext"
-        value={totalExtrinsicCount}
-        isLoading={statsLoading}
-      />
+        <StatCard
+          title="Total ext"
+          value={totalExtrinsicCount}
+          isLoading={statsLoading}
+        />
 
-      <StatCard
-        title="DA Submissions"
-        value={totalDataSubmissionCount}
-        isLoading={statsLoading}
-      />
-      <StatCard
-        title="Total DA Fees"
-        value={totalDAFees}
-        isLoading={statsLoading}
-      />
-      <StatCard
-        title="Total DA Fees [usd]"
-        value={totalDAFeesUSD}
-        isLoading={statsLoading}
-      />
-      <StatCard
-        title="Total DA Blocks"
-        value={totalDataBlocksCount}
-        isLoading={statsLoading}
-      />
-      {/* <StatCard
-        title="Last Avail Price"
-        value={lastPriceFeed?.availPrice}
-        isLoading={statsLoading}
-      />
-      <StatCard
-        title="Last ETH Price"
-        value={lastPriceFeed?.ethPrice}
-        isLoading={statsLoading}
-      /> */}
-      {/* <div className="lg:col-span-2 h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
+        <StatCard
+          title="DA Submissions"
+          value={totalDataSubmissionCount}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Total DA Fees"
+          value={totalDAFees}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Total DA Fees [usd]"
+          value={totalDAFeesUSD}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Total DA Blocks"
+          value={totalDataBlocksCount}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Last Avail Price"
+          value={lastPriceFeed?.availPrice}
+          isLoading={statsLoading}
+        />
+        <StatCard
+          title="Last ETH Price"
+          value={lastPriceFeed?.ethPrice}
+          isLoading={statsLoading}
+        />
+        <div className="lg:col-span-2 h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
         <p className=" text-sm opacity-50">{"Last update"}</p>
         <p>{new Date(data?.collectiveData?.timestampLast).toUTCString()}</p>
         <progress
@@ -174,8 +219,9 @@ function AvailStats({}: Props) {
           value={Number(percent)}
           max="100"
         ></progress>
-      </div> */}
-    </div>
+      </div>
+      </div>
+    </>
   );
 }
 

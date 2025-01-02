@@ -2,7 +2,10 @@ import ImageWithFallback from "@/components/ImageWithFallback";
 import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
 import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import { availClient } from "@/lib/apollo/client";
-import { AVAIL_ACCOUNTS_LIMIT_QUERY } from "@/lib/apollo/queriesAvail";
+import {
+  AVAIL_ACCOUNTS_LIMIT_QUERY,
+  AVAIL_APP_ACCOUNTS_LIMIT_QUERY,
+} from "@/lib/apollo/queriesAvail";
 import { formatAddress, formatBytes } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
@@ -11,17 +14,20 @@ import React from "react";
 import { useState } from "react";
 import { useMemo } from "react";
 
-type Props = {};
+type Props = {
+  appId: String;
+};
 const LIMIT_PER_PAGE = 10;
-function AvailAccounts({}: Props) {
+function TopAvailAppAccounts({ appId }: Props) {
   const [page, setPage] = useState(1);
   const { data: rawData, loading: statsLoading } = useQuery(
-    AVAIL_ACCOUNTS_LIMIT_QUERY,
+    AVAIL_APP_ACCOUNTS_LIMIT_QUERY,
     {
       client: availClient,
       variables: {
         skip: LIMIT_PER_PAGE * (page - 1),
         limit: LIMIT_PER_PAGE,
+        appId: appId,
       },
     }
   );
@@ -80,7 +86,7 @@ function AvailAccounts({}: Props) {
   );
 }
 
-export default AvailAccounts;
+export default TopAvailAppAccounts;
 //   totalByteSize;
 //   totalFees;
 //   totalExtrinsicCount;
@@ -139,9 +145,9 @@ const AccountRow = ({ acc }: any) => {
           </div>
           <Link
             className="text-primary hidden lg:block"
-            href={`/avail/${acc?.id}`}
+            href={`/avail/${acc?.address}`}
           >
-            {formatAddress(acc?.id)}
+            {formatAddress(acc?.address)}
           </Link>
         </div>
 

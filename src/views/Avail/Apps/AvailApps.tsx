@@ -1,9 +1,15 @@
 import ImageWithFallback from "@/components/ImageWithFallback";
 import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
-import { getAccountDetailsFromAddressBook } from "@/configs/constants";
+import {
+  getAccountDetailsFromAddressBook,
+  getAppDetailsFromAppBook,
+} from "@/configs/constants";
 import { availClient } from "@/lib/apollo/client";
-import { AVAIL_ACCOUNTS_LIMIT_QUERY } from "@/lib/apollo/queriesAvail";
-import { formatAddress, formatBytes } from "@/lib/utils";
+import {
+  AVAIL_ACCOUNTS_LIMIT_QUERY,
+  AVAIL_APPS_LIMIT_QUERY,
+} from "@/lib/apollo/queriesAvail";
+import { formatAddress, formatBytes, formatWrapedText } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
@@ -13,10 +19,10 @@ import { useMemo } from "react";
 
 type Props = {};
 const LIMIT_PER_PAGE = 10;
-function AvailAccounts({}: Props) {
+function AvailApps({}: Props) {
   const [page, setPage] = useState(1);
   const { data: rawData, loading: statsLoading } = useQuery(
-    AVAIL_ACCOUNTS_LIMIT_QUERY,
+    AVAIL_APPS_LIMIT_QUERY,
     {
       client: availClient,
       variables: {
@@ -29,11 +35,11 @@ function AvailAccounts({}: Props) {
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
       <div className="hidden xl:grid xl:grid-cols-6 py-4 px-4  border-b border-base-200 text-sm items-center">
-        <div className="flex items-center gap-2 col-span-2 ">Address</div>
+        <div className="flex items-center gap-2 col-span-2 ">App</div>
 
         <p>Size</p>
         <p>Data Subs</p>
-        <p>Transactions</p>
+        <p>Extrinsics</p>
         <p>Fees</p>
       </div>
       <div className="px-4 ">
@@ -45,11 +51,11 @@ function AvailAccounts({}: Props) {
               />
             );
           })}
-        {rawData?.accountEntities?.nodes?.map((acc: any) => {
+        {rawData?.appEntities?.nodes?.map((acc: any) => {
           return <AccountRow acc={acc} key={acc?.id} />;
         })}
       </div>
-      {rawData?.accountEntities?.totalCount > LIMIT_PER_PAGE && (
+      {rawData?.appEntities?.totalCount > LIMIT_PER_PAGE && (
         <div className="flex px-4 justify-end gap-2  p-4  border-t border-base-200">
           {page > 1 && (
             <button
@@ -80,7 +86,7 @@ function AvailAccounts({}: Props) {
   );
 }
 
-export default AvailAccounts;
+export default AvailApps;
 //   totalByteSize;
 //   totalFees;
 //   totalExtrinsicCount;
@@ -91,13 +97,14 @@ export default AvailAccounts;
 //   totalFeesUSD;
 //   totalDAFeesUSD;
 const AccountRow = ({ acc }: any) => {
-  const accountDetails = getAccountDetailsFromAddressBook(acc?.id);
+  const accountDetails = getAppDetailsFromAppBook(acc?.id);
+  console.log(`🚀 ~ file: AvailApps.tsx:101 ~ accountDetails:`, accountDetails);
   const totalSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));
   }, [acc?.totalByteSize]);
   const totalFees = useMemo(() => {
-    return new BigNumber(acc?.totalFees).toFormat(4);
-  }, [acc?.totalFees]);
+    return new BigNumber(acc?.totalFeesAvail).toFormat(4);
+  }, [acc?.totalFeesAvail]);
   const totalFeesUSD = useMemo(() => {
     return new BigNumber(acc?.totalFeesUSD).toFormat(4);
   }, [acc?.totalFeesUSD]);
@@ -130,7 +137,10 @@ const AccountRow = ({ acc }: any) => {
         <div className="flex items-center gap-2 col-span-2 ">
           <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
             <ImageWithFallback
-              src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+              src={
+                accountDetails?.logoUri ||
+                `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+              }
               className="rounded-lg"
               width={24}
               height={24}
@@ -139,9 +149,13 @@ const AccountRow = ({ acc }: any) => {
           </div>
           <Link
             className="text-primary hidden lg:block"
-            href={`/avail/${acc?.id}`}
+            href={`/avail/apps/${acc?.id}`}
           >
-            {formatAddress(acc?.id)}
+            {accountDetails?.name ? (
+              <p>{accountDetails?.name}</p>
+            ) : (
+              acc?.name && <p>{formatWrapedText(acc?.name, 6, 9)}</p>
+            )}
           </Link>
         </div>
 
@@ -166,8 +180,11 @@ const AccountRow = ({ acc }: any) => {
           <div className="flex items-center gap-2">
             <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
               <ImageWithFallback
-                src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
-                className="rounded-lg "
+                src={
+                  accountDetails?.logoUri ||
+                  `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+                }
+                className="rounded-lg"
                 width={24}
                 height={24}
                 alt=""
