@@ -74,7 +74,7 @@ export function getColorForIndex(index: number, totalColors: number) {
   const colorHex = rgbToHex(rgb.r, rgb.g, rgb.b);
 
   // Convert RGB to HEX
-  return rgbToHex(rgb.r, rgb.g, rgb.b);
+  return colorHex;
 }
 
 export function hslToRgb(h: number, s: number, l: number) {
