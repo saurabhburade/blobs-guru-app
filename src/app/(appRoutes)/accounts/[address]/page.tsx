@@ -10,7 +10,7 @@ type Props = {};
 function SingleBlockPage({}: Props) {
   const { address = "" } = useParams();
 
-  return <SingleAccount account={address as string} />;
+  return <SingleAccount account={(address as string)?.toLowerCase()} />;
 }
 
 export default SingleBlockPage;
