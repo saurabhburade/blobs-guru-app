@@ -49,13 +49,13 @@ export async function handleNewPriceMinute({
     return priceFeedMinuteZero!;
   }
   try {
-    let priceFeedThisMinute = await PriceFeedMinute.get(minuteId.toString());
-    if (priceFeedThisMinute !== null || priceFeedThisMinute !== undefined) {
+    const existingPrice = await PriceFeedMinute.get(minuteId.toString());
+    if (existingPrice !== null || existingPrice !== undefined) {
       logger.info(
-        `PRICE FOR THIS MINUTE EXIST :: ${priceFeedThisMinute?.availPrice}`
+        `PRICE FOR THIS MINUTE EXIST :: ${existingPrice?.availPrice}`
       );
 
-      return priceFeedThisMinute!;
+      return existingPrice!;
     }
     // get one day price at once
     const res = await fetch(
@@ -85,6 +85,7 @@ export async function handleNewPriceMinute({
       };
     });
     logger.info(`PRICE LENGTH ${mappedPrices?.length}`);
+    let priceFeedThisMinute;
     for (let index = 0; index < mappedPrices.length; index++) {
       const element = mappedPrices[index];
       const priceForMinute = PriceFeedMinute.create({
@@ -97,13 +98,14 @@ export async function handleNewPriceMinute({
         availDate: element?.timestampF,
         ethDate: element?.timestampF,
       });
+      await priceForMinute.save();
       if (index === 0) {
         logger.info(
           `ZERO PRICE FOR THIS MINUTE EXIST :: ${JSON.stringify(element)}`
         );
         priceFeedThisMinute = priceForMinute;
       }
-      await priceFeedThisMinute.save();
+      await priceFeedThisMinute!.save();
       // return priceFeedMinuteZero!;
     }
     return priceFeedThisMinute!;
