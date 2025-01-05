@@ -45,7 +45,7 @@ export async function handleNewPriceMinute({
       ethDate: blockDate,
     });
     await priceFeedMinuteZero.save();
-    logger.info(`PRICE FOR THIS MINUTE EXIST :: 0 minuteId < 28696058`);
+    // logger.info(`PRICE FOR THIS MINUTE EXIST :: 0 minuteId < 28696058`);
     return priceFeedMinuteZero!;
   }
   try {
@@ -97,6 +97,9 @@ export async function handleNewPriceMinute({
         minuteId: minuteIdOhlc,
       };
     });
+    if (mappedPrices?.length <= 0) {
+      throw new Error("API Error");
+    }
     logger.info(`PRICE LENGTH ${mappedPrices?.length}`);
     let priceFeedThisMinute;
     const pricesToSave: PriceFeedMinute[] = [];
@@ -115,15 +118,16 @@ export async function handleNewPriceMinute({
       pricesToSave.push(priceForMinute);
       // await priceForMinute.save();
       if (index === 0) {
-        logger.info(
-          `ZERO PRICE FOR THIS MINUTE EXIST :: ${JSON.stringify(element)}`
-        );
+        // logger.info(
+        //   `ZERO PRICE FOR THIS MINUTE EXIST :: ${JSON.stringify(element)}`
+        // );
         priceFeedThisMinute = priceForMinute;
       }
       // await priceFeedThisMinute!.save();
       // return priceFeedMinuteZero!;
     }
     await Promise.all([store.bulkUpdate("PriceFeedMinute", pricesToSave)]);
+    await delay(1000);
     return priceFeedThisMinute!;
   } catch (error) {
     logger.error(`ERROR API ${error}`);
