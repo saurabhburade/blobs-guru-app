@@ -44,6 +44,7 @@ export async function handleNewPriceMinute({
       availDate: blockDate,
       ethDate: blockDate,
     });
+    await priceFeedMinuteZero.save();
     logger.info(`PRICE FOR THIS MINUTE EXIST :: 0 minuteId < 28696058`);
     return priceFeedMinuteZero!;
   }
@@ -97,6 +98,9 @@ export async function handleNewPriceMinute({
         ethDate: element?.timestampF,
       });
       if (index === 0) {
+        logger.info(
+          `ZERO PRICE FOR THIS MINUTE EXIST :: ${JSON.stringify(element)}`
+        );
         priceFeedThisMinute = priceForMinute;
       }
       await priceFeedThisMinute.save();
