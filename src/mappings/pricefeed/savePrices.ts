@@ -79,7 +79,7 @@ export async function handleNewPriceMinute({
       `
     );
     // get one day price at once
-    const res = await fetch();
+    const res = await fetch(URL);
     const data = await res.json();
 
     const { t, o, c, h, l } = data;
