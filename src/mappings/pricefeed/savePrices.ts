@@ -102,7 +102,7 @@ export async function handleNewPriceMinute({
     for (let index = 0; index < mappedPrices.length; index++) {
       const element = mappedPrices[index];
       const priceForMinute = PriceFeedMinute.create({
-        id: element?.mminuteId?.toString(),
+        id: element?.minuteId?.toString(),
         availBlock: availBlock,
         ethBlock: 0,
         availPrice: element?.avgPrice,
