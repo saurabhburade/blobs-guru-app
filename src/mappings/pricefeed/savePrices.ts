@@ -47,11 +47,6 @@ export async function handleNewPriceMinute({
     logger.info(`PRICE FOR THIS MINUTE EXIST :: 0 minuteId < 28696058`);
     return priceFeedMinuteZero!;
   }
-  if (minuteId > 28695894 && minuteId < 28695899) {
-    const priceFeedMinute = await PriceFeedMinute.get("28695894");
-    return priceFeedMinute!;
-  }
-
   try {
     let priceFeedThisMinute = await PriceFeedMinute.get(minuteId.toString());
     if (priceFeedThisMinute !== null || priceFeedThisMinute !== undefined) {
