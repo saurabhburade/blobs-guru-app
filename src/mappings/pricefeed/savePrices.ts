@@ -50,7 +50,10 @@ export async function handleNewPriceMinute({
   }
   try {
     const existingPrice = await PriceFeedMinute.get(minuteId.toString());
-    if (existingPrice !== null || existingPrice !== undefined) {
+    if (
+      existingPrice &&
+      (existingPrice !== null || existingPrice !== undefined)
+    ) {
       logger.info(
         `PRICE FOR THIS MINUTE EXIST :: ${JSON.stringify(existingPrice)}`
       );
