@@ -44,6 +44,7 @@ export async function handleNewPriceMinute({
       availDate: blockDate,
       ethDate: blockDate,
     });
+    logger.info(`PRICE FOR THIS MINUTE EXIST :: 0 minuteId < 28696058`);
     return priceFeedMinuteZero!;
   }
   if (minuteId > 28695894 && minuteId < 28695899) {
