@@ -109,6 +109,7 @@ export async function handleNewPriceMinute({
     }
     return priceFeedThisMinute!;
   } catch (error) {
+    logger.error(`ERROR API ${error}`);
     try {
       const blockNumberApi = await fetch(
         `https://coins.llama.fi/block/ethereum/${Number(
