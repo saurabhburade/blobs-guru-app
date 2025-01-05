@@ -73,7 +73,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
       interval: 3s
-      timeout: 50s
+      timeout: 60s
       retries: 10
 
   graphql-engine:

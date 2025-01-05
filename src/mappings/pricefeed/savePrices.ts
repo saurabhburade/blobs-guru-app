@@ -60,6 +60,13 @@ export async function handleNewPriceMinute({
 
       return existingPrice!;
     }
+    logger.info(
+      `MAKE PRICE CALL :: from :: ${Number(
+        block.timestamp.getTime() / 1000
+      ).toFixed(0)} to ::${Number(
+        block.timestamp.getTime() + 86400000 / 1000
+      ).toFixed(0)}`
+    );
     // get one day price at once
     const res = await fetch(
       `https://api.dev.dex.guru/v1/tradingview/history?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Number(
