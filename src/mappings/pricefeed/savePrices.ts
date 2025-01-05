@@ -83,7 +83,7 @@ export async function handleNewPriceMinute({
         minuteId: minuteIdOhlc,
       };
     });
-
+    logger.info(`PRICE LENGTH ${mappedPrices?.length}`);
     for (let index = 0; index < mappedPrices.length; index++) {
       const element = mappedPrices[index];
       const priceForMinute = PriceFeedMinute.create({
@@ -96,10 +96,10 @@ export async function handleNewPriceMinute({
         availDate: element?.timestampF,
         ethDate: element?.timestampF,
       });
-      await priceForMinute.save();
       if (index === 0) {
         priceFeedThisMinute = priceForMinute;
       }
+      await priceFeedThisMinute.save();
       // return priceFeedMinuteZero!;
     }
     return priceFeedThisMinute!;
