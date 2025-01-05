@@ -60,23 +60,26 @@ export async function handleNewPriceMinute({
 
       return existingPrice!;
     }
+    const URL = `https://api.dev.dex.guru/v1/tradingview/history?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Number(
+      block.timestamp.getTime() / 1000
+    ).toFixed(0)}&to=${Number(
+      block.timestamp.getTime() + 86400000 / 1000
+    ).toFixed(
+      0
+    )}&currencyCode=USD&api-key=mzwVQMz5AN7Rj4UCm_wl-QsvqqpoLG6v6fjCIRfV6JU`;
     logger.info(
       `MAKE PRICE CALL :: from :: ${Number(
         block.timestamp.getTime() / 1000
       ).toFixed(0)} to ::${Number(
         block.timestamp.getTime() + 86400000 / 1000
-      ).toFixed(0)}`
+      ).toFixed(0)} 
+      
+      URL:::${URL}
+      
+      `
     );
     // get one day price at once
-    const res = await fetch(
-      `https://api.dev.dex.guru/v1/tradingview/history?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Number(
-        block.timestamp.getTime() / 1000
-      ).toFixed(0)}&to=${Number(
-        block.timestamp.getTime() + 86400000 / 1000
-      ).toFixed(
-        0
-      )}&currencyCode=USD&api-key=mzwVQMz5AN7Rj4UCm_wl-QsvqqpoLG6v6fjCIRfV6JU`
-    );
+    const res = await fetch();
     const data = await res.json();
 
     const { t, o, c, h, l } = data;
