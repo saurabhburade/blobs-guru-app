@@ -99,6 +99,7 @@ export async function handleNewPriceMinute({
     });
     logger.info(`PRICE LENGTH ${mappedPrices?.length}`);
     let priceFeedThisMinute;
+    const pricesToSave: PriceFeedMinute[] = [];
     for (let index = 0; index < mappedPrices.length; index++) {
       const element = mappedPrices[index];
       const priceForMinute = PriceFeedMinute.create({
@@ -111,16 +112,18 @@ export async function handleNewPriceMinute({
         availDate: element?.timestampF,
         ethDate: element?.timestampF,
       });
-      await priceForMinute.save();
+      pricesToSave.push(priceForMinute);
+      // await priceForMinute.save();
       if (index === 0) {
         logger.info(
           `ZERO PRICE FOR THIS MINUTE EXIST :: ${JSON.stringify(element)}`
         );
         priceFeedThisMinute = priceForMinute;
       }
-      await priceFeedThisMinute!.save();
+      // await priceFeedThisMinute!.save();
       // return priceFeedMinuteZero!;
     }
+    await Promise.all([store.bulkUpdate("PriceFeedMinute", pricesToSave)]);
     return priceFeedThisMinute!;
   } catch (error) {
     logger.error(`ERROR API ${error}`);
