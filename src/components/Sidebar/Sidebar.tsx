@@ -1,3 +1,4 @@
+"use client";
 import { div } from "framer-motion/client";
 import Link from "next/link";
 import React from "react";
@@ -10,12 +11,16 @@ import { TbReportMoney } from "react-icons/tb";
 import { IoStatsChart } from "react-icons/io5";
 import { BsUiChecksGrid } from "react-icons/bs";
 import { CiGrid2H } from "react-icons/ci";
+import { IoIosApps } from "react-icons/io";
+
+import ImageWithFallback from "../ImageWithFallback";
+import { User } from "lucide-react";
 
 type Props = {};
 
 function Sidebar({}: Props) {
   return (
-    <div className="border-base-200 lg:border-r  ">
+    <div className="border-base-200 lg:border-r  opacity-80">
       <div className="flex flex-col justify-between h-screen">
         <div className="h-[90vh] overflow-scroll">
           <div className="p-5 flex items-center justify-between hidden lg:flex">
@@ -112,6 +117,61 @@ function Sidebar({}: Props) {
                       <span className="font-semibold text-[#ff0420] font-extrabold uppercase font-sans">
                         SUPERCHAINS
                       </span>
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                </ul>
+              </div>
+            </div>
+            <div className="collapse collapse-arrow ">
+              <input type="checkbox" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-xl font-medium ">
+                <div className="flex items-center gap-2">
+                  <ImageWithFallback
+                    src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+                    width={24}
+                    height={24}
+                    alt="avail"
+                  />
+                  <p>Avail DA</p>
+                </div>
+              </div>
+              <div className="collapse-content ">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
+                  {/* Sidebar content here */}
+                  <li className="  ">
+                    <Link href="/avail">
+                      <span>
+                        <TiThSmall />
+                      </span>
+                      Summary
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/avail/apps">
+                      <span>
+                        <IoIosApps />
+                      </span>
+                      Apps
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/avail/accounts">
+                      <span>
+                        <User />
+                      </span>
+                      Accounts
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/avail/stats">
+                      <span>
+                        <IoStatsChart />
+                      </span>
+                      Stats
                     </Link>
                   </li>
                   <hr className="border-base-200" />

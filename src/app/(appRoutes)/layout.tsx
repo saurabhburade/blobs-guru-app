@@ -50,7 +50,7 @@ export default function RootLayout({
 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://blobs.guru/" />
-        <meta
+        {/* <meta
           property="og:title"
           content="Ethereum Blobs Explorer: Analyze L2 Transactions & EIP-4844 Data"
         />
@@ -73,7 +73,7 @@ export default function RootLayout({
         <meta
           property="twitter:image"
           content="https://blobs.guru/summary.jpeg"
-        />
+        /> */}
       </head>
       <body className={space_grotesk.className}>
         <ThemeProvider enableSystem={false} defaultTheme="dark">
