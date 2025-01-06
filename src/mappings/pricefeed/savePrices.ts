@@ -11,6 +11,9 @@ const ETH_RPC =
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+const DEX_GURU_API_KEY =
+  process.env.DEX_GURU_API_KEY || "mzwVQMz5AN7Rj4UCm_wl-QsvqqpoLG6v6fjCIRfV6JU";
 export async function handleNewPriceMinute({
   //   availPrice,
   //   ethPrice,
@@ -64,9 +67,7 @@ export async function handleNewPriceMinute({
       block.timestamp.getTime() / 1000
     ).toFixed(0)}&to=${Number(
       (block.timestamp.getTime() + 86400000) / 1000
-    ).toFixed(
-      0
-    )}&currencyCode=USD&api-key=mzwVQMz5AN7Rj4UCm_wl-QsvqqpoLG6v6fjCIRfV6JU`;
+    ).toFixed(0)}&currencyCode=USD&api-key=${DEX_GURU_API_KEY}`;
     logger.info(
       `MAKE PRICE CALL :: from :: ${Number(
         block.timestamp.getTime() / 1000
