@@ -81,7 +81,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             new Date(Number(bd?.dayStartTimestamp) * 1000)
           ),
           totalBlobTransactionCount: Number(bd?.totalBlobTransactionCount),
-          totalBlobHashesCount: Number(bd?.totalBlobHashesCount) / 10,
+          totalBlobHashesCount: Number(bd?.totalBlobHashesCount),
           avgEthPrice: Number(bd?.avgEthPrice),
           totalBlobGasUSD: new BigNumber(Number(bd?.totalBlobGasUSD))
             .div(1e20)
@@ -149,7 +149,7 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
               <p className=" leading-6 font-bold">
                 {chartData
                   ? new BigNumber(
-                      chartData?.at(-1)?.totalBlobHashesCount * 10
+                      chartData?.at(-1)?.totalBlobHashesCount
                     )?.toFormat()
                   : "0"}{" "}
               </p>
@@ -219,6 +219,13 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             tickLine={false}
             orientation={"right"}
           /> */}
+          <YAxis
+            className="text-[10px] "
+            axisLine={false}
+            tickLine={false}
+            orientation={"right"}
+            scale={"sqrt"}
+          />
           <XAxis
             dataKey={"timestamp2"}
             className="text-[10px] !text-current"
@@ -240,8 +247,6 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             stroke="currentColor"
             fill="none"
             strokeWidth={2}
-            // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
           <Area
             type="monotone"
@@ -249,8 +254,6 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             stroke="orange"
             fill="none"
             strokeWidth={2}
-            // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
           <Area
             type="monotone"
@@ -260,8 +263,6 @@ export default function ETHPriceDayChart({ duration }: { duration: number }) {
             strokeWidth={2}
             // fill="url(#colorUvAccStatCard)"
             fill="none"
-            // TODO: make it generic & reusable
-            strokeDasharray={`${duration * 11} 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5 2 5 2 5 2 5 2 5   2 5 2 5 2 5 2 5`}
           />
         </AreaChart>
       </ResponsiveContainer>

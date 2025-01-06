@@ -11,6 +11,7 @@ import { useQuery as useReactQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useAvailDaAppsDataBasic } from "@/hooks/useAvailDaAppsDataBasic";
 import ImageWithFallback from "@/components/ImageWithFallback";
+import Link from "next/link";
 
 type Props = {};
 
@@ -95,7 +96,7 @@ function AvailStats({}: Props) {
   }, [blockData?.data, endBlock]);
   return (
     <>
-      <div className="grid lg:grid-cols-4  gap-2">
+      <div className="grid lg:grid-cols-4  gap-4">
         {appsData?.formattedOp?.map((app, idx) => {
           return (
             <div
@@ -114,7 +115,11 @@ function AvailStats({}: Props) {
                   className="rounded-lg"
                 />
                 {/* <p className="opacity-70">[{app?.id}]</p> */}
-                {app?.name && <p>{formatWrapedText(app?.name, 6, 9)}</p>}
+                {app?.name && (
+                  <Link href={`/avail/apps/${app?.id}`} className="text-primary">
+                    {formatWrapedText(app?.name, 6, 9)}
+                  </Link>
+                )}
               </div>
               <hr className="border-base-200/50" />
               <div className="flex gap-2 justify-between">
@@ -212,14 +217,14 @@ function AvailStats({}: Props) {
           isLoading={statsLoading}
         />
         <div className="lg:col-span-2 h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
-        <p className=" text-sm opacity-50">{"Last update"}</p>
-        <p>{new Date(data?.collectiveData?.timestampLast).toUTCString()}</p>
-        <progress
-          className="progress progress-info w-3/4 h-1"
-          value={Number(percent)}
-          max="100"
-        ></progress>
-      </div>
+          <p className=" text-sm opacity-50">{"Last update"}</p>
+          <p>{new Date(data?.collectiveData?.timestampLast).toUTCString()}</p>
+          <progress
+            className="progress progress-info w-3/4 h-1"
+            value={Number(percent)}
+            max="100"
+          ></progress>
+        </div>
       </div>
     </>
   );

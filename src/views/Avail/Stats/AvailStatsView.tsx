@@ -33,7 +33,7 @@ function AvailStatsView({}: Props) {
               height={24}
               alt=""
             />
-            <p className="font-bold text-2xl">Avail Accounts</p>
+            <p className="font-bold text-2xl">Avail Stats</p>
           </div>
           <div className="lg:w-1/2 flex justify-end">
             <SearchAccount />
@@ -42,7 +42,7 @@ function AvailStatsView({}: Props) {
 
         <AvailDAUtilisation />
         <AvailStatsWithDuration />
-        <AvailStats />
+        {/* <AvailStats /> */}
         <PoweredBy />
         <Footer />
       </div>

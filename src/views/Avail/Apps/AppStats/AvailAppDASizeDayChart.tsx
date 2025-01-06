@@ -43,7 +43,6 @@ export default function AvailAppDASizeDayChart({
   duration,
   appId,
 }: {
-  account: string;
   appId: string;
   duration: number;
 }) {
@@ -147,6 +146,10 @@ export default function AvailAppDASizeDayChart({
             allowDataOverflow
             axisLine={false}
             tickLine={false}
+            tickFormatter={(v) => {
+              const [num, denom] = formatBytes(v, 1).split(" ");
+              return `${Number(num).toFixed(0)} ${denom}`;
+            }}
           />
           <XAxis
             dataKey="timestamp3"

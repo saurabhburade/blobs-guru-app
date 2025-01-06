@@ -191,8 +191,15 @@ const AccountRow = ({ acc }: any) => {
               />
             </div>
 
-            <Link className="text-primary " href={`/avail/${acc?.id}`}>
-              {formatAddress(acc?.id)}
+            <Link
+              className="text-primary"
+              href={`/avail/apps/${acc?.id}`}
+            >
+              {accountDetails?.name ? (
+                <p>{accountDetails?.name}</p>
+              ) : (
+                acc?.name && <p>{formatWrapedText(acc?.name, 6, 9)}</p>
+              )}
             </Link>
           </div>
           <div className="text-end">

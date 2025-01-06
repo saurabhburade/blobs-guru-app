@@ -76,7 +76,7 @@ function AvailAppStats({ appId }: Props) {
         <>
           <div className="grid lg:grid-cols-2 lg:h-[20em] ">
             <div className="border-base-200 lg:border-b-0 border-b lg:border-r p-5 h-[20em]">
-              <AvailAppDACountDayChart appId={appId} duration={duration} />
+              <AvailAppDASizeDayChart appId={appId} duration={duration} />
             </div>
             <div className=" p-5 h-[20em]">
               <AppDACountDayChart appId={appId} duration={duration} />

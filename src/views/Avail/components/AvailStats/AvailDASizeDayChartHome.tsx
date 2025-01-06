@@ -187,7 +187,7 @@ export default function AvailDASizeDayChartHome({
             fill="url(#colorUv)"
             radius={10}
           ></Bar> */}
-          {chartDataFormated?.keys?.reverse()?.map((key, idx) => {
+          {chartDataFormated?.keys?.map((key, idx) => {
             return (
               <Bar
                 key={key}

@@ -5,7 +5,8 @@ const availUrl = "https://availsubquery2.blobs.guru/";
 // const availUrl2 = "https://availsubquery2.blobs.guru/";
 // const availUrl2 = "https://availsubquery.blobs.guru/";
 // const availUrl2 = "http://50.28.2.32:3000";
-const availUrl2 = "https://availwd.blobs.guru/"; //"http://92.113.144.195:3000";
+const availUrl2 = "https://availlat.blobs.guru/";
+// const availUrl2 = "https://availwd.blobs.guru/"; //"http://92.113.144.195:3000";
 // const availUrl2 = "http://69.167.167.199:3000";
 
 // const httpLink = new HttpLink({ uri: subgraphUrl });

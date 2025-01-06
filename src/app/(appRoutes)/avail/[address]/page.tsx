@@ -1,14 +1,23 @@
-"use client";
 import SingleAvailAccount from "@/views/Avail/SingleAvailAccount";
-import { useParams } from "next/navigation";
-import React from "react";
+import { Metadata, ResolvingMetadata } from "next";
 
-type Props = {};
+type Props = {
+  params: { address: string };
+};
 
-function SingleAvailAccPage({}: Props) {
-  const { address = "" } = useParams();
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const address = params.address;
 
-  return <SingleAvailAccount account={address as string} />;
+  return {
+    title: `Avail Account | ${address}`,
+    description: `Explore Avail DA stats for account ${address}`,
+    openGraph: {
+      images: ["/summary-avail.jpeg"],
+    },
+  };
 }
 
-export default SingleAvailAccPage;
+export default function SingleAvailAccPage({ params }: Props) {
+  const { address } = params;
+  return <SingleAvailAccount account={address} />;
+}

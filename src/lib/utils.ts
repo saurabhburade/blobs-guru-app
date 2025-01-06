@@ -57,8 +57,11 @@ export const gaEvent = ({ action, category, label, value }: any) => {
 };
 
 export function getColorForIndex(index: number, totalColors: number) {
+  if (index === 0) {
+    return "#3360cc";
+  }
   // Use a golden ratio conjugate to get more distinguishable colors
-  const goldenRatioConjugate = 0.518033; // More precise value
+  const goldenRatioConjugate = 0.718033; // More precise value
   let hue = index / totalColors + goldenRatioConjugate;
   hue = hue % 1; // Keep the hue within 0-1 range
 
@@ -68,9 +71,10 @@ export function getColorForIndex(index: number, totalColors: number) {
 
   // Convert HSL to RGB
   const rgb = hslToRgb(hue * 360, saturation, lightness);
+  const colorHex = rgbToHex(rgb.r, rgb.g, rgb.b);
 
   // Convert RGB to HEX
-  return rgbToHex(rgb.r, rgb.g, rgb.b);
+  return colorHex;
 }
 
 export function hslToRgb(h: number, s: number, l: number) {
@@ -271,4 +275,3 @@ export const dateTimeString = new Intl.DateTimeFormat("en-US", {
   month: "2-digit",
   year: "2-digit",
 });
-

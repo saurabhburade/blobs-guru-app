@@ -16,4 +16,8 @@ export const AVAIL_APP_BOOK: AppBook = {
     l2beatProjectDataUrl:
       "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/sophon.json",
   },
+  "19": {
+    name: "Skate",
+    logoUri: "/images/icons/skate.webp",
+  },
 };
