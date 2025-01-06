@@ -111,14 +111,7 @@ function AvailAccountStatCard({ acc, isLoading, className }: any) {
                 )?.toFormat()}
               </p>
             </div>
-            <div className="flex justify-between items-center py-3 p-4">
-              <div className="flex items-center gap-2">
-                <Coins />
 
-                <p className=""> Total fee</p>
-              </div>
-              <p className="text-xl font-bold"> {totalFeesAvail} AVAIL</p>
-            </div>
             <div className="flex justify-between items-center py-3 p-4">
               <div className="flex items-center gap-2">
                 <Database />
@@ -202,8 +195,6 @@ const AccountExtChart = ({ account }: { account: string }) => {
 
         formattedAddress: formatAddress(rawData?.accountId),
 
-
-
         timestamp: day,
         timestampF: dateString.format(new Date(rawData?.timestampStart)),
         timestamp2: new Date(rawData?.timestampStart).toDateString(),
@@ -258,7 +249,6 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
           <p className=" ">
             AVAIL Balance: {`${payload[0]?.payload?.amountTotalF}`}{" "}
           </p>
-        
         </div>
       </div>
     );

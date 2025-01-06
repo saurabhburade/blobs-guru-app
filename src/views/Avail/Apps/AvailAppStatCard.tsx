@@ -114,14 +114,7 @@ function AvailAppStatCard({ acc, isLoading, className, chartData }: any) {
                 )?.toFormat()}
               </p>
             </div>
-            <div className="flex justify-between items-center py-3 p-4">
-              <div className="flex items-center gap-2">
-                <Coins />
-
-                <p className=""> Total fee</p>
-              </div>
-              <p className="text-xl font-bold"> {totalFeesAvail} AVAIL</p>
-            </div>
+      
             <div className="flex justify-between items-center py-3 p-4">
               <div className="flex items-center gap-2">
                 <Database />
