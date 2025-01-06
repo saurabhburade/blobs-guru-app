@@ -138,7 +138,7 @@ const BlocksRow = ({ blk }: any) => {
         </div>
 
         <div>
-          <p>{blk?.blockFee} AVAIL</p>
+          <p>{Number(blk?.blockFee)?.toFixed(4)} AVAIL</p>
         </div>
       </div>
       <div className="flex flex-wrap xl:hidden gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
@@ -160,7 +160,7 @@ const BlocksRow = ({ blk }: any) => {
           <p>{blk?.distinctCount?.id} DA subs</p>
         </div>
         <div className="text-end">
-          <p>{blk?.blockFee} AVAIL</p>
+          <p>{Number(blk?.blockFee)?.toFixed(4)} AVAIL</p>
           <p className="text-xs opacity-70">
             {" "}
             ${new BigNumber(blk?.blockFee)
