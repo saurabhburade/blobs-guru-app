@@ -120,7 +120,7 @@ const BlocksRow = ({ blk }: any) => {
               {blockNumber}
             </Link> */}
             <p>{blockNumber}</p>
-            <p>{timeAgo(blk?.timestamp)}</p>
+            <p>{timeAgo(new Date(blk.timestamp + "Z"))}</p>
           </div>
         </div>
 
@@ -152,7 +152,7 @@ const BlocksRow = ({ blk }: any) => {
             </Link> */}
             <p>{blockNumber}</p>
 
-            <p>{timeAgo(blk.timestamp)}</p>
+            <p>{timeAgo(new Date(blk.timestamp + "Z"))}</p>
           </div>
         </div>
         <div>

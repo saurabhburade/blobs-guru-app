@@ -155,7 +155,7 @@ const TransactionRow = ({ txn }: any) => {
           <div>
             {formatAddress(txn?.id)}
 
-            <p>{timeAgo(new Date(txn?.timestamp))}</p>
+            <p>{timeAgo(new Date(txn.timestamp + "Z"))}</p>
           </div>
         </div>
         {txn?.signer ? <p>{formatAddress(txn?.signer)}</p> : <p>-</p>}
@@ -189,8 +189,7 @@ const TransactionRow = ({ txn }: any) => {
           </div>
           <div>
             <p>{formatAddress(txn?.id)}</p>
-
-            <p>{timeAgo(new Date(txn?.timestamp))}</p>
+            <p>{timeAgo(new Date(txn.timestamp + "Z"))}</p>
           </div>
         </div>
         <div>

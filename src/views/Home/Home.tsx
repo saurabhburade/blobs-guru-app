@@ -25,9 +25,6 @@ import Footer from "@/components/Footer/Footer";
 type Props = {};
 
 function Home({}: Props) {
-  const { data, loading: statsLoading } = useQuery(COLLECTIVE_STAT_QUERY);
-  const r = useDAProvidersRaw();
-  console.log(`🚀 ~ file: Home.tsx:27 ~ r:`, r);
   return (
     <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
       <div className="lg:block hidden">
