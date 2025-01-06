@@ -116,7 +116,10 @@ function AvailStats({}: Props) {
                 />
                 {/* <p className="opacity-70">[{app?.id}]</p> */}
                 {app?.name && (
-                  <Link href={`/avail/apps/${app?.id}`} className="text-primary">
+                  <Link
+                    href={`/avail/apps/${app?.id}`}
+                    className="text-primary"
+                  >
                     {formatWrapedText(app?.name, 6, 9)}
                   </Link>
                 )}
@@ -144,7 +147,7 @@ function AvailStats({}: Props) {
           isLoading={statsLoading}
         />
 
-        <StatCard
+        {/* <StatCard
           title="Total Blocks"
           value={totalBlocksCount}
           isLoading={statsLoading}
@@ -154,7 +157,7 @@ function AvailStats({}: Props) {
           value={endBlock - totalBlocksCount}
           // after={new Date(data?.collectiveData?.timestampLast).toString()}
           isLoading={statsLoading}
-        />
+        /> */}
 
         <StatCard
           title="Txn Fees"
@@ -162,7 +165,7 @@ function AvailStats({}: Props) {
           isLoading={statsLoading}
           after="AVAIL"
         />
-        <StatCard
+        {/* <StatCard
           title="Sync"
           value={percent}
           isLoading={statsLoading}
@@ -172,7 +175,7 @@ function AvailStats({}: Props) {
           title="Target"
           value={blockData?.data?.latest_block}
           isLoading={blockData?.isLoading}
-        />
+        /> */}
         <StatCard
           title="Total data"
           value={dataSize?.split(" ")[0]}
@@ -201,17 +204,17 @@ function AvailStats({}: Props) {
           value={totalDAFeesUSD}
           isLoading={statsLoading}
         />
-        <StatCard
+        {/* <StatCard
           title="Total DA Blocks"
           value={totalDataBlocksCount}
           isLoading={statsLoading}
-        />
+        /> */}
         <StatCard
           title="Last Avail Price"
           value={lastPriceFeed?.availPrice}
           isLoading={statsLoading}
         />
-        <StatCard
+        {/* <StatCard
           title="Last ETH Price"
           value={lastPriceFeed?.ethPrice}
           isLoading={statsLoading}
@@ -224,7 +227,7 @@ function AvailStats({}: Props) {
             value={Number(percent)}
             max="100"
           ></progress>
-        </div>
+        </div> */}
       </div>
     </>
   );
