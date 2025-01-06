@@ -14,6 +14,33 @@ function delay(ms: number) {
 
 const DEX_GURU_API_KEY =
   process.env.DEX_GURU_API_KEY || "mzwVQMz5AN7Rj4UCm_wl-QsvqqpoLG6v6fjCIRfV6JU";
+
+async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
+  // 50 seconds timeout (50000 ms)
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  // Set up the timeout to abort the fetch request after the specified duration
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, { ...options, signal });
+
+    // Clear the timeout once the fetch request completes
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error("Fetch failed");
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    if (error?.name === "AbortError") {
+      throw new Error("Request timed out");
+    }
+    throw error; // Re-throw other errors
+  }
+}
 export async function handleNewPriceMinute({
   //   availPrice,
   //   ethPrice,
@@ -80,8 +107,8 @@ export async function handleNewPriceMinute({
       `
     );
     // get one day price at once
-    const res = await fetch(URL);
-    const data = await res.json();
+    const res = await fetchWithTimeout(URL, {});
+    const data = res;
 
     const { t, o, c, h, l } = data;
 

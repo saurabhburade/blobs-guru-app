@@ -282,6 +282,7 @@ type DataSubmission @entity {
   feesPerMb: Float @index
   priceFeed: PriceFeedMinute
   extrinsic: Extrinsic
+  block: Block
 }
 
 type CollectiveData @entity {

@@ -365,6 +365,7 @@ export function handleDataSubmission(
       priceFeedId: priceFeed.id,
       feesUSD: 0,
       extrinsicId: ext.hash.toString(),
+      blockId: block.block.header.number.toString(),
     });
 
     if (extraDetails?.feeRounded) {
