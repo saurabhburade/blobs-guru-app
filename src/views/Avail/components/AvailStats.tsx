@@ -1,6 +1,9 @@
 import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
 import { availClient } from "@/lib/apollo/client";
-import { AVAIL_COLLECTIVE_STAT_QUERY } from "@/lib/apollo/queriesAvail";
+import {
+  AVAIL_COLLECTIVE_STAT_QUERY,
+  AVAIL_DA_COST_DATAS_QUERY,
+} from "@/lib/apollo/queriesAvail";
 import { formatBytes, formatWrapedText } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
@@ -12,11 +15,14 @@ import axios from "axios";
 import { useAvailDaAppsDataBasic } from "@/hooks/useAvailDaAppsDataBasic";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import Link from "next/link";
+import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
+import { useDaCostCompare } from "@/hooks/useDaCostCompare";
 
 type Props = {};
 
 function AvailStats({}: Props) {
   const { data: appsData } = useAvailDaAppsDataBasic();
+  const { data: daCostData, loading: daCostDataLoading } = useDaCostCompare();
   const { data: rawData, loading: statsLoading } = useQuery(
     AVAIL_COLLECTIVE_STAT_QUERY,
     {
@@ -214,6 +220,32 @@ function AvailStats({}: Props) {
           value={lastPriceFeed?.availPrice}
           isLoading={statsLoading}
         />
+
+        {!daCostDataLoading && (
+          <>
+            <div className=" h-full w-full bg-base-100 border-[0.5px] p-4 space-y-1.5 border-base-200">
+              <p className=" text-sm opacity-50">{"Cost per MB [EIP 4844]"}</p>
+              <p>
+                {Number(daCostData?.totalDataEth?.costPerMb)?.toFixed(4)} ETH
+              </p>
+              <p className="text-xs opacity-70">
+                {Number(daCostData?.totalDataEth?.costPerMbUSD)?.toFixed(4)} USD
+              </p>
+            </div>
+            <div className=" h-full w-full bg-base-100 border-[0.5px] p-4 space-y-1.5 border-base-200">
+              <p className=" text-sm opacity-50">{"Cost per MB [AvailDA]"}</p>
+              <p>
+                {Number(daCostData?.totalDataAvail?.costPerMb)?.toFixed(4)}{" "}
+                AVAIL
+              </p>
+              <p className="text-xs opacity-70">
+                {Number(daCostData?.totalDataAvail?.costPerMbUSD)?.toFixed(4)}{" "}
+                USD
+              </p>
+            </div>
+          </>
+        )}
+
         {/* <StatCard
           title="Last ETH Price"
           value={lastPriceFeed?.ethPrice}

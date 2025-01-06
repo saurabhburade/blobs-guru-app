@@ -450,7 +450,7 @@ export const AVAIL_BLOCKS_WITH_LIMIT_QUERY = gql`
 `;
 export const AVAIL_BLOCKS_DA_SUM_QUERY = gql`
   query DataSubmission($timestamps: [Datetime!]!) {
-    dataSubmissions(first: 20, filter: { timestamp: { in: $timestamps } }) {
+    dataSubmissions( filter: { timestamp: { in: $timestamps } }) {
       totalCount
       aggregates {
         sum {
@@ -492,6 +492,18 @@ export const AVAIL_BASIC_APP_DATAS_QUERY = gql`
           fees
           byteSize
         }
+      }
+    }
+  }
+`;
+export const AVAIL_DA_COST_DATAS_QUERY = gql`
+  query DataSubmission($duration: Int) {
+    dataSubmissions(first:$duration, orderBy: TIMESTAMP_DESC) {
+      nodes {
+        feesUSD
+        byteSize
+        fees
+        timestamp
       }
     }
   }

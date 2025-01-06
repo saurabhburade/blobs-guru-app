@@ -468,3 +468,14 @@ export const BLOB_ACCOUNT_SINGLE_QUERY = gql`
     }
   }
 `;
+export const BLOB_TRANSACTIONS_DA_COST_QUERY = gql`
+  query BlobTransactions($limit: Int) {
+    blobTransactions(first: $limit, orderBy: timestamp, orderDirection: desc) {
+      blobHashesLength
+      blobGasEth
+      blobGasUSD
+      timestamp
+      blobGas
+    }
+  }
+`;
