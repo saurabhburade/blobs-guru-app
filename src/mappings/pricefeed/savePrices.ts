@@ -18,29 +18,32 @@ const DEX_GURU_API_KEY =
 import { AbortController } from "abort-controller"; // Add this import if using an older Node.js version
 
 async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
-  const controller = new AbortController();
-  const signal = controller.signal;
+  // const controller = new AbortController();
+  // const signal = controller.signal;
 
   // Set up the timeout to abort the fetch request after the specified duration
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  // const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-  try {
-    const response = await fetch(url, { ...options, signal });
+  // try {
+  const response = await fetch(url, {
+    ...options,
+    //  signal: signal
+  });
 
-    // Clear the timeout once the fetch request completes
-    clearTimeout(timeoutId);
+  // Clear the timeout once the fetch request completes
+  // clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      throw new Error("Fetch failed");
-    }
-
-    return await response.json();
-  } catch (error: any) {
-    if (error?.name === "AbortError") {
-      throw new Error("Request timed out");
-    }
-    throw error; // Re-throw other errors
+  if (!response?.ok) {
+    throw new Error("Fetch failed");
   }
+
+  return await response.json();
+  // } catch (error: any) {
+  //   if (error?.name === "AbortError") {
+  //     throw new Error("Request timed out");
+  //   }
+  //   throw error; // Re-throw other errors
+  // }
 }
 // async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
 //   // 50 seconds timeout (50000 ms)
