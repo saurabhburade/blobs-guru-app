@@ -242,7 +242,6 @@ const StatCard = ({
 };
 
 export function AccountRows({ data, loading }: any) {
-  console.log(`🚀 ~ file: Superchains.tsx:273 ~ data:`, data?.accounts);
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
       <div className="hidden xl:grid xl:grid-cols-7 py-4 px-4  border-b border-base-200 text-sm items-center">

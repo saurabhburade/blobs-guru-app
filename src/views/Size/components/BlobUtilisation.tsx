@@ -46,7 +46,7 @@ const BlobUtilisation: React.FC = () => {
         name: formatAddress(bd?.id),
       };
     });
-    console.log(`🚀 ~ file: BlobUtilisation.tsx:30 ~ datas:`, datas);
+
     const averageBlobCount = _.meanBy(datas, function (o: any) {
       return Number(o?.totalBlobTransactionCount);
     });

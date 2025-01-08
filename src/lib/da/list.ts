@@ -4,7 +4,6 @@ import * as celestiaDA from "./celestia";
 import * as espressoDA from "./espressoDA";
 import * as meeDA from "./meeda";
 import * as nearDA from "./near";
-console.log(`🚀 ~ file: list.ts:6 ~ nearDA:`, nearDA);
 
 export const getDARAW = () => {
   const DA_RAW_URLS = [
