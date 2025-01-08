@@ -94,7 +94,7 @@ const BlocksRow = ({ blk }: any) => {
   }, [blk?.totalBlobGasEth]);
   const blockNumber = useMemo(() => {
     return new BigNumber(blk?.id).toFormat(0);
-  }, [blk?.blockNumber]);
+  }, [blk?.id]);
 
   const blobSize = useMemo(() => {
     return formatBytes(Number(blk?.totalBlobGas));
@@ -116,10 +116,10 @@ const BlocksRow = ({ blk }: any) => {
             <Box strokeWidth="1" width={24} height={24} />
           </div>
           <div>
-            {/* <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
+            <Link className="text-primary" href={`/avail/blocks/${blk?.id}`}>
               {blockNumber}
-            </Link> */}
-            <p>{blockNumber}</p>
+            </Link>
+            {/* <p>{blockNumber}</p> */}
             <p>{timeAgo(new Date(blk.timestamp + "Z"))}</p>
           </div>
         </div>
@@ -150,7 +150,9 @@ const BlocksRow = ({ blk }: any) => {
             {/* <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
               {blockNumber}
             </Link> */}
-            <p>{blockNumber}</p>
+            <Link className="text-primary" href={`/avail/blocks/${blk?.id}`}>
+              {blockNumber}
+            </Link>
 
             <p>{timeAgo(new Date(blk.timestamp + "Z"))}</p>
           </div>

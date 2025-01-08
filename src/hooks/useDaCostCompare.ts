@@ -19,6 +19,9 @@ export const useDaCostCompare = () => {
     BLOB_TRANSACTIONS_DA_COST_QUERY,
     {
       pollInterval: 3_000,
+      variables: {
+        limit: 100,
+      },
     }
   );
 

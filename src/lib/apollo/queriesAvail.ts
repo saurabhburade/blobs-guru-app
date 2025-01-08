@@ -450,7 +450,7 @@ export const AVAIL_BLOCKS_WITH_LIMIT_QUERY = gql`
 `;
 export const AVAIL_BLOCKS_DA_SUM_QUERY = gql`
   query DataSubmission($timestamps: [Datetime!]!) {
-    dataSubmissions( filter: { timestamp: { in: $timestamps } }) {
+    dataSubmissions(filter: { timestamp: { in: $timestamps } }) {
       totalCount
       aggregates {
         sum {
@@ -498,12 +498,55 @@ export const AVAIL_BASIC_APP_DATAS_QUERY = gql`
 `;
 export const AVAIL_DA_COST_DATAS_QUERY = gql`
   query DataSubmission($duration: Int) {
-    dataSubmissions(first:$duration, orderBy: TIMESTAMP_DESC) {
+    dataSubmissions(first: $duration, orderBy: TIMESTAMP_DESC) {
       nodes {
         feesUSD
         byteSize
         fees
         timestamp
+      }
+    }
+  }
+`;
+export const AVAIL_BLOCK_QUERY = gql`
+  query Block($id: String!) {
+    block(id: $id) {
+      id
+      blockFee
+      hash
+      parentHash
+      stateRoot
+      extrinsicsRoot
+      availPrice
+      timestamp
+      nbEvents
+      nbExtrinsics
+      runtimeVersion
+      extrinsics {
+        nodes {
+          id
+          fees
+          module
+          timestamp
+          signer
+          fees
+          nbEvents
+          blockHeight
+          extrinsicIndex
+          dataSubmissions {
+            totalCount
+            aggregates {
+              sum {
+                byteSize
+                fees
+                feesUSD
+              }
+            }
+          }
+        }
+        groupedAggregates(groupBy: MODULE) {
+          keys
+        }
       }
     }
   }
