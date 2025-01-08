@@ -9,7 +9,7 @@ export const useDaCostCompare = () => {
     AVAIL_DA_COST_DATAS_QUERY,
     {
       client: availClient,
-      pollInterval: 3_000,
+      pollInterval: 15_000, // Every 15 sec
       variables: {
         duration: 100,
       },
@@ -18,7 +18,7 @@ export const useDaCostCompare = () => {
   const { data: ethDaCostData, loading: totalDataEthLoading } = useQuery(
     BLOB_TRANSACTIONS_DA_COST_QUERY,
     {
-      pollInterval: 3_000,
+      pollInterval: 15_000, // Every 15 sec
       variables: {
         limit: 100,
       },

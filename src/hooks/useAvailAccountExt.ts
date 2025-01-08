@@ -22,11 +22,7 @@ export const useAvailAccountExt = ({
     client: availClient,
   });
   const extIds = data?.extrinsics?.nodes?.map((ext: any) => `${ext?.id}`);
-  console.log(
-    `🚀 ~ file: useAvailAccountExt.ts:27 ~ data:`,
-    data?.extrinsics?.nodes,
-    { extIds }
-  );
+
   const { data: daSubs, loading: daSubsloading } = useQuery(
     AVAIL_DA_EXT_FILTER_LIMIT_QUERY,
     {

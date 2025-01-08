@@ -98,7 +98,7 @@ export default AvailApps;
 //   totalDAFeesUSD;
 const AccountRow = ({ acc }: any) => {
   const accountDetails = getAppDetailsFromAppBook(acc?.id);
-  console.log(`🚀 ~ file: AvailApps.tsx:101 ~ accountDetails:`, accountDetails);
+
   const totalSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));
   }, [acc?.totalByteSize]);
@@ -191,10 +191,7 @@ const AccountRow = ({ acc }: any) => {
               />
             </div>
 
-            <Link
-              className="text-primary"
-              href={`/avail/apps/${acc?.id}`}
-            >
+            <Link className="text-primary" href={`/avail/apps/${acc?.id}`}>
               {accountDetails?.name ? (
                 <p>{accountDetails?.name}</p>
               ) : (
