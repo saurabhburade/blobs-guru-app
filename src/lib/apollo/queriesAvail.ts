@@ -551,3 +551,39 @@ export const AVAIL_BLOCK_QUERY = gql`
     }
   }
 `;
+export const AVAIL_TXN_QUERY = gql`
+  query Extrinsic($id: String!) {
+    extrinsic(id: $id) {
+      id
+      call
+      argsName
+      argsValue
+      blockId
+      blockHeight
+      fees
+      availPrice
+      success
+      isSigned
+      nbEvents
+      extrinsicIndex
+      signer
+      timestamp
+      module
+      dataSubmissions {
+        aggregates {
+          sum {
+            fees
+            feesUSD
+            byteSize
+          }
+        }
+        nodes {
+          id
+          byteSize
+          fees
+          feesUSD
+        }
+      }
+    }
+  }
+`;

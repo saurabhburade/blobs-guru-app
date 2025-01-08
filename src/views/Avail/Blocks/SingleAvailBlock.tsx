@@ -381,7 +381,10 @@ const TransactionRow = ({ txn }: any) => {
             <NotepadText strokeWidth="1" width={24} height={24} />
           </div>
           <div>
-            {formatAddress(txn?.id)}
+            <Link href={`/avail/txn/${txn?.id}`} className="text-primary">
+              {" "}
+              {formatAddress(txn?.id)}
+            </Link>
 
             <p>{timeAgo(new Date(txn.timestamp + "Z"))}</p>
           </div>
@@ -429,7 +432,10 @@ const TransactionRow = ({ txn }: any) => {
             <NotepadText strokeWidth="1" width={24} height={24} />
           </div>
           <div>
-            <p>{formatAddress(txn?.id)}</p>
+            <Link href={`/avail/txn/${txn?.id}`} className="text-primary">
+              {" "}
+              {formatAddress(txn?.id)}
+            </Link>
 
             <p>{timeAgo(new Date(txn.timestamp + "Z"))}</p>
           </div>
