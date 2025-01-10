@@ -140,7 +140,7 @@ function L2BeatCard({ account }: any) {
 
               <div>
                 <p className="text-xl">{l2BeatAccountDetails?.display?.name}</p>
-                <p className="text-xs">Source L2BEAT</p>
+                {/* <p className="text-xs">Source L2BEAT</p> */}
               </div>
             </>
           )}
