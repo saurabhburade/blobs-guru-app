@@ -173,6 +173,7 @@ export const AVAIL_ACCOUNT_EXT_LIMIT_QUERY = gql`
 export const AVAIL_BLOCKS_LIMIT_QUERY = gql`
   query Blocks($skip: Int, $limit: Int) {
     blocks(orderBy: TIMESTAMP_DESC, first: $limit, offset: $skip) {
+      totalCount
       nodes {
         nbEvents
         timestamp

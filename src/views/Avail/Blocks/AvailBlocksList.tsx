@@ -41,11 +41,11 @@ function AvailBlocksList({}: Props) {
               />
             );
           })}
-        {rawData?.map((blk: any) => {
+        {rawData?.mapBlockDAData?.map((blk: any) => {
           return <BlocksRow blk={blk} key={blk?.id} />;
         })}
       </div>
-      {rawData?.accountEntities?.totalCount > LIMIT_PER_PAGE && (
+      {rawData?.totalCount > LIMIT_PER_PAGE && (
         <div className="flex px-4 justify-end gap-2  p-4  border-t border-base-200">
           {page > 1 && (
             <button

@@ -55,5 +55,8 @@ export const useAvailBlocks = ({ page }: { page: number }) => {
       })
     : null;
 
-  return { data: mapBlockDAData, loading: loading || daSubsloading };
+  return {
+    data: { mapBlockDAData, totalCount: data?.blocks?.totalCount },
+    loading: loading || daSubsloading,
+  };
 };

@@ -17,6 +17,7 @@ import ImageWithFallback from "@/components/ImageWithFallback";
 import Link from "next/link";
 import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
 import { useDaCostCompare } from "@/hooks/useDaCostCompare";
+import { InfoIcon } from "lucide-react";
 
 type Props = {};
 
@@ -224,7 +225,18 @@ function AvailStats({}: Props) {
         {!daCostDataLoading && (
           <>
             <div className=" h-full w-full bg-base-100 border-[0.5px] p-4 space-y-1.5 border-base-200">
-              <p className=" text-sm opacity-50">{"Cost per MB [EIP 4844]"}</p>
+              <div className="flex justify-between items-center">
+                <p className=" text-sm opacity-50">
+                  {"Cost per MB [EIP 4844]"}
+                </p>
+                <div
+                  className="tooltip "
+                  data-tip="Based on last 100 DA submissions"
+                >
+                  <InfoIcon className="opacity-50 w-[18px] h-[18px]" />
+                </div>
+              </div>
+
               <p>
                 {Number(daCostData?.totalDataEth?.costPerMb)?.toFixed(4)} ETH
               </p>
@@ -233,7 +245,17 @@ function AvailStats({}: Props) {
               </p>
             </div>
             <div className=" h-full w-full bg-base-100 border-[0.5px] p-4 space-y-1.5 border-base-200">
-              <p className=" text-sm opacity-50">{"Cost per MB [AvailDA]"}</p>
+              <div className="flex justify-between items-center">
+                <p className=" text-sm opacity-50">{"Cost per MB [AvailDA]"}</p>
+
+                <div
+                  className="tooltip "
+                  data-tip="Based on last 100 DA submissions"
+                >
+                  <InfoIcon className="opacity-50 w-[18px] h-[18px]" />
+                </div>
+              </div>
+
               <p>
                 {Number(daCostData?.totalDataAvail?.costPerMb)?.toFixed(4)}{" "}
                 AVAIL

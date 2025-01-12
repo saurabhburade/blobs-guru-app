@@ -83,7 +83,7 @@ function TxnRows({ account }: { account: string }) {
           Ext #
         </div>
         <p>From</p>
-        <p>Events</p>
+        <p>Module</p>
         <p>DA size</p>
         <p>Position</p>
         <p>Txn fee</p>
@@ -154,9 +154,11 @@ const TransactionRow = ({ txn }: any) => {
           </div>
         </div>
         {txn?.signer ? <p>{formatAddress(txn?.signer)}</p> : <p>-</p>}
-        {txn?.nbEvents ? (
-          <div className="">
-            <p>{txn?.nbEvents}</p>
+        {txn?.module ? (
+          <div className="flex justify-end">
+            <p className=" p-1 px-2 border border-base-200 rounded-full w-fit -mr-2">
+              {txn?.module}
+            </p>
           </div>
         ) : (
           <p>-</p>
