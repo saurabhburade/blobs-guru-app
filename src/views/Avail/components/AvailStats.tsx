@@ -230,7 +230,7 @@ function AvailStats({}: Props) {
                   {"Cost per MB [EIP 4844]"}
                 </p>
                 <div
-                  className="tooltip "
+                  className="tooltip before:bg-base-100 before:border-base-200/50 before:!border before:text-current"
                   data-tip="Based on last 100 DA submissions"
                 >
                   <InfoIcon className="opacity-50 w-[18px] h-[18px]" />
@@ -249,7 +249,7 @@ function AvailStats({}: Props) {
                 <p className=" text-sm opacity-50">{"Cost per MB [AvailDA]"}</p>
 
                 <div
-                  className="tooltip "
+                  className="tooltip before:bg-base-100 before:border-base-200/50 before:!border before:text-current"
                   data-tip="Based on last 100 DA submissions"
                 >
                   <InfoIcon className="opacity-50 w-[18px] h-[18px]" />
