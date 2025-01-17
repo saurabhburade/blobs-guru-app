@@ -20,10 +20,10 @@ type Props = {};
 
 function Sidebar({}: Props) {
   return (
-    <div className="border-base-200 lg:border-r  opacity-80">
+    <div className="border-base-200 xl:border-r  opacity-80">
       <div className="flex flex-col justify-between h-screen">
         <div className="h-[90vh] overflow-scroll">
-          <div className="p-5 flex items-center justify-between hidden lg:flex">
+          <div className="p-5 flex items-center justify-between hidden xl:flex">
             <Link href="/">
               <div className="font-bold flex items-center gap-2">
                 <img src="/images/logo.svg" width={34} height={34} alt="" />
@@ -32,7 +32,7 @@ function Sidebar({}: Props) {
             </Link>
             <ThemeController />
           </div>
-          <hr className="border-base-200 lg:block hidden" />
+
 
           <div className="">
             <div className="collapse collapse-arrow ">

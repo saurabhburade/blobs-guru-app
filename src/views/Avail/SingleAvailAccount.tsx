@@ -32,11 +32,11 @@ function SingleAvailAccount({ account }: Props) {
   });
 
   return (
-    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
-      <div className="lg:block hidden">
+    <div className="grid xl:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="xl:block hidden">
         <Sidebar />
       </div>
-      <div className="lg:hidden block">
+      <div className="xl:hidden block">
         <Header />
       </div>
       <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
