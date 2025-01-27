@@ -151,7 +151,7 @@ export default function BlobCostChart({ duration }: { duration: number }) {
           width={200}
           height={200}
           data={chartData}
-          margin={{ top: 30, right: 20, left: 20, bottom: 20 }}
+          margin={{ top: 30, right: 30, left: -15, bottom: 30 }}
         >
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
@@ -168,12 +168,23 @@ export default function BlobCostChart({ duration }: { duration: number }) {
             fill="url(#colorUvAccStatCard)"
           ></Area>
 
+          <YAxis
+            className="text-[10px] !text-current"
+            allowDataOverflow
+            axisLine={false}
+            tickLine={false}
+            tickFormatter={(v) => {
+              return `${Number(v).toFixed(0)} USD`;
+            }}
+          />
           <XAxis
             dataKey="timestamp2"
             className="text-[10px] !text-current"
-            angle={0}
+            angle={-60}
+            tickLine={false}
             allowDataOverflow
             axisLine={false}
+            tickMargin={10}
           />
         </AreaChart>
       </ResponsiveContainer>

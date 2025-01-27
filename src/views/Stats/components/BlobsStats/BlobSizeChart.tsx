@@ -126,7 +126,12 @@ export default function BlobSizeChart({ duration }: { duration: number }) {
         </p>
       </div>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart width={400} height={400} data={chartData}>
+        <BarChart
+          width={400}
+          height={400}
+          data={chartData}
+          margin={{ top: 30, right: 30, left: -15, bottom: 30 }}
+        >
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
             // @ts-ignore
@@ -154,12 +159,31 @@ export default function BlobSizeChart({ duration }: { duration: number }) {
             // @ts-ignore
             // shape={<TriangleBar />}
           />
-          <XAxis
+          {/* <XAxis
             dataKey="timestamp2"
             className="text-[10px] !text-current"
             angle={0}
             allowDataOverflow
             axisLine={false}
+          /> */}
+          <YAxis
+            className="text-[10px] !text-current"
+            allowDataOverflow
+            axisLine={false}
+            tickLine={false}
+            tickFormatter={(v) => {
+              const [num, denom] = formatBytes(v, 1).split(" ");
+              return `${Number(num).toFixed(0)} ${denom}`;
+            }}
+          />
+          <XAxis
+            dataKey="timestamp2"
+            className="text-[10px] !text-current"
+            angle={-60}
+            tickLine={false}
+            allowDataOverflow
+            axisLine={false}
+            tickMargin={10}
           />
         </BarChart>
       </ResponsiveContainer>

@@ -136,7 +136,7 @@ export default function BlobOnlyEthFeeChart({
           width={200}
           height={200}
           data={chartData}
-          margin={{ top: 30, right: 20, left: 20, bottom: 50 }}
+          margin={{ top: 30, right: 30, left: -15, bottom: 75 }}
         >
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
@@ -163,12 +163,23 @@ export default function BlobOnlyEthFeeChart({
             fill="url(#colorUvAccStatCard)"
           ></Area>
 
+          <YAxis
+            className="text-[10px] !text-current"
+            allowDataOverflow
+            axisLine={false}
+            tickLine={false}
+            tickFormatter={(v) => {
+              return `${Number(v / 1e18).toFixed(0)} ETH`;
+            }}
+          />
           <XAxis
             dataKey="timestamp2"
             className="text-[10px] !text-current"
-            angle={0}
+            angle={-60}
+            tickLine={false}
             allowDataOverflow
             axisLine={false}
+            tickMargin={10}
           />
         </AreaChart>
       </ResponsiveContainer>

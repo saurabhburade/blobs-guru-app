@@ -30,12 +30,10 @@ const dateFormater = new Intl.DateTimeFormat("en-US", {
   month: "short",
   hour: "2-digit",
   minute: "2-digit",
-  second: "2-digit",
   timeZone: "UTC",
 });
 const dayFormater = new Intl.DateTimeFormat("en-US", {
   hour: "2-digit",
-  minute: "2-digit",
   timeZone: "UTC",
 });
 export default function BlobOnlyEthFeeChart({
@@ -175,7 +173,12 @@ export default function BlobOnlyEthFeeChart({
         </p>
       </div>
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart width={400} height={400} data={chartData}>
+        <AreaChart
+          width={400}
+          height={400}
+          data={chartData}
+          margin={{ top: 30, right: 30, left: 0, bottom: 30 }}
+        >
           <Tooltip
             cursor={{ fill: "var(--fallback-b2, oklch(var(--b2) / 0.3))" }}
             // @ts-ignore
@@ -191,12 +194,23 @@ export default function BlobOnlyEthFeeChart({
             fill="url(#colorUvAccStatCard)"
           ></Area>
 
+          <YAxis
+            className="text-[10px] !text-current"
+            allowDataOverflow
+            axisLine={false}
+            tickLine={false}
+            tickFormatter={(v) => {
+              return `${Number(v).toFixed(2)} USD`;
+            }}
+          />
           <XAxis
             dataKey="timestamp2"
             className="text-[10px] !text-current"
-            angle={0}
+            angle={-60}
+            tickLine={false}
             allowDataOverflow
             axisLine={false}
+            tickMargin={10}
           />
         </AreaChart>
       </ResponsiveContainer>
