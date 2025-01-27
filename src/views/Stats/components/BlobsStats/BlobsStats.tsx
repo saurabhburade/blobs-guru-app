@@ -13,7 +13,7 @@ type Props = {};
 
 function BlobsStats({}: Props) {
   const [duration, setDuration] = useState(15);
-  const [showHourly, setShowHourly] = useState(false);
+  const [showHourly, setShowHourly] = useState(true);
   return (
     <div className="bg-base-100 border border-base-200">
       <div className="p-5 border-b border-base-200 flex justify-between">
