@@ -1,0 +1,53 @@
+                    GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+Copyright (C) 2024 saurabhburade 
+Copyright (C) saurabhburade 
+
+
+Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
+
+                      Preamble
+
+The GNU General Public License is a free, copyleft license for software and other kinds of works.
+
+The licenses for most software and other practical works are designed to take away your freedom to share and change the works. By contrast, the GNU General Public License is intended to guarantee your freedom to share and change all versions of a program—to make sure it remains free software for all its users.
+
+When we speak of free software, we are referring to freedom, not price. To understand the concept, you should think of "free" as in "free speech," not as in "free beer."
+
+To protect your rights, we need to make restrictions that forbid distributors to deny you these rights or to ask you to surrender these rights. These restrictions translate to certain responsibilities for you if you distribute copies of the software, or if you modify it.
+
+For example, if you distribute copies of the software, you must pass on to the recipients the same freedoms that you received. You must make sure that they, too, receive or can get the source code. And you must show them these terms so they know their rights.
+
+Finally, every program is threatened constantly by software patents. We wish to avoid the danger that commercial users of a free program may be required to pay royalties for using it. To prevent this, the GPL ensures that any patent licenses granted for a program apply to all users of that program, not just those who have paid for it.
+
+                       TERMS AND CONDITIONS
+
+0. **Definitions.**
+   - "This License" refers to version 3 of the GNU General Public License.
+   - "The Program" refers to any software or other work licensed under this License.
+
+1. **You may copy, modify, and distribute the Program, with or without modifications, under the terms of this License.**
+   - You may distribute copies of the Program in its source code and/or compiled form.
+   - You may modify the Program and distribute it as modified, provided that you meet the conditions outlined in this License.
+
+2. **Commercial Use Restriction.**
+   - Except for the copyright holder(s) (the "Owner"), **no one** may use the Program, or any modified version of it, for commercial purposes, including but not limited to:
+     - selling the software or charging for its use,
+     - using the software to provide a service for commercial gain,
+     - or distributing it as part of any product or service for commercial purposes.
+   
+   - The Owner is granted the exclusive right to use the software for commercial purposes. As the Owner, you may use, modify, and distribute the Program commercially without restriction.
+
+3. **You must provide a copy of this License with every distribution of the Program, including any modified versions of the Program.**
+   - If you distribute the Program in any form, you must provide a copy of the full text of this License.
+
+4. **Source Code.**
+   - If you distribute the Program or any modified version, you must make the source code available, or include a written offer to provide the source code, under the same conditions as this License.
+
+5. **No Warranty.**
+   - The Program is provided "as-is" without warranty of any kind, either express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, or non-infringement.
+
+6. **Acceptance.**
+   - By using, modifying, or distributing the Program, you agree to be bound by the terms of this License.
+
