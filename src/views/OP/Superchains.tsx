@@ -263,7 +263,7 @@ export function AccountRows({ data, loading }: any) {
             );
           })}
         {data?.accounts?.map((acc: any) => {
-          return <AccountRow key={acc?.id} acc={acc} />;
+          return acc?.id && <AccountRow key={acc?.id} acc={acc} />;
         })}
       </div>
     </div>
@@ -271,6 +271,7 @@ export function AccountRows({ data, loading }: any) {
 }
 
 const AccountRow = ({ acc }: any) => {
+  console.log(`🚀 ~ file: Superchains.tsx:274 ~ acc:`, acc);
   const accountDetails = getAccountDetailsFromAddressBook(acc?.id);
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(acc?.totalBlobGas));
