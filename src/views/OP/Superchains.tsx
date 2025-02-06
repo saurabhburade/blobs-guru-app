@@ -271,7 +271,6 @@ export function AccountRows({ data, loading }: any) {
 }
 
 const AccountRow = ({ acc }: any) => {
-  console.log(`🚀 ~ file: Superchains.tsx:274 ~ acc:`, acc);
   const accountDetails = getAccountDetailsFromAddressBook(acc?.id);
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(acc?.totalBlobGas));

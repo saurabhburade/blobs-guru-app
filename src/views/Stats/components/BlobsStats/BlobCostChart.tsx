@@ -114,7 +114,6 @@ export default function BlobCostChart({ duration }: { duration: number }) {
     const totalBlobGasUSD = _.sumBy(datas, "totalBlobGasUSD");
     const totalFeeEth = _.sumBy(datas, "totalFeeEth");
     const costPerBlob = _.meanBy(datas, "costPerBlob");
-    console.log(`🚀 ~ file: BlobCostChart.tsx:116 ~ datas:`, datas);
 
     const totalBlobTransactionCount = _.sumBy(
       datas,
