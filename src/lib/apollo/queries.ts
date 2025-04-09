@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const COLLECTIVE_STAT_QUERY = gql`
   query {
-    collectiveData(id: "1") {
+    collectiveData(id: "0x01000000") {
       id
       totalBlobTransactionCount
       totalGasEth

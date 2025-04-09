@@ -1,6 +1,8 @@
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 const subgraphUrl =
-  "https://api.studio.thegraph.com/query/90545/blobs-explorer/vt1.5(np)";
+  // "https://api.studio.thegraph.com/query/90545/blobs-explorer/vt1.5(np)";
+  // "https://api.studio.thegraph.com/query/90545/blobs-explorer/vt1.6.24";
+  "https://api.studio.thegraph.com/query/90545/blobs-explorer/vt1.6.26";
 const availUrl = "https://lwmetal2.blobs.guru/";
 
 export const apolloClient = new ApolloClient({
