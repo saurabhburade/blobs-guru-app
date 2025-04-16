@@ -18,6 +18,7 @@ import Link from "next/link";
 import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
 import { useDaCostCompare } from "@/hooks/useDaCostCompare";
 import { InfoIcon } from "lucide-react";
+import { div } from "framer-motion/client";
 
 type Props = {};
 
@@ -102,19 +103,19 @@ function AvailStats({}: Props) {
     return 100;
   }, [blockData?.data, endBlock]);
   return (
-    <div className="overflow-hidden">
-      {percent < 99.5 && (
-        <div className="bg-red-400 px-4 py-3 rounded-lg text-sm flex gap-3 items-center absolute bottom-4 right-4 z-10">
-          <span className="loading loading-spinner "></span>
-          <p>
-            {" "}
-            Syncing blocks ({new BigNumber(endBlock).toFormat()} of{" "}
-            {new BigNumber(blockData?.data?.latest_block).toFormat()} blocks
-            synced){" "}
-          </p>
-        </div>
-      )}
-      <div className="grid lg:grid-cols-4  gap-4">
+    <>
+      <div className="grid lg:grid-cols-4  gap-4 ">
+        {percent < 99.5 && (
+          <div className="bg-red-400 px-4 py-3 rounded-lg text-sm flex gap-3 items-center absolute lg:bottom-4 bottom-0 right-0 lg:right-4 z-10">
+            <span className="loading loading-spinner "></span>
+            <p>
+              {" "}
+              Syncing blocks ({new BigNumber(endBlock).toFormat()} of{" "}
+              {new BigNumber(blockData?.data?.latest_block).toFormat()} blocks
+              synced){" "}
+            </p>
+          </div>
+        )}
         {appsData?.formattedOp?.map((app, idx) => {
           return (
             <div
@@ -165,7 +166,6 @@ function AvailStats({}: Props) {
             value={percent}
             isLoading={statsLoading}
             after="%"
-
           />
         )}
         {percent < 99.5 && (
@@ -300,7 +300,7 @@ function AvailStats({}: Props) {
           ></progress>
         </div> */}
       </div>
-    </div>
+    </>
   );
 }
 
