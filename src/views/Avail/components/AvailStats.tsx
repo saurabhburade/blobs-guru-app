@@ -107,7 +107,8 @@ function AvailStats({}: Props) {
       <div className="grid lg:grid-cols-4  gap-4 ">
         {percent < 99.5 && (
           <div className="bg-red-400 px-4 py-3 rounded-lg text-sm flex gap-3 items-center absolute lg:bottom-4 bottom-0 right-0 lg:right-4 z-10">
-            <span className="loading loading-spinner "></span>
+            <span className="loading loading-bars loading-xs"></span>
+
             <p>
               {" "}
               Syncing blocks ({new BigNumber(endBlock).toFormat()} of{" "}
