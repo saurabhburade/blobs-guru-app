@@ -140,17 +140,17 @@ function L2BeatCard({ account }: any) {
 
               <div>
                 <p className="text-xl">{l2BeatAccountDetails?.display?.name}</p>
-                {/* <p className="text-xs">Source L2BEAT</p> */}
+                <p className="text-xs">Source L2BEAT</p>
               </div>
             </>
           )}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          {l2BeatAccountDetails?.badges?.map((b: string) => {
+          {l2BeatAccountDetails?.badges?.map((b: any) => {
             return (
               <img
-                key={`l2BeatAccountDetails__${b}`}
-                src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/images/badges/${b}.png?raw=true`}
+                key={`l2BeatAccountDetails__${b?.id}`}
+                src={`https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/public/images/badges/${b?.id}.png`}
                 alt=""
                 className="lg:w-[50px] w-[30px] lg:h-[50px] h-[30px]"
               />

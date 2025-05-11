@@ -59,7 +59,7 @@ export const useL2BeatTVLSummary = ({
     queryKey: ["useL2BeatTVLSummary", duration, projectId],
     queryFn: async () => {
       const res = await axios.get(
-        `https://l2beat.com/api/scaling/tvl/${projectId}`,
+        `https://l2beat.com/api/scaling/tvs/${projectId}`,
         {
           params: {
             range: duration,
