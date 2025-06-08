@@ -150,7 +150,7 @@ function L2BeatCard({ account }: any) {
             return (
               <img
                 key={`l2BeatAccountDetails__${b?.id}`}
-                src={`https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/public/images/badges/${b?.id}.png`}
+                src={`https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/images/badges/${b?.id}.png`}
                 alt=""
                 className="lg:w-[50px] w-[30px] lg:h-[50px] h-[30px]"
               />
