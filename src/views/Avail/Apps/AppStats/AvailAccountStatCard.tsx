@@ -108,7 +108,7 @@ function AvailAccountStatCard({ acc, isLoading, className }: any) {
                 )?.toFormat()}
               </p>
             </div>
-        
+
             <div className="flex justify-between items-center py-3 p-4">
               <div className="flex items-center gap-2">
                 <Database />
@@ -133,7 +133,7 @@ function AvailAccountStatCard({ acc, isLoading, className }: any) {
             <div className="flex justify-between items-center  py-3 p-4">
               <div className="flex items-center gap-2">
                 <ImageWithFallback
-                  src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+                  src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`}
                   width={24}
                   height={24}
                   alt="avail"

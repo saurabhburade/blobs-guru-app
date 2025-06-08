@@ -63,7 +63,7 @@ function DAList({}: Props) {
               >
                 <div className="flex gap-4 p-4 h-fit w-full lg:col-span-1 col-span-2 lg:border-b-0 border-b border-base-200">
                   <img
-                    src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/${provider?.data?.display?.slug}.png?raw=true`}
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/${provider?.data?.display?.slug}.png?raw=true`}
                     // src="/images/eigen-da.png"
                     alt=""
                     className="rounded-lg size-10 bg-white p-1"

@@ -33,7 +33,6 @@ function Sidebar({}: Props) {
             <ThemeController />
           </div>
 
-
           <div className="">
             <div className="collapse collapse-arrow ">
               <input type="checkbox" name="my-accordion-2" defaultChecked />
@@ -128,7 +127,7 @@ function Sidebar({}: Props) {
               <div className="collapse-title text-xl font-medium ">
                 <div className="flex items-center gap-2">
                   <ImageWithFallback
-                    src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`}
                     width={24}
                     height={24}
                     alt="avail"
