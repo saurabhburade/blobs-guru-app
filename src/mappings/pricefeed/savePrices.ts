@@ -18,74 +18,21 @@ const DEX_GURU_API_KEY =
 import { AbortController } from "abort-controller"; // Add this import if using an older Node.js version
 
 async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
-  // const controller = new AbortController();
-  // const signal = controller.signal;
-
-  // Set up the timeout to abort the fetch request after the specified duration
-  // const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-  // try {
   const response = await fetch(url, {
     ...options,
     //  signal: signal
   });
-
-  // Clear the timeout once the fetch request completes
-  // clearTimeout(timeoutId);
 
   if (!response?.ok) {
     throw new Error("Fetch failed");
   }
 
   return await response.json();
-  // } catch (error: any) {
-  //   if (error?.name === "AbortError") {
-  //     throw new Error("Request timed out");
-  //   }
-  //   throw error; // Re-throw other errors
-  // }
 }
-// async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
-//   // 50 seconds timeout (50000 ms)
-//   const controller = new AbortController();
-//   const signal = controller.signal;
 
-//   // Set up the timeout to abort the fetch request after the specified duration
-//   const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-//   try {
-//     const response = await fetch(url, { ...options, signal });
-
-//     // Clear the timeout once the fetch request completes
-//     clearTimeout(timeoutId);
-
-//     if (!response.ok) {
-//       throw new Error("Fetch failed");
-//     }
-
-//     return await response.json();
-//   } catch (error: any) {
-//     if (error?.name === "AbortError") {
-//       throw new Error("Request timed out");
-//     }
-//     throw error; // Re-throw other errors
-//   }
-// }
 export async function handleNewPriceMinute({
-  //   availPrice,
-  //   ethPrice,
-  //   ethBlock,
-  //   availBlock,
-  //   ethDate,
-  //   availDate,
   block,
 }: {
-  //   availPrice: number;
-  //   ethPrice: number;
-  //   ethBlock: number;
-  //   availBlock: number;
-  //   ethDate: Date;
-  //   availDate: Date;
   block: CorrectSubstrateBlock;
 }): Promise<PriceFeedMinute> {
   const blockDate = new Date(Number(block.timestamp.getTime()));
@@ -139,7 +86,7 @@ export async function handleNewPriceMinute({
     // get one day price at once
     const res = await fetchWithTimeout(URL, {});
     const data = res;
-
+    // @ts-ignore
     const { t, o, c, h, l } = data;
 
     const mappedPrices = t.map((timestamp: number | string, idx: number) => {
@@ -161,31 +108,28 @@ export async function handleNewPriceMinute({
     logger.info(`PRICE LENGTH ${mappedPrices?.length}`);
     let priceFeedThisMinute;
     const pricesToSave: PriceFeedMinute[] = [];
+    const minuteNow = Math.floor(Number(new Date().getTime()) / 60000);
     for (let index = 0; index < mappedPrices.length; index++) {
       const element = mappedPrices[index];
-      const priceForMinute = PriceFeedMinute.create({
-        id: element?.minuteId?.toString(),
-        availBlock: availBlock,
-        ethBlock: 0,
-        availPrice: element?.avgPrice,
-        ethPrice: 0,
-        date: element?.timestampF,
-        availDate: element?.timestampF,
-        ethDate: element?.timestampF,
-      });
-      pricesToSave.push(priceForMinute);
-      // await priceForMinute.save();
-      if (index === 0) {
-        // logger.info(
-        //   `ZERO PRICE FOR THIS MINUTE EXIST :: ${JSON.stringify(element)}`
-        // );
-        priceFeedThisMinute = priceForMinute;
+      if (element?.minuteId?.toString() >= minuteNow?.toString()) {
+        const priceForMinute = PriceFeedMinute.create({
+          id: element?.minuteId?.toString(),
+          availBlock: availBlock,
+          ethBlock: 0,
+          availPrice: element?.avgPrice,
+          ethPrice: 0,
+          date: element?.timestampF,
+          availDate: element?.timestampF,
+          ethDate: element?.timestampF,
+        });
+        pricesToSave.push(priceForMinute);
+        if (index === 0) {
+          priceFeedThisMinute = priceForMinute;
+        }
       }
-      // await priceFeedThisMinute!.save();
-      // return priceFeedMinuteZero!;
     }
     await Promise.all([store.bulkUpdate("PriceFeedMinute", pricesToSave)]);
-    await delay(1000);
+    await delay(200);
     return priceFeedThisMinute!;
   } catch (error) {
     logger.error(`ERROR API ${error}`);
