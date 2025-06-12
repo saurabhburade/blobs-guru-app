@@ -83,7 +83,7 @@ export async function handleBlock(block: CorrectSubstrateBlock): Promise<void> {
       const savedPrice = await handleNewPriceMinute({
         block,
       });
-      // logger.info(`PRICE DATA SAVED ::::::  ${JSON.stringify(savedPrice)}`);
+      logger.info(`PRICE DATA SAVED ::::::  ${JSON.stringify(savedPrice)}`);
       await blockHandler(block, savedPrice);
       // }
     } catch (error) {
