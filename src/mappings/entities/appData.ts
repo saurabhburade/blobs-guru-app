@@ -165,28 +165,27 @@ export async function handleApp(
     appRecord.endBlock = block.block.header.number.toNumber();
     // logger.info(`New ACCOUNT SAVE::::::  ${JSON.stringify(appRecord)}`);
     // APP ACCOUNT HANDLE WITH   type: number = 0,  appRecord?: AppEntity
-    await Promise.all([
-      await handleAppDayData(extrinsicRecord, extrinsic, priceFeed, appRecord),
-      await handleAppHourData(extrinsicRecord, extrinsic, priceFeed, appRecord),
-      await handleAccount(extrinsicRecord, extrinsic, priceFeed, 1, appRecord),
 
-      await handleAccountDayData(
-        extrinsicRecord,
-        extrinsic,
-        priceFeed,
-        1,
-        appRecord
-      ),
+    await handleAppDayData(extrinsicRecord, extrinsic, priceFeed, appRecord);
+    await handleAppHourData(extrinsicRecord, extrinsic, priceFeed, appRecord);
+    await handleAccount(extrinsicRecord, extrinsic, priceFeed, 1, appRecord);
 
-      await handleAccountHourData(
-        extrinsicRecord,
-        extrinsic,
-        priceFeed,
-        1,
-        appRecord
-      ),
-      await appRecord.save(),
-    ]);
+    await handleAccountDayData(
+      extrinsicRecord,
+      extrinsic,
+      priceFeed,
+      1,
+      appRecord
+    );
+
+    await handleAccountHourData(
+      extrinsicRecord,
+      extrinsic,
+      priceFeed,
+      1,
+      appRecord
+    );
+    await appRecord.save();
   }
 }
 
@@ -234,7 +233,7 @@ export async function getAppDataFromKeyRPC(id: number) {
       }
       appEntries.push(appEntry);
     }
-    await Promise.all([store.bulkUpdate("AppLookupBaseData", appEntries)]);
+    await store.bulkUpdate("AppLookupBaseData", appEntries);
     // @ts-ignore
     // const appEntry = data?.find((app) => app.id === appId);
   }

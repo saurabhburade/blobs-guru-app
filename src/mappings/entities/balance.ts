@@ -187,11 +187,9 @@ export const updateBalanceAccounts = async (
       }
     }
 
-    await Promise.all([
-      store.bulkUpdate("AccountBalance", accountsToUpdate),
-      store.bulkUpdate("AccountBalanceDayData", accountsToUpdateDay),
-      store.bulkUpdate("AccountBalanceHourData", accountsToUpdateHour),
-    ]);
+    await store.bulkUpdate("AccountBalance", accountsToUpdate);
+    await store.bulkUpdate("AccountBalanceDayData", accountsToUpdateDay);
+    await store.bulkUpdate("AccountBalanceHourData", accountsToUpdateHour);
   } catch (err: any) {
     throw err;
     logger.error("Error in update account : " + err.toString());
