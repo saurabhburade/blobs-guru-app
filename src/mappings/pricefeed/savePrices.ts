@@ -115,7 +115,7 @@ export async function handleNewPriceMinute({
     const minuteNow = Math.floor(Number(new Date().getTime()) / 60000);
     for (let index = 0; index < mappedPrices.length; index++) {
       const element = mappedPrices[index];
-      if (Number(element?.minuteId) >= Number(minuteNow)) {
+      if (Number(element?.minuteId) <= Number(minuteNow)) {
         const priceForMinute = PriceFeedMinute.create({
           id: element?.minuteId?.toString(),
           availBlock: availBlock,
