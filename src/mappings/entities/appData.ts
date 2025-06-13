@@ -194,8 +194,11 @@ export async function getAppDataFromKeyRPC(id: number) {
   let appDataFromStore = await AppLookupBaseData.get(id.toString());
 
   if (!appDataFromStore) {
+    logger.info(`FETCHING DA APP KEYS`);
+
     // @ts-ignore
     const entries = await api.query.dataAvailability.appKeys.entries();
+    logger.info(`FETCHED DA APP KEYS LENGTH :: ${entries.length}`);
 
     const data: ApplicationData[] = entries.map(([key, value]: any) => {
       const name = key.args[0].toHuman() as string;

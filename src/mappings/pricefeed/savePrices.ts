@@ -67,6 +67,7 @@ export async function handleNewPriceMinute({
 
       return existingPrice!;
     }
+
     const URL = `https://api.dev.dex.guru/v1/tradingview/history?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Number(
       block.timestamp.getTime() / 1000
     ).toFixed(0)}&to=${Number(
@@ -89,19 +90,22 @@ export async function handleNewPriceMinute({
     // @ts-ignore
     const { t, o, c, h, l } = data;
 
-    const mappedPrices = t.map((timestamp: number | string, idx: number) => {
-      const hp = h[idx];
-      const lp = l[idx];
-      const avgPrice = (Number(hp) + Number(lp)) / 2;
+    const mappedPrices = t
+      .map((timestamp: number | string, idx: number) => {
+        const hp = h[idx];
+        const lp = l[idx];
+        const avgPrice = (Number(hp) + Number(lp)) / 2;
 
-      const minuteIdOhlc = Math.floor((Number(timestamp) * 1000) / 60000);
-      return {
-        avgPrice,
-        timestamp: Number(timestamp) * 1000,
-        timestampF: new Date(new Date(Number(timestamp)).getTime() * 1000),
-        minuteId: minuteIdOhlc,
-      };
-    });
+        const minuteIdOhlc = Math.floor((Number(timestamp) * 1000) / 60000);
+        return {
+          avgPrice,
+          timestamp: Number(timestamp) * 1000,
+          timestampF: new Date(new Date(Number(timestamp)).getTime() * 1000),
+          minuteId: minuteIdOhlc,
+        };
+      })
+      // @ts-ignore
+      ?.filter((v) => v?.timestamp <= new Date().getTime());
     if (mappedPrices?.length <= 0) {
       throw new Error("API Error");
     }
@@ -128,7 +132,11 @@ export async function handleNewPriceMinute({
         }
       }
     }
+    
     await Promise.all([store.bulkUpdate("PriceFeedMinute", pricesToSave)]);
+
+    logger.info(`SAVING PRICES FROM DEXGURU API :: ${pricesToSave?.length}`);
+
     await delay(200);
     return priceFeedThisMinute!;
   } catch (error) {
