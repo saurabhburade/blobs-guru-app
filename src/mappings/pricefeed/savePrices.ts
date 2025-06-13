@@ -92,8 +92,8 @@ export async function handleNewPriceMinute({
 
     const mappedPrices = t
       .map((timestamp: number | string, idx: number) => {
-        const hp = h[idx];
-        const lp = l[idx];
+        const hp = o[idx];
+        const lp = c[idx];
         const avgPrice = (Number(hp) + Number(lp)) / 2;
 
         const minuteIdOhlc = Math.floor((Number(timestamp) * 1000) / 60000);
@@ -115,7 +115,7 @@ export async function handleNewPriceMinute({
     const minuteNow = Math.floor(Number(new Date().getTime()) / 60000);
     for (let index = 0; index < mappedPrices.length; index++) {
       const element = mappedPrices[index];
-      if (element?.minuteId?.toString() >= minuteNow?.toString()) {
+      if (Number(element?.minuteId) >= Number(minuteNow)) {
         const priceForMinute = PriceFeedMinute.create({
           id: element?.minuteId?.toString(),
           availBlock: availBlock,
@@ -132,8 +132,8 @@ export async function handleNewPriceMinute({
         }
       }
     }
-    
-    await Promise.all([store.bulkUpdate("PriceFeedMinute", pricesToSave)]);
+
+    await store.bulkUpdate("PriceFeedMinute", pricesToSave);
 
     logger.info(`SAVING PRICES FROM DEXGURU API :: ${pricesToSave?.length}`);
 
