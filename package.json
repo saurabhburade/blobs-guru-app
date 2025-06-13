@@ -36,7 +36,6 @@
     "@subql/types-ethereum": "latest",
     "@types/node": "^17.0.21",
     "@types/node-fetch": "latest",
-    "abort-controller": "^3.0.0",
     "axios": "^1.7.9",
     "pino": "^7.8.0",
     "ts-proto": "^1.112.1",

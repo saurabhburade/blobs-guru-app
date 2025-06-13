@@ -15,8 +15,6 @@ function delay(ms: number) {
 const DEX_GURU_API_KEY =
   process.env.DEX_GURU_API_KEY || "mzwVQMz5AN7Rj4UCm_wl-QsvqqpoLG6v6fjCIRfV6JU";
 
-import { AbortController } from "abort-controller"; // Add this import if using an older Node.js version
-
 async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
   const response = await fetch(url, {
     ...options,
