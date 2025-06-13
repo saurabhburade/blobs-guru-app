@@ -29,7 +29,27 @@ async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
 
   return await response.json();
 }
-
+const CONSTANT_PRICE_FEED_FILES = [
+  "2024-07",
+  "2024-08",
+  "2025-04",
+  "2025-05",
+  "2025-06",
+  "2024-09",
+  "2024-10",
+  "2024-11",
+  "2024-12",
+  "2025-01",
+  "2025-02",
+  "2025-03",
+];
+function chunkArray(array: PriceFeedMinute[], chunkSize = 1000) {
+  const result = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
+  }
+  return result;
+}
 export async function handleNewPriceMinute({
   block,
 }: {
@@ -66,6 +86,53 @@ export async function handleNewPriceMinute({
       // );
 
       return existingPrice!;
+    }
+
+    // CHECK SAVED PRICES
+    if (minuteId <= 29164030) {
+      let priceFeedThisMinute;
+
+      let fileIdx = 0;
+      for (const file of CONSTANT_PRICE_FEED_FILES) {
+        const data = await fetchWithTimeout(
+          `https://raw.githubusercontent.com/saurabhburade/multi-chain-subquery/refs/heads/dev/src/mappings/pricefeed/saved/${file}.json`,
+          {}
+        );
+        logger.info(`FETCHED PRICE DATA FROM FILE :: ${file}.json`);
+        const pricesToSave: PriceFeedMinute[] = [];
+        // @ts-ignore
+        for (const element of data) {
+          // SAVE MONTHLY DATA FROM LOCAL FILES
+          const priceForMinute = PriceFeedMinute.create({
+            id: element?.minuteId?.toString(),
+            availBlock: availBlock,
+            availPrice: element?.avgPrice,
+            date: element?.timestampF,
+            availDate: blockDate,
+            ethBlock: 0,
+            ethPrice: 0,
+            ethDate: blockDate,
+          });
+          pricesToSave.push(priceForMinute);
+
+          // await priceForMinute.save();
+          if (Number(element?.minuteId) === minuteId) {
+            priceFeedThisMinute = priceForMinute;
+          }
+        }
+        const splitedChunk = chunkArray(pricesToSave, 1000);
+        for (let index = 0; index < splitedChunk.length; index++) {
+          logger.info(`SAVING PRICES CHUNK`);
+
+          const ck = splitedChunk[index];
+          await store.bulkUpdate("PriceFeedMinute", ck);
+          logger.info(
+            `SAVED PRICES CHUNK :: ${index} out of ${splitedChunk.length}`
+          );
+        }
+        fileIdx += 1;
+      }
+      return priceFeedThisMinute!;
     }
 
     const URL = `https://api.dev.dex.guru/v1/tradingview/history?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Number(
