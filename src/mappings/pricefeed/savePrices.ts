@@ -87,6 +87,7 @@ export async function handleNewPriceMinute({
     }
 
     // CHECK SAVED PRICES
+    logger.info(`MAY SAVE PRICES FROM FILES :: minuteId: ${minuteId} `);
     if (minuteId <= 29164030) {
       let priceFeedThisMinute;
 
