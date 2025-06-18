@@ -226,7 +226,7 @@ export async function handleExtrinsics(
     }
   );
   await collectiveData.save();
-  await handleAccountBalancesBulk(block, priceFeed);
+  // await handleAccountBalancesBulk(block, priceFeed);
 
   await store.bulkCreate("Extrinsic", calls);
   await store.bulkCreate("DataSubmission", daSubmissions);

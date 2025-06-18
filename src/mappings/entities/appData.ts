@@ -232,8 +232,9 @@ export async function getAppDataFromKeyRPC(id: number) {
         appDataFromStore = appEntry;
       }
       appEntries.push(appEntry);
+      await appEntry.save();
     }
-    await store.bulkUpdate("AppLookupBaseData", appEntries);
+    // await store.bulkUpdate("AppLookupBaseData", appEntries);
     // @ts-ignore
     // const appEntry = data?.find((app) => app.id === appId);
   }

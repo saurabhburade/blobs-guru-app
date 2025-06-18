@@ -106,8 +106,8 @@ export const updateBalanceAccounts = async (
         record.timestampLast = timestamp;
         record.endBlock = blockNumber;
         record.lastPriceFeedId = priceFeed.id;
-        accountsToUpdate.push(record);
-        // await record.save();
+        // accountsToUpdate.push(record);
+        await record.save();
         //   HANDLE DAY DATA
         const blockDate = new Date(Number(timestamp.getTime()));
         const minuteId = Math.floor(blockDate.getTime() / 60000);
@@ -140,9 +140,9 @@ export const updateBalanceAccounts = async (
         accountDayRecord.lastPriceFeedId = priceFeed.id;
         accountDayRecord.prevDayDataId = dayidPrev.toString();
 
-        accountsToUpdateDay.push(accountDayRecord);
+        // accountsToUpdateDay.push(accountDayRecord);
 
-        // await accountDayRecord.save();
+        await accountDayRecord.save();
         //   HANDLE HOUR DATA
 
         const hourNum = Math.floor(blockDate.getTime() / 3600000); // Divide by milliseconds in an hour
@@ -174,8 +174,8 @@ export const updateBalanceAccounts = async (
         accountHourRecord.endBlock = blockNumber;
         accountHourRecord.lastPriceFeedId = priceFeed.id;
         accountHourRecord.prevHourDataId = houridPrev.toString();
-        // await accountHourRecord.save();
-        accountsToUpdateHour.push(accountHourRecord);
+        await accountHourRecord.save();
+        // accountsToUpdateHour.push(accountHourRecord);
 
         // if (isNew) {
         //   accountsToCreate.push(record);
@@ -187,9 +187,9 @@ export const updateBalanceAccounts = async (
       }
     }
 
-    await store.bulkUpdate("AccountBalance", accountsToUpdate);
-    await store.bulkUpdate("AccountBalanceDayData", accountsToUpdateDay);
-    await store.bulkUpdate("AccountBalanceHourData", accountsToUpdateHour);
+    // await store.bulkUpdate("AccountBalance", accountsToUpdate);
+    // await store.bulkUpdate("AccountBalanceDayData", accountsToUpdateDay);
+    // await store.bulkUpdate("AccountBalanceHourData", accountsToUpdateHour);
   } catch (err: any) {
     throw err;
     logger.error("Error in update account : " + err.toString());
