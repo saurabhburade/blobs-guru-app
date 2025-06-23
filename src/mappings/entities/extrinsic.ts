@@ -155,25 +155,12 @@ export async function handleExtrinsics(
       priceFeed
     );
     calls.push(extrinsicRecord);
-    await Promise.all([
-      await handleAccount(extrinsicRecord, substrateExtrinsic, priceFeed),
-      await handleAccountDayData(
-        extrinsicRecord,
-        substrateExtrinsic,
-        priceFeed
-      ),
-      await handleAccountHourData(
-        extrinsicRecord,
-        substrateExtrinsic,
-        priceFeed
-      ),
-      await handleApp(
-        extrinsicRecord,
-        substrateExtrinsic,
-        priceFeed,
-        extraData
-      ),
-    ]);
+
+    await handleAccount(extrinsicRecord, substrateExtrinsic, priceFeed);
+    await handleAccountDayData(extrinsicRecord, substrateExtrinsic, priceFeed);
+    await handleAccountHourData(extrinsicRecord, substrateExtrinsic, priceFeed);
+    await handleApp(extrinsicRecord, substrateExtrinsic, priceFeed, extraData);
+
     // await extrinsicRecord.save();
 
     if (isDataSubmission) {
@@ -216,35 +203,34 @@ export async function handleExtrinsics(
       collectiveData.totalDataSubmissionCount! + daSubmissions.length;
     collectiveData.totalByteSize = collectiveData.totalByteSize! + daSize || 0;
   }
-  await Promise.all([
-    await handleDayData(
-      block,
-      priceFeed,
-      { totalFee },
-      {
-        daSubmissionsLength: daSubmissions.length,
-        daFees,
-        daSize,
-      }
-    ),
-    await handleHourData(
-      block,
-      priceFeed,
 
-      { totalFee },
-      {
-        daSubmissionsLength: daSubmissions.length,
-        daFees,
-        daSize,
-      }
-    ),
-    await collectiveData.save(),
-    await handleAccountBalancesBulk(block, priceFeed),
-  ]);
-  await Promise.all([
-    store.bulkCreate("Extrinsic", calls),
-    store.bulkCreate("DataSubmission", daSubmissions),
-  ]);
+  await handleDayData(
+    block,
+    priceFeed,
+    { totalFee },
+    {
+      daSubmissionsLength: daSubmissions.length,
+      daFees,
+      daSize,
+    }
+  );
+  await handleHourData(
+    block,
+    priceFeed,
+
+    { totalFee },
+    {
+      daSubmissionsLength: daSubmissions.length,
+      daFees,
+      daSize,
+    }
+  );
+  await collectiveData.save();
+  // await handleAccountBalancesBulk(block, priceFeed);
+
+  await store.bulkCreate("Extrinsic", calls);
+  await store.bulkCreate("DataSubmission", daSubmissions);
+
   daSubmissions.length = 0;
   calls.length = 0;
 }
@@ -365,6 +351,7 @@ export function handleDataSubmission(
       priceFeedId: priceFeed.id,
       feesUSD: 0,
       extrinsicId: ext.hash.toString(),
+      blockId: block.block.header.number.toString(),
     });
 
     if (extraDetails?.feeRounded) {

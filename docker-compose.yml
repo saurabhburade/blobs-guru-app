@@ -11,11 +11,25 @@ services:
       - .data/postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=512MB
+      -c work_mem=124MB
+      -c maintenance_work_mem=128MB
+      -c effective_cache_size=1GB
+      -c autovacuum_vacuum_threshold=50
+      -c autovacuum_vacuum_cost_limit=1000
+      -c log_min_duration_statement=50
+      -c log_statement='none'
+      -c track_io_timing=on
+      
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
+
 
   # subquery-node-evm:
   #   image: subquerynetwork/subql-node-ethereum:latest
@@ -73,7 +87,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
       interval: 3s
-      timeout: 50s
+      timeout: 60s
       retries: 10
 
   graphql-engine:

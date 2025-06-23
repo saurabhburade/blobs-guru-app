@@ -5,7 +5,7 @@
 type PriceFeed @entity {
   id: ID!
 
-  blockNumber: Int!
+  blockNumber: Float!
 
   date: Date
 
@@ -17,15 +17,15 @@ type PriceFeedMinute @entity {
   date: Date
   ethPrice: Float!
   availPrice: Float!
-  ethBlock: Int!
-  availBlock: Int!
+  ethBlock: Float!
+  availBlock: Float!
   ethDate: Date
   availDate: Date
 }
 type PriceFeedHour @entity {
   id: ID!
 
-  blockNumber: Int!
+  blockNumber: Float!
 
   date: Date
 
@@ -35,7 +35,7 @@ type PriceFeedHour @entity {
 type PriceFeedDay @entity {
   id: ID!
 
-  blockNumber: Int!
+  blockNumber: Float!
 
   date: Date
 
@@ -49,20 +49,20 @@ type SpecVersion @entity {
 
 type Block @entity {
   id: ID!
-  number: Int! @index
+  number: Float! @index
   hash: String! @index
   timestamp: Date! @index
   parentHash: String!
   stateRoot: String!
   extrinsicsRoot: String!
-  runtimeVersion: Int!
-  nbExtrinsics: Int!
-  nbEvents: Int!
+  runtimeVersion: Float!
+  nbExtrinsics: Float!
+  nbEvents: Float!
   author: String @index
-  sessionId: Int @index
+  sessionId: Float @index
   ethPrice: Float!
   availPrice: Float!
-  ethBlock: Int!
+  ethBlock: Float!
   blockFee: Float!
 }
 
@@ -81,20 +81,20 @@ type Extrinsic @entity {
   blockHeight: String! @index
   success: Boolean!
   isSigned: Boolean!
-  extrinsicIndex: Int!
+  extrinsicIndex: Float!
   hash: String! @index
   timestamp: Date! @index
   signer: String! @index
   signature: String!
   fees: String
   feesRounded: Float @index
-  nonce: Int!
+  nonce: Float!
   argsName: [String]!
   argsValue: [String]!
-  nbEvents: Int!
+  nbEvents: Float!
   ethPrice: Float!
   availPrice: Float!
-  ethBlock: Int!
+  ethBlock: Float!
 }
 
 type Event @entity {
@@ -104,7 +104,7 @@ type Event @entity {
   module: String! @index
   event: String! @index
   blockHeight: BigInt! @index
-  eventIndex: Int!
+  eventIndex: Float!
   call: String! @index
   argsName: [String]!
   argsValue: [String]!
@@ -129,8 +129,8 @@ type Commitment @entity {
   id: ID!
   block: Block!
   headerExtension: HeaderExtension!
-  rows: Int
-  cols: Int
+  rows: Float
+  cols: Float
   dataRoot: String @index
   commitment: String
 }
@@ -139,7 +139,7 @@ type AppLookup @entity {
   id: ID!
   block: Block!
   headerExtension: HeaderExtension!
-  size: Int
+  size: Float
   index: String
   creator: String @index
   owner: String @index
@@ -161,16 +161,16 @@ type TransferEntity @entity {
 
 type AccountEntity @entity {
   id: ID!
-  type: Int
+  type: Float
   attachedAppId: String
   app: AppEntity
   validator: Boolean
-  validatorSessionParticipated: Int
+  validatorSessionParticipated: Float
   createdAt: Date!
   updatedAt: Date!
   timestampCreation: Date! @index
   address: String! @index
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -199,7 +199,7 @@ type AppEntity @entity {
   creationExt: Extrinsic
   timestampCreation: Date! @index
   owner: String! @index
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalDAFees: Float
   totalDAFeesUSD: Float
   totalFeesUSD: Float
@@ -222,7 +222,7 @@ type AppEntity @entity {
 type AppDayData @entity {
   id: ID!
   app: AppEntity! @index
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -246,7 +246,7 @@ type AppDayData @entity {
 }
 type AppHourData @entity {
   id: ID!
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -274,19 +274,20 @@ type DataSubmission @entity {
   id: ID!
   extrinsicIdAttched: String!
   timestamp: Date! @index
-  byteSize: Int! @index
-  appId: Int! @index
+  byteSize: Float! @index
+  appId: Float! @index
   signer: String! @index
   fees: Float
   feesUSD: Float
   feesPerMb: Float @index
   priceFeed: PriceFeedMinute
   extrinsic: Extrinsic
+  block: Block
 }
 
 type CollectiveData @entity {
   id: ID!
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -306,7 +307,7 @@ type CollectiveData @entity {
 }
 type CollectiveDayData @entity {
   id: ID!
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -332,10 +333,10 @@ type CollectiveDayData @entity {
 }
 type AccountDayData @entity {
   id: ID!
-  type: Int
+  type: Float
   attachedAppId: String
   app: AppEntity
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -360,10 +361,10 @@ type AccountDayData @entity {
 }
 type AccountHourData @entity {
   id: ID!
-  type: Int
+  type: Float
   attachedAppId: String
   app: AppEntity
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -389,7 +390,7 @@ type AccountHourData @entity {
 
 type CollectiveHourData @entity {
   id: ID!
-  totalByteSize: Int! @index
+  totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float
   totalDAFeesUSD: Float
@@ -492,6 +493,6 @@ type AppLookupBaseData @entity {
   id: ID!
   owner: String @index
   name: String
-  key: Int @index
+  key: Float @index
   app: AppEntity
 }

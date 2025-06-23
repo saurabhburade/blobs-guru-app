@@ -165,28 +165,27 @@ export async function handleApp(
     appRecord.endBlock = block.block.header.number.toNumber();
     // logger.info(`New ACCOUNT SAVE::::::  ${JSON.stringify(appRecord)}`);
     // APP ACCOUNT HANDLE WITH   type: number = 0,  appRecord?: AppEntity
-    await Promise.all([
-      await handleAppDayData(extrinsicRecord, extrinsic, priceFeed, appRecord),
-      await handleAppHourData(extrinsicRecord, extrinsic, priceFeed, appRecord),
-      await handleAccount(extrinsicRecord, extrinsic, priceFeed, 1, appRecord),
 
-      await handleAccountDayData(
-        extrinsicRecord,
-        extrinsic,
-        priceFeed,
-        1,
-        appRecord
-      ),
+    await handleAppDayData(extrinsicRecord, extrinsic, priceFeed, appRecord);
+    await handleAppHourData(extrinsicRecord, extrinsic, priceFeed, appRecord);
+    await handleAccount(extrinsicRecord, extrinsic, priceFeed, 1, appRecord);
 
-      await handleAccountHourData(
-        extrinsicRecord,
-        extrinsic,
-        priceFeed,
-        1,
-        appRecord
-      ),
-      await appRecord.save(),
-    ]);
+    await handleAccountDayData(
+      extrinsicRecord,
+      extrinsic,
+      priceFeed,
+      1,
+      appRecord
+    );
+
+    await handleAccountHourData(
+      extrinsicRecord,
+      extrinsic,
+      priceFeed,
+      1,
+      appRecord
+    );
+    await appRecord.save();
   }
 }
 
@@ -194,8 +193,11 @@ export async function getAppDataFromKeyRPC(id: number) {
   let appDataFromStore = await AppLookupBaseData.get(id.toString());
 
   if (!appDataFromStore) {
+    logger.info(`FETCHING DA APP KEYS`);
+
     // @ts-ignore
     const entries = await api.query.dataAvailability.appKeys.entries();
+    logger.info(`FETCHED DA APP KEYS LENGTH :: ${entries.length}`);
 
     const data: ApplicationData[] = entries.map(([key, value]: any) => {
       const name = key.args[0].toHuman() as string;
@@ -230,8 +232,9 @@ export async function getAppDataFromKeyRPC(id: number) {
         appDataFromStore = appEntry;
       }
       appEntries.push(appEntry);
+      await appEntry.save();
     }
-    await Promise.all([store.bulkUpdate("AppLookupBaseData", appEntries)]);
+    // await store.bulkUpdate("AppLookupBaseData", appEntries);
     // @ts-ignore
     // const appEntry = data?.find((app) => app.id === appId);
   }
