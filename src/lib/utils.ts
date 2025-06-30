@@ -28,6 +28,10 @@ export const getRandomNumberFrom = (min: number, max: number) => {
 };
 
 export const formatAddress = (account: string) => {
+  if (account?.startsWith(`"`)) {
+    const address = JSON.parse(account);
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  }
   const address = account;
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
@@ -275,3 +279,10 @@ export const dateTimeString = new Intl.DateTimeFormat("en-US", {
   month: "2-digit",
   year: "2-digit",
 });
+
+export const parseCelestiaString = (str: string) => {
+  if (str?.startsWith('"')) {
+    return JSON.parse(str);
+  }
+  return str;
+};

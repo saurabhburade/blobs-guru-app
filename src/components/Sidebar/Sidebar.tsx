@@ -179,6 +179,61 @@ function Sidebar({}: Props) {
             </div>
             <div className="collapse collapse-arrow ">
               <input type="checkbox" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-xl font-medium ">
+                <div className="flex items-center gap-2">
+                  <ImageWithFallback
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/celestia.png?raw=true`}
+                    width={24}
+                    height={24}
+                    alt="celestia"
+                  />
+                  <p>Celestia DA</p>
+                </div>
+              </div>
+              <div className="collapse-content ">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
+                  {/* Sidebar content here */}
+                  <li className="  ">
+                    <Link href="/celestia">
+                      <span>
+                        <TiThSmall />
+                      </span>
+                      Summary
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/celestia/apps">
+                      <span>
+                        <IoIosApps />
+                      </span>
+                      Apps
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/celestia/accounts">
+                      <span>
+                        <User />
+                      </span>
+                      Accounts
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/celestia/stats">
+                      <span>
+                        <IoStatsChart />
+                      </span>
+                      Stats
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                </ul>
+              </div>
+            </div>
+            <div className="collapse collapse-arrow ">
+              <input type="checkbox" name="my-accordion-2" defaultChecked />
               <div className="collapse-title text-xl font-medium">
                 <div className="flex items-center gap-2">
                   <BsUiChecksGrid /> <p>Data Availability</p>
