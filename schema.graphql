@@ -1,281 +1,270 @@
-enum TransactionTraceStatus {
-  UNKNOWN
-  SUCCEEDED
-  FAILED
-  REVERTED
-  # Add other statuses as needed
+# To improve query performance, we strongly suggest adding indexes to any field that you plan to filter or sort by
+# Add the `@index` or `@index(unique: true)` annotation after any non-key field
+# https://academy.subquery.network/build/graphql.html#indexing-by-non-primary-key-field
+
+# type Block @entity {
+#   id: ID! # The block hash
+#   height: BigInt!
+# }
+
+# type Transaction @entity {
+#   id: ID!
+#   blockHeight: BigInt!
+#   timestamp: String!
+# }
+
+type Transfers @entity {
+  id: ID!
+  blockHeight: BigInt
+  txHash: String
+  fromAddress: String
+  toAddress: String
+  amount: String
+  denomination: String
 }
 
-type BlobTransaction @entity {
+type BlockData @entity {
   id: ID!
-  to: String!
-  nonce: BigInt!
-  gasPrice: Float
-  gasLimit: Float!
-  value: Float
-
-  status: Float!
-  currentEthPrice: Float!
-  # v: Uint8Array!
-  # r: Uint8Array!
-  # s: Uint8Array!
-  gasUsed: Float
-  cumulativeGasUsed: Float
-  totalFeeEth: Float
-  totalFeeUSD: Float!
-  totalFeeBurnedETH: Float!
-  totalFeeBurnedUSD: Float!
-  # type: String!  # Replace with actual Type if it's an enum or another type
-  # accessList: [AccessTuple!]!
-  maxFeePerGas: Float
-  maxPriorityFeePerGas: Float
-  index: Float
   hash: String!
-  input: String
-  from: String!
-  miner: String!
-  returnData: String
-  publicKey: String
-  # beginOrdinal: u64!
-  # endOrdinal: u64!
-  # status: TransactionTraceStatus!
-  # receipt: TransactionReceipt
-  # calls: [Call!]!
-  blobGas: Float
-  blobGasFeeCap: Float
-  blobHashes: [String!]
-  blobHashesLength: Float
-  blobGasPrice: Float
-  stateRoot: String
-  blobGasEth: Float
-  blobGasUSD: Float!
-  blockNumber: Float!
-  timestamp: Float
-}
-type CollectiveData @entity {
-  id: ID!
-  totalBlobTransactionCount: Float!
-  avgEthPrice: Float!
-  currentEthPrice: Float!
-  totalGasEth: Float!
-  totalGasUSD: Float!
-  totalFeeEth: Float!
-  totalFeeUSD: Float!
-  totalValue: Float!
-  totalValueEth: Float!
-  totalValueUSD: Float!
-  totalFeeBurnedETH: Float!
-  totalFeeBurnedUSD: Float!
-  totalGasUsed: Float!
-  totalCumulativeGasUsed: Float!
+  height: Float!
+  proposer: String!
+  totalBlobSize: Float!
+  totalSquareSize: Float!
 
-  totalBlobGas: Float!
-  totalBlobGasEth: Float!
-  totalBlobGasUSD: Float!
-  totalBlobGasFeeCap: Float!
-  totalBlobHashesCount: Float!
-  lastUpdatedBlock: Float
-  totalBlobBlocks: Float
-  totalBlobAccounts: Float
-  totalValidatorAccounts: Float
+  totalEventsCount: Float!
+
+  totalBlobTransactionCount: Float!
+
   totalTransactionCount: Float!
 
-  totalTransactionCountLegacy: Float!
-  totalTransactionCountAccessList: Float!
-  totalTransactionCountDynamicFee: Float!
-}
-type BlobBlockData @entity {
-  id: ID!
-  totalBlobTransactionCount: Float!
-  totalTransactionCount: Float!
-  avgEthPrice: Float!
-  currentEthPrice: Float!
-  totalBlockFeeEth: Float!
+  avgNativePrice: Float!
+  currentNativePrice: Float!
+  totalBlockFeeNatve: Float!
   totalBlockFeeUSD: Float!
-  totalGasEth: Float!
-  totalGasUSD: Float!
-  totalFeeEth: Float!
-  totalFeeUSD: Float!
-  totalValue: Float!
-  totalValueEth: Float!
-  totalValueUSD: Float!
-  totalFeeBurnedETH: Float!
-  totalFeeBurnedUSD: Float!
-  totalGasUsed: Float!
-  totalCumulativeGasUsed: Float!
+  totalDAFeeNatve: Float!
+  totalDAFeeUSD: Float!
 
-  totalBlobGas: Float!
-  totalBlobGasEth: Float!
-  totalBlobGasUSD: Float!
-  totalBlobGasFeeCap: Float!
-  totalBlobHashesCount: Float!
-  blockNumber: Float
   timestamp: Float
-
+  transactions: [TransactionData] @derivedFrom(field: "blockHeight")
+  blobs: [BlobData] @derivedFrom(field: "blockHeight")
+}
+type BlobData @entity {
+  id: ID!
+  namespaceID: String
+  data: String
+  shareVersion: String
+  namespaceVersion: String
+  transaction: TransactionData
+  commitment: String
   size: Float
-  totalBlobAccounts: Float
-
-  totalTransactionCountLegacy: Float!
-  totalTransactionCountAccessList: Float!
-  totalTransactionCountDynamicFee: Float!
+  signer: AccountEntity
+  blockHeight: BlockData
 }
 
-type BlobsDayData @entity {
+type TransactionData @entity {
   id: ID!
-  totalBlobTransactionCount: Float!
-  avgEthPrice: Float!
-  currentEthPrice: Float!
-  totalGasEth: Float!
-  totalGasUSD: Float!
-  totalFeeEth: Float!
+  hash: String!
+  blockHeight: BlockData
+  timestamp: Float!
+
+  signer: AccountEntity
+
+  amount: Float!
+  denomination: String!
+  lastPriceFeed: PriceFeedMinute
+
+  txFeeNative: Float!
+  nMessages: Float!
+  nEvents: Float!
+  nDataSubs: Float!
+  totalBytes: Float!
+
+  totalFeeNatve: Float!
   totalFeeUSD: Float!
-  totalValue: Float!
-  totalValueEth: Float!
-  totalValueUSD: Float!
-  totalFeeBurnedETH: Float!
-  totalFeeBurnedUSD: Float!
-  totalGasUsed: Float!
-  totalCumulativeGasUsed: Float!
+  totalDAFeeNatve: Float!
+  totalDAFeeUSD: Float!
 
-  totalBlobGas: Float!
-  totalBlobGasEth: Float!
-  totalBlobGasUSD: Float!
-  totalBlobGasFeeCap: Float!
-  totalBlobHashesCount: Float!
-  previousBlobsDayData: BlobsDayData
-  dayStartTimestamp: Float
-  dayStartBlock: Float
-  lastUpdatedBlock: Float
-  totalBlobBlocks: Float
-  totalBlobAccounts: Float
-  totalValidatorAccounts: Float
-
-  totalTransactionCount: Float!
-
-  totalTransactionCountLegacy: Float!
-  totalTransactionCountAccessList: Float!
-  totalTransactionCountDynamicFee: Float!
+  isBlobTransaction: Boolean!
+  blobs: [BlobData] @derivedFrom(field: "transaction")
 }
-type BlobsHourData @entity {
+
+type Block @entity {
   id: ID!
-  totalBlobTransactionCount: Float!
-  avgEthPrice: Float!
-  currentEthPrice: Float!
-  totalGasEth: Float!
-  totalGasUSD: Float!
-  totalFeeEth: Float!
-  totalFeeUSD: Float!
-  totalValue: Float!
-  totalValueEth: Float!
-  totalValueUSD: Float!
-  totalFeeBurnedETH: Float!
-  totalFeeBurnedUSD: Float!
-  totalGasUsed: Float!
-  totalCumulativeGasUsed: Float!
-
-  totalBlobGas: Float!
-  totalBlobGasEth: Float!
-  totalBlobGasUSD: Float!
-  totalBlobGasFeeCap: Float!
-  totalBlobHashesCount: Float!
-  previousBlobsHourData: BlobsHourData
-  hourStartTimestamp: Float
-  hourStartBlock: Float
-  lastUpdatedBlock: Float
-  totalBlobBlocks: Float
-  totalBlobAccounts: Float
-  totalValidatorAccounts: Float
-
-  totalTransactionCount: Float!
-  totalTransactionCountLegacy: Float!
-  totalTransactionCountAccessList: Float!
-  totalTransactionCountDynamicFee: Float!
+  height: Float!
+  hash: String!
+  timestamp: Date!
+  proposer: String
+  nTransactions: Int
+  nEvents: Int
+  nBlobs: Int
+  blobSize: Int
+  totalFeesNative: Float
+  totalFeesUSD: Float
+  version: String
+  nativePrice: Float!
 }
-type Account @entity {
+
+type PriceFeedMinute @entity {
   id: ID!
-  totalBlobTransactionCount: Float!
-  type: BigInt!
+  date: Date
+  nativePrice: Float!
+  nativeBlock: Int!
+  nativeDate: Date
+}
 
-  currentEthPrice: Float!
-  totalGasEth: Float!
-  totalGasUSD: Float!
-  totalFeeEth: Float!
-  totalFeeUSD: Float!
-  totalValue: Float!
-  totalValueEth: Float!
-  totalValueUSD: Float!
-  totalFeeBurnedETH: Float!
-  totalFeeBurnedUSD: Float!
-  totalGasUsed: Float!
-  totalCumulativeGasUsed: Float!
-
-  totalBlobGas: Float!
-  totalBlobGasEth: Float!
-  totalBlobGasUSD: Float!
-  totalBlobGasFeeCap: Float!
-  totalBlobHashesCount: Float!
+type AccountEntity @entity {
+  id: ID!
+  type: Float
+  createdAt: Date!
+  updatedAt: Date!
+  address: String!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float!
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  lastPriceFeed: PriceFeedMinute
+  avgNativePrice: Float
+  accountDayData: [AccountDayData] @derivedFrom(field: "account")
+  accountHourData: [AccountHourData] @derivedFrom(field: "account")
   startBlock: Float
-  lastUpdatedBlock: Float
-  totalBlobBlocks: Float
-  accountDayData: [AccountDayData!] @derivedFrom(field: "account")
-  accountHourData: [AccountHourData!] @derivedFrom(field: "account")
+  endBlock: Float
+  transactions: [TransactionData] @derivedFrom(field: "signer")
+  blobs: [BlobData] @derivedFrom(field: "signer")
 }
 type AccountDayData @entity {
   id: ID!
-  account: Account!
-  totalBlobTransactionCount: Float!
-
-  currentEthPrice: Float!
-  totalGasEth: Float!
-  totalGasUSD: Float!
-  totalFeeEth: Float!
-  totalFeeUSD: Float!
-  totalValue: Float!
-  totalValueEth: Float!
-  totalValueUSD: Float!
-  totalFeeBurnedETH: Float!
-  totalFeeBurnedUSD: Float!
-  totalGasUsed: Float!
-  totalCumulativeGasUsed: Float!
-
-  totalBlobGas: Float!
-  totalBlobGasEth: Float!
-  totalBlobGasUSD: Float!
-  totalBlobGasFeeCap: Float!
-  totalBlobHashesCount: Float!
-  previousAccountDayData: AccountDayData
-  dayStartTimestamp: Float
-  dayStartBlock: Float
-
-  lastUpdatedBlock: Float
-  totalBlobBlocks: Float
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+  prevDayData: AccountDayData
+  account: AccountEntity!
+  collectiveDayData: CollectiveDayData
 }
 type AccountHourData @entity {
   id: ID!
-  account: Account!
-  totalBlobTransactionCount: Float!
+  type: Float
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+  prevHourData: AccountHourData
+  account: AccountEntity!
+  collectiveHourData: CollectiveHourData
+}
 
-  currentEthPrice: Float!
-  totalGasEth: Float!
-  totalGasUSD: Float!
-  totalFeeEth: Float!
-  totalFeeUSD: Float!
-  totalValue: Float!
-  totalValueEth: Float!
-  totalValueUSD: Float!
-  totalFeeBurnedETH: Float!
-  totalFeeBurnedUSD: Float!
-  totalGasUsed: Float!
-  totalCumulativeGasUsed: Float!
+type CollectiveData @entity {
+  id: ID!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  avgNativePrice: Float
 
-  totalBlobGas: Float!
-  totalBlobGasEth: Float!
-  totalBlobGasUSD: Float!
-  totalBlobGasFeeCap: Float!
-  totalBlobHashesCount: Float!
-  previousAccountHourData: AccountHourData
-  hourStartBlock: Float
-  hourStartTimestamp: Float
-  lastUpdatedBlock: Float
-  totalBlobBlocks: Float
+  endBlock: Float
+  collectiveDayData: [CollectiveDayData] @derivedFrom(field: "collectiveData")
+  collectiveHourData: [CollectiveHourData] @derivedFrom(field: "collectiveData")
+  lastUpdatedTxnId: String!
+}
+type CollectiveDayData @entity {
+  id: ID!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+
+  prevDayData: CollectiveDayData
+
+  accountDayDataParticipant: [AccountDayData]
+    @derivedFrom(field: "collectiveDayData")
+
+  collectiveData: CollectiveData
+  lastUpdatedTxnId: String!
+}
+type CollectiveHourData @entity {
+  id: ID!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampStart: Date!
+  timestampLast: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+
+  prevHourData: CollectiveHourData
+
+  accountHourDataParticipant: [AccountHourData]
+    @derivedFrom(field: "collectiveHourData")
+  collectiveData: CollectiveData
+  lastUpdatedTxnId: String!
 }
