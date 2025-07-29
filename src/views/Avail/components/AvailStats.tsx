@@ -1,7 +1,10 @@
 import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
 import { availClient } from "@/lib/apollo/client";
-import { AVAIL_COLLECTIVE_STAT_QUERY } from "@/lib/apollo/queriesAvail";
-import { formatBytes, formatWrapedText } from "@/lib/utils";
+import {
+  AVAIL_COLLECTIVE_STAT_QUERY,
+  AVAIL_DA_COST_DATAS_QUERY,
+} from "@/lib/apollo/queriesAvail";
+import { cn, formatBytes, formatWrapedText } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import MotionNumber from "motion-number";
@@ -12,11 +15,16 @@ import axios from "axios";
 import { useAvailDaAppsDataBasic } from "@/hooks/useAvailDaAppsDataBasic";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import Link from "next/link";
+import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
+import { useDaCostCompare } from "@/hooks/useDaCostCompare";
+import { InfoIcon } from "lucide-react";
+import { div } from "framer-motion/client";
 
 type Props = {};
 
 function AvailStats({}: Props) {
   const { data: appsData } = useAvailDaAppsDataBasic();
+  const { data: daCostData, loading: daCostDataLoading } = useDaCostCompare();
   const { data: rawData, loading: statsLoading } = useQuery(
     AVAIL_COLLECTIVE_STAT_QUERY,
     {
@@ -85,18 +93,30 @@ function AvailStats({}: Props) {
     refetchInterval: 10_000,
   });
   const percent = useMemo(() => {
-    if (blockData?.data?.latest_block && endBlock) {
-      const percent = new BigNumber(Number(endBlock))
+    if (Number(blockData?.data?.latest_block) > 0 && Number(endBlock) > 0) {
+      const p = new BigNumber(Number(endBlock))
         .div(blockData?.data?.latest_block)
         .multipliedBy(100)
-        .toFormat();
-      return percent;
+        .toNumber();
+      return p;
     }
-    return 0;
+    return 100;
   }, [blockData?.data, endBlock]);
   return (
     <>
-      <div className="grid lg:grid-cols-4  gap-4">
+      <div className="grid lg:grid-cols-4  gap-4 ">
+        {percent < 99.5 && (
+          <div className="bg-red-400 px-4 py-3 rounded-lg text-sm flex gap-3 items-center absolute lg:bottom-4 bottom-0 right-0 lg:right-4 z-10">
+            <span className="loading loading-bars loading-xs"></span>
+
+            <p>
+              {" "}
+              Syncing blocks ({new BigNumber(endBlock).toFormat()} of{" "}
+              {new BigNumber(blockData?.data?.latest_block).toFormat()} blocks
+              synced){" "}
+            </p>
+          </div>
+        )}
         {appsData?.formattedOp?.map((app, idx) => {
           return (
             <div
@@ -107,7 +127,7 @@ function AvailStats({}: Props) {
                 <ImageWithFallback
                   src={
                     app?.logoUri ||
-                    `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+                    `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`
                   }
                   width={24}
                   height={24}
@@ -116,7 +136,10 @@ function AvailStats({}: Props) {
                 />
                 {/* <p className="opacity-70">[{app?.id}]</p> */}
                 {app?.name && (
-                  <Link href={`/avail/apps/${app?.id}`} className="text-primary">
+                  <Link
+                    href={`/avail/apps/${app?.id}`}
+                    className="text-primary"
+                  >
                     {formatWrapedText(app?.name, 6, 9)}
                   </Link>
                 )}
@@ -138,13 +161,28 @@ function AvailStats({}: Props) {
         })}
       </div>
       <div className="grid lg:grid-cols-4 gap-0 rounded-lg  w-full ">
+        {percent < 99.5 && (
+          <StatCard
+            title="Sync"
+            value={percent}
+            isLoading={statsLoading}
+            after="%"
+          />
+        )}
+        {percent < 99.5 && (
+          <StatCard
+            title="Target"
+            value={blockData?.data?.latest_block}
+            isLoading={blockData?.isLoading}
+          />
+        )}
         <StatCard
           title="Last block"
           value={endBlock}
           isLoading={statsLoading}
         />
 
-        <StatCard
+        {/* <StatCard
           title="Total Blocks"
           value={totalBlocksCount}
           isLoading={statsLoading}
@@ -154,7 +192,7 @@ function AvailStats({}: Props) {
           value={endBlock - totalBlocksCount}
           // after={new Date(data?.collectiveData?.timestampLast).toString()}
           isLoading={statsLoading}
-        />
+        /> */}
 
         <StatCard
           title="Txn Fees"
@@ -162,17 +200,7 @@ function AvailStats({}: Props) {
           isLoading={statsLoading}
           after="AVAIL"
         />
-        <StatCard
-          title="Sync"
-          value={percent}
-          isLoading={statsLoading}
-          after="%"
-        />
-        <StatCard
-          title="Target"
-          value={blockData?.data?.latest_block}
-          isLoading={blockData?.isLoading}
-        />
+
         <StatCard
           title="Total data"
           value={dataSize?.split(" ")[0]}
@@ -201,17 +229,64 @@ function AvailStats({}: Props) {
           value={totalDAFeesUSD}
           isLoading={statsLoading}
         />
-        <StatCard
+        {/* <StatCard
           title="Total DA Blocks"
           value={totalDataBlocksCount}
           isLoading={statsLoading}
-        />
+        /> */}
         <StatCard
           title="Last Avail Price"
           value={lastPriceFeed?.availPrice}
           isLoading={statsLoading}
         />
-        <StatCard
+
+        {!daCostDataLoading && (
+          <>
+            <div className=" h-full w-full bg-base-100 border-[0.5px] p-4 space-y-1.5 border-base-200">
+              <div className="flex justify-between items-center">
+                <p className=" text-sm opacity-50">
+                  {"Cost per MB [EIP 4844]"}
+                </p>
+                <div
+                  className="tooltip before:bg-base-100 before:border-base-200/50 before:!border before:text-current"
+                  data-tip="Based on last 100 DA submissions"
+                >
+                  <InfoIcon className="opacity-50 w-[18px] h-[18px]" />
+                </div>
+              </div>
+
+              <p>
+                {Number(daCostData?.totalDataEth?.costPerMb)?.toFixed(4)} ETH
+              </p>
+              <p className="text-xs opacity-70">
+                {Number(daCostData?.totalDataEth?.costPerMbUSD)?.toFixed(4)} USD
+              </p>
+            </div>
+            <div className=" h-full w-full bg-base-100 border-[0.5px] p-4 space-y-1.5 border-base-200">
+              <div className="flex justify-between items-center">
+                <p className=" text-sm opacity-50">{"Cost per MB [AvailDA]"}</p>
+
+                <div
+                  className="tooltip before:bg-base-100 before:border-base-200/50 before:!border before:text-current"
+                  data-tip="Based on last 100 DA submissions"
+                >
+                  <InfoIcon className="opacity-50 w-[18px] h-[18px]" />
+                </div>
+              </div>
+
+              <p>
+                {Number(daCostData?.totalDataAvail?.costPerMb)?.toFixed(4)}{" "}
+                AVAIL
+              </p>
+              <p className="text-xs opacity-70">
+                {Number(daCostData?.totalDataAvail?.costPerMbUSD)?.toFixed(4)}{" "}
+                USD
+              </p>
+            </div>
+          </>
+        )}
+
+        {/* <StatCard
           title="Last ETH Price"
           value={lastPriceFeed?.ethPrice}
           isLoading={statsLoading}
@@ -224,7 +299,7 @@ function AvailStats({}: Props) {
             value={Number(percent)}
             max="100"
           ></progress>
-        </div>
+        </div> */}
       </div>
     </>
   );
@@ -237,22 +312,34 @@ const StatCard = ({
   value,
   isLoading,
   after,
+  className,
 }: {
   title: string;
   after?: string;
+  className?: string;
   value: string | number | null;
   isLoading: boolean;
 }) => {
   if (isLoading) {
     return (
-      <div className="h-full w-full bg-base-100 border p-4  border-[0.5px]  space-y-2 border-base-200 animate-pulse">
+      <div
+        className={cn(
+          "h-full w-full bg-base-100 border p-4  border-[0.5px]  space-y-2 border-base-200 animate-pulse",
+          className
+        )}
+      >
         <p className=" text-sm opacity-50 h-5 w-20 rounded-full bg-base-200 animate-pulse"></p>
         <p className=" text-sm opacity-50 h-8 w-32 rounded-full bg-base-200 animate-pulse"></p>
       </div>
     );
   }
   return (
-    <div className="h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200">
+    <div
+      className={cn(
+        "h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200",
+        className
+      )}
+    >
       <p className=" text-sm opacity-50">{title || "Block Height"}</p>
       <MotionNumber
         className="text-2xl font-bold gap-1"

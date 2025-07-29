@@ -32,7 +32,6 @@ const LIMIT = 100;
 const AvailDAUtilisation: React.FC = () => {
   const { data: data, loading } = useAvailUtilisation({ limit: LIMIT });
 
-  console.log(`🚀 ~ file: useAvailUtilisation.ts:26 ~ daSubs:`, data);
   const memoOption = useMemo(() => {
     const lastblockNumber = data?.blocks?.at(0)?.id;
 
@@ -42,10 +41,7 @@ const AvailDAUtilisation: React.FC = () => {
     const averageDataPerBlock = new BigNumber(data?.byteSize)
       .div(data?.blocks?.length)
       .toNumber();
-    console.log(
-      `🚀 ~ file: AvailDAUtilisation.tsx:41 ~ averageDataPerBlock:`,
-      averageDataPerBlock
-    );
+
     const averageDataPerSub = new BigNumber(data?.byteSize)
       .div(data?.totalCount)
       .toNumber();

@@ -63,16 +63,16 @@ function SingleAccount({ account }: Props) {
     },
   });
   return (
-    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
-      <div className="lg:block hidden">
+    <div className="grid xl:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="xl:block hidden">
         <Sidebar />
       </div>
-      <div className="lg:hidden block">
+      <div className="xl:hidden block">
         <Header />
       </div>
       <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
         <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
-          <h2 className="lg:text-xl text-xl font-semibold">L2 Rollups</h2>
+          <h2 className="lg:text-xl text-xl font-semibold">L2 Rollup</h2>
         </div>
         <div className="w-full space-y-4 ">
           <L2BeatCard account={account} />

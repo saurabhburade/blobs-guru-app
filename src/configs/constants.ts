@@ -3,9 +3,13 @@ import { mainnet, sepolia } from "wagmi/chains";
 import { AVAIL_APP_BOOK } from "./availProjects";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-export const MAX_BLOBS_TARGET = process.env.NEXT_PUBLIC_MAX_BLOBS_TARGET || 6;
+export const MAX_BLOBS_TARGET = process.env.NEXT_PUBLIC_MAX_BLOBS_TARGET || 9;
 export const MAX_BLOBS_SIZE_TARGET_AVAIL =
-  process.env.NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_AVAIL || 1_048_576 * 2;
+  process.env.NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_AVAIL || 1_048_576 * 4;
+export const MAX_BLOBS_SIZE_TARGET_CELESTIA =
+  process.env.NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_CELESTIA || 1_048_576 * 8;
+export const MAX_BLOBS_SIZE_TARGET_ETHEREUM =
+  process.env.NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_ETHEREUM || 128 * 1024 * 9;
 export const KB_PER_BLOB = process.env.NEXT_PUBLIC_KB_PER_BLOB || 128;
 export const ETHERSCAN_LINK = "https://etherscan.io";
 export const wagmiconfig = createConfig({
@@ -19,6 +23,7 @@ interface AddressBook {
   [address: string]: any;
 }
 export const SYNC_START_BLOCK = 19426947;
+export const DUNCUN_BLOCK = 19426589;
 export const BLOCK_DURATION_SEC = 12;
 export const ADDRESS_BOOK: AddressBook = {
   "0x000000633b68f5d8d3a86593ebb815b4663bcbe0": {

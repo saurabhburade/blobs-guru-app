@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const COLLECTIVE_STAT_QUERY = gql`
   query {
-    collectiveData(id: "1") {
+    collectiveData(id: "0x01000000") {
       id
       totalBlobTransactionCount
       totalGasEth
@@ -465,6 +465,22 @@ export const BLOB_ACCOUNT_SINGLE_QUERY = gql`
       totalBlobHashesCount
       totalFeeEth
       totalBlobGasUSD
+    }
+  }
+`;
+export const BLOB_TRANSACTIONS_DA_COST_QUERY = gql`
+  query BlobTransactions($limit: Int) {
+    blobTransactions(
+      first: $limit
+      orderBy: blockNumber
+      orderDirection: desc
+    ) {
+      blobHashesLength
+      blobGasEth
+      blobGasUSD
+      timestamp
+      blobGas
+      blockNumber
     }
   }
 `;

@@ -20,10 +20,10 @@ type Props = {};
 
 function Sidebar({}: Props) {
   return (
-    <div className="border-base-200 lg:border-r  opacity-80">
+    <div className="border-base-200 xl:border-r  opacity-80">
       <div className="flex flex-col justify-between h-screen">
         <div className="h-[90vh] overflow-scroll">
-          <div className="p-5 flex items-center justify-between hidden lg:flex">
+          <div className="p-5 flex items-center justify-between hidden xl:flex">
             <Link href="/">
               <div className="font-bold flex items-center gap-2">
                 <img src="/images/logo.svg" width={34} height={34} alt="" />
@@ -32,21 +32,26 @@ function Sidebar({}: Props) {
             </Link>
             <ThemeController />
           </div>
-          <hr className="border-base-200 lg:block hidden" />
 
           <div className="">
             <div className="collapse collapse-arrow ">
               <input type="checkbox" name="my-accordion-2" defaultChecked />
               <div className="collapse-title text-xl font-medium ">
                 <div className="flex items-center gap-2">
-                  <TbBlob /> <p>Ethereum Blobs</p>
+                  <ImageWithFallback
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/ethereum.png?raw=true`}
+                    width={24}
+                    height={24}
+                    alt="ethereum"
+                  />
+                  <p>Ethereum Blobs</p>
                 </div>
               </div>
               <div className="collapse-content ">
                 <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
                   {/* Sidebar content here */}
                   <li className="  ">
-                    <Link href="/">
+                    <Link href="/ethereum">
                       <span>
                         <TiThSmall />
                       </span>
@@ -55,37 +60,25 @@ function Sidebar({}: Props) {
                   </li>
                   <hr className="border-base-200" />
                   <li className="  ">
-                    <Link href="/accounts">
+                    <Link href="/ethereum/apps">
                       <span>
-                        <LuScroll />
+                        <IoIosApps />
                       </span>
                       Rollups
                     </Link>
                   </li>
-                  <hr className="border-base-200" />
-
+                  {/* <hr className="border-base-200" />
                   <li className="  ">
-                    <Link href="/size">
+                    <Link href="/ethereum/accounts">
                       <span>
-                        <TbDatabaseShare />
+                        <User />
                       </span>
-                      Size
+                      Accounts
                     </Link>
-                  </li>
+                  </li> */}
                   <hr className="border-base-200" />
                   <li className="  ">
-                    <Link href="/cost">
-                      <span>
-                        <TbReportMoney />
-                      </span>
-                      Costs
-                    </Link>
-                  </li>
-
-                  <hr className="border-base-200" />
-
-                  <li className="  ">
-                    <Link href="/stats">
+                    <Link href="/ethereum/stats">
                       <span>
                         <IoStatsChart />
                       </span>
@@ -93,42 +86,16 @@ function Sidebar({}: Props) {
                     </Link>
                   </li>
                   <hr className="border-base-200" />
-                  <li className="  ">
-                    <Link
-                      target="_blank"
-                      referrerPolicy="no-referrer"
-                      href="https://www.eip4844.com/"
-                    >
-                      EIP 4844
-                    </Link>
-                  </li>
-
-                  <hr className="border-base-200" />
-                  <li className="  ">
-                    <Link href="/superchains">
-                      <span>
-                        <img
-                          src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/optimism.png`}
-                          width={24}
-                          height={24}
-                          alt=""
-                        />
-                      </span>
-                      <span className="font-semibold text-[#ff0420] font-extrabold uppercase font-sans">
-                        SUPERCHAINS
-                      </span>
-                    </Link>
-                  </li>
-                  <hr className="border-base-200" />
                 </ul>
               </div>
             </div>
+        
             <div className="collapse collapse-arrow ">
               <input type="checkbox" name="my-accordion-2" defaultChecked />
               <div className="collapse-title text-xl font-medium ">
                 <div className="flex items-center gap-2">
                   <ImageWithFallback
-                    src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`}
                     width={24}
                     height={24}
                     alt="avail"
@@ -168,6 +135,61 @@ function Sidebar({}: Props) {
                   <hr className="border-base-200" />
                   <li className="  ">
                     <Link href="/avail/stats">
+                      <span>
+                        <IoStatsChart />
+                      </span>
+                      Stats
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                </ul>
+              </div>
+            </div>
+            <div className="collapse collapse-arrow ">
+              <input type="checkbox" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-xl font-medium ">
+                <div className="flex items-center gap-2">
+                  <ImageWithFallback
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/celestia.png?raw=true`}
+                    width={24}
+                    height={24}
+                    alt="celestia"
+                  />
+                  <p>Celestia DA</p>
+                </div>
+              </div>
+              <div className="collapse-content ">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
+                  {/* Sidebar content here */}
+                  <li className="  ">
+                    <Link href="/celestia">
+                      <span>
+                        <TiThSmall />
+                      </span>
+                      Summary
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/celestia/apps">
+                      <span>
+                        <IoIosApps />
+                      </span>
+                      Apps
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/celestia/accounts">
+                      <span>
+                        <User />
+                      </span>
+                      Accounts
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/celestia/stats">
                       <span>
                         <IoStatsChart />
                       </span>

@@ -13,7 +13,7 @@ type Props = {};
 
 function BlobsStats({}: Props) {
   const [duration, setDuration] = useState(15);
-  const [showHourly, setShowHourly] = useState(false);
+  const [showHourly, setShowHourly] = useState(true);
   return (
     <div className="bg-base-100 border border-base-200">
       <div className="p-5 border-b border-base-200 flex justify-between">
@@ -61,7 +61,7 @@ function BlobsStats({}: Props) {
       {showHourly && <BlobsStatsHourly duration={24} />}
       {!showHourly && (
         <>
-          <div className="grid lg:grid-cols-2 lg:h-[20em]  ">
+          <div className="grid lg:grid-cols-2 lg:h-[20em]  border-b border-b-base-200">
             <div className="border-base-200 border-r p-5 h-[20em]">
               <BlobSizeChart duration={duration} />
             </div>
@@ -69,7 +69,7 @@ function BlobsStats({}: Props) {
               <BlobTxnsChart duration={duration} />
             </div>
           </div>
-          <div className="grid lg:grid-cols-2 lg:h-[20em] ">
+          <div className="grid lg:grid-cols-2 lg:h-[20em]   border-b border-b-base-200">
             <div className="border-base-200 border-r p-5 h-[20em]">
               <BlobHashesChart duration={duration} />
             </div>

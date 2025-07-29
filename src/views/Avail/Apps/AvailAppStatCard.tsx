@@ -61,7 +61,7 @@ function AvailAppStatCard({ acc, isLoading, className, chartData }: any) {
             <ImageWithFallback
               src={
                 accountDetails?.logoUri ||
-                `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+                `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`
               }
               width={24}
               height={24}
@@ -114,14 +114,7 @@ function AvailAppStatCard({ acc, isLoading, className, chartData }: any) {
                 )?.toFormat()}
               </p>
             </div>
-            <div className="flex justify-between items-center py-3 p-4">
-              <div className="flex items-center gap-2">
-                <Coins />
 
-                <p className=""> Total fee</p>
-              </div>
-              <p className="text-xl font-bold"> {totalFeesAvail} AVAIL</p>
-            </div>
             <div className="flex justify-between items-center py-3 p-4">
               <div className="flex items-center gap-2">
                 <Database />
@@ -146,7 +139,7 @@ function AvailAppStatCard({ acc, isLoading, className, chartData }: any) {
             <div className="flex justify-between items-center  py-3 p-4">
               <div className="flex items-center gap-2">
                 <ImageWithFallback
-                  src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+                  src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`}
                   width={24}
                   height={24}
                   alt="avail"

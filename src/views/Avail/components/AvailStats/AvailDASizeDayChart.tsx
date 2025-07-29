@@ -50,7 +50,6 @@ export default function AvailDASizeDayChart({
     },
     client: availClient,
   });
-  console.log(`🚀 ~ file: AvailDASizeDayChart.tsx:50 ~ data:`, data);
 
   const chartData = useMemo(() => {
     const formatter = new Intl.DateTimeFormat("en-US", { weekday: "long" });

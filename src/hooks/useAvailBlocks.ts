@@ -54,9 +54,9 @@ export const useAvailBlocks = ({ page }: { page: number }) => {
         };
       })
     : null;
-  console.log(`🚀 ~ file: useAvailBlocks.ts:38 ~ res:`, res, {
-    mapBlockDAData,
-  });
 
-  return { data: mapBlockDAData, loading: loading || daSubsloading };
+  return {
+    data: { mapBlockDAData, totalCount: data?.blocks?.totalCount },
+    loading: loading || daSubsloading,
+  };
 };

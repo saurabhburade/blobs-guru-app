@@ -23,11 +23,11 @@ type Props = {};
 
 function AvailAppsSummary({}: Props) {
   return (
-    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
-      <div className="lg:block hidden">
+    <div className="grid xl:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="xl:block hidden">
         <Sidebar />
       </div>
-      <div className="lg:hidden block">
+      <div className="xl:hidden block">
         <Header />
       </div>
       <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
@@ -35,7 +35,7 @@ function AvailAppsSummary({}: Props) {
           {/* <img src="/images/avail_logo.png" alt="" className="w-[140px]" /> */}
           <div className="flex gap-2 items-center">
             <ImageWithFallback
-              src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`}
+              src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`}
               fallback="/images/avail_logo.png"
               className="rounded-lg"
               width={24}

@@ -5,6 +5,11 @@ import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import { formatBytes } from "@/lib/utils";
 import { COLLECTIVE_STAT_QUERY } from "@/lib/apollo/queries";
+import {
+  DUNCUN_BLOCK,
+  KB_PER_BLOB,
+  MAX_BLOBS_TARGET,
+} from "@/configs/constants";
 
 type Props = {};
 
@@ -118,6 +123,41 @@ function StatsOverview({}: Props) {
     ).toFormat(0);
     return totalBlobHashesCountBn || 0;
   }, [data?.collectiveData?.totalBlobHashesCount]);
+  const duncunUtStats = useMemo(() => {
+    const sblocks = new BigNumber(data?.collectiveData?.lastUpdatedBlock || 0)
+      .minus(DUNCUN_BLOCK || 0)
+      .toFixed(0);
+    const idealBlobsCount = new BigNumber(sblocks)
+      .times(MAX_BLOBS_TARGET || 0)
+      .toFixed(0);
+    const idealTotalBytes = new BigNumber(idealBlobsCount)
+      .times(KB_PER_BLOB)
+      .toFixed(0);
+    const utilizedBlobsCount = new BigNumber(
+      data?.collectiveData?.totalBlobHashesCount
+    ).toFixed(0);
+    const utilizedBlobsBytes = new BigNumber(utilizedBlobsCount)
+      .times(KB_PER_BLOB)
+      .toFixed(0);
+    const utilizationPercent = new BigNumber(utilizedBlobsCount)
+      .div(idealBlobsCount)
+      .times(100)
+      .toNumber();
+    return {
+      sblocks,
+      idealBlobsCount,
+      idealTotalBytes,
+      utilizedBlobsCount,
+      utilizedBlobsBytes,
+      utilizationPercent,
+    };
+  }, [data?.collectiveData]);
+  const totalBlocksAfterDuncun = useMemo(() => {
+    const tb = new BigNumber(data?.collectiveData?.lastUpdatedBlock || 0)
+      .minus(DUNCUN_BLOCK || 0)
+      .toFormat(0);
+    return tb || 0;
+  }, [data?.collectiveData?.lastUpdatedBlock]);
 
   return (
     <div className="grid lg:grid-cols-4 gap-0  ">
@@ -181,6 +221,26 @@ function StatsOverview({}: Props) {
       <StatsOverviewCard
         title="Data per transaction"
         value={`${dataSizePerTx?.toString()}/tx`}
+        isLoading={statsLoading}
+      />
+      <StatsOverviewCard
+        title="Blocks after Duncun"
+        value={`${totalBlocksAfterDuncun?.toString()}`}
+        isLoading={statsLoading}
+      />
+      <StatsOverviewCard
+        title="Max Blobs Count [6/block]"
+        value={`${new BigNumber(duncunUtStats?.idealBlobsCount || 0)?.toFormat()}`}
+        isLoading={statsLoading}
+      />
+      <StatsOverviewCard
+        title={`Utilized Blobs [${new BigNumber(duncunUtStats?.idealBlobsCount || 0).div(duncunUtStats?.utilizedBlobsCount)?.toFormat(2)}/block]`}
+        value={`${new BigNumber(duncunUtStats?.utilizedBlobsCount || 0)?.toFormat()}`}
+        isLoading={statsLoading}
+      />
+      <StatsOverviewCard
+        title="Utilization Percent"
+        value={`${new BigNumber(duncunUtStats?.utilizationPercent || 0)?.toFormat(2)}%`}
         isLoading={statsLoading}
       />
     </div>

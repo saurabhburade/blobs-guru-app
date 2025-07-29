@@ -30,11 +30,11 @@ function DAList({}: Props) {
   const daList = useDAProvidersRaw();
 
   return (
-    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
-      <div className="lg:block hidden">
+    <div className="grid xl:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="xl:block hidden">
         <Sidebar />
       </div>
-      <div className="lg:hidden block">
+      <div className="xl:hidden block">
         <Header />
       </div>
       <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
@@ -63,7 +63,7 @@ function DAList({}: Props) {
               >
                 <div className="flex gap-4 p-4 h-fit w-full lg:col-span-1 col-span-2 lg:border-b-0 border-b border-base-200">
                   <img
-                    src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/${provider?.data?.display?.slug}.png?raw=true`}
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/${provider?.data?.display?.slug}.png?raw=true`}
                     // src="/images/eigen-da.png"
                     alt=""
                     className="rounded-lg size-10 bg-white p-1"

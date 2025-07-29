@@ -60,7 +60,6 @@ export default function AvailExtCountDayChart({
       client: availClient,
     }
   );
-  console.log(`🚀 ~ file: AvailExtCountDayChart.tsx:54 ~ data:`, data);
   const [totalExt, setTotalExt] = useState(0);
   const chartDataFormated = useMemo(() => {
     const formatter = new Intl.DateTimeFormat("en-US", { weekday: "long" });

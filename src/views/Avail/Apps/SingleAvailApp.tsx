@@ -39,11 +39,11 @@ function SingleAvailApp({ appId }: Props) {
   });
 
   return (
-    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
-      <div className="lg:block hidden">
+    <div className="grid xl:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="xl:block hidden">
         <Sidebar />
       </div>
-      <div className="lg:hidden block">
+      <div className="xl:hidden block">
         <Header />
       </div>
       <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
@@ -153,9 +153,12 @@ const TransactionRow = ({ txn }: any) => {
             <NotepadText strokeWidth="1" width={24} height={24} />
           </div>
           <div>
-            {formatAddress(txn?.id)}
+            <Link href={`/avail/txn/${txn?.id}`} className="text-primary">
+              {" "}
+              {formatAddress(txn?.id)}
+            </Link>
 
-            <p>{timeAgo(new Date(txn?.timestamp))}</p>
+            <p>{timeAgo(new Date(txn.timestamp + "Z"))}</p>
           </div>
         </div>
         {txn?.signer ? <p>{formatAddress(txn?.signer)}</p> : <p>-</p>}
@@ -188,9 +191,11 @@ const TransactionRow = ({ txn }: any) => {
             <NotepadText strokeWidth="1" width={24} height={24} />
           </div>
           <div>
-            <p>{formatAddress(txn?.id)}</p>
-
-            <p>{timeAgo(new Date(txn?.timestamp))}</p>
+            <Link href={`/avail/txn/${txn?.id}`} className="text-primary">
+              {" "}
+              {formatAddress(txn?.id)}
+            </Link>
+            <p>{timeAgo(new Date(txn.timestamp + "Z"))}</p>
           </div>
         </div>
         <div>

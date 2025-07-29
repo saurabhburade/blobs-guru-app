@@ -32,11 +32,11 @@ function Superchains({}: Props) {
   const d = useOpStackAccountsData(superList);
 
   return (
-    <div className="grid lg:grid-cols-[1.25fr_5fr] gap-0 h-screen">
-      <div className="lg:block hidden">
+    <div className="grid xl:grid-cols-[1.25fr_5fr] gap-0 h-screen">
+      <div className="xl:block hidden">
         <Sidebar />
       </div>
-      <div className="lg:hidden block">
+      <div className="xl:hidden block">
         <Header />
       </div>
       <div className="p-5 min-h-[90vh] h-screen overflow-scroll flex flex-col space-y-4 pb-10 ">
@@ -242,7 +242,6 @@ const StatCard = ({
 };
 
 export function AccountRows({ data, loading }: any) {
-  console.log(`🚀 ~ file: Superchains.tsx:273 ~ data:`, data?.accounts);
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">
       <div className="hidden xl:grid xl:grid-cols-7 py-4 px-4  border-b border-base-200 text-sm items-center">
@@ -264,7 +263,7 @@ export function AccountRows({ data, loading }: any) {
             );
           })}
         {data?.accounts?.map((acc: any) => {
-          return <AccountRow key={acc?.id} acc={acc} />;
+          return acc?.id && <AccountRow key={acc?.id} acc={acc} />;
         })}
       </div>
     </div>

@@ -98,7 +98,7 @@ export default AvailApps;
 //   totalDAFeesUSD;
 const AccountRow = ({ acc }: any) => {
   const accountDetails = getAppDetailsFromAppBook(acc?.id);
-  console.log(`🚀 ~ file: AvailApps.tsx:101 ~ accountDetails:`, accountDetails);
+
   const totalSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));
   }, [acc?.totalByteSize]);
@@ -139,7 +139,7 @@ const AccountRow = ({ acc }: any) => {
             <ImageWithFallback
               src={
                 accountDetails?.logoUri ||
-                `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+                `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`
               }
               className="rounded-lg"
               width={24}
@@ -182,7 +182,7 @@ const AccountRow = ({ acc }: any) => {
               <ImageWithFallback
                 src={
                   accountDetails?.logoUri ||
-                  `https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/icons/avail.png?raw=true`
+                  `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`
                 }
                 className="rounded-lg"
                 width={24}
@@ -191,10 +191,7 @@ const AccountRow = ({ acc }: any) => {
               />
             </div>
 
-            <Link
-              className="text-primary"
-              href={`/avail/apps/${acc?.id}`}
-            >
+            <Link className="text-primary" href={`/avail/apps/${acc?.id}`}>
               {accountDetails?.name ? (
                 <p>{accountDetails?.name}</p>
               ) : (

@@ -140,11 +140,11 @@ function L2BeatCard({ account }: any) {
           )}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          {l2BeatAccountDetails?.badges?.map((b: string) => {
+          {l2BeatAccountDetails?.badges?.map((b: any) => {
             return (
               <img
-                key={`l2BeatAccountDetails__${b}`}
-                src={`https://github.com/l2beat/l2beat/blob/main/packages/frontend/public/images/badges/${b}.png?raw=true`}
+                key={`l2BeatAccountDetails__${b?.id}`}
+                src={`https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/public/images/badges/${b?.id}.png`}
                 alt=""
                 className="lg:w-[50px] w-[30px] lg:h-[50px] h-[30px]"
               />
@@ -288,7 +288,7 @@ function L2BeatCard({ account }: any) {
             </div>
 
             {l2BeatAccountDetails?.milestones &&
-              l2BeatAccountDetails?.milestones[0]?.name && (
+              l2BeatAccountDetails?.milestones[0]?.title && (
                 <div className=" p-4 bg-base-200/30 mx-4  rounded-xl space-y-2">
                   <div className="flex justify-between">
                     <div className="flex justify-between items-center gap-2">
@@ -296,7 +296,7 @@ function L2BeatCard({ account }: any) {
                         <Shield width={30} height={30} />
                       </div>
                       <p className="font-medium">
-                        {l2BeatAccountDetails?.milestones[0]?.name}
+                        {l2BeatAccountDetails?.milestones[0]?.title}
                       </p>
                     </div>
                     <p className="text-sm">

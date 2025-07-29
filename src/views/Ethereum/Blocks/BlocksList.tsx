@@ -1,0 +1,188 @@
+import ImageWithFallback from "@/components/ImageWithFallback";
+import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
+
+import { apolloClient } from "@/lib/apollo/client";
+
+import { ETHEREUM_BLOCKS_LIMIT_QUERY } from "@/lib/apollo/queriesEthereum";
+import { timeAgo } from "@/lib/time";
+import { formatAddress, formatBytes, formatEthereumValue } from "@/lib/utils";
+import { useQuery } from "@apollo/client";
+import BigNumber from "bignumber.js";
+import { Box } from "lucide-react";
+import Link from "next/link";
+import React from "react";
+import { useState } from "react";
+import { useMemo } from "react";
+
+type Props = {};
+const LIMIT_PER_PAGE = 10;
+function BlocksList({}: Props) {
+  const [page, setPage] = useState(1);
+
+  const { data: rawData, loading: blocksLoading } = useQuery(
+    ETHEREUM_BLOCKS_LIMIT_QUERY,
+    {
+      variables: {
+        skip: LIMIT_PER_PAGE * (page - 1),
+        limit: LIMIT_PER_PAGE,
+      },
+      pollInterval: 15_000, // Every 15 sec
+      client: apolloClient,
+    }
+  );
+
+  return (
+    <div className=" bg-base-100 border rounded-lg border-base-200">
+      <div className="hidden xl:grid xl:grid-cols-7 py-4 px-4  border-b border-base-200 text-sm items-center">
+        <div className="flex items-center gap-2 col-span-2 ">Block</div>
+
+        <p>Size</p>
+
+        <p>Blob Txn</p>
+        <p>Txns</p>
+        <p>Events</p>
+        <p>Fees</p>
+      </div>
+      <div className="px-4 ">
+        {blocksLoading &&
+          new Array(10)?.fill(1)?.map((num, idx) => {
+            return (
+              <TransactionRowSkeleton
+                key={`TransactionRowSkeleton_ACCOUNTS_${idx}`}
+              />
+            );
+          })}
+        {rawData?.blockData?.nodes?.map((blk: any) => {
+          return <BlocksRow blk={blk} key={blk?.id} />;
+        })}
+      </div>
+      {rawData?.blockData?.totalCount > LIMIT_PER_PAGE && (
+        <div className="flex px-4 justify-end gap-2  p-4  border-t border-base-200">
+          {page > 1 && (
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={() => {
+                setPage((prev) => {
+                  if (prev > 1) {
+                    return prev - 1;
+                  }
+                  return prev;
+                });
+              }}
+            >
+              Prev
+            </button>
+          )}
+          <button
+            className="btn btn-outline btn-sm"
+            onClick={() => {
+              setPage((prev) => prev + 1);
+            }}
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default BlocksList;
+
+const BlocksRow = ({ blk }: any) => {
+  // blockFee: 0;
+  // byteSize: "0";
+  // id: "561904";
+  // nbEvents: 2;
+  // nbExtrinsics: 2;
+  // timestamp: "2024-11-11T11:02:40";
+  // __typename: "DataSubmissionSumAggregates";
+  const feeEth = useMemo(() => {
+    return new BigNumber(blk?.totalBlockFeeNatve).div(1e18).toFormat(4);
+  }, [blk?.totalBlockFeeNatve]);
+  const blobFeeGwei = useMemo(() => {
+    return new BigNumber(blk?.totalBlobGasEth).div(1e9).toFormat(5);
+  }, [blk?.totalBlobGasEth]);
+  const blockNumber = useMemo(() => {
+    return new BigNumber(blk?.id).toFormat(0);
+  }, [blk?.id]);
+
+  const blobSize = useMemo(() => {
+    return formatBytes(Number(blk?.totalBlobGas));
+  }, [blk?.totalBlobGas]);
+  const blockSize = useMemo(() => {
+    return formatBytes(Number(blk?.totalBlobSize));
+  }, [blk?.totalBlobSize]);
+  const ethBurn = useMemo(() => {
+    return new BigNumber(blk?.rpcData?.data?.baseFeePerGas)
+      .multipliedBy(Number(blk?.rpcData?.data?.gasUsed))
+      .div(1e18)
+      .toFormat(5);
+  }, [blk?.rpcData]);
+
+  return (
+    <>
+      <div className="hidden xl:grid xl:grid-cols-7 py-4 border-b border-base-200 text-sm items-center">
+        <div className="flex items-center gap-2 text-start col-span-2">
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <Box strokeWidth="1" width={24} height={24} />
+          </div>
+          <div>
+            <Link className="text-primary" href={`/ethereum/blocks/${blk?.id}`}>
+              {blockNumber}
+            </Link>
+            {/* <p>{blockNumber}</p> */}
+            <p>{timeAgo(new Date(Number(blk.timestamp)))}</p>
+          </div>
+        </div>
+
+        <div>
+          <p>{blockSize}</p>
+        </div>
+        <div>
+          <p>{blk?.totalBlobTransactionCount}</p>
+        </div>
+        <div>
+          <p>{blk?.totalTransactionCount} </p>
+        </div>
+        <div>
+          <p>{blk?.totalEventsCount} </p>
+        </div>
+
+        <div>
+          <p>{(Number(blk?.totalBlockFeeNatve) / 10 ** 18)?.toFixed(4)} ETH</p>
+        </div>
+      </div>
+      <div className="flex flex-wrap xl:hidden gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
+        <div className="flex items-center gap-2">
+          <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
+            <Box strokeWidth="1" width={24} height={24} />
+          </div>
+          <div>
+            {/* <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
+              {blockNumber}
+            </Link> */}
+            <Link className="text-primary" href={`/ethereum/blocks/${blk?.id}`}>
+              {blockNumber}
+            </Link>
+
+            <p>{timeAgo(new Date(blk.timestamp))}</p>
+          </div>
+        </div>
+        <div>
+          <p>{blockSize}</p>
+        </div>
+        <div className="text-end">
+          <p>{(Number(blk?.totalBlockFeeNatve) / 10 ** 18)?.toFixed(4)} ETH</p>
+          <p className="text-xs opacity-70">
+            {" "}
+            $
+            {new BigNumber(blk?.totalBlockFeeNatve)
+              ?.times(blk?.avgNativePrice)
+              .toFormat(2)}{" "}
+          </p>
+        </div>
+      </div>
+    </>
+  );
+};

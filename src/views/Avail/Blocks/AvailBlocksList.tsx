@@ -41,11 +41,11 @@ function AvailBlocksList({}: Props) {
               />
             );
           })}
-        {rawData?.map((blk: any) => {
+        {rawData?.mapBlockDAData?.map((blk: any) => {
           return <BlocksRow blk={blk} key={blk?.id} />;
         })}
       </div>
-      {rawData?.accountEntities?.totalCount > LIMIT_PER_PAGE && (
+      {rawData?.totalCount > LIMIT_PER_PAGE && (
         <div className="flex px-4 justify-end gap-2  p-4  border-t border-base-200">
           {page > 1 && (
             <button
@@ -94,7 +94,7 @@ const BlocksRow = ({ blk }: any) => {
   }, [blk?.totalBlobGasEth]);
   const blockNumber = useMemo(() => {
     return new BigNumber(blk?.id).toFormat(0);
-  }, [blk?.blockNumber]);
+  }, [blk?.id]);
 
   const blobSize = useMemo(() => {
     return formatBytes(Number(blk?.totalBlobGas));
@@ -116,11 +116,11 @@ const BlocksRow = ({ blk }: any) => {
             <Box strokeWidth="1" width={24} height={24} />
           </div>
           <div>
-            {/* <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
+            <Link className="text-primary" href={`/avail/blocks/${blk?.id}`}>
               {blockNumber}
-            </Link> */}
-            <p>{blockNumber}</p>
-            <p>{timeAgo(blk?.timestamp)}</p>
+            </Link>
+            {/* <p>{blockNumber}</p> */}
+            <p>{timeAgo(new Date(blk.timestamp + "Z"))}</p>
           </div>
         </div>
 
@@ -138,7 +138,7 @@ const BlocksRow = ({ blk }: any) => {
         </div>
 
         <div>
-          <p>{blk?.blockFee} AVAIL</p>
+          <p>{Number(blk?.blockFee)?.toFixed(4)} AVAIL</p>
         </div>
       </div>
       <div className="flex flex-wrap xl:hidden gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
@@ -150,9 +150,11 @@ const BlocksRow = ({ blk }: any) => {
             {/* <Link className="text-primary" href={`/blocks/${blk?.blockNumber}`}>
               {blockNumber}
             </Link> */}
-            <p>{blockNumber}</p>
+            <Link className="text-primary" href={`/avail/blocks/${blk?.id}`}>
+              {blockNumber}
+            </Link>
 
-            <p>{timeAgo(blk.timestamp)}</p>
+            <p>{timeAgo(new Date(blk.timestamp + "Z"))}</p>
           </div>
         </div>
         <div>
@@ -160,7 +162,7 @@ const BlocksRow = ({ blk }: any) => {
           <p>{blk?.distinctCount?.id} DA subs</p>
         </div>
         <div className="text-end">
-          <p>{blk?.blockFee} AVAIL</p>
+          <p>{Number(blk?.blockFee)?.toFixed(4)} AVAIL</p>
           <p className="text-xs opacity-70">
             {" "}
             ${new BigNumber(blk?.blockFee)
