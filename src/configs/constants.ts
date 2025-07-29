@@ -8,6 +8,8 @@ export const MAX_BLOBS_SIZE_TARGET_AVAIL =
   process.env.NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_AVAIL || 1_048_576 * 4;
 export const MAX_BLOBS_SIZE_TARGET_CELESTIA =
   process.env.NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_CELESTIA || 1_048_576 * 8;
+export const MAX_BLOBS_SIZE_TARGET_ETHEREUM =
+  process.env.NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_ETHEREUM || 128 * 1024 * 9;
 export const KB_PER_BLOB = process.env.NEXT_PUBLIC_KB_PER_BLOB || 128;
 export const ETHERSCAN_LINK = "https://etherscan.io";
 export const wagmiconfig = createConfig({
