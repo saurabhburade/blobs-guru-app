@@ -90,10 +90,16 @@ function ChainStats({}: Props) {
   const blockData = useReactQuery({
     queryKey: ["ethereum-latest-block"],
     queryFn: async () => {
-      const res = await axios.get(
-        "https://public-ethereum-rpc.numia.xyz/status"
-      );
-      return res.data?.result?.sync_info?.latest_block_height;
+      const res = await axios.post("https://eth.drpc.org", {
+        jsonrpc: "2.0",
+        id: 1,
+        method: "eth_blockNumber",
+        params: [],
+      });
+
+      // Convert hex block number to integer
+      const latestBlock = parseInt(res.data.result, 16);
+      return latestBlock;
     },
     refetchInterval: 10_000,
   });
@@ -101,7 +107,7 @@ function ChainStats({}: Props) {
   const percent = useMemo(() => {
     if (Number(blockData?.data) > 0 && Number(endBlock) > 0) {
       const p = new BigNumber(Number(endBlock))
-        .div(blockData?.data)
+        .div(Number(blockData?.data))
         .multipliedBy(100)
         .toNumber();
       return p;
@@ -118,7 +124,7 @@ function ChainStats({}: Props) {
             <p>
               {" "}
               Syncing blocks ({new BigNumber(endBlock).toFormat()} of{" "}
-              {new BigNumber(blockData?.data).toFormat()} blocks synced){" "}
+              {new BigNumber(Number(blockData?.data)).toFormat()} blocks synced){" "}
             </p>
           </div>
         )}
@@ -179,7 +185,7 @@ function ChainStats({}: Props) {
         {percent < 99.5 && (
           <StatCard
             title="Target"
-            value={blockData?.data}
+            value={Number(blockData?.data)}
             isLoading={blockData?.isLoading}
           />
         )}
