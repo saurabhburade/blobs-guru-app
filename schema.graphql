@@ -78,9 +78,9 @@ type TransactionData @entity {
   nDataSubs: Float!
   totalBytes: Float!
 
-  totalFeeNatve: Float!
+  totalFeeNatve: Float! @index
   totalFeeUSD: Float!
-  totalDAFeeNatve: Float!
+  totalDAFeeNatve: Float! @index
   totalDAFeeUSD: Float!
 
   isBlobTransaction: Boolean!
@@ -142,15 +142,15 @@ type AccountDayData @entity {
   totalByteSize: Float! @index
   totalFees: Float @index
   totalDAFees: Float @index
-  totalDAFeesUSD: Float @index
-  totalFeesUSD: Float @index
+  totalDAFeesUSD: Float 
+  totalFeesUSD: Float 
   totalFeesNative: Float @index
   totalDataSubmissionCount: Float @index
-  totalTransferCount: Float @index
+  totalTransferCount: Float
   totalTxnCount: Float
   totalBlocksCount: Float
-  totalDataBlocksCount: Float @index
-  totalDataAccountsCount: Float @index
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float 
   lastPriceFeed: PriceFeedMinute
   timestampLast: Date! @index
   timestampStart: Date! @index
@@ -165,18 +165,18 @@ type AccountHourData @entity {
   id: ID!
   type: Float @index
   totalByteSize: Float! @index
-  totalFees: Float @index
+  totalFees: Float
   totalDAFees: Float @index
-  totalDAFeesUSD: Float @index
-  totalFeesUSD: Float @index
-  totalFeesNative: Float @index
+  totalDAFeesUSD: Float 
+  totalFeesUSD: Float 
+  totalFeesNative: Float 
   totalDataSubmissionCount: Float @index
-  totalTransferCount: Float @index
+  totalTransferCount: Float 
   totalTxnCount: Float @index
-  totalBlocksCount: Float @index
-  totalDataBlocksCount: Float @index
-  totalDataAccountsCount: Float @index
-  lastPriceFeed: PriceFeedMinute @index
+  totalBlocksCount: Float 
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float 
+  lastPriceFeed: PriceFeedMinute 
   timestampLast: Date! @index
   timestampStart: Date! @index
   startBlock: Float @index
