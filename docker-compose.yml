@@ -33,7 +33,7 @@ services:
       - ${SUB_COMMAND:-} # set SUB_COMMAND env variable to "test" to run tests
       - -f=/app
       - --db-schema=app
-      - --workers=8
+      - --workers=4
       - --batch-size=10
       - --unsafe=true
       - --allow-schema-migration

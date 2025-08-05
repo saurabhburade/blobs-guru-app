@@ -70,7 +70,7 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
     const transactionToSave = TransactionData.create({
       id: txn.hash,
       amount: Number(txn.value),
-      denomination: "ETH",
+
       hash: txn.hash,
       isBlobTransaction: txn.type === "0x3" ? true : false,
       nDataSubs: txn?.blobVersionedHashes?.length || 0,

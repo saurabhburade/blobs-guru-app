@@ -15,19 +15,18 @@
 
 type Transfers @entity {
   id: ID!
-  blockHeight: BigInt
-  txHash: String
-  fromAddress: String
-  toAddress: String
-  amount: String
-  denomination: String
+  blockHeight: BigInt @index
+  txHash: Bytes
+  fromAddress: Bytes @index
+  toAddress: Bytes @index
+  amount: String @index
 }
 
 type BlockData @entity {
   id: ID!
-  hash: String!
+  hash: Bytes!
   height: Float!
-  proposer: String!
+  proposer: Bytes!
   totalBlobSize: Float!
   totalSquareSize: Float!
 
@@ -50,28 +49,28 @@ type BlockData @entity {
 }
 type BlobData @entity {
   id: ID!
-  namespaceID: String
-  data: String
+  namespaceID: Bytes @index
+  data: Bytes
   shareVersion: String
   namespaceVersion: String
   transaction: TransactionData
-  commitment: String
-  size: Float
-  signer: AccountEntity
-  blockHeight: BlockData
+  commitment: Bytes
+  size: Float @index
+  signer: AccountEntity @index
+  blockHeight: BlockData @index
 }
 
 type TransactionData @entity {
   id: ID!
-  hash: String!
-  blockHeight: BlockData
-  timestamp: Float!
+  hash: Bytes!
+  blockHeight: BlockData @index
+  timestamp: Float! @index
 
-  signer: AccountEntity
+  signer: AccountEntity @index
 
   amount: Float!
-  denomination: String!
-  lastPriceFeed: PriceFeedMinute
+
+  lastPriceFeed: PriceFeedMinute @index
 
   txFeeNative: Float!
   nMessages: Float!
@@ -85,78 +84,78 @@ type TransactionData @entity {
   totalDAFeeUSD: Float!
 
   isBlobTransaction: Boolean!
-  blobs: [BlobData] @derivedFrom(field: "transaction")
+  blobs: [BlobData] @derivedFrom(field: "transaction") @index
 }
 
 type Block @entity {
   id: ID!
-  height: Float!
-  hash: String!
-  timestamp: Date!
-  proposer: String
+  height: Float! @index
+  hash: Bytes!
+  timestamp: Date! @index
+  proposer: Bytes @index
   nTransactions: Int
   nEvents: Int
-  nBlobs: Int
-  blobSize: Int
-  totalFeesNative: Float
-  totalFeesUSD: Float
-  version: String
+  nBlobs: Int @index
+  blobSize: Int @index
+  totalFeesNative: Float @index
+  totalFeesUSD: Float @index
+  version: Bytes
   nativePrice: Float!
 }
 
 type PriceFeedMinute @entity {
   id: ID!
-  date: Date
+  date: Date @index
   nativePrice: Float!
   nativeBlock: Int!
-  nativeDate: Date
+  nativeDate: Date @index
 }
 
 type AccountEntity @entity {
   id: ID!
   type: Float
-  createdAt: Date!
-  updatedAt: Date!
-  address: String!
-  totalByteSize: Float!
-  totalFees: Float
+  createdAt: Date! @index
+  updatedAt: Date! @index
+  address: Bytes! @index
+  totalByteSize: Float! @index
+  totalFees: Float @index
   totalDAFees: Float
-  totalDAFeesUSD: Float
+  totalDAFeesUSD: Float @index
   totalFeesUSD: Float
-  totalFeesNative: Float
-  totalDataSubmissionCount: Float
+  totalFeesNative: Float @index
+  totalDataSubmissionCount: Float @index
   totalTransferCount: Float
-  totalTxnCount: Float!
+  totalTxnCount: Float! @index
   totalBlocksCount: Float
   totalDataBlocksCount: Float
   lastPriceFeed: PriceFeedMinute
   avgNativePrice: Float
   accountDayData: [AccountDayData] @derivedFrom(field: "account")
   accountHourData: [AccountHourData] @derivedFrom(field: "account")
-  startBlock: Float
-  endBlock: Float
+  startBlock: Float @index
+  endBlock: Float @index
   transactions: [TransactionData] @derivedFrom(field: "signer")
   blobs: [BlobData] @derivedFrom(field: "signer")
 }
 type AccountDayData @entity {
   id: ID!
-  totalByteSize: Float!
-  totalFees: Float
-  totalDAFees: Float
-  totalDAFeesUSD: Float
-  totalFeesUSD: Float
-  totalFeesNative: Float
-  totalDataSubmissionCount: Float
-  totalTransferCount: Float
+  totalByteSize: Float! @index
+  totalFees: Float @index
+  totalDAFees: Float @index
+  totalDAFeesUSD: Float @index
+  totalFeesUSD: Float @index
+  totalFeesNative: Float @index
+  totalDataSubmissionCount: Float @index
+  totalTransferCount: Float @index
   totalTxnCount: Float
   totalBlocksCount: Float
-  totalDataBlocksCount: Float
-  totalDataAccountsCount: Float
+  totalDataBlocksCount: Float @index
+  totalDataAccountsCount: Float @index
   lastPriceFeed: PriceFeedMinute
-  timestampLast: Date!
-  timestampStart: Date!
-  startBlock: Float
-  endBlock: Float
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float @index
+  endBlock: Float @index
   avgNativePrice: Float
   prevDayData: AccountDayData
   account: AccountEntity!
@@ -164,24 +163,24 @@ type AccountDayData @entity {
 }
 type AccountHourData @entity {
   id: ID!
-  type: Float
-  totalByteSize: Float!
-  totalFees: Float
-  totalDAFees: Float
-  totalDAFeesUSD: Float
-  totalFeesUSD: Float
-  totalFeesNative: Float
-  totalDataSubmissionCount: Float
-  totalTransferCount: Float
-  totalTxnCount: Float
-  totalBlocksCount: Float
-  totalDataBlocksCount: Float
-  totalDataAccountsCount: Float
-  lastPriceFeed: PriceFeedMinute
-  timestampLast: Date!
-  timestampStart: Date!
-  startBlock: Float
-  endBlock: Float
+  type: Float @index
+  totalByteSize: Float! @index
+  totalFees: Float @index
+  totalDAFees: Float @index
+  totalDAFeesUSD: Float @index
+  totalFeesUSD: Float @index
+  totalFeesNative: Float @index
+  totalDataSubmissionCount: Float @index
+  totalTransferCount: Float @index
+  totalTxnCount: Float @index
+  totalBlocksCount: Float @index
+  totalDataBlocksCount: Float @index
+  totalDataAccountsCount: Float @index
+  lastPriceFeed: PriceFeedMinute @index
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float @index
+  endBlock: Float @index
   avgNativePrice: Float
   prevHourData: AccountHourData
   account: AccountEntity!
@@ -190,46 +189,46 @@ type AccountHourData @entity {
 
 type CollectiveData @entity {
   id: ID!
-  totalByteSize: Float!
-  totalFees: Float
-  totalDAFees: Float
-  totalDAFeesUSD: Float
-  totalFeesUSD: Float
-  totalFeesNative: Float
+  totalByteSize: Float! @index
+  totalFees: Float @index
+  totalDAFees: Float @index
+  totalDAFeesUSD: Float @index
+  totalFeesUSD: Float @index
+  totalFeesNative: Float @index
   totalDataSubmissionCount: Float
   totalTransferCount: Float
-  totalTxnCount: Float
+  totalTxnCount: Float @index
   totalBlocksCount: Float
   totalDataBlocksCount: Float
   totalDataAccountsCount: Float
-  lastPriceFeed: PriceFeedMinute
-  timestampLast: Date!
+  lastPriceFeed: PriceFeedMinute @index
+  timestampLast: Date! @index
   avgNativePrice: Float
 
-  endBlock: Float
+  endBlock: Float @index
   collectiveDayData: [CollectiveDayData] @derivedFrom(field: "collectiveData")
   collectiveHourData: [CollectiveHourData] @derivedFrom(field: "collectiveData")
-  lastUpdatedTxnId: String!
+  lastUpdatedTxnId: Bytes!
 }
 type CollectiveDayData @entity {
   id: ID!
-  totalByteSize: Float!
-  totalFees: Float
-  totalDAFees: Float
-  totalDAFeesUSD: Float
-  totalFeesUSD: Float
-  totalFeesNative: Float
-  totalDataSubmissionCount: Float
-  totalTransferCount: Float
-  totalTxnCount: Float
-  totalBlocksCount: Float
-  totalDataBlocksCount: Float
-  totalDataAccountsCount: Float
+  totalByteSize: Float! @index
+  totalFees: Float @index
+  totalDAFees: Float @index
+  totalDAFeesUSD: Float @index
+  totalFeesUSD: Float @index
+  totalFeesNative: Float @index
+  totalDataSubmissionCount: Float @index
+  totalTransferCount: Float @index
+  totalTxnCount: Float @index
+  totalBlocksCount: Float @index
+  totalDataBlocksCount: Float @index
+  totalDataAccountsCount: Float @index
   lastPriceFeed: PriceFeedMinute
-  timestampLast: Date!
-  timestampStart: Date!
-  startBlock: Float
-  endBlock: Float
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float @index
+  endBlock: Float @index
   avgNativePrice: Float
 
   prevDayData: CollectiveDayData
@@ -238,27 +237,27 @@ type CollectiveDayData @entity {
     @derivedFrom(field: "collectiveDayData")
 
   collectiveData: CollectiveData
-  lastUpdatedTxnId: String!
+  lastUpdatedTxnId: Bytes!
 }
 type CollectiveHourData @entity {
   id: ID!
-  totalByteSize: Float!
-  totalFees: Float
-  totalDAFees: Float
-  totalDAFeesUSD: Float
-  totalFeesUSD: Float
-  totalFeesNative: Float
-  totalDataSubmissionCount: Float
-  totalTransferCount: Float
-  totalTxnCount: Float
-  totalBlocksCount: Float
-  totalDataBlocksCount: Float
-  totalDataAccountsCount: Float
+  totalByteSize: Float! @index
+  totalFees: Float @index
+  totalDAFees: Float @index
+  totalDAFeesUSD: Float @index
+  totalFeesUSD: Float @index
+  totalFeesNative: Float @index
+  totalDataSubmissionCount: Float @index
+  totalTransferCount: Float @index
+  totalTxnCount: Float @index
+  totalBlocksCount: Float @index
+  totalDataBlocksCount: Float @index
+  totalDataAccountsCount: Float @index
   lastPriceFeed: PriceFeedMinute
-  timestampStart: Date!
-  timestampLast: Date!
-  startBlock: Float
-  endBlock: Float
+  timestampStart: Date! @index
+  timestampLast: Date! @index
+  startBlock: Float @index
+  endBlock: Float @index
   avgNativePrice: Float
 
   prevHourData: CollectiveHourData
@@ -266,5 +265,5 @@ type CollectiveHourData @entity {
   accountHourDataParticipant: [AccountHourData]
     @derivedFrom(field: "collectiveHourData")
   collectiveData: CollectiveData
-  lastUpdatedTxnId: String!
+  lastUpdatedTxnId: Bytes! @index
 }
