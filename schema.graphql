@@ -56,7 +56,7 @@ type BlobData @entity {
   transaction: TransactionData
   commitment: Bytes
   size: Float @index
-  signer: AccountEntity @index
+  signer: AccountEntity
   blockHeight: BlockData @index
 }
 
@@ -66,7 +66,7 @@ type TransactionData @entity {
   blockHeight: BlockData @index
   timestamp: Float! @index
 
-  signer: AccountEntity @index
+  signer: AccountEntity
 
   amount: Float!
 
@@ -118,11 +118,11 @@ type AccountEntity @entity {
   updatedAt: Date! @index
   address: Bytes! @index
   totalByteSize: Float! @index
-  totalFees: Float @index
-  totalDAFees: Float
-  totalDAFeesUSD: Float @index
+  totalFees: Float
+  totalDAFees: Float  @index
+  totalDAFeesUSD: Float
   totalFeesUSD: Float
-  totalFeesNative: Float @index
+  totalFeesNative: Float
   totalDataSubmissionCount: Float @index
   totalTransferCount: Float
   totalTxnCount: Float! @index
