@@ -114,12 +114,12 @@ type PriceFeedMinute @entity {
 type AccountEntity @entity {
   id: ID!
   type: Float
-  createdAt: Date! @index
+  createdAt: Date!
   updatedAt: Date! @index
   address: Bytes! @index
   totalByteSize: Float! @index
   totalFees: Float
-  totalDAFees: Float  @index
+  totalDAFees: Float @index
   totalDAFeesUSD: Float
   totalFeesUSD: Float
   totalFeesNative: Float
