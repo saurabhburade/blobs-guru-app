@@ -244,7 +244,7 @@ type CollectiveHourData @entity {
   totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float @index
-  totalDAFeesUSD: Float @index
+  totalDAFeesUSD: Float
   totalFeesUSD: Float
   totalFeesNative: Float @index
   totalDataSubmissionCount: Float @index
@@ -265,5 +265,5 @@ type CollectiveHourData @entity {
   accountHourDataParticipant: [AccountHourData]
     @derivedFrom(field: "collectiveHourData")
   collectiveData: CollectiveData
-  lastUpdatedTxnId: Bytes! @index
+  lastUpdatedTxnId: Bytes! 
 }
