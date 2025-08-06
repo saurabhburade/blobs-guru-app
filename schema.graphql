@@ -140,11 +140,11 @@ type AccountEntity @entity {
 type AccountDayData @entity {
   id: ID!
   totalByteSize: Float! @index
-  totalFees: Float @index
+  totalFees: Float 
   totalDAFees: Float @index
   totalDAFeesUSD: Float 
   totalFeesUSD: Float 
-  totalFeesNative: Float @index
+  totalFeesNative: Float 
   totalDataSubmissionCount: Float @index
   totalTransferCount: Float
   totalTxnCount: Float
@@ -152,9 +152,9 @@ type AccountDayData @entity {
   totalDataBlocksCount: Float
   totalDataAccountsCount: Float 
   lastPriceFeed: PriceFeedMinute
-  timestampLast: Date! @index
+  timestampLast: Date!
   timestampStart: Date! @index
-  startBlock: Float @index
+  startBlock: Float
   endBlock: Float @index
   avgNativePrice: Float
   prevDayData: AccountDayData
@@ -178,8 +178,8 @@ type AccountHourData @entity {
   totalDataAccountsCount: Float 
   lastPriceFeed: PriceFeedMinute 
   timestampLast: Date! @index
-  timestampStart: Date! @index
-  startBlock: Float @index
+  timestampStart: Date!
+  startBlock: Float 
   endBlock: Float @index
   avgNativePrice: Float
   prevHourData: AccountHourData
