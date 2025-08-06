@@ -163,7 +163,7 @@ type AccountDayData @entity {
 }
 type AccountHourData @entity {
   id: ID!
-  type: Float @index
+  type: Float 
   totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float @index
@@ -172,7 +172,7 @@ type AccountHourData @entity {
   totalFeesNative: Float 
   totalDataSubmissionCount: Float @index
   totalTransferCount: Float 
-  totalTxnCount: Float @index
+  totalTxnCount: Float
   totalBlocksCount: Float 
   totalDataBlocksCount: Float
   totalDataAccountsCount: Float 
