@@ -16,7 +16,7 @@
 type BlockData @entity {
   id: ID!
   hash: Bytes!
-  height: Float!
+  height: BigInt!
   proposer: Bytes!
   totalBlobSize: Float!
   totalSquareSize: Float!
@@ -43,7 +43,7 @@ type BlobData @entity {
   transaction: TransactionData
   size: Float @index
   signer: AccountEntity
-  blockHeight: BlockData @index
+  blockHeight: BlockData
 }
 
 type TransactionData @entity {
@@ -59,9 +59,8 @@ type TransactionData @entity {
   lastPriceFeed: PriceFeedMinute
 
   txFeeNative: Float!
-  nMessages: Float!
-  nEvents: Float!
-  nDataSubs: Float!
+  nEvents: Int!
+  nDataSubs: Int!
   totalBytes: Float!
 
   totalFeeNatve: Float!
@@ -75,7 +74,7 @@ type TransactionData @entity {
 
 type Block @entity {
   id: ID!
-  height: Float! @index
+  height: BigInt! @index
   hash: Bytes!
   timestamp: Date! @index
   proposer: Bytes @index
@@ -93,7 +92,6 @@ type PriceFeedMinute @entity {
   date: Date @index
   nativePrice: Float!
   nativeBlock: Block!
-  nativeDate: Date @index
 }
 
 type AccountEntity @entity {
@@ -186,7 +184,7 @@ type CollectiveData @entity {
   totalBlocksCount: Float
   totalDataBlocksCount: Float
   totalDataAccountsCount: Float
-  lastPriceFeed: PriceFeedMinute @index
+  lastPriceFeed: PriceFeedMinute
   timestampLast: Date! @index
   avgNativePrice: Float
 
