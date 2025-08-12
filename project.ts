@@ -45,8 +45,6 @@ const project: EthereumProject = {
       "https://eth-mainnet.public.blastapi.io",
       "https://ethereum-rpc.publicnode.com",
       "https://eth.drpc.org",
-      "https://1.rpc.hypersync.xyz",
-      "https://eth.rpc.hypersync.xyz",
     ],
   },
   dataSources: [
