@@ -13,20 +13,11 @@
 #   timestamp: String!
 # }
 
-type Transfers @entity {
-  id: ID!
-  blockHeight: BigInt @index
-  txHash: String
-  fromAddress: String @index
-  toAddress: String @index
-  amount: String @index
-}
-
 type BlockData @entity {
   id: ID!
-  hash: String!
+  hash: Bytes!
   height: Float!
-  proposer: String!
+  proposer: Bytes!
   totalBlobSize: Float!
   totalSquareSize: Float!
 
@@ -87,14 +78,13 @@ type Block @entity {
   height: Float! @index
   hash: Bytes!
   timestamp: Date! @index
-  proposer: String
+  proposer: Bytes @index
   nTransactions: Int
   nEvents: Int
   nBlobs: Int
   blobSize: Int @index
   totalFeesNative: Float @index
   totalFeesUSD: Float
-  version: String
   nativePrice: Float!
 }
 
@@ -111,7 +101,7 @@ type AccountEntity @entity {
 
   createdAt: Date!
   updatedAt: Date! @index
-  address: String! @index
+  address: Bytes! @index
   totalByteSize: Float! @index
   totalFees: Float
   totalDAFees: Float @index
@@ -203,7 +193,7 @@ type CollectiveData @entity {
   endBlock: Float @index
   collectiveDayData: [CollectiveDayData] @derivedFrom(field: "collectiveData")
   collectiveHourData: [CollectiveHourData] @derivedFrom(field: "collectiveData")
-  lastUpdatedTxnId: String!
+  lastUpdatedTxnId: Bytes!
 }
 type CollectiveDayData @entity {
   id: ID!
@@ -232,7 +222,7 @@ type CollectiveDayData @entity {
     @derivedFrom(field: "collectiveDayData")
 
   collectiveData: CollectiveData
-  lastUpdatedTxnId: String!
+  lastUpdatedTxnId: Bytes!
 }
 type CollectiveHourData @entity {
   id: ID!
@@ -260,5 +250,5 @@ type CollectiveHourData @entity {
   accountHourDataParticipant: [AccountHourData]
     @derivedFrom(field: "collectiveHourData")
   collectiveData: CollectiveData
-  lastUpdatedTxnId: String!
+  lastUpdatedTxnId: Bytes!
 }
