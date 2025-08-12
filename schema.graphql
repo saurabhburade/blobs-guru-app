@@ -49,12 +49,7 @@ type BlockData @entity {
 }
 type BlobData @entity {
   id: ID!
-  namespaceID: String @index
-  data: String
-  shareVersion: String
-  namespaceVersion: String
   transaction: TransactionData
-  commitment: String
   size: Float @index
   signer: AccountEntity
   blockHeight: BlockData @index
@@ -62,15 +57,15 @@ type BlobData @entity {
 
 type TransactionData @entity {
   id: ID!
-  hash: String!
-  blockHeight: BlockData @index
-  timestamp: Float! @index
+  hash: Bytes!
+  blockHeight: BlockData
+  timestamp: BigInt! @index
 
   signer: AccountEntity
 
   amount: Float!
 
-  lastPriceFeed: PriceFeedMinute @index
+  lastPriceFeed: PriceFeedMinute
 
   txFeeNative: Float!
   nMessages: Float!
@@ -78,24 +73,24 @@ type TransactionData @entity {
   nDataSubs: Float!
   totalBytes: Float!
 
-  totalFeeNatve: Float! @index
+  totalFeeNatve: Float!
   totalFeeUSD: Float!
-  totalDAFeeNatve: Float! @index
+  totalDAFeeNatve: Float!
   totalDAFeeUSD: Float!
 
   isBlobTransaction: Boolean!
-  blobs: [BlobData] @derivedFrom(field: "transaction") @index
+  blobs: [BlobData] @derivedFrom(field: "transaction")
 }
 
 type Block @entity {
   id: ID!
   height: Float! @index
-  hash: String!
+  hash: Bytes!
   timestamp: Date! @index
-  proposer: String @index
+  proposer: String
   nTransactions: Int
   nEvents: Int
-  nBlobs: Int @index
+  nBlobs: Int
   blobSize: Int @index
   totalFeesNative: Float @index
   totalFeesUSD: Float
@@ -107,13 +102,13 @@ type PriceFeedMinute @entity {
   id: ID!
   date: Date @index
   nativePrice: Float!
-  nativeBlock: Int!
+  nativeBlock: Block!
   nativeDate: Date @index
 }
 
 type AccountEntity @entity {
   id: ID!
-  type: Float
+
   createdAt: Date!
   updatedAt: Date! @index
   address: String! @index
@@ -226,8 +221,8 @@ type CollectiveDayData @entity {
   totalDataAccountsCount: Float
   lastPriceFeed: PriceFeedMinute
   timestampLast: Date! @index
-  timestampStart: Date! 
-  startBlock: Float 
+  timestampStart: Date!
+  startBlock: Float
   endBlock: Float @index
   avgNativePrice: Float
 
@@ -265,5 +260,5 @@ type CollectiveHourData @entity {
   accountHourDataParticipant: [AccountHourData]
     @derivedFrom(field: "collectiveHourData")
   collectiveData: CollectiveData
-  lastUpdatedTxnId: String! 
+  lastUpdatedTxnId: String!
 }

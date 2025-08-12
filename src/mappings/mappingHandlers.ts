@@ -76,7 +76,7 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
       nDataSubs: txn?.blobVersionedHashes?.length || 0,
       nEvents: txn?.logs?.length || 0,
       nMessages: 0,
-      timestamp: Number(block.timestamp) * 1000,
+      timestamp: BigInt(Number(block.timestamp) * 1000),
       totalBytes: dataSubmissionSize,
       txFeeNative: fees,
       blockHeightId: block.number.toString(),
@@ -152,11 +152,10 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
           // hashes.push(blobHash);
           const blob = BlobData.create({
             id: blobHash,
-            commitment: "",
-            data: "",
+
             signerId: txn.from,
             size: BYTES_PER_BLOB,
-            shareVersion: "",
+
             transactionId: txn.hash,
             blockHeightId: block.number.toString(),
           });
