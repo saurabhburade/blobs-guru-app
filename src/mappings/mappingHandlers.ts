@@ -163,27 +163,29 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
         }
       }
     } else {
-      const account = await AccountEntity.get(txn.from);
-      if (account && account !== null) {
-        // save  account datas for other txns
-        const acc = await handleAccount(txn, priceData!, {
-          height: block.number,
-          timestamp: Number(block.timestamp) * 1000,
-        });
-        accountsToSave.push(acc);
+      logger.info(`SKIP ::: NON BLOB TRANSACTION :: ${txn.hash}`);
 
-        const accDayData = await handleAccountDayData(txn, priceData!, {
-          height: block.number,
-          timestamp: Number(block.timestamp) * 1000,
-        });
-        accountDayDatas.push(accDayData);
+      // const account = await AccountEntity.get(txn.from);
+      // if (account && account !== null) {
+      //   // save  account datas for other txns
+      //   const acc = await handleAccount(txn, priceData!, {
+      //     height: block.number,
+      //     timestamp: Number(block.timestamp) * 1000,
+      //   });
+      //   accountsToSave.push(acc);
 
-        const accHourData = await handleAccountHourData(txn, priceData!, {
-          height: block.number,
-          timestamp: Number(block.timestamp) * 1000,
-        });
-        accountHourDatas.push(accHourData);
-      }
+      //   const accDayData = await handleAccountDayData(txn, priceData!, {
+      //     height: block.number,
+      //     timestamp: Number(block.timestamp) * 1000,
+      //   });
+      //   accountDayDatas.push(accDayData);
+
+      //   const accHourData = await handleAccountHourData(txn, priceData!, {
+      //     height: block.number,
+      //     timestamp: Number(block.timestamp) * 1000,
+      //   });
+      //   accountHourDatas.push(accHourData);
+      // }
     }
   }
 
