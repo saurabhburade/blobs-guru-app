@@ -163,7 +163,7 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
         }
       }
     } else {
-      logger.info(`SKIP ::: NON BLOB TRANSACTION :: ${txn.hash}`);
+      // logger.info(`SKIP ::: NON BLOB TRANSACTION :: ${txn.hash}`);
 
       // const account = await AccountEntity.get(txn.from);
       // if (account && account !== null) {
