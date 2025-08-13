@@ -219,10 +219,6 @@ export const ETHEREUM_APP_DA_FILTER_LIMIT_QUERY = gql`
       offset: $skip
     ) {
       nodes {
-        namespaceID
-        shareVersion
-        namespaceVersion
-        commitment
         size
         signer
       }
@@ -251,7 +247,6 @@ export const ETHEREUM_APP_DA_TRANSACTIONS_FILTER_LIMIT_QUERY = gql`
         timestamp
         blobs {
           nodes {
-            commitment
             signer
             size
           }
@@ -280,7 +275,6 @@ export const ETHEREUM_USER_TRANSACTIONS_FILTER_LIMIT_QUERY = gql`
         timestamp
         blobs {
           nodes {
-            commitment
             signerId
             size
           }
@@ -668,7 +662,6 @@ export const ETHEREUM_BLOCK_QUERY = gql`
           timestamp
           blobs {
             nodes {
-              commitment
               signer
               size
             }
@@ -697,7 +690,6 @@ export const ETHEREUM_TXN_QUERY = gql`
       }
       blobs {
         nodes {
-          commitment
           signer
           size
         }

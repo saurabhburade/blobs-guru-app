@@ -159,12 +159,15 @@ const TransactionRow = ({ txn }: any) => {
             <NotepadText strokeWidth="1" width={24} height={24} />
           </div>
           <div>
-            <Link href={`/ethereum/txn/${txn?.hash}`} className="text-primary">
+            <Link
+              href={`/ethereum/txn/${txn?.hash?.replace("\\x", "0x")}`}
+              className="text-primary"
+            >
               {" "}
-              {formatAddress(txn?.hash)}
+              {formatAddress(txn?.hash)?.replace("\\x", "0x")}
             </Link>
 
-            <p>{timeAgo(new Date(txn.timestamp))}</p>
+            <p>{timeAgo(new Date(Number(txn.timestamp)))}</p>
           </div>
         </div>
         {txn?.signerId ? <p>{formatAddress(txn?.signerId)}</p> : <p>-</p>}
