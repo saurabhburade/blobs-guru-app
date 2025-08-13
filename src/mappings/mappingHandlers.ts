@@ -56,42 +56,43 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
   });
   for (let index = 0; index < transactions.length; index++) {
     const txn = transactions[index];
-    const dataSubmissionSize =
-      (txn.blobVersionedHashes?.length || 0) * BYTES_PER_BLOB;
-    const fees = Number(txn.gas) * Number(txn.gasPrice);
-    const feesUSD = fees * priceData!.nativePrice;
-
-    const feesDA =
-      Number(txn.maxFeePerBlobGas) *
-      Number(txn.blobVersionedHashes?.length) *
-      BYTES_PER_BLOB;
-    const feesUSDDA = feesDA * priceData!.nativePrice;
-
-    const transactionToSave = TransactionData.create({
-      id: txn.hash,
-      amount: Number(txn.value),
-
-      hash: txn.hash,
-      isBlobTransaction: txn.type === "0x3" ? true : false,
-      nDataSubs: txn?.blobVersionedHashes?.length || 0,
-      nEvents: txn?.logs?.length || 0,
-      timestamp: BigInt(Number(block.timestamp) * 1000),
-      totalBytes: dataSubmissionSize,
-      txFeeNative: fees,
-      blockHeightId: block.number.toString(),
-      signerId: txn.from,
-      lastPriceFeedId: priceData!.id,
-      totalDAFeeNatve: feesDA,
-      totalDAFeeUSD: feesUSDDA,
-      totalFeeNatve: fees,
-      totalFeeUSD: feesUSD,
-    });
-    txnRecords.push(transactionToSave);
-    bdata.totalBlobSize += dataSubmissionSize;
-    bdata.totalBlockFeeNatve += fees;
-    bdata.totalBlockFeeUSD += feesUSD;
 
     if (txn.type === "0x3") {
+      const dataSubmissionSize =
+        (txn.blobVersionedHashes?.length || 0) * BYTES_PER_BLOB;
+      const fees = Number(txn.gas) * Number(txn.gasPrice);
+      const feesUSD = fees * priceData!.nativePrice;
+
+      const feesDA =
+        Number(txn.maxFeePerBlobGas) *
+        Number(txn.blobVersionedHashes?.length) *
+        BYTES_PER_BLOB;
+      const feesUSDDA = feesDA * priceData!.nativePrice;
+
+      const transactionToSave = TransactionData.create({
+        id: txn.hash,
+        amount: Number(txn.value),
+
+        hash: txn.hash,
+        isBlobTransaction: txn.type === "0x3" ? true : false,
+        nDataSubs: txn?.blobVersionedHashes?.length || 0,
+        nEvents: txn?.logs?.length || 0,
+        timestamp: BigInt(Number(block.timestamp) * 1000),
+        totalBytes: dataSubmissionSize,
+        txFeeNative: fees,
+        blockHeightId: block.number.toString(),
+        signerId: txn.from,
+        lastPriceFeedId: priceData!.id,
+        totalDAFeeNatve: feesDA,
+        totalDAFeeUSD: feesUSDDA,
+        totalFeeNatve: fees,
+        totalFeeUSD: feesUSD,
+      });
+      txnRecords.push(transactionToSave);
+      bdata.totalBlobSize += dataSubmissionSize;
+      bdata.totalBlockFeeNatve += fees;
+      bdata.totalBlockFeeUSD += feesUSD;
+
       bdata.totalDAFeeNatve += feesDA;
       bdata.totalDAFeeUSD += feesUSDDA;
       bdata.totalBlobTransactionCount += 1;
