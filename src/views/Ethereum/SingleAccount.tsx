@@ -48,17 +48,23 @@ function SingleAccount({ account }: Props) {
         <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
           <h2 className="lg:text-xl text-xl font-semibold">Rollup Account</h2>
         </div>
-        <div className="w-full space-y-4 ">
-          <L2BeatCard account={account} />
-          <div className="">
-            <AccountStatCard
-              acc={data?.accountEntities?.nodes[0]}
-              isLoading={loading}
-            />
-          </div>
-        </div>
-        <AccountStats account={account} />
-        <TxnRows account={account} />
+        {data?.accountEntities?.nodes?.length > 0 || loading ? (
+          <>
+            <div className="w-full space-y-4 ">
+              <L2BeatCard account={account} />
+              <div className="">
+                <AccountStatCard
+                  acc={data?.accountEntities?.nodes[0]}
+                  isLoading={loading}
+                />
+              </div>
+            </div>
+            <AccountStats account={account} />
+            <TxnRows account={account} />
+          </>
+        ) : (
+          "No data found, please wait while we sync this account."
+        )}
         <PoweredBy />
         <Footer />
       </div>

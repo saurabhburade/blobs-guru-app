@@ -1,4 +1,5 @@
 import ImageWithFallback from "@/components/ImageWithFallback";
+import { getAccountDetailsFromAddressBook } from "@/configs/constants";
 import { apolloClient } from "@/lib/apollo/client";
 
 import { ETHEREUM_SEARCH } from "@/lib/apollo/queriesEthereum";
@@ -7,6 +8,7 @@ import { useQuery } from "@apollo/client";
 
 import Link from "next/link";
 import React, { useState } from "react";
+import { isAddress } from "viem";
 
 type Props = {};
 
@@ -32,14 +34,14 @@ function SearchAccount({}: Props) {
             value={addressQuery}
             onChange={(e) => {
               const v = e.target.value;
-              // if (v?.length <= 48) {
-              setAddressQuery(v?.toString());
-              // }
-              // if (v?.length === 48 && isValidAddress(v)) {
-              setHash(v?.toString());
-              // } else {
-              //   setHash("");
-              // }
+              if (v?.length <= 48) {
+                setAddressQuery(v?.toString());
+              }
+              if (isAddress(v)) {
+                setHash(v?.toString());
+              } else {
+                setHash("");
+              }
             }}
           />
           <button className="btn join-item rounded-r-full">Search</button>
@@ -51,6 +53,7 @@ function SearchAccount({}: Props) {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] w-full mt-1 p-2 shadow border border-base-200"
         >
           {data?.accountEntities?.nodes?.map((d: any) => {
+            const accountMapData = getAccountDetailsFromAddressBook(d?.id);
             return (
               <li key={d?.id}>
                 <Link
@@ -59,14 +62,19 @@ function SearchAccount({}: Props) {
                 >
                   <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
                     <ImageWithFallback
-                      src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/ethereum.png?raw=true`}
+                      src={
+                        accountMapData?.logoUri ??
+                        `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/ethereum.png?raw=true`
+                      }
                       className="rounded-lg"
                       width={24}
                       height={24}
                       alt=""
                     />
                   </div>
-                  <p className="text-primary">{formatAddress(d?.id)}</p>
+                  <p className="text-primary">
+                    {accountMapData?.name ?? formatAddress(d?.id)}
+                  </p>
                 </Link>
               </li>
             );
