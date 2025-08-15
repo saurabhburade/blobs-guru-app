@@ -261,6 +261,7 @@ export const ETHEREUM_USER_TRANSACTIONS_FILTER_LIMIT_QUERY = gql`
       filter: { signerId: { equalTo: $signerId } }
       first: $limit
       offset: $skip
+      orderBy: TIMESTAMP_DESC
     ) {
       nodes {
         hash
