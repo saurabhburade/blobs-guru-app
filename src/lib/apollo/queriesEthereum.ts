@@ -285,7 +285,7 @@ export const ETHEREUM_USER_TRANSACTIONS_FILTER_LIMIT_QUERY = gql`
 `;
 export const ETHEREUM_ACCOUNT_SINGLE_QUERY = gql`
   query AccountEntity($id: String!) {
-    accountEntities(filter: { id: { includes: $id } }, first: 1) {
+    accountEntities(filter: { id: { likeInsensitive: $id } }, first: 1) {
       nodes {
         id
         totalByteSize
@@ -323,7 +323,7 @@ export const ETHEREUM_SEARCH = gql`
         id
       }
     }
-    appEntities(filter: { id: { includesInsensitive: $query } }) {
+    appEntities(filter: { id: { likeInsensitive: $query } }) {
       nodes {
         id
         name

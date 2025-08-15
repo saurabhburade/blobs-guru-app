@@ -31,11 +31,10 @@ type Props = {
 function SingleAccount({ account }: Props) {
   const { data, loading, error } = useQuery(ETHEREUM_ACCOUNT_SINGLE_QUERY, {
     variables: {
-      id: account,
+      id: checksumAddress(account as `0xString`, 1)?.toLowerCase(),
     },
     client: apolloClient,
   });
-  console.log(`🚀 ~ SingleAccount.tsx:36 ~ data:`, { data, error });
 
   return (
     <div className="grid xl:grid-cols-[1.25fr_5fr] gap-0 h-screen">
