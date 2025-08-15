@@ -173,12 +173,13 @@ const BlocksRow = ({ blk }: any) => {
           <p>{blockSize}</p>
         </div>
         <div className="text-end">
-          <p>{(Number(blk?.totalBlockFeeNatve) / 10 ** 18)?.toFixed(4)} ETH</p>
+          <p>{(Number(blk?.totalBlockFeeNatve) / 1e18)?.toFixed(4)} ETH</p>
           <p className="text-xs opacity-70">
             {" "}
             $
             {new BigNumber(blk?.totalBlockFeeNatve)
               ?.times(blk?.avgNativePrice)
+              ?.div(1e18)
               .toFormat(2)}{" "}
           </p>
         </div>

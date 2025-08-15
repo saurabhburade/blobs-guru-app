@@ -33,17 +33,17 @@ type Props = {
 function SingleTxn({ hash }: Props) {
   const { data: { transactionDatum: txnData } = {}, loading: txnDataLoading } =
     useQuery(ETHEREUM_TXN_QUERY, {
-      variables: { id: hash?.toUpperCase() },
+      variables: { id: hash?.toLowerCase() },
       client: apolloClient,
     });
 
   const totalData = useMemo(() => {
     const reducedData = {
       byteSize: txnData?.totalBytes,
-      daFees: txnData?.txFeeNative,
-      daFeesUSD: txnData?.txFeeUSD,
-      feesUSD: txnData?.txFeeUSD,
-      fees: txnData?.txFeeNative,
+      daFees: new BigNumber(txnData?.txFeeNative)?.div(1e18)?.toNumber(),
+      daFeesUSD: new BigNumber(txnData?.txFeeUSD)?.div(1e18)?.toNumber(),
+      feesUSD: new BigNumber(txnData?.txFeeUSD)?.div(1e18)?.toNumber(),
+      fees: new BigNumber(txnData?.txFeeNative)?.div(1e18)?.toNumber(),
       daCount: txnData?.blobs?.nodes?.length,
     };
     return reducedData;
@@ -102,7 +102,9 @@ function SingleTxn({ hash }: Props) {
 
                 <div className="flex gap-2 items-center ">
                   <div className="flex items-center">
-                    {txnData && <p>{timeAgo(txnData?.timestamp)}</p>}
+                    {txnData && (
+                      <p>{timeAgo(new Date(Number(txnData?.timestamp)))}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -152,7 +154,7 @@ function SingleTxn({ hash }: Props) {
                 <div className="">Timestamp </div>
                 {!txnDataLoading && (
                   <div className=" break-words">
-                    {new Date(txnData?.timestamp)?.toLocaleString()}
+                    <p>{timeAgo(new Date(Number(txnData?.timestamp)))}</p>
                   </div>
                 )}
 

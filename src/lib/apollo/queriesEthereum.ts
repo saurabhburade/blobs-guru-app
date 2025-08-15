@@ -649,19 +649,19 @@ export const ETHEREUM_BLOCK_QUERY = gql`
       transactions {
         nodes {
           hash
-          timestamp
+
           txFeeNative
           blockHeightId
           nEvents
           id
-          txFeeUSD
+          txFeeUSD: totalFeeUSD
           txFeeNative
           totalBytes
           signerId
           timestamp
           blobs {
             nodes {
-              signer
+              signer: signerId
               size
             }
           }
@@ -679,7 +679,8 @@ export const ETHEREUM_TXN_QUERY = gql`
       blockHeightId
       nEvents
       id
-      txFeeUSD
+
+      txFeeUSD: totalFeeUSD
       txFeeNative
       totalBytes
       signerId
@@ -689,7 +690,7 @@ export const ETHEREUM_TXN_QUERY = gql`
       }
       blobs {
         nodes {
-          signer
+          signer: signerId
           size
         }
       }

@@ -7,7 +7,12 @@ import { ETHERSCAN_LINK } from "@/configs/constants";
 import { apolloClient } from "@/lib/apollo/client";
 
 import { timeAgo } from "@/lib/time";
-import { cn, formatAddress, formatBytes } from "@/lib/utils";
+import {
+  cn,
+  formatAddress,
+  formatBytes,
+  parseEthHashString,
+} from "@/lib/utils";
 import PoweredBy from "@/views/Home/components/PoweredBy";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
@@ -35,19 +40,17 @@ function SingleBlock({ blockNumber }: Props) {
       variables: { id: blockNumber?.toString() },
       client: apolloClient,
     });
-  console.log(`🚀 ~ SingleBlock.tsx:34 ~ blockData:`, blockData);
 
   const totalData = useMemo(() => {
     const reducedData = blockData?.transactions?.nodes.reduce(
       (acc: any, node: any) => {
-        console.log(`🚀 ~ SingleBlock.tsx:42 ~ node:`, node);
         acc.byteSize += Number(node?.totalBytes) || 0;
         if (Number(node?.totalBytes) > 0) {
-          acc.daFeesUSD += Number(node.txFeeUSD) || 0;
-          acc.txFeeNative += Number(node.txFeeNative) || 0;
+          acc.daFeesUSD += Number(node.txFeeUSD) / 1e18 || 0;
+          acc.txFeeNative += Number(node.txFeeNative) / 1e18 || 0;
         }
-        acc.feesUSD += Number(node.txFeeUSD) || 0;
-        acc.fees += Number(node.txFeeNative) || 0;
+        acc.feesUSD += Number(node.txFeeUSD) / 1e18 || 0;
+        acc.fees += Number(node.txFeeNative) / 1e18 || 0;
 
         acc.daCount += Number(node?.blobs?.nodes?.length) || 0;
 
@@ -134,12 +137,12 @@ function SingleBlock({ blockNumber }: Props) {
                 <div className="">Block Hash</div>
                 {!blockDataLoading && (
                   <div className=" break-words hidden lg:block">
-                    {blockData?.hash}
+                    {parseEthHashString(blockData?.hash)}
                   </div>
                 )}
                 {!blockDataLoading && blockData?.hash && (
                   <div className=" break-words lg:hidden block">
-                    {formatAddress(blockData?.hash)}
+                    {formatAddress(parseEthHashString(blockData?.hash))}
                   </div>
                 )}
                 {blockDataLoading && (
@@ -194,7 +197,10 @@ function SingleBlock({ blockNumber }: Props) {
                 )}
                 {!blockDataLoading && blockData?.totalBlockFeeNatve && (
                   <div className="">
-                    {blockData?.totalBlockFeeNatve?.toString()}
+                    {new BigNumber(blockData?.totalBlockFeeNatve)
+                      ?.div(1e18)
+                      ?.toString()}{" "}
+                    ETH
                   </div>
                 )}
               </div>
@@ -205,7 +211,10 @@ function SingleBlock({ blockNumber }: Props) {
                 )}
                 {!blockDataLoading && blockData?.totalBlockFeeUSD && (
                   <div className="">
-                    {new BigNumber(blockData?.totalBlockFeeUSD)?.toString()}
+                    $
+                    {new BigNumber(blockData?.totalBlockFeeUSD)
+                      ?.div(1e18)
+                      ?.toString()}
                   </div>
                 )}
               </div>
@@ -214,9 +223,10 @@ function SingleBlock({ blockNumber }: Props) {
                 {blockDataLoading && (
                   <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
-                {!blockDataLoading && blockData?.blockData?.avgNativePrice && (
+
+                {!blockDataLoading && blockData?.avgNativePrice && (
                   <div className="">
-                    {new BigNumber(blockData?.avgNativePrice)?.toString()}
+                    $ {new BigNumber(blockData?.avgNativePrice)?.toString()}
                   </div>
                 )}
               </div>
@@ -225,8 +235,8 @@ function SingleBlock({ blockNumber }: Props) {
                 {blockDataLoading && (
                   <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
-                {!blockDataLoading && blockData?.totalBlobSize && (
-                  <div className="">{totalData?.daFees?.toString()}</div>
+                {!blockDataLoading && totalData?.byteSize && (
+                  <div className="">{totalData?.txFeeNative?.toString()}</div>
                 )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
@@ -318,12 +328,15 @@ const TransactionRow = ({ txn }: any) => {
             <NotepadText strokeWidth="1" width={24} height={24} />
           </div>
           <div>
-            <Link href={`/ethereum/txn/${txn?.hash}`} className="text-primary">
+            <Link
+              href={`/ethereum/txn/${parseEthHashString(txn?.hash)}`}
+              className="text-primary"
+            >
               {" "}
-              {formatAddress(txn?.hash)}
+              {formatAddress(parseEthHashString(txn?.hash))}
             </Link>
 
-            <p>{timeAgo(new Date(txn.timestamp))}</p>
+            <p>{timeAgo(new Date(Number(txn.timestamp)))}</p>
           </div>
         </div>
         {txn?.signerId ? <p>{formatAddress(txn?.signerId)}</p> : <p>-</p>}

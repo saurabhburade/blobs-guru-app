@@ -286,3 +286,9 @@ export const parseCelestiaString = (str: string) => {
   }
   return str;
 };
+export const parseEthHashString = (hash: string) => {
+  if (hash?.startsWith("\\x")) {
+    return hash?.replace("\\x", "0x");
+  }
+  return hash;
+};

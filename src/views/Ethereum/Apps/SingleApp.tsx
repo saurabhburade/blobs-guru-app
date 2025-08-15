@@ -1,7 +1,12 @@
 "use client";
 import Header from "@/components/Header/Header";
 
-import { formatAddress, formatBytes, formatEthereumValue } from "@/lib/utils";
+import {
+  formatAddress,
+  formatBytes,
+  formatEthereumValue,
+  parseEthHashString,
+} from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import { useQuery as useQueryFetch } from "@tanstack/react-query";
 import BigNumber from "bignumber.js";
@@ -161,9 +166,12 @@ const TransactionRow = ({ txn }: any) => {
             <NotepadText strokeWidth="1" width={24} height={24} />
           </div>
           <div>
-            <Link href={`/ethereum/txn/${txn?.hash}`} className="text-primary">
+            <Link
+              href={`/ethereum/txn/${parseEthHashString(txn?.hash)}`}
+              className="text-primary"
+            >
               {" "}
-              {formatAddress(txn?.hash)}
+              {formatAddress(parseEthHashString(txn?.hash))}
             </Link>
 
             <p>{timeAgo(new Date(txn.timestamp))}</p>
