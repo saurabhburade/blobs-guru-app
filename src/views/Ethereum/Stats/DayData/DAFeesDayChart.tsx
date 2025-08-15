@@ -254,7 +254,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
               {`${payload[0]?.payload?.timestamp2}`}
             </p>
             <p className="h-full  flex justify-end w-full">
-              {`${new BigNumber(total).toFormat(2)}`} ETH
+              {`${new BigNumber(total)?.div(1e18).toFormat(2)}`} ETH
             </p>
           </div>
           <hr className="border-base-200" />
