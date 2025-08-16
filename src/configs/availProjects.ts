@@ -7,21 +7,21 @@ export const AVAIL_APP_BOOK: AppBook = {
     // logoUri:
     //   "https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/icons/sophon.png",
     // l2beatProjectDataUrl:
-    //   "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/sophon.json",
+    //   "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/sophon.json",
   },
   "17": {
     name: "Sophon",
     logoUri:
       "https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/icons/sophon.png",
     l2beatProjectDataUrl:
-      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/sophon.json",
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/sophon.json",
   },
   "26": {
     name: "Lens Mainnet",
     logoUri:
       "https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/icons/lens.png",
     l2beatProjectDataUrl:
-      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/lens.json",
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/lens.json",
   },
   "19": {
     name: "Skate",
