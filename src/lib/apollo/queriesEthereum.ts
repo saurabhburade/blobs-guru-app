@@ -477,7 +477,7 @@ export const ETHEREUM_HOUR_DATAS_WITH_DURATION_QUERY = gql`
 export const ETHEREUM_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
   query AccountDayData($address: String, $duration: Int) {
     accountDayData(
-      filter: { accountId: { equalTo: $address } }
+      filter: { accountId: { includesInsensitive: $address } }
       orderBy: TIMESTAMP_LAST_DESC
       first: $duration
     ) {
