@@ -170,7 +170,7 @@ export const ETHEREUM_ACCOUNT_EXT_LIMIT_QUERY = gql`
 `;
 export const ETHEREUM_BLOCKS_LIMIT_QUERY = gql`
   query BlockData($skip: Int, $limit: Int) {
-    blockData(orderBy: TIMESTAMP_DESC, first: $limit, offset: $skip) {
+    blockData(orderBy: HEIGHT_DESC, first: $limit, offset: $skip) {
       totalCount
       aggregates {
         sum {
