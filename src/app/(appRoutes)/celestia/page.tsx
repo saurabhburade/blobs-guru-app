@@ -1,22 +1,21 @@
 import CelestiaSummary from "@/views/Celestia/CelestiaSummary";
-import EthereumSummary from "@/views/Ethereum/EthereumSummary";
 import Home from "@/views/Home/Home";
 import Superchains from "@/views/OP/Superchains";
 import { Metadata } from "next";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Blobs Guru",
+  title: "Celestia | Analyze DA",
   description:
-    "Unlock the power of DA Analytics for Ethereum EIP4844, Avail and Celestia. Analyze decentralized data availability, enhanced scalability and performance.",
+    "Unlock the power of DA Analytics for Celestia. Analyze decentralized data availability, enhanced scalability and performance.",
   openGraph: {
-    images: ["/summary.jpeg"],
+    images: ["/summary-celestia.jpeg"],
   },
 };
 export default function Page() {
   return (
     <div className="">
-      <EthereumSummary />
+      <CelestiaSummary />
     </div>
   );
 }

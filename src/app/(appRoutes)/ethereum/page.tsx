@@ -6,11 +6,11 @@ import { Metadata } from "next";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Blobs Guru",
+  title: "EIP 4844 | Analyze DA",
   description:
-    "Unlock the power of DA Analytics for Ethereum EIP4844, Avail and Celestia. Analyze decentralized data availability, enhanced scalability and performance.",
+    "Unlock the power of DA Analytics for Ethereum Blobs. Analyze decentralized data availability, enhanced scalability and performance.",
   openGraph: {
-    images: ["/summary.jpeg"],
+    images: ["/summary-ethereum.jpeg"],
   },
 };
 export default function Page() {
