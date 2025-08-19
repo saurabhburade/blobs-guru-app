@@ -114,34 +114,36 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
       });
       accountHourDatas.push(accHourData);
 
-      const collectiveData = await handleCollective(txn, priceData!, {
+      // const collectiveData =
+      await handleCollective(txn, priceData!, {
         height: block.number,
         timestamp: Number(block.timestamp) * 1000,
       });
-      const collectiveDayData = await handleCollectiveDayData(
-        txn,
-        priceData!,
-        {
-          height: block.number,
-          timestamp: Number(block.timestamp) * 1000,
-        },
+      // const collectiveDayData =
+      //   await handleCollectiveDayData(
+      //   txn,
+      //   priceData!,
+      //   {
+      //     height: block.number,
+      //     timestamp: Number(block.timestamp) * 1000,
+      //   },
 
-        collectiveData
-      );
-      const collectiveHourData = await handleCollectiveHourData(
-        txn,
-        priceData!,
-        {
-          height: block.number,
-          timestamp: Number(block.timestamp) * 1000,
-        },
+      //   collectiveData
+      // );
+      // const collectiveHourData = await handleCollectiveHourData(
+      //   txn,
+      //   priceData!,
+      //   {
+      //     height: block.number,
+      //     timestamp: Number(block.timestamp) * 1000,
+      //   },
 
-        collectiveData
-      );
+      //   collectiveData
+      // );
 
-      collectiveDataEntities.push(collectiveData);
-      collectiveDayDatas.push(collectiveDayData);
-      collectiveHourDatas.push(collectiveHourData);
+      // collectiveDataEntities.push(collectiveData);
+      // collectiveDayDatas.push(collectiveDayData);
+      // collectiveHourDatas.push(collectiveHourData);
 
       let hashes: string[] = [];
 
@@ -164,7 +166,6 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
       }
     } else {
       // logger.info(`SKIP ::: NON BLOB TRANSACTION :: ${txn.hash}`);
-
       // const account = await AccountEntity.get(txn.from);
       // if (account && account !== null) {
       //   // save  account datas for other txns
@@ -173,13 +174,11 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
       //     timestamp: Number(block.timestamp) * 1000,
       //   });
       //   accountsToSave.push(acc);
-
       //   const accDayData = await handleAccountDayData(txn, priceData!, {
       //     height: block.number,
       //     timestamp: Number(block.timestamp) * 1000,
       //   });
       //   accountDayDatas.push(accDayData);
-
       //   const accHourData = await handleAccountHourData(txn, priceData!, {
       //     height: block.number,
       //     timestamp: Number(block.timestamp) * 1000,
@@ -190,9 +189,9 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
   }
 
   await Promise.all([
-    store.bulkUpdate("CollectiveData", collectiveDataEntities),
-    store.bulkUpdate("CollectiveDayData", collectiveDayDatas),
-    store.bulkUpdate("CollectiveHourData", collectiveHourDatas),
+    // store.bulkUpdate("CollectiveData", collectiveDataEntities),
+    // store.bulkUpdate("CollectiveDayData", collectiveDayDatas),
+    // store.bulkUpdate("CollectiveHourData", collectiveHourDatas),
 
     store.bulkUpdate("AccountEntity", accountsToSave),
     store.bulkUpdate("AccountDayData", accountDayDatas),
