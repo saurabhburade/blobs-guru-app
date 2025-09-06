@@ -137,7 +137,7 @@ const AccountRow = ({ acc }: any) => {
             <ImageWithFallback
               src={
                 accountDetails?.logoUri ||
-                `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/celestia.png?raw=true`
+                `https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/celestia.png?raw=true`
               }
               className="rounded-lg"
               width={24}
@@ -180,7 +180,7 @@ const AccountRow = ({ acc }: any) => {
               <ImageWithFallback
                 src={
                   accountDetails?.logoUri ||
-                  `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/celestia.png?raw=true`
+                  `https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/celestia.png?raw=true`
                 }
                 className="rounded-lg"
                 width={24}

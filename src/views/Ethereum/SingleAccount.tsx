@@ -22,6 +22,7 @@ import PoweredBy from "../Home/components/PoweredBy";
 import { apolloClient } from "@/lib/apollo/client";
 import {
   ETHEREUM_ACCOUNT_SINGLE_QUERY,
+  ETHEREUM_ACCOUNT_SINGLE_QUERY_V2,
   ETHEREUM_USER_TRANSACTIONS_FILTER_LIMIT_QUERY,
 } from "@/lib/apollo/queriesEthereum";
 import AccountStatCard from "./components/AccountStats/AccountStatCard";
@@ -34,9 +35,9 @@ type Props = {
 };
 
 function SingleAccount({ account }: Props) {
-  const { data, loading, error } = useQuery(ETHEREUM_ACCOUNT_SINGLE_QUERY, {
+  const { data, loading, error } = useQuery(ETHEREUM_ACCOUNT_SINGLE_QUERY_V2, {
     variables: {
-      id: checksumAddress(account as `0xString`, 1)?.toLowerCase(),
+      id: checksumAddress(account as `0xString`),
     },
     client: apolloClient,
   });
@@ -53,13 +54,13 @@ function SingleAccount({ account }: Props) {
         <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
           <h2 className="lg:text-xl text-xl font-semibold">Rollup Account</h2>
         </div>
-        {data?.accountEntities?.nodes?.length > 0 || loading ? (
+        {data?.accountEntity || loading ? (
           <>
             <div className="w-full space-y-4 ">
               <L2BeatCard account={account} />
               <div className="">
                 <AccountStatCard
-                  acc={data?.accountEntities?.nodes[0]}
+                  acc={data?.accountEntity}
                   isLoading={loading}
                 />
               </div>

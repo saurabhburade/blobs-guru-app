@@ -126,7 +126,7 @@ function AccountStatCard({ acc, isLoading, className }: any) {
             <div className="flex justify-between items-center  py-3 p-4">
               <div className="flex items-center gap-2">
                 <ImageWithFallback
-                  src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/celestia.png?raw=true`}
+                  src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/celestia.png?raw=true`}
                   width={24}
                   height={24}
                   alt="celestia"
