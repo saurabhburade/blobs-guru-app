@@ -313,6 +313,23 @@ export const CELESTIA_ACCOUNT_SINGLE_QUERY = gql`
     }
   }
 `;
+export const CELESTIA_ACCOUNT_SINGLE_QUERY_V2 = gql`
+  query AccountEntity($id: String!) {
+    accountEntity(id: $id) {
+      id
+      totalByteSize
+      totalFees
+      totalTxnCount
+      totalDAFees
+      endBlock
+      startBlock
+      totalDataSubmissionCount
+      totalFeesUSD
+      totalDAFeesUSD
+      totalFeesNative
+    }
+  }
+`;
 export const CELESTIA_ACCOUNT_SEARCH = gql`
   query AccountEntities($address: String!) {
     accountEntities(filter: { address: { like: $address } }) {
