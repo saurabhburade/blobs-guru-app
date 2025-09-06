@@ -39,7 +39,7 @@ function Sidebar({}: Props) {
               <div className="collapse-title text-xl font-medium ">
                 <div className="flex items-center gap-2">
                   <ImageWithFallback
-                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/ethereum.png?raw=true`}
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/ethereum.png?raw=true`}
                     width={24}
                     height={24}
                     alt="ethereum"
@@ -89,13 +89,13 @@ function Sidebar({}: Props) {
                 </ul>
               </div>
             </div>
-        
+
             <div className="collapse collapse-arrow ">
               <input type="checkbox" name="my-accordion-2" defaultChecked />
               <div className="collapse-title text-xl font-medium ">
                 <div className="flex items-center gap-2">
                   <ImageWithFallback
-                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`}
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/avail.png?raw=true`}
                     width={24}
                     height={24}
                     alt="avail"
@@ -150,7 +150,7 @@ function Sidebar({}: Props) {
               <div className="collapse-title text-xl font-medium ">
                 <div className="flex items-center gap-2">
                   <ImageWithFallback
-                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/celestia.png?raw=true`}
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/celestia.png?raw=true`}
                     width={24}
                     height={24}
                     alt="celestia"

@@ -35,7 +35,7 @@ function EthereumSummary({}: Props) {
         <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
           <div className="flex gap-2 items-center">
             <ImageWithFallback
-              src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/ethereum.png`}
+              src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/ethereum.png`}
               fallback="/images/ethereum_logo.png"
               className="rounded-lg"
               width={24}

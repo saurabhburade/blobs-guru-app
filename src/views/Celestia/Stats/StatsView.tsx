@@ -24,7 +24,7 @@ function StatsView({}: Props) {
         <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
           <div className="flex gap-2 items-center">
             <ImageWithFallback
-              src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/celestia.png?raw=true`}
+              src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/celestia.png?raw=true`}
               fallback="/images/celestia_logo.png"
               className="rounded-lg"
               width={24}

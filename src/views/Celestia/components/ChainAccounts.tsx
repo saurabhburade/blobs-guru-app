@@ -131,7 +131,7 @@ const AccountRow = ({ acc }: any) => {
         <div className="flex items-center gap-2 col-span-2 ">
           <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
             <ImageWithFallback
-              src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/celestia.png?raw=true`}
+              src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/celestia.png?raw=true`}
               className="rounded-lg"
               width={24}
               height={24}
@@ -167,7 +167,7 @@ const AccountRow = ({ acc }: any) => {
           <div className="flex items-center gap-2">
             <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
               <ImageWithFallback
-                src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/celestia.png?raw=true`}
+                src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/celestia.png?raw=true`}
                 className="rounded-lg "
                 width={24}
                 height={24}

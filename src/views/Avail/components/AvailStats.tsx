@@ -127,7 +127,7 @@ function AvailStats({}: Props) {
                 <ImageWithFallback
                   src={
                     app?.logoUri ||
-                    `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png?raw=true`
+                    `https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/avail.png?raw=true`
                   }
                   width={24}
                   height={24}

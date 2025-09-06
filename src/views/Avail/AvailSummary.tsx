@@ -37,7 +37,7 @@ function AvailSummary({}: Props) {
           {/* <img src="/images/avail_logo.png" alt="" className="w-[140px]" /> */}
           <div className="flex gap-2 items-center">
             <ImageWithFallback
-              src={`https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/public/icons/avail.png`}
+              src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/avail.png`}
               fallback="/images/avail_logo.png"
               className="rounded-lg"
               width={24}
