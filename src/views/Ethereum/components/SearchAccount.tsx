@@ -8,7 +8,7 @@ import { useQuery } from "@apollo/client";
 
 import Link from "next/link";
 import React, { useState } from "react";
-import { isAddress } from "viem";
+import { checksumAddress, isAddress } from "viem";
 
 type Props = {};
 
@@ -19,7 +19,7 @@ function SearchAccount({}: Props) {
   const { data, loading, error } = useQuery(ETHEREUM_SEARCH, {
     variables: {
       address: hash,
-      query: hash,
+      query: hash?.length > 42 ? hash : checksumAddress(hash as `0xString`),
     },
     client: apolloClient,
   });

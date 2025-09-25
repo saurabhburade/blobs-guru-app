@@ -185,6 +185,16 @@ export const ADDRESS_BOOK: AddressBook = {
     l2beatProjectDataUrl:
       "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/world.json",
   },
+  "0xfbc0dcd6c3518cb529bc1b585db992a7d40005fa": {
+    name: "zkLighter",
+    logoUri:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/frontend/static/icons/zklighter.png",
+    rpc: "",
+    tags: [],
+    address: "0xfbc0dcd6c3518cb529bc1b585db992a7d40005fa",
+    l2beatProjectDataUrl:
+      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/zklighter.json",
+  },
 };
 export const getAccountDetailsFromAddressBook = (address: string) => {
   const d = ADDRESS_BOOK[address?.toLowerCase()];
