@@ -170,16 +170,21 @@ const AccountRow = ({ acc }: any) => {
           <div className="flex items-center gap-2">
             <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[44px] h-[44px]">
               <ImageWithFallback
-                src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/ethereum.png?raw=true`}
+                src={
+                  accountDetails?.logoUri ??
+                  `https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/ethereum.png?raw=true`
+                }
                 className="rounded-lg "
                 width={24}
                 height={24}
                 alt=""
               />
             </div>
-
-            <Link className="text-primary " href={`/ethereum/${acc?.id}`}>
-              {formatAddress(acc?.id)}
+            <Link
+              className="text-primary  lg:hidden"
+              href={`/ethereum/${acc?.id}`}
+            >
+              {accountDetails?.name ?? formatWrapedText(acc?.id)}
             </Link>
           </div>
           <div className="text-end">
