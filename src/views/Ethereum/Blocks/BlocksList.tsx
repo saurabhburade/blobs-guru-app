@@ -18,18 +18,19 @@ type Props = {};
 const LIMIT_PER_PAGE = 10;
 function BlocksList({}: Props) {
   const [page, setPage] = useState(1);
-
-  const { data: rawData, loading: blocksLoading } = useQuery(
-    ETHEREUM_BLOCKS_LIMIT_QUERY,
-    {
-      variables: {
-        skip: LIMIT_PER_PAGE * (page - 1),
-        limit: LIMIT_PER_PAGE,
-      },
-      pollInterval: 15_000, // Every 15 sec
-      client: apolloClient,
-    }
-  );
+  const {
+    data: rawData,
+    loading: blocksLoading,
+    error,
+  } = useQuery(ETHEREUM_BLOCKS_LIMIT_QUERY, {
+    variables: {
+      skip: LIMIT_PER_PAGE * (page - 1),
+      limit: LIMIT_PER_PAGE,
+    },
+    pollInterval: 15_000, // Every 15 sec
+    client: apolloClient,
+  });
+  console.log(`🚀 ~ BlocksList.tsx:34 ~ error:`, error);
 
   return (
     <div className=" bg-base-100 border rounded-lg border-base-200">

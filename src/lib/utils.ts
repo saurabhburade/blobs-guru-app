@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 const _ = require("lodash");
@@ -292,3 +293,9 @@ export const parseEthHashString = (hash: string) => {
   }
   return hash;
 };
+
+export function safeBigNumber(value: number | string | BigNumber): BigNumber {
+  const bigValue = new BigNumber(value);
+  // Check if the value is NaN using BigNumber.isNaN() and return 0 if NaN
+  return new BigNumber(bigValue).isNaN() ? new BigNumber(0) : bigValue;
+}
