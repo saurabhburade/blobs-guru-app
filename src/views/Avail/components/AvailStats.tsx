@@ -4,7 +4,7 @@ import {
   AVAIL_COLLECTIVE_STAT_QUERY,
   AVAIL_DA_COST_DATAS_QUERY,
 } from "@/lib/apollo/queriesAvail";
-import { cn, formatBytes, formatWrapedText } from "@/lib/utils";
+import { cn, formatBytes, formatWrapedText, safeBigNumber } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import MotionNumber from "motion-number";
@@ -156,6 +156,10 @@ function AvailStats({}: Props) {
                   <span className="">AVAIL</span>
                 </p>
               </div>
+              <div className="flex gap-2 justify-between">
+                <p className="">Fee USD</p>
+                <p className="">${safeBigNumber(app?.feesUSD).toFormat(2)} </p>
+              </div>
             </div>
           );
         })}
@@ -240,7 +244,7 @@ function AvailStats({}: Props) {
           isLoading={statsLoading}
         />
 
-        {!daCostDataLoading && (
+        {/* {!daCostDataLoading && (
           <>
             <div className=" h-full w-full bg-base-100 border-[0.5px] p-4 space-y-1.5 border-base-200">
               <div className="flex justify-between items-center">
@@ -284,7 +288,7 @@ function AvailStats({}: Props) {
               </p>
             </div>
           </>
-        )}
+        )} */}
 
         {/* <StatCard
           title="Last ETH Price"
