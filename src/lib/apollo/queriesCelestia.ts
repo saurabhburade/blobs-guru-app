@@ -643,7 +643,7 @@ export const CELESTIA_PRICE_DAY_DATAS_QUERY = gql`
 
 export const CELESTIA_BASIC_APP_DATAS_QUERY = gql`
   query AppEntities {
-    appEntities(orderBy: TOTAL_BYTE_SIZE_ASC) {
+    appEntities(orderBy: TOTAL_BYTE_SIZE_DESC, first: 10) {
       nodes {
         id
         totalByteSize

@@ -164,12 +164,19 @@ function ChainStats({}: Props) {
                 <p className="">{formatBytes(app?.totalByteSize)}</p>
               </div>
               <div className="flex gap-2 justify-between">
-                <p className="">Fees</p>
+                <p className=""> Fees</p>
                 <p className="">
-                  {new BigNumber(app?.totalFeesNative)
+                  {new BigNumber(app?.totalDAFees)?.div(10 ** 18).toFormat(2)}{" "}
+                  <span className="">ETH</span>
+                </p>
+              </div>
+              <div className="flex gap-2 justify-between">
+                <p className=""> Fees USD </p>
+                <p className="">
+                  $
+                  {new BigNumber(app?.totalDAFeesUSD)
                     ?.div(10 ** 18)
                     .toFormat(2)}{" "}
-                  <span className="">ETH</span>
                 </p>
               </div>
             </div>

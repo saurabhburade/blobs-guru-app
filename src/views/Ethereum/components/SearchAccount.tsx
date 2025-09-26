@@ -19,7 +19,7 @@ function SearchAccount({}: Props) {
   const { data, loading, error } = useQuery(ETHEREUM_SEARCH, {
     variables: {
       address: hash,
-      query: hash?.length > 42 ? hash : checksumAddress(hash as `0xString`),
+      query: hash?.length === 42 ? checksumAddress(hash as `0xString`) : hash,
     },
     client: apolloClient,
   });

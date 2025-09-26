@@ -32,7 +32,7 @@ export const useCelestiaDaAppsDataBasic = () => {
   return {
     data: {
       formattedOp: _.take(
-        _.orderBy(formattedOp, (s) => Number(s?.byteSize), ["desc"]),
+        _.orderBy(formattedOp, (s) => Number(s?.totalByteSize), ["desc"]),
         4
       ),
       totalCount: data?.dataSubmissions?.totalCount,
