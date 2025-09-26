@@ -151,6 +151,20 @@ function AvailAppStatCard({ acc, isLoading, className, chartData }: any) {
                 AVAIL
               </p>
             </div>
+            <div className="flex justify-between items-center  py-3 p-4">
+              <div className="flex items-center gap-2">
+                <ImageWithFallback
+                  src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/avail.png?raw=true`}
+                  width={24}
+                  height={24}
+                  alt="avail"
+                />
+                <p className=""> DA Fees (USD)</p>
+              </div>
+              <p className="text-xl font-bold">
+                ${new BigNumber(Number(acc?.totalDAFeesUSD || 0))?.toFormat(4)}{" "}
+              </p>
+            </div>
           </div>
         )}
         {/* <div className="p-5  bg-base-100/50    border-base-300/20 w-full ">

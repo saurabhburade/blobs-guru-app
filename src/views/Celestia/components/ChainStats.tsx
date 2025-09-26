@@ -153,6 +153,12 @@ function ChainStats({}: Props) {
                   <span className="">TIA</span>
                 </p>
               </div>
+              <div className="flex gap-2 justify-between">
+                <p className=""> Fees USD </p>
+                <p className="">
+                  ${new BigNumber(app?.totalDAFeesUSD).toFormat(2)}{" "}
+                </p>
+              </div>
             </div>
           );
         })}

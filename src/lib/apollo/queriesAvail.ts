@@ -492,6 +492,7 @@ export const AVAIL_BASIC_APP_DATAS_QUERY = gql`
         sum {
           fees
           byteSize
+          feesUSD
         }
       }
     }

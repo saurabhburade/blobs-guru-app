@@ -17,6 +17,7 @@ import PoweredBy from "../Home/components/PoweredBy";
 import { celestiaClient } from "@/lib/apollo/client";
 import {
   CELESTIA_ACCOUNT_SINGLE_QUERY,
+  CELESTIA_ACCOUNT_SINGLE_QUERY_V2,
   CELESTIA_USER_TRANSACTIONS_FILTER_LIMIT_QUERY,
 } from "@/lib/apollo/queriesCelestia";
 import AccountStatCard from "./components/AccountStats/AccountStatCard";
@@ -27,7 +28,7 @@ type Props = {
 };
 
 function SingleAccount({ account }: Props) {
-  const { data, loading, error } = useQuery(CELESTIA_ACCOUNT_SINGLE_QUERY, {
+  const { data, loading, error } = useQuery(CELESTIA_ACCOUNT_SINGLE_QUERY_V2, {
     variables: {
       id: account,
     },
@@ -48,10 +49,9 @@ function SingleAccount({ account }: Props) {
         </div>
         <div className="w-full space-y-4 ">
           <div className="">
-            <AccountStatCard
-              acc={data?.accountEntities?.nodes[0]}
-              isLoading={loading}
-            />
+            {data?.accountEntity && (
+              <AccountStatCard acc={data?.accountEntity} isLoading={loading} />
+            )}
           </div>
         </div>
         <AccountStats account={account} />

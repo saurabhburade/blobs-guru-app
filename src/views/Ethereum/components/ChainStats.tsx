@@ -1,7 +1,7 @@
 import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
 import { apolloClient } from "@/lib/apollo/client";
 
-import { cn, formatBytes, formatWrapedText } from "@/lib/utils";
+import { cn, formatBytes, formatWrapedText, safeBigNumber } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import MotionNumber from "motion-number";
@@ -24,7 +24,6 @@ type Props = {};
 
 function ChainStats({}: Props) {
   const { data: appsData } = useEthereumDaAppsDataBasic();
-  console.log(`🚀 ~ ChainStats.tsx:27 ~ appsData:`, appsData);
   const { data: daCostData, loading: daCostDataLoading } = useDaCostCompare();
   const { data: rawData, loading: statsLoading } = useQuery(
     ETHEREUM_COLLECTIVE_STAT_QUERY,
@@ -44,7 +43,9 @@ function ChainStats({}: Props) {
 
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalByteSize) {
-      return formatBytes(Number(data?.collectiveData?.totalByteSize));
+      return formatBytes(
+        safeBigNumber(data?.collectiveData?.totalByteSize).toNumber()
+      );
     }
     return "0 KB";
   }, [data]);
@@ -54,37 +55,39 @@ function ChainStats({}: Props) {
     )
       ?.div(10 ** 18)
       .toNumber();
-    return totalFeeNativeBn || 0;
+    return safeBigNumber(totalFeeNativeBn).toNumber() || 0;
   }, [data?.collectiveData?.totalFeesNative]);
   const totalDAFees = useMemo(() => {
     const bn = new BigNumber(data?.collectiveData?.totalDAFees)
       ?.div(10 ** 18)
       .toNumber();
-    return bn || 0;
+    return safeBigNumber(bn)?.toNumber() || 0;
   }, [data?.collectiveData?.totalDAFees]);
   const totalDAFeesUSD = useMemo(() => {
     const bn = new BigNumber(data?.collectiveData?.totalDAFeesUSD)
       ?.div(10 ** 18)
       .toNumber();
-    return bn || 0;
+    return safeBigNumber(bn).toNumber() || 0;
   }, [data?.collectiveData?.totalDAFeesUSD]);
   const totalDataSubmissionCount = useMemo(() => {
-    return data?.collectiveData?.totalDataSubmissionCount;
+    return safeBigNumber(
+      data?.collectiveData?.totalDataSubmissionCount
+    ).toNumber();
   }, [data?.collectiveData?.totalDataSubmissionCount]);
   const lastPriceFeed = useMemo(() => {
     return data?.collectiveData?.lastPriceFeed;
   }, [data?.collectiveData?.lastPriceFeed]);
   const totalBlocksCount = useMemo(() => {
-    return data?.collectiveData?.totalBlocksCount;
+    return safeBigNumber(data?.collectiveData?.totalBlocksCount).toNumber();
   }, [data?.collectiveData?.totalBlocksCount]);
   const totalDataBlocksCount = useMemo(() => {
-    return data?.collectiveData?.totalDataBlocksCount;
+    return safeBigNumber(data?.collectiveData?.totalDataBlocksCount).toNumber();
   }, [data?.collectiveData?.totalDataBlocksCount]);
   const endBlock = useMemo(() => {
-    return data?.collectiveData?.endBlock;
+    return safeBigNumber(data?.collectiveData?.endBlock).toNumber();
   }, [data?.collectiveData?.endBlock]);
   const totalExtrinsicCount = useMemo(() => {
-    const bn = new BigNumber(data?.collectiveData?.totalTxnCount).toNumber();
+    const bn = safeBigNumber(data?.collectiveData?.totalTxnCount).toNumber();
     return bn || 0;
   }, [data?.collectiveData?.totalTxnCount]);
   const blockData = useReactQuery({
@@ -99,7 +102,7 @@ function ChainStats({}: Props) {
 
       // Convert hex block number to integer
       const latestBlock = parseInt(res.data.result, 16);
-      return latestBlock;
+      return safeBigNumber(latestBlock).toNumber();
     },
     refetchInterval: 10_000,
   });
@@ -110,7 +113,7 @@ function ChainStats({}: Props) {
         .div(Number(blockData?.data))
         .multipliedBy(100)
         .toNumber();
-      return p;
+      return safeBigNumber(p).toNumber();
     }
     return 100;
   }, [blockData?.data, endBlock]);
@@ -161,12 +164,19 @@ function ChainStats({}: Props) {
                 <p className="">{formatBytes(app?.totalByteSize)}</p>
               </div>
               <div className="flex gap-2 justify-between">
-                <p className="">Fees</p>
+                <p className=""> Fees</p>
                 <p className="">
-                  {new BigNumber(app?.totalFeesNative)
+                  {new BigNumber(app?.totalDAFees)?.div(10 ** 18).toFormat(2)}{" "}
+                  <span className="">ETH</span>
+                </p>
+              </div>
+              <div className="flex gap-2 justify-between">
+                <p className=""> Fees USD </p>
+                <p className="">
+                  $
+                  {new BigNumber(app?.totalDAFeesUSD)
                     ?.div(10 ** 18)
                     .toFormat(2)}{" "}
-                  <span className="">ETH</span>
                 </p>
               </div>
             </div>
@@ -249,7 +259,7 @@ function ChainStats({}: Props) {
         /> */}
         <StatCard
           title="Last ETH Price"
-          value={lastPriceFeed?.nativePrice}
+          value={safeBigNumber(lastPriceFeed?.nativePrice).toNumber()}
           isLoading={statsLoading}
         />
 

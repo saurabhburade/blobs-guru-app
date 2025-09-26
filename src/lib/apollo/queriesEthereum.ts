@@ -336,7 +336,7 @@ export const ETHEREUM_ACCOUNT_SEARCH = gql`
 `;
 export const ETHEREUM_SEARCH = gql`
   query SearchEntities($query: String!) {
-    accountEntities(filter: { id: { likeInsensitive: $query } }, first: 2) {
+    accountEntities(filter: { id: { like: $query } }, first: 2) {
       nodes {
         id
       }
