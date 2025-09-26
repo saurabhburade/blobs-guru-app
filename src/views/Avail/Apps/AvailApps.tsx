@@ -4,6 +4,7 @@ import {
   getAccountDetailsFromAddressBook,
   getAppDetailsFromAppBook,
 } from "@/configs/constants";
+import { useAvailDaAppsDataBasicSingle } from "@/hooks/useAvailDaAppsDataBasic";
 import { availClient } from "@/lib/apollo/client";
 import {
   AVAIL_ACCOUNTS_LIMIT_QUERY,
@@ -97,7 +98,7 @@ export default AvailApps;
 //   totalFeesUSD;
 //   totalDAFeesUSD;
 const AccountRow = ({ acc }: any) => {
-  const accountDetails = getAppDetailsFromAppBook(acc?.id);
+  const { data: accountDetails } = useAvailDaAppsDataBasicSingle(acc?.id);
 
   const totalSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));

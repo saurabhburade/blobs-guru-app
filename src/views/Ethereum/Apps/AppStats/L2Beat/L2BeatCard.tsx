@@ -34,18 +34,19 @@ import { useL2BeatSeries } from "@/hooks/useL2BeatSeries";
 
 import { Tooltip as RTooltip } from "react-tooltip";
 import L2BeatTvlStats from "./L2BeatTvlStats";
+import { useEthereumDaAppsDataBasicSingle } from "@/hooks/useEthereumDaAppsDataBasic";
+import ImageWithFallback from "@/components/ImageWithFallback";
 type Props = {};
 
 function L2BeatCard({ account }: any) {
   const accountDetails = getAccountDetailsFromAddressBook(account);
 
-  const { data: l2BeatAccountDetails, isLoading } = useQueryFetch({
-    queryKey: ["l2BeatAccountDetails", account],
-    queryFn: async () => {
-      const d = await axios.get(accountDetails?.l2beatProjectDataUrl);
-      return d?.data;
-    },
-  });
+  const { data: l2BeatAccountDetails, loading: isLoading } =
+    useEthereumDaAppsDataBasicSingle(account);
+  console.log(
+    `🚀 ~ L2BeatCard.tsx:45 ~ l2BeatAccountDetails:`,
+    l2BeatAccountDetails
+  );
 
   //   const { data: l2BeatSeries, error } = useL2BeatSeries({
   //     duration: "30d",
@@ -112,7 +113,7 @@ function L2BeatCard({ account }: any) {
       stateValidation,
     ];
   }, [l2BeatAccountDetails]);
-  if (!l2BeatAccountDetails && !isLoading) {
+  if (!l2BeatAccountDetails?.id) {
     return null;
   }
   if (isLoading) {
@@ -130,7 +131,8 @@ function L2BeatCard({ account }: any) {
           )}
           {!isLoading && (
             <>
-              <img
+              <ImageWithFallback
+                key={`l2BeatAccountDetails__${l2BeatAccountDetails?.id}`}
                 src={accountDetails?.logoUri || "/images/logox.jpeg"}
                 className="rounded-lg"
                 width={40}
@@ -148,11 +150,13 @@ function L2BeatCard({ account }: any) {
         <div className="flex items-center gap-2 flex-wrap">
           {l2BeatAccountDetails?.badges?.map((b: any) => {
             return (
-              <img
+              <ImageWithFallback
                 key={`l2BeatAccountDetails__${b?.id}`}
                 src={`https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/images/badges/${b?.id}.png`}
                 alt=""
                 className="lg:w-[50px] w-[30px] lg:h-[50px] h-[30px]"
+                width={40}
+                height={40}
               />
             );
           })}

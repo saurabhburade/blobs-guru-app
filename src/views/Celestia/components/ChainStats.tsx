@@ -137,7 +137,7 @@ function ChainStats({}: Props) {
                     href={`/celestia/apps/${app?.id}`}
                     className="text-primary"
                   >
-                    {formatWrapedText(app?.id, 6, 9)}
+                    {formatWrapedText(app?.name, 6, 9)}
                   </Link>
                 )}
               </div>

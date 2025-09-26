@@ -17,57 +17,99 @@ export interface ApplicationData {
   owner: string;
 }
 export const useAvailDaAppsDataBasic = () => {
-  const { data, loading } = useQuery(AVAIL_BASIC_APP_DATAS_QUERY, {
+  const { data, loading, error } = useQuery(AVAIL_BASIC_APP_DATAS_QUERY, {
     pollInterval: 15_000, // Every 15 sec
     client: availClient,
   });
-  const { data: appDatasRes, isLoading } = useReactQuery({
-    queryKey: ["useAvailDaAppsDataBasic"],
+  const appDatasMap = new Map<string, any>();
+
+  const { data: appDatasL2beat, ...other } = useReactQuery({
+    queryKey: ["home-l2beat-avail-apps"],
     queryFn: async () => {
-      const api = await initialize("wss://mainnet.avail-rpc.com/");
-      const entries = await api.query.dataAvailability.appKeys.entries();
+      const datas = await Promise.all(
+        data?.appEntities?.nodes?.map(async (agg: any) => {
+          return await fetch(
+            `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/with-da-id/avail/avail/${(agg?.id as string)?.toLowerCase()}.json`
+          )
+            ?.then(async (res) => {
+              const result = await res.json();
+              if (result) {
+                return {
+                  ...result,
+                  address: (agg?.id as string)?.toLowerCase(),
+                  logoUri: `https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/icons/${(result?.display?.slug as string)?.toLowerCase()}.png`,
+                  name: result?.display?.name,
+                };
+              }
+              return null;
+            })
+            .catch(() => null);
+        })
+      );
 
-      const appDatas: ApplicationData[] = entries.map(([key, value]: any) => {
-        const name = key.args[0].toHuman() as string;
-        const appKey = value.toHuman() as {
-          owner: string;
-          id: string | number;
-        };
-
-        return {
-          name,
-          owner: appKey.owner,
-          id: Number(appKey.id),
-        };
-      });
-      return appDatas;
+      return datas;
     },
   });
+  if (appDatasL2beat) {
+    appDatasL2beat.forEach((app: any) => {
+      if (!app) return;
+      appDatasMap.set((app?.address as string)?.toLowerCase(), app);
+    });
+  }
+  const formattedOp = data?.appEntities?.nodes?.map((agg: any) => {
+    let decoded = agg?.id;
 
-  const formattedOp = data?.dataSubmissions?.groupedAggregates?.map(
-    (agg: any) => {
-      const foundApp = appDatasRes?.find(
-        (app) => Number(app.id) === Number(agg?.keys[0])
-      );
-      const appDataFromBook = AVAIL_APP_BOOK[agg?.keys[0]];
-      return {
-        key: agg?.keys[0],
-        ...agg?.sum,
-        distinctCount: agg?.distinctCount,
-        ...foundApp,
-        ...appDataFromBook,
-      };
-    }
-  );
+    const app =
+      appDatasMap?.get((agg?.id as string)?.toLowerCase()) ??
+      AVAIL_APP_BOOK[(agg?.id as string)?.toLowerCase()];
+
+    return {
+      ...agg,
+      name: app?.name ?? decoded,
+      logoUri: app?.logoUri,
+    };
+  });
 
   return {
     data: {
       formattedOp: _.take(
-        _.orderBy(formattedOp, (s) => Number(s?.byteSize), ["desc"]),
+        _.orderBy(formattedOp, (s) => Number(s?.totalByteSize), ["desc"]),
         4
       ),
       totalCount: data?.dataSubmissions?.totalCount,
     },
-    loading: loading || isLoading,
+    loading: loading,
+    ...other,
+  };
+};
+export const useAvailDaAppsDataBasicSingle = (id: string) => {
+  const { data: appDatasL2beat, ...other } = useReactQuery({
+    queryKey: ["home-l2beat-avail-apps", id],
+    queryFn: async () => {
+      return await fetch(
+        `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/with-da-id/avail/avail/${(id as string)?.toLowerCase()}.json`
+      )
+        ?.then(async (res) => {
+          const result = await res.json();
+          if (result) {
+            return {
+              ...result,
+              address: (id as string)?.toLowerCase(),
+              logoUri: `https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/icons/${(result?.display?.slug as string)?.toLowerCase()}.png`,
+              name: result?.display?.name,
+            };
+          }
+          return null;
+        })
+        .catch(() => null);
+    },
+  });
+
+  const formattedOp =
+    appDatasL2beat ?? AVAIL_APP_BOOK[(id as string)?.toLowerCase()];
+
+  return {
+    data: formattedOp,
+    ...other,
   };
 };

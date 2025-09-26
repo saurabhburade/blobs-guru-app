@@ -34,18 +34,14 @@ import { useL2BeatSeries } from "@/hooks/useL2BeatSeries";
 
 import { Tooltip as RTooltip } from "react-tooltip";
 import L2BeatTvlStats from "./L2BeatTvlStats";
+import { useAvailDaAppsDataBasicSingle } from "@/hooks/useAvailDaAppsDataBasic";
 type Props = {};
 
 function L2BeatCard({ account }: any) {
   const accountDetails = getAppDetailsFromAppBook(account);
 
-  const { data: l2BeatAccountDetails, isLoading } = useQueryFetch({
-    queryKey: ["l2BeatAccountDetails", account],
-    queryFn: async () => {
-      const d = await axios.get(accountDetails?.l2beatProjectDataUrl);
-      return d?.data;
-    },
-  });
+  const { data: l2BeatAccountDetails, isLoading } =
+    useAvailDaAppsDataBasicSingle(account);
 
   //   const { data: l2BeatSeries, error } = useL2BeatSeries({
   //     duration: "30d",
@@ -112,7 +108,7 @@ function L2BeatCard({ account }: any) {
       stateValidation,
     ];
   }, [l2BeatAccountDetails]);
-  if (!l2BeatAccountDetails && !isLoading) {
+  if (!l2BeatAccountDetails?.id) {
     return null;
   }
   if (isLoading) {
