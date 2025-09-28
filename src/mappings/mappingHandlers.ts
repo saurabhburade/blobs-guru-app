@@ -31,17 +31,14 @@ const BLOB_BASE_FEE_UPDATE_FRACTION = 3338477;
 export async function handleBlock(block: EthereumBlock): Promise<void> {
   const priceData = await handleNewPriceMinute({ block });
   const receipts = await getTxReceipts({ block });
-  logger.info(`PRICE DATA FOUND ::  ${priceData?.nativePrice}`);
-  logger.info(`RECEIPT DATA FOUND ::  ${receipts ? receipts?.size : 0}`);
-  logger.info(`BLOCK ::: ${block.number}`);
   const transactions = block.transactions;
-  const accountsToSave = [];
-  const accountDayDatas = [];
-  const accountHourDatas = [];
+  // const accountsToSave = [];
+  // const accountDayDatas = [];
+  // const accountHourDatas = [];
 
-  const collectiveDataEntities = [];
-  const collectiveDayDatas = [];
-  const collectiveHourDatas = [];
+  // const collectiveDataEntities = [];
+  // const collectiveDayDatas = [];
+  // const collectiveHourDatas = [];
 
   const blobs: BlobData[] = [];
   let txnRecords: TransactionData[] = [];
@@ -220,6 +217,13 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
   await store.bulkUpdate("BlobData", blobs);
   await store.bulkUpdate("TransactionData", txnRecords);
   await bdata.save();
+  logger.info(`=================================================`);
+  logger.info(
+    `DATA SAVED FOR BLOCK  ::  ${block.number} :: PRICE:${
+      priceData?.nativePrice
+    } :: RECEIPTS::${receipts ? receipts?.size : 0}`
+  );
+  logger.info(`=================================================`);
   // await Promise.all([
   //   // store.bulkUpdate("CollectiveData", collectiveDataEntities),
   //   // store.bulkUpdate("CollectiveDayData", collectiveDayDatas),

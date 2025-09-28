@@ -39,9 +39,9 @@ services:
       - --allow-schema-migration
       - --scale-batch-size
       - --unfinalized-blocks=false
-      - --store-cache-threshold=200000
+      - --store-cache-threshold=100000
       - --store-flush-interval=2000
-      - --store-cache-upper-limit=250000
+      - --store-cache-upper-limit=200000
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
