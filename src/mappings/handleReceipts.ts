@@ -7,8 +7,11 @@ const rpcUrls = [
   "https://1.rpc.hypersync.xyz",
   "https://eth-traces.rpc.hypersync.xyz",
 ];
-const RPC_URL = "https://eth-traces.rpc.hypersync.xyz";
-const FILES_COUNT = 100;
+
+// Pick a random index
+const RPC_URL = rpcUrls[Math.floor(Math.random() * rpcUrls.length)];
+
+console.log("Using RPC:", RPC_URL);
 
 // Helper: convert number to hex quantity
 function toHexQuantity(n: number) {
@@ -47,24 +50,7 @@ async function getBlockReceipts(blockNumber: number) {
     effectiveGasPrice: fromHexQuantity(r.effectiveGasPrice),
   }));
 }
-const CONSTANT_PRICE_FEED_FILES = [
-  "2024-03",
-  "2024-04",
-  "2024-05",
-  "2024-06",
-  "2024-07",
-  "2024-08",
-  "2024-09",
-  "2024-10",
-  "2024-11",
-  "2024-12",
-  "2025-01",
-  "2025-02",
-  "2025-03",
-  "2025-04",
-  "2025-05",
-  "2025-06",
-];
+
 function chunkArray(array: TransactionReceipt[], chunkSize = 1000) {
   const result = [];
   for (let i = 0; i < array.length; i += chunkSize) {
@@ -87,26 +73,30 @@ export async function getTxReceipts({
   block,
 }: {
   block: EthereumBlock;
-}): Promise<Map<string, TransactionReceipt> | undefined> {
+}): Promise<Map<string, TransactionReceipt>> {
   let batchReceipt: Map<string, TransactionReceipt> = new Map();
   // const receiptsToSave = [];
-
-  const receipts = await getBlockReceipts(block.number);
-  if (receipts) {
-    receipts.forEach((r: any) => {
-      const newReceipt = TransactionReceipt.create({
-        id: (r?.txHash as string)?.toLowerCase(),
-        hash: r?.txHash,
-        blockId: block?.number?.toString(),
-        effectiveGasPrice: r?.effectiveGasPrice,
-        gasUsed: r?.gasUsed,
-        transactionId: r?.txHash,
-        blockNumber: r?.blockNumber,
+  try {
+    const receipts = await getBlockReceipts(block.number);
+    if (receipts) {
+      receipts.forEach((r: any) => {
+        const newReceipt = TransactionReceipt.create({
+          id: (r?.txHash as string)?.toLowerCase(),
+          hash: r?.txHash,
+          blockId: block?.number?.toString(),
+          effectiveGasPrice: r?.effectiveGasPrice,
+          gasUsed: r?.gasUsed,
+          transactionId: r?.txHash,
+          blockNumber: r?.blockNumber,
+        });
+        batchReceipt.set((r?.txHash as string)?.toLowerCase(), newReceipt);
+        // receiptsToSave.push(newReceipt);
       });
-      batchReceipt.set((r?.txHash as string)?.toLowerCase(), newReceipt);
-      // receiptsToSave.push(newReceipt);
-    });
-    // await store.bulkUpdate("TransactionReceipt", receiptsToSave);
+      // await store.bulkUpdate("TransactionReceipt", receiptsToSave);
+    }
+    return batchReceipt;
+  } catch (error) {
+    logger.info(`ERROR::: batchReceipt ::  ${error}`);
     return batchReceipt;
   }
 }

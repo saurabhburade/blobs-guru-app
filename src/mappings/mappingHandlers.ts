@@ -32,7 +32,7 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
   const priceData = await handleNewPriceMinute({ block });
   const receipts = await getTxReceipts({ block });
   logger.info(`PRICE DATA FOUND ::  ${priceData?.nativePrice}`);
-  logger.info(`RECEIPT DATA FOUND ::  ${receipts?.size}`);
+  logger.info(`RECEIPT DATA FOUND ::  ${receipts ? receipts?.size : 0}`);
   logger.info(`BLOCK ::: ${block.number}`);
   const transactions = block.transactions;
   const accountsToSave = [];
