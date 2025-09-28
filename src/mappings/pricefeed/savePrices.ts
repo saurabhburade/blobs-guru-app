@@ -74,10 +74,10 @@ export async function handleNewPriceMinute({
       while (indexMinute < 28312800) {
         const priceFeedMinuteZero = PriceFeedMinute.create({
           id: indexMinute.toString(),
-          nativeBlock: nativeBlock,
+          nativeBlockId: nativeBlock?.toString(),
+
           nativePrice: 2.4,
           date: blockDate,
-          nativeDate: blockDate,
         });
         pricesToSave.push(priceFeedMinuteZero);
         indexMinute = Number(indexMinute) + 1;
@@ -101,10 +101,9 @@ export async function handleNewPriceMinute({
           // SAVE MONTHLY DATA FROM LOCAL FILES
           const priceForMinute = PriceFeedMinute.create({
             id: element?.minuteId?.toString(),
-            nativeBlock: nativeBlock,
+            nativeBlockId: nativeBlock?.toString(),
             nativePrice: element?.avgPrice,
             date: element?.timestampF,
-            nativeDate: blockDate,
           });
           pricesToSave.push(priceForMinute);
 
@@ -144,10 +143,9 @@ export async function handleNewPriceMinute({
 
             const priceForMinute = PriceFeedMinute.create({
               id: minuteIdOhlc?.toString(),
-              nativeBlock: nativeBlock,
+              nativeBlockId: nativeBlock?.toString(),
               nativePrice: avgPrice,
               date: new Date(new Date(Number(timestamp)).getTime()),
-              nativeDate: blockDate,
             });
             pricesToSave.push(priceForMinute);
             // consider 2 mins diff if any
@@ -181,10 +179,9 @@ export async function handleNewPriceMinute({
           ) {
             const priceForMinute = PriceFeedMinute.create({
               id: minuteId?.toString(),
-              nativeBlock: nativeBlock,
+              nativeBlockId: nativeBlock?.toString(),
               nativePrice: value,
               date: new Date(timestamp),
-              nativeDate: blockDate,
             });
             await priceForMinute.save();
             priceFeedThisMinute = priceForMinute;
@@ -210,10 +207,10 @@ export async function handleNewPriceMinute({
           ) {
             const priceForMinute = PriceFeedMinute.create({
               id: minuteId?.toString(),
-              nativeBlock: nativeBlock,
+              nativeBlockId: nativeBlock?.toString(),
+
               nativePrice: usd,
               date: new Date(Number(last_updated_at) * 1000),
-              nativeDate: blockDate,
             });
             await priceForMinute.save();
             priceFeedThisMinute = priceForMinute;

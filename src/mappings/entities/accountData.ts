@@ -13,7 +13,7 @@ import { BYTES_PER_BLOB } from "../../utils";
 export async function handleAccount(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number }
+  block: { height: number; timestamp: number; baseBlobGasPrice: number }
 ) {
   try {
     let dataSubmissionSize =
@@ -57,7 +57,7 @@ export async function handleAccount(
     const feesUSD = fees * priceFeed.nativePrice;
     if (isDataSubmission) {
       const feesDA =
-        Number(decodedTxn.maxFeePerBlobGas) *
+        (block?.baseBlobGasPrice ?? 1) *
         Number(decodedTxn.blobVersionedHashes?.length) *
         BYTES_PER_BLOB;
       const feesUSDDA = feesDA * priceFeed.nativePrice;
@@ -97,7 +97,7 @@ export async function handleAccount(
 export async function handleAccountDayData(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number }
+  block: { height: number; timestamp: number; baseBlobGasPrice: number }
 ) {
   const blockDate = new Date(Number(block.timestamp));
   const minuteId = Math.floor(blockDate.getTime() / 60000);
@@ -151,7 +151,7 @@ export async function handleAccountDayData(
     decodedTxn?.blobVersionedHashes?.length > 0
   ) {
     const feesDA =
-      Number(decodedTxn.maxFeePerBlobGas) *
+      (block?.baseBlobGasPrice ?? 1) *
       Number(decodedTxn.blobVersionedHashes?.length) *
       BYTES_PER_BLOB;
     const feesUSDDA = feesDA * priceFeed.nativePrice;
@@ -192,7 +192,7 @@ export async function handleAccountDayData(
 export async function handleAccountHourData(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number }
+  block: { height: number; timestamp: number; baseBlobGasPrice: number }
 ) {
   const blockDate = new Date(Number(block.timestamp));
   const minuteId = Math.floor(blockDate.getTime() / 60000);
@@ -247,7 +247,7 @@ export async function handleAccountHourData(
     decodedTxn?.blobVersionedHashes?.length > 0
   ) {
     const feesDA =
-      Number(decodedTxn.maxFeePerBlobGas) *
+      (block?.baseBlobGasPrice || 1) *
       Number(decodedTxn.blobVersionedHashes?.length) *
       BYTES_PER_BLOB;
     const feesUSDDA = feesDA * priceFeed.nativePrice;
