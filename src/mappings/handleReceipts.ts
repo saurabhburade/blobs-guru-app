@@ -7,7 +7,7 @@ const rpcUrls = [
   "https://1.rpc.hypersync.xyz",
   "https://eth-traces.rpc.hypersync.xyz",
 ];
-const RPC_URL = rpcUrls[Math.floor(Math.random() * rpcUrls.length)];
+const RPC_URL = "https://eth-traces.rpc.hypersync.xyz";
 const FILES_COUNT = 100;
 
 // Helper: convert number to hex quantity
@@ -89,93 +89,24 @@ export async function getTxReceipts({
   block: EthereumBlock;
 }): Promise<Map<string, TransactionReceipt> | undefined> {
   let batchReceipt: Map<string, TransactionReceipt> = new Map();
+  // const receiptsToSave = [];
 
-  if (block?.number < 23460919) {
-    for (let index = 0; index < block?.transactions.length; index++) {
-      const tx = block?.transactions[index];
-      if (tx.type !== "0x3") {
-        continue;
-      }
-      const r = await TransactionReceipt.get(
-        (tx?.hash as string)?.toLowerCase()
-      );
-      if (r) {
-        batchReceipt.set((tx?.hash as string)?.toLowerCase(), r);
-      } else {
-        if (block?.number > 19426500 || block?.number < 23460919) {
-          let fileIdx = 0;
-          for (let filesIndex = 1; filesIndex <= FILES_COUNT; filesIndex++) {
-            const data = await fetchData(
-              `https://raw.githubusercontent.com/saurabhburade/eth-subql-starter/refs/heads/dev/scripts/receipts/receipts-${fileIdx}.json`,
-              {}
-            );
-            logger.info(
-              `FETCHED PRICE DATA FROM FILE :: receipts-${fileIdx}.json`
-            );
-            const receiptsToSave: TransactionReceipt[] = [];
-            for (const element of data) {
-              const newReceipt = TransactionReceipt.create({
-                id: (element?.txHash as string)?.toLowerCase(),
-                hash: element?.txHash,
-                blockId: element?.blockNumber?.toString(),
-                effectiveGasPrice: element?.effectiveGasPrice?.toNumber(),
-                gasUsed: element?.gasUsed?.toNumber(),
-                transactionId: element?.txHash,
-                blockNumber: element?.blockNumber,
-              });
-              receiptsToSave.push(newReceipt);
-              if (element?.blockNumber === block.number) {
-                batchReceipt.set(
-                  (element?.txHash as string)?.toLowerCase(),
-                  newReceipt
-                );
-              }
-            }
-            const splitedChunk = chunkArray(receiptsToSave, 1000);
-            for (let index = 0; index < splitedChunk.length; index++) {
-              logger.info(`SAVING RECEIPTS CHUNK`);
-
-              const ck = splitedChunk[index];
-              await store.bulkUpdate("TransactionReceipt", ck);
-              logger.info(
-                `SAVED RECEIPTS CHUNK :: ${index} out of ${splitedChunk.length}`
-              );
-            }
-            fileIdx += 1;
-          }
-
-          return batchReceipt;
-        } else {
-          const receiptRaw = await api.getTransactionReceipt(tx?.hash);
-          const newReceipt = TransactionReceipt.create({
-            id: (receiptRaw?.transactionHash as string)?.toLowerCase(),
-            hash: receiptRaw?.transactionHash,
-            blockId: block?.number?.toString(),
-            effectiveGasPrice: receiptRaw?.effectiveGasPrice?.toNumber(),
-            gasUsed: receiptRaw?.gasUsed?.toNumber(),
-            transactionId: receiptRaw?.transactionHash,
-            blockNumber: receiptRaw?.blockNumber,
-          });
-          batchReceipt.set((tx?.hash as string)?.toLowerCase(), newReceipt);
-        }
-      }
-    }
-  } else {
-    const receipts = await getBlockReceipts(block.number);
-    if (receipts) {
-      receipts.forEach((r: any) => {
-        const newReceipt = TransactionReceipt.create({
-          id: (r?.txHash as string)?.toLowerCase(),
-          hash: r?.txHash,
-          blockId: block?.number?.toString(),
-          effectiveGasPrice: r?.effectiveGasPrice,
-          gasUsed: r?.gasUsed,
-          transactionId: r?.txHash,
-          blockNumber: r?.blockNumber,
-        });
-        batchReceipt.set((r?.txHash as string)?.toLowerCase(), newReceipt);
+  const receipts = await getBlockReceipts(block.number);
+  if (receipts) {
+    receipts.forEach((r: any) => {
+      const newReceipt = TransactionReceipt.create({
+        id: (r?.txHash as string)?.toLowerCase(),
+        hash: r?.txHash,
+        blockId: block?.number?.toString(),
+        effectiveGasPrice: r?.effectiveGasPrice,
+        gasUsed: r?.gasUsed,
+        transactionId: r?.txHash,
+        blockNumber: r?.blockNumber,
       });
-    }
+      batchReceipt.set((r?.txHash as string)?.toLowerCase(), newReceipt);
+      // receiptsToSave.push(newReceipt);
+    });
+    // await store.bulkUpdate("TransactionReceipt", receiptsToSave);
     return batchReceipt;
   }
 }
