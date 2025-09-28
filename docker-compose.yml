@@ -39,6 +39,9 @@ services:
       - --allow-schema-migration
       - --scale-batch-size
       - --unfinalized-blocks=false
+      - --store-cache-threshold=200000
+      - --store-flush-interval=2000
+      - --store-cache-upper-limit=250000
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
@@ -60,3 +63,4 @@ services:
     command:
       - --name=app
       - --playground
+      - --query-timeout=60000
