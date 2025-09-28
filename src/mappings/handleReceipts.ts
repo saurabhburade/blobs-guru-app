@@ -3,7 +3,6 @@ import { TransactionReceipt } from "../types";
 import fetch from "node-fetch";
 
 const rpcUrls = [
-  "https://eth.drpc.org",
   "https://1.rpc.hypersync.xyz",
   "https://eth-traces.rpc.hypersync.xyz",
 ];
@@ -68,13 +67,20 @@ async function rpcCall(body: any) {
 
 function parseBlockReceipts(result: any): ParsedReceipt[] {
   const receipts = result || [];
-  return receipts.map((r: any) => ({
-    blockNumber: parseInt(r.blockNumber, 16),
-    blockHash: r.blockHash,
-    txHash: r.transactionHash,
-    gasUsed: fromHexQuantityNumber(r.gasUsed),
-    effectiveGasPrice: fromHexQuantityNumber(r.effectiveGasPrice),
-  }));
+  return receipts
+    .map((r: any) => {
+      if (r.type === "0x3") {
+        return null;
+      }
+      return {
+        blockNumber: parseInt(r.blockNumber, 16),
+        blockHash: r.blockHash,
+        txHash: r.transactionHash,
+        gasUsed: fromHexQuantityNumber(r.gasUsed),
+        effectiveGasPrice: fromHexQuantityNumber(r.effectiveGasPrice),
+      };
+    })
+    ?.filter((v:any) => v);
 }
 
 // Single-block fallback
