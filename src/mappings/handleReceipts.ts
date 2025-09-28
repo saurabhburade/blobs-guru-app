@@ -80,7 +80,7 @@ function parseBlockReceipts(result: any): ParsedReceipt[] {
         effectiveGasPrice: fromHexQuantityNumber(r.effectiveGasPrice),
       };
     })
-    ?.filter((v:any) => v);
+    ?.filter((v: any) => v);
 }
 
 // Single-block fallback
@@ -151,7 +151,12 @@ async function getOrPrefetchBlockReceipts(
 ): Promise<ParsedReceipt[]> {
   // Cache hit?
   const cached = receiptCache.get(blockNumber);
-  if (cached) return cached;
+  if (cached) {
+    logger.info(`=================================================`);
+    logger.info(`CACHE HIT  ::  ${blockNumber}`);
+    logger.info(`=================================================`);
+    return cached;
+  }
 
   // Prefetch blockNumber..blockNumber+49
   try {
@@ -162,7 +167,12 @@ async function getOrPrefetchBlockReceipts(
 
   // After prefetch, try again
   const after = receiptCache.get(blockNumber);
-  if (after) return after;
+  if (after) {
+    logger.info(`=================================================`);
+    logger.info(`CACHE HIT  AFTER ::  ${blockNumber}`);
+    logger.info(`=================================================`);
+    return after;
+  }
 
   // Fallback: single-block fetch
   const fresh = await getBlockReceipts(blockNumber);
