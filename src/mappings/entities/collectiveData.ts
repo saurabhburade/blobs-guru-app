@@ -13,7 +13,7 @@ import { BYTES_PER_BLOB } from "../../utils";
 export async function handleCollective(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number }
+  block: { height: number; timestamp: number; baseBlobGasPrice: number }
 ) {
   try {
     const dataSubmissionSize =
@@ -56,7 +56,7 @@ export async function handleCollective(
         decodedTxn?.blobVersionedHashes?.length > 0
       ) {
         const feesDA =
-          Number(decodedTxn.maxFeePerBlobGas) *
+          (block?.baseBlobGasPrice || 1) *
           Number(decodedTxn.blobVersionedHashes?.length) *
           BYTES_PER_BLOB;
         const feesUSDDA = feesDA * priceFeed.nativePrice;
@@ -106,6 +106,7 @@ export async function handleCollective(
       {
         height: block.height,
         timestamp: Number(block.timestamp),
+        baseBlobGasPrice: block?.baseBlobGasPrice,
       },
 
       collectiveEntity
@@ -116,6 +117,7 @@ export async function handleCollective(
       {
         height: block.height,
         timestamp: Number(block.timestamp),
+        baseBlobGasPrice: block?.baseBlobGasPrice,
       },
 
       collectiveEntity
@@ -129,7 +131,7 @@ export async function handleCollective(
 export async function handleCollectiveDayData(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number },
+  block: { height: number; timestamp: number; baseBlobGasPrice: number },
   collectiveEntity: CollectiveData
 ) {
   const blockDate = new Date(Number(block.timestamp));
@@ -185,7 +187,7 @@ export async function handleCollectiveDayData(
         decodedTxn?.blobVersionedHashes?.length > 0
       ) {
         const feesDA =
-          Number(decodedTxn.maxFeePerBlobGas) *
+          (block?.baseBlobGasPrice || 1) *
           Number(decodedTxn.blobVersionedHashes?.length) *
           BYTES_PER_BLOB;
         const feesUSDDA = feesDA * priceFeed.nativePrice;
@@ -238,7 +240,7 @@ export async function handleCollectiveDayData(
 export async function handleCollectiveHourData(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number },
+  block: { height: number; timestamp: number; baseBlobGasPrice: number },
   collectiveEntity: CollectiveData
 ) {
   const blockDate = new Date(Number(block.timestamp));
@@ -297,7 +299,7 @@ export async function handleCollectiveHourData(
         decodedTxn?.blobVersionedHashes?.length > 0
       ) {
         const feesDA =
-          Number(decodedTxn.maxFeePerBlobGas) *
+          (block?.baseBlobGasPrice || 1) *
           Number(decodedTxn.blobVersionedHashes?.length) *
           BYTES_PER_BLOB;
         const feesUSDDA = feesDA * priceFeed.nativePrice;

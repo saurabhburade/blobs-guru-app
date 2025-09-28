@@ -7,7 +7,13 @@ import {
   TransactionData,
 } from "../types";
 
-import { BYTES_PER_BLOB, ZERO_BD } from "../utils";
+import {
+  BYTES_PER_BLOB,
+  fakeExponential,
+  ONE_BI,
+  ZERO_BD,
+  ZERO_BI,
+} from "../utils";
 import {
   handleAccount,
   handleAccountDayData,
@@ -19,6 +25,7 @@ import {
   handleCollectiveDayData,
   handleCollectiveHourData,
 } from "./entities/collectiveData";
+const BLOB_BASE_FEE_UPDATE_FRACTION = 3338477;
 
 export async function handleBlock(block: EthereumBlock): Promise<void> {
   const priceData = await handleNewPriceMinute({ block });
@@ -54,17 +61,26 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
     totalTransactionCount: transactions.length,
     timestamp: Number(block.timestamp) * 1000,
   });
+  const baseBlobGasPrice = fakeExponential(
+    1,
+    Number(block.excessBlobGas),
+    BLOB_BASE_FEE_UPDATE_FRACTION
+  );
   for (let index = 0; index < transactions.length; index++) {
     const txn = transactions[index];
 
     if (txn.type === "0x3") {
       const dataSubmissionSize =
         (txn.blobVersionedHashes?.length || 0) * BYTES_PER_BLOB;
-      const fees = Number(txn.gas) * Number(txn.gasPrice);
+      const receipt = await txn.receipt();
+      txn.gas = receipt.gasUsed || txn.gas;
+      txn.gasPrice = receipt.effectiveGasPrice || txn.gas;
+      const fees =
+        Number(receipt?.gasUsed) * Number(receipt?.effectiveGasPrice);
       const feesUSD = fees * priceData!.nativePrice;
 
       const feesDA =
-        Number(txn.maxFeePerBlobGas) *
+        (baseBlobGasPrice || 1) *
         Number(txn.blobVersionedHashes?.length) *
         BYTES_PER_BLOB;
       const feesUSDDA = feesDA * priceData!.nativePrice;
@@ -99,18 +115,21 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
       const acc = await handleAccount(txn, priceData!, {
         height: block.number,
         timestamp: Number(block.timestamp) * 1000,
+        baseBlobGasPrice: baseBlobGasPrice,
       });
       accountsToSave.push(acc);
 
       const accDayData = await handleAccountDayData(txn, priceData!, {
         height: block.number,
         timestamp: Number(block.timestamp) * 1000,
+        baseBlobGasPrice: baseBlobGasPrice,
       });
       accountDayDatas.push(accDayData);
 
       const accHourData = await handleAccountHourData(txn, priceData!, {
         height: block.number,
         timestamp: Number(block.timestamp) * 1000,
+        baseBlobGasPrice: baseBlobGasPrice,
       });
       accountHourDatas.push(accHourData);
 
@@ -118,6 +137,7 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
       await handleCollective(txn, priceData!, {
         height: block.number,
         timestamp: Number(block.timestamp) * 1000,
+        baseBlobGasPrice: baseBlobGasPrice,
       });
       // const collectiveDayData =
       //   await handleCollectiveDayData(
