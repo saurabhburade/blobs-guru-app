@@ -45,7 +45,15 @@ type BlobData @entity {
   signer: AccountEntity
   blockHeight: BlockData
 }
-
+type TransactionReceipt @entity {
+  id: ID!
+  hash: Bytes!
+  transaction: TransactionData
+  gasUsed: Float
+  effectiveGasPrice: Float
+  blockNumber: Float
+  block: Block
+}
 type TransactionData @entity {
   id: ID!
   hash: Bytes!
@@ -70,6 +78,7 @@ type TransactionData @entity {
 
   isBlobTransaction: Boolean!
   blobs: [BlobData] @derivedFrom(field: "transaction")
+  receipt: TransactionReceipt @derivedFrom(field: "transaction")
 }
 
 type Block @entity {

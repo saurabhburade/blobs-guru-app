@@ -25,12 +25,14 @@ import {
   handleCollectiveDayData,
   handleCollectiveHourData,
 } from "./entities/collectiveData";
+import { getTxReceipts } from "./handleReceipts";
 const BLOB_BASE_FEE_UPDATE_FRACTION = 3338477;
 
 export async function handleBlock(block: EthereumBlock): Promise<void> {
   const priceData = await handleNewPriceMinute({ block });
-
+  const receipts = await getTxReceipts({ block });
   logger.info(`PRICE DATA FOUND ::  ${priceData?.nativePrice}`);
+  logger.info(`RECEIPT DATA FOUND ::  ${receipts?.size}`);
   logger.info(`BLOCK ::: ${block.number}`);
   const transactions = block.transactions;
   const accountsToSave = [];
@@ -43,6 +45,7 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
 
   const blobs: BlobData[] = [];
   let txnRecords: TransactionData[] = [];
+
   let bdata = BlockData.create({
     id: block.number.toString(),
     avgNativePrice: priceData?.nativePrice!,
@@ -72,9 +75,12 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
     if (txn.type === "0x3") {
       const dataSubmissionSize =
         (txn.blobVersionedHashes?.length || 0) * BYTES_PER_BLOB;
-      const receipt = await txn.receipt();
-      txn.gas = receipt.gasUsed || txn.gas;
-      txn.gasPrice = receipt.effectiveGasPrice || txn.gas;
+      const receipt =
+        receipts?.get((txn.hash as string).toLowerCase()) ??
+        (await txn.receipt());
+      txn.gas = BigInt((receipt.gasUsed ?? 0)?.toString()) || txn.gas;
+      txn.gasPrice =
+        BigInt((receipt.effectiveGasPrice ?? 0)?.toString()) || txn.gas;
       const fees =
         Number(receipt?.gasUsed) * Number(receipt?.effectiveGasPrice);
       const feesUSD = fees * priceData!.nativePrice;
