@@ -1,4 +1,5 @@
 import ChartLoading from "@/components/Skeletons/ChartLoading";
+import { useAvailDaAppsDataBasicSingle } from "@/hooks/useAvailDaAppsDataBasic";
 import { availClient } from "@/lib/apollo/client";
 import {
   ACCOUNT_DAY_DATAS_QUERY,
@@ -86,6 +87,12 @@ export default function AvailDASizeDayChartHome({
     const keys = (datas as any[])?.map((e) => {
       return e?.appDayDataParticipant?.nodes?.map((v: any) => v?.app?.name);
     });
+    const idMap = new Map();
+    (datas as any[])?.map((e) => {
+      return e?.appDayDataParticipant?.nodes?.forEach((v: any) =>
+        idMap.set(v?.app?.name, v?.app?.id)
+      );
+    });
     const keysSet = _.uniq(_.flatten(keys));
 
     const appDayDataParticipants = datas?.map(
@@ -98,6 +105,7 @@ export default function AvailDASizeDayChartHome({
       const appDayDatasMap = {};
       for (let idx = 0; idx < appList?.length; idx++) {
         const appDayData = appList[idx];
+
         if (appDayData) {
           // @ts-ignore
           appDayDatasMap[`${appDayData?.app?.name}`] =
@@ -118,6 +126,7 @@ export default function AvailDASizeDayChartHome({
     return {
       chartDataList,
       keys: keysSet,
+      idsMap: idMap,
     };
   }, [data?.collectiveDayData]);
 
@@ -195,6 +204,7 @@ export default function AvailDASizeDayChartHome({
                 fill={getColorForIndex(idx, chartDataFormated?.keys?.length)}
                 stackId="a"
                 radius={[0, 0, 0, 0]}
+                id={chartDataFormated.idsMap.get(key)}
               ></Bar>
             );
           })}
@@ -243,18 +253,14 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
 
             {sortedPayload?.map((p: any, idx: any) => {
               return (
-                <div className="flex items-center gap-2" key={p?.dataKey}>
-                  <span
-                    className="w-[10px] h-[10px]"
-                    style={{
-                      backgroundColor: p?.fill,
-                    }}
-                  ></span>
-                  <p className=" " key={p?.dataKey}>
-                    {formatWrapedText(p?.name, 5, 5)} :{" "}
-                    {`${formatBytes(p?.value)}`}
-                  </p>
-                </div>
+                <AppData
+                  key={p.name}
+                  name={p.name}
+                  id={p.id}
+                  fill={p.fill}
+                  value={p.value}
+                  dataKey={p.dataKey}
+                />
               );
             })}
           </div>
@@ -264,4 +270,23 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   }
 
   return null;
+};
+
+const AppData = ({ id, value, fill, dataKey, name }: any) => {
+  const { data: accountDetails } = useAvailDaAppsDataBasicSingle(id);
+
+  return (
+    <div className="flex items-center gap-2" key={dataKey}>
+      <span
+        className="w-[10px] h-[10px]"
+        style={{
+          backgroundColor: fill,
+        }}
+      ></span>
+      <p className=" " key={dataKey}>
+        {formatWrapedText(accountDetails?.name ?? name, 5, 5)} :{" "}
+        {`${formatBytes(value)}`}
+      </p>
+    </div>
+  );
 };

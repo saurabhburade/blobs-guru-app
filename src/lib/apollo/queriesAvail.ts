@@ -271,6 +271,7 @@ export const AVAIL_DAY_DATAS_WITH_DURATION_QUERY = gql`
             appId
             app {
               name
+              id
             }
             totalByteSize
             totalExtrinsicCount
