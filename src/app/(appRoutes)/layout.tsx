@@ -5,7 +5,6 @@ import "../globals.css";
 
 import { Providers } from "./providers";
 import { ThemeProvider } from "next-themes";
-import { Space_Grotesk } from "next/font/google";
 import Script from "next/script";
 import Footer from "@/components/Footer/Footer";
 
@@ -14,10 +13,6 @@ export const metadata: Metadata = {
   description:
     "Unlock the potential of Ethereum blobs. Analyze Layer 2 blob transactions and EIP-4844 data for improved scalability and efficiency.",
 };
-const space_grotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -75,7 +70,7 @@ export default function RootLayout({
           content="https://blobs.guru/summary.jpeg"
         /> */}
       </head>
-      <body className={space_grotesk.className}>
+      <body>
         <ThemeProvider enableSystem={false} defaultTheme="dark">
           <Providers>{children}</Providers>
         </ThemeProvider>

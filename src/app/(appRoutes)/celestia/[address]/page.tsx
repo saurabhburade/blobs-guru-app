@@ -1,14 +1,13 @@
-import dynamic from "next/dynamic";
 export const runtime = 'edge';
-const SingleAccount = dynamic(() => import("@/views/Celestia/SingleAccount"), { ssr: false });
+import SingleAccount from "@/views/Celestia/SingleAccount";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
-  params: { address: string };
+  params: Promise<{ address: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const address = params.address;
+  const { address } = await params;
 
   return {
     title: `Celestia Account | ${address}`,
@@ -19,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SingleAccPage({ params }: Props) {
-  const { address } = params;
+export default async function SingleAccPage({ params }: Props) {
+  const { address } = await params;
   return <SingleAccount account={address} />;
 }

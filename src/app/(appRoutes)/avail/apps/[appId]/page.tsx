@@ -1,15 +1,13 @@
-import dynamic from "next/dynamic";
 export const runtime = 'edge';
-const SingleAvailApp = dynamic(() => import("@/views/Avail/Apps/SingleAvailApp"), { ssr: false });
-const SingleAvailAccount = dynamic(() => import("@/views/Avail/SingleAvailAccount"), { ssr: false });
+import SingleAvailApp from "@/views/Avail/Apps/SingleAvailApp";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
-  params: { appId: string };
+  params: Promise<{ appId: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const appId = params.appId;
+  const { appId } = await params;
 
   return {
     title: `Avail App | ${appId}`,
@@ -20,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SingleAvailAppPage({ params }: Props) {
-  const { appId } = params;
+export default async function SingleAvailAppPage({ params }: Props) {
+  const { appId } = await params;
   return <SingleAvailApp appId={appId as string} />;
 }

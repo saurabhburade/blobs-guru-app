@@ -1,15 +1,13 @@
-import dynamic from "next/dynamic";
 export const runtime = 'edge';
-const SingleAccount = dynamic(() => import("@/views/Ethereum/SingleAccount"), { ssr: false });
-const SingleTxn = dynamic(() => import("@/views/Ethereum/Txn/SingleTxn"), { ssr: false });
+import SingleTxn from "@/views/Ethereum/Txn/SingleTxn";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
-  params: { _hash: string };
+  params: Promise<{ _hash: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const address = params._hash;
+  const { _hash: address } = await params;
 
   return {
     title: `EIP 4844 | Txn ${address}`,
@@ -20,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SingleTxPage({ params }: Props) {
-  const { _hash } = params;
+export default async function SingleTxPage({ params }: Props) {
+  const { _hash } = await params;
   return <SingleTxn hash={_hash} />;
 }

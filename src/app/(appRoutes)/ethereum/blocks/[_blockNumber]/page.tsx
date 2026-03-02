@@ -1,16 +1,13 @@
-import dynamic from "next/dynamic";
 export const runtime = 'edge';
-const SingleBlock = dynamic(() => import("@/views/Ethereum/Blocks/SingleBlock"), { ssr: false });
-const SingleAccount = dynamic(() => import("@/views/Ethereum/SingleAccount"), { ssr: false });
-const SingleTxn = dynamic(() => import("@/views/Ethereum/Txn/SingleTxn"), { ssr: false });
+import SingleBlock from "@/views/Ethereum/Blocks/SingleBlock";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
-  params: { _blockNumber: string };
+  params: Promise<{ _blockNumber: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const address = params._blockNumber;
+  const { _blockNumber: address } = await params;
 
   return {
     title: `EIP 4844 | Block ${address}`,
@@ -21,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SingleTxPage({ params }: Props) {
-  const { _blockNumber } = params;
+export default async function SingleTxPage({ params }: Props) {
+  const { _blockNumber } = await params;
   return <SingleBlock blockNumber={_blockNumber} />;
 }
