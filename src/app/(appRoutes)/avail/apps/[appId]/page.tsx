@@ -1,6 +1,7 @@
+import dynamic from "next/dynamic";
 export const runtime = 'edge';
-import SingleAvailApp from "@/views/Avail/Apps/SingleAvailApp";
-import SingleAvailAccount from "@/views/Avail/SingleAvailAccount";
+const SingleAvailApp = dynamic(() => import("@/views/Avail/Apps/SingleAvailApp"), { ssr: false });
+const SingleAvailAccount = dynamic(() => import("@/views/Avail/SingleAvailAccount"), { ssr: false });
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {

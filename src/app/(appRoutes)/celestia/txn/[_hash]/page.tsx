@@ -1,7 +1,8 @@
 "use client";
+import dynamic from "next/dynamic";
 export const runtime = 'edge';
 
-import SingleTxn from "@/views/Celestia/Txn/SingleTxn";
+const SingleTxn = dynamic(() => import("@/views/Celestia/Txn/SingleTxn"), { ssr: false });
 import { useParams } from "next/navigation";
 import React from "react";
 

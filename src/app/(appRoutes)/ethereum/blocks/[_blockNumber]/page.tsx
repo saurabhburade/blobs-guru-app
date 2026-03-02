@@ -1,7 +1,8 @@
+import dynamic from "next/dynamic";
 export const runtime = 'edge';
-import SingleBlock from "@/views/Ethereum/Blocks/SingleBlock";
-import SingleAccount from "@/views/Ethereum/SingleAccount";
-import SingleTxn from "@/views/Ethereum/Txn/SingleTxn";
+const SingleBlock = dynamic(() => import("@/views/Ethereum/Blocks/SingleBlock"), { ssr: false });
+const SingleAccount = dynamic(() => import("@/views/Ethereum/SingleAccount"), { ssr: false });
+const SingleTxn = dynamic(() => import("@/views/Ethereum/Txn/SingleTxn"), { ssr: false });
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {

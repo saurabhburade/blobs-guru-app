@@ -1,6 +1,7 @@
 "use client";
+import dynamic from "next/dynamic";
 export const runtime = 'edge';
-import SingleBlock from "@/views/Blocks/SingleBlock";
+const SingleBlock = dynamic(() => import("@/views/Blocks/SingleBlock"), { ssr: false });
 import { useParams } from "next/navigation";
 import React from "react";
 

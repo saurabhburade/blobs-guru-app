@@ -1,6 +1,7 @@
+import dynamic from "next/dynamic";
 
 export const runtime = 'edge';
-import SingleApp from "@/views/Celestia/Apps/SingleApp";
+const SingleApp = dynamic(() => import("@/views/Celestia/Apps/SingleApp"), { ssr: false });
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {

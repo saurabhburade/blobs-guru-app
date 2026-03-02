@@ -1,7 +1,8 @@
 "use client";
+import dynamic from "next/dynamic";
 export const runtime = 'edge';
-import SingleBlock from "@/views/Blocks/SingleBlock";
-import SingleTransaction from "@/views/Transactions/SingleTransaction";
+const SingleBlock = dynamic(() => import("@/views/Blocks/SingleBlock"), { ssr: false });
+const SingleTransaction = dynamic(() => import("@/views/Transactions/SingleTransaction"), { ssr: false });
 import { useParams } from "next/navigation";
 import React from "react";
 

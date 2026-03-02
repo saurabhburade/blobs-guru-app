@@ -1,5 +1,6 @@
+import dynamic from "next/dynamic";
 export const runtime = 'edge';
-import SingleAvailAccount from "@/views/Avail/SingleAvailAccount";
+const SingleAvailAccount = dynamic(() => import("@/views/Avail/SingleAvailAccount"), { ssr: false });
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {

@@ -1,5 +1,6 @@
+import dynamic from "next/dynamic";
 export const runtime = 'edge';
-import SingleAccount from "@/views/Ethereum/SingleAccount";
+const SingleAccount = dynamic(() => import("@/views/Ethereum/SingleAccount"), { ssr: false });
 import { Metadata, ResolvingMetadata } from "next";
 import { checksumAddress } from "viem";
 
