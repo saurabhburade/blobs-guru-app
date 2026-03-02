@@ -4,6 +4,7 @@ import {
   getAccountDetailsFromAddressBook,
   getAppDetailsFromAppBook,
 } from "@/configs/constants";
+import { useCelestiaDaAppsDataBasicSingle } from "@/hooks/useCelestiaDaAppsDataBasic";
 import { celestiaClient } from "@/lib/apollo/client";
 
 import { CELESTIA_APPS_LIMIT_QUERY } from "@/lib/apollo/queriesCelestia";
@@ -95,7 +96,7 @@ export default ChainApps;
 //   totalFeesUSD;
 //   totalDAFeesUSD;
 const AccountRow = ({ acc }: any) => {
-  const accountDetails = getAppDetailsFromAppBook(acc?.id);
+  const { data: accountDetails } = useCelestiaDaAppsDataBasicSingle(acc?.name);
 
   const totalSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));

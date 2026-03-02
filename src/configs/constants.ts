@@ -136,16 +136,7 @@ export const ADDRESS_BOOK: AddressBook = {
     l2beatProjectDataUrl:
       "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/blast.json",
   },
-  "0xc70ae19b5feaa5c19f576e621d2bad9771864fe2": {
-    name: "StarkNet (Unknown)",
-    logoUri:
-      "https://assets.coingecko.com/asset_platforms/images/151/small/starknet.png",
-    rpc: "https://rpc.scroll.io/",
-    tags: ["Optimistic Rollup", "EVM", "Mainnet"],
-    address: "0xcf2898225ed05be911d3709d9417e86e0b4cfc8f",
-    l2beatProjectDataUrl:
-      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/starknet.json",
-  },
+
   "0xc94c243f8fb37223f3eb2f7961f7072602a51b8b": {
     name: "Metal L2",
     logoUri: "https://s2.coinmarketcap.com/static/img/coins/64x64/1788.png",

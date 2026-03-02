@@ -235,6 +235,7 @@ export const CELESTIA_APP_DA_TRANSACTIONS_FILTER_LIMIT_QUERY = gql`
       filter: { blobs: { some: { namespaceID: { like: $namespaceID } } } }
       first: $limit
       offset: $skip
+      orderBy: TIMESTAMP_DESC
     ) {
       nodes {
         hash

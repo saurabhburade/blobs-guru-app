@@ -1,13 +1,13 @@
-
+export const runtime = 'edge';
 import SingleApp from "@/views/Celestia/Apps/SingleApp";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
-  params: { appId: string };
+  params: Promise<{ appId: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const appId = params.appId;
+  const { appId } = await params;
 
   return {
     title: `Celestia App | ${appId}`,
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SingleAppPage({ params }: Props) {
-  const { appId } = params;
+export default async function SingleAppPage({ params }: Props) {
+  const { appId } = await params;
   return <SingleApp appId={appId as string} />;
 }

@@ -1,13 +1,13 @@
-import SingleApp from "@/views/Celestia/Apps/SingleApp";
+export const runtime = 'edge';
 import SingleAccount from "@/views/Ethereum/SingleAccount";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
-  params: { appId: string };
+  params: Promise<{ appId: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const appId = params.appId;
+  const { appId } = await params;
 
   return {
     title: `Ethereum Rollup | ${appId}`,
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SingleAppPage({ params }: Props) {
-  const { appId } = params;
+export default async function SingleAppPage({ params }: Props) {
+  const { appId } = await params;
   return <SingleAccount account={appId as string} />;
 }

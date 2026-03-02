@@ -147,18 +147,20 @@ function AvailStats({}: Props) {
               <hr className="border-base-200/50" />
               <div className="flex gap-2 justify-between">
                 <p className="">Size</p>
-                <p className="">{formatBytes(app?.byteSize)}</p>
+                <p className="">{formatBytes(app?.totalByteSize)}</p>
               </div>
               <div className="flex gap-2 justify-between">
                 <p className="">Fees</p>
                 <p className="">
-                  {new BigNumber(app?.fees).toFormat(2)}{" "}
+                  {new BigNumber(app?.totalDAFees).toFormat(2)}{" "}
                   <span className="">AVAIL</span>
                 </p>
               </div>
               <div className="flex gap-2 justify-between">
                 <p className="">Fee USD</p>
-                <p className="">${safeBigNumber(app?.feesUSD).toFormat(2)} </p>
+                <p className="">
+                  ${safeBigNumber(app?.totalDAFeesUSD).toFormat(2)}{" "}
+                </p>
               </div>
             </div>
           );

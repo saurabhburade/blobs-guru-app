@@ -4,6 +4,7 @@ import {
   getAccountDetailsFromAddressBook,
   getAppDetailsFromAppBook,
 } from "@/configs/constants";
+import { useEthereumDaAppsDataBasicSingle } from "@/hooks/useEthereumDaAppsDataBasic";
 import { apolloClient } from "@/lib/apollo/client";
 
 import { ETHEREUM_APPS_LIMIT_QUERY } from "@/lib/apollo/queriesEthereum";
@@ -95,7 +96,7 @@ export default ChainApps;
 //   totalFeesUSD;
 //   totalDAFeesUSD;
 const AccountRow = ({ acc }: any) => {
-  const accountDetails = getAppDetailsFromAppBook(acc?.id);
+  const { data: accountDetails } = useEthereumDaAppsDataBasicSingle(acc?.id);
 
   const totalSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));

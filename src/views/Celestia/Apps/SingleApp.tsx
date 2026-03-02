@@ -1,7 +1,12 @@
 "use client";
 import Header from "@/components/Header/Header";
 
-import { formatAddress, formatBytes, formatEthereumValue, parseCelestiaString } from "@/lib/utils";
+import {
+  formatAddress,
+  formatBytes,
+  formatEthereumValue,
+  parseCelestiaString,
+} from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import { useQuery as useQueryFetch } from "@tanstack/react-query";
 import BigNumber from "bignumber.js";
@@ -50,7 +55,7 @@ function SingleApp({ appId }: Props) {
         <div className=" w-full lg:flex-row flex-col flex justify-between gap-4 items-center lg:my-0 my-[5em]">
           <h2 className="lg:text-xl text-xl font-semibold">Celestia Apps</h2>
         </div>
-        <L2BeatCard account={appId} />
+        <L2BeatCard account={data?.appEntity?.name} />
 
         <div className="w-full space-y-4 ">
           <div className="">

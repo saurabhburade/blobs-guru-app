@@ -1,14 +1,13 @@
+export const runtime = 'edge';
 import SingleBlock from "@/views/Ethereum/Blocks/SingleBlock";
-import SingleAccount from "@/views/Ethereum/SingleAccount";
-import SingleTxn from "@/views/Ethereum/Txn/SingleTxn";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
-  params: { _blockNumber: string };
+  params: Promise<{ _blockNumber: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const address = params._blockNumber;
+  const { _blockNumber: address } = await params;
 
   return {
     title: `EIP 4844 | Block ${address}`,
@@ -19,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SingleTxPage({ params }: Props) {
-  const { _blockNumber } = params;
+export default async function SingleTxPage({ params }: Props) {
+  const { _blockNumber } = await params;
   return <SingleBlock blockNumber={_blockNumber} />;
 }
