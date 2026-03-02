@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import SingleApp from "@/views/Celestia/Apps/SingleApp";
 import SingleAccount from "@/views/Ethereum/SingleAccount";
 import { Metadata, ResolvingMetadata } from "next";

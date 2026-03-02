@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import SingleAccount from "@/views/Ethereum/SingleAccount";
 import { Metadata, ResolvingMetadata } from "next";
 import { checksumAddress } from "viem";

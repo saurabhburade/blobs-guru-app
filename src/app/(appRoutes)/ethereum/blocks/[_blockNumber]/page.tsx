@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import SingleBlock from "@/views/Ethereum/Blocks/SingleBlock";
 import SingleAccount from "@/views/Ethereum/SingleAccount";
 import SingleTxn from "@/views/Ethereum/Txn/SingleTxn";

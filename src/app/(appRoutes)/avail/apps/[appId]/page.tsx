@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import SingleAvailApp from "@/views/Avail/Apps/SingleAvailApp";
 import SingleAvailAccount from "@/views/Avail/SingleAvailAccount";
 import { Metadata, ResolvingMetadata } from "next";

@@ -1,4 +1,5 @@
 "use client";
+export const runtime = 'edge';
 import SingleAvailBlock from "@/views/Avail/Blocks/SingleAvailBlock";
 import SingleAvailTxn from "@/views/Avail/Txn/SingleAvailTxn";
 import SingleBlock from "@/views/Blocks/SingleBlock";
@@ -7,7 +8,7 @@ import React from "react";
 
 type Props = {};
 
-function SingleAvailBlockPage({}: Props) {
+function SingleAvailBlockPage({ }: Props) {
   const { _hash = "" } = useParams();
 
   return <SingleAvailTxn hash={_hash as string} />;

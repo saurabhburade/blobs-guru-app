@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import SingleAccount from "@/views/Ethereum/SingleAccount";
 import SingleTxn from "@/views/Ethereum/Txn/SingleTxn";
 import { Metadata, ResolvingMetadata } from "next";
