@@ -8,12 +8,8 @@ import {
 
 import { ETHEREUM_DAY_DATAS_WITH_DURATION_WITH_APPS_QUERY } from "@/lib/apollo/queriesEthereum";
 import { formatDateDDMM } from "@/lib/time";
-import {
-  formatAddress,
-  formatBytes,
-  formatWrapedText,
-  getColorForIndex,
-} from "@/lib/utils";
+import { formatAddress, formatBytes, formatWrapedText } from "@/lib/utils";
+import { getAppSeriesColor, getAppSeriesId } from "./chartSeries";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import _ from "lodash";
@@ -52,7 +48,7 @@ export default function DASizeDayChart({ duration }: { duration: number }) {
         limit: 5,
       },
       client: apolloClient,
-    }
+    },
   );
 
   const chartDataFormated = useMemo(() => {
@@ -84,12 +80,14 @@ export default function DASizeDayChart({ duration }: { duration: number }) {
       ?.reverse();
 
     const keys = (datas as any[])?.map((e) => {
-      return e?.appDayDataParticipant?.nodes?.map((v: any) => v?.appId);
+      return e?.appDayDataParticipant?.nodes?.map((v: any) =>
+        getAppSeriesId(v?.appId),
+      );
     });
     const keysSet = _.uniq(_.flatten(keys));
 
     const accountDayDataParticipants = datas?.map(
-      (e: any) => e?.appDayDataParticipant?.nodes
+      (e: any) => e?.appDayDataParticipant?.nodes,
     );
 
     const chartDataList = [];
@@ -100,8 +98,14 @@ export default function DASizeDayChart({ duration }: { duration: number }) {
       for (let idx = 0; idx < accList?.length; idx++) {
         const accDayData = accList[idx];
         if (accDayData) {
+          const seriesId = getAppSeriesId(accDayData?.appId);
           // @ts-ignore
-          accDayDatasMap[`${accDayData?.appId}`] = accDayData?.totalByteSize;
+          accDayDatasMap[seriesId] = new BigNumber(
+            // @ts-ignore
+            accDayDatasMap[seriesId] ?? 0,
+          )
+            .plus(accDayData?.totalByteSize ?? 0)
+            .toNumber();
           sum += Number(accDayData?.totalByteSize);
         }
       }
@@ -123,20 +127,20 @@ export default function DASizeDayChart({ duration }: { duration: number }) {
   const cumulativeData = useMemo(() => {
     const totalDataSubmissionCount = _.sumBy(
       data?.collectiveDayData?.nodes,
-      "totalDataSubmissionCount"
+      "totalDataSubmissionCount",
     );
     const totalExtCount = _.sumBy(
       data?.collectiveDayData?.nodes,
-      "totalTxnCount"
+      "totalTxnCount",
     );
     const totalByteSize = _.sumBy(
       data?.collectiveDayData?.nodes,
-      "totalByteSize"
+      "totalByteSize",
     );
 
     return {
       totalDataSubmissionCountF: new BigNumber(
-        totalDataSubmissionCount
+        totalDataSubmissionCount,
       ).toFormat(),
       totalDataSubmissionCount,
       totalExtCountF: new BigNumber(totalExtCount).toFormat(),
@@ -186,12 +190,12 @@ export default function DASizeDayChart({ duration }: { duration: number }) {
             fill="url(#colorUv)"
             radius={10}
           ></Bar> */}
-          {chartDataFormated?.keys?.reverse()?.map((key, idx) => {
+          {[...(chartDataFormated?.keys ?? [])].reverse().map((key) => {
             return (
               <Bar
                 key={key}
                 dataKey={key}
-                fill={getColorForIndex(idx, chartDataFormated?.keys?.length)}
+                fill={getAppSeriesColor(key)}
                 stackId="a"
                 radius={[0, 0, 0, 0]}
               ></Bar>
@@ -227,7 +231,7 @@ const CustomTooltipRaw = ({ active, payload, label, rotation }: any) => {
   if (active && payload && payload.length) {
     const sortedPayload = _.orderBy(payload, ["value"], ["desc"])?.map((v) => {
       const appName = getAccountDetailsFromAddressBook(
-        (v?.name as string)?.toLowerCase()?.split("-")[0]
+        (v?.name as string)?.toLowerCase()?.split("-")[0],
       );
       return {
         ...v,
