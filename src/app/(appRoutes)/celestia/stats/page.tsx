@@ -1,8 +1,7 @@
-import StatsView from "@/views/Celestia/Stats/StatsView";
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { CelestiaStatsView } from "@/views/Celestia/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Celestia | Stats",
@@ -13,9 +12,5 @@ export const metadata: Metadata = {
   },
 };
 export default function StatsPage() {
-  return (
-    <div className="">
-      <StatsView />
-    </div>
-  );
+  return <CelestiaStatsView />;
 }

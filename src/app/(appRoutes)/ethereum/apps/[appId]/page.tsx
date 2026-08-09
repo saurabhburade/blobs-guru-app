@@ -1,10 +1,13 @@
-export const runtime = 'edge';
-import SingleAccount from "@/views/Ethereum/SingleAccount";
-import { Metadata, ResolvingMetadata } from "next";
+import { SingleAccountView } from "@/views/Ethereum/ServerViews";
+import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ appId: string }>;
+  searchParams?: { txnPage?: string };
 };
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { appId } = await params;
@@ -18,7 +21,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function SingleAppPage({ params }: Props) {
+export default async function SingleAppPage({ params, searchParams }: Props) {
   const { appId } = await params;
-  return <SingleAccount account={appId as string} />;
+  return (
+    <SingleAccountView
+      account={appId}
+      txnPage={Number(searchParams?.txnPage || 1)}
+      basePath={`/ethereum/apps/${encodeURIComponent(appId)}`}
+    />
+  );
 }

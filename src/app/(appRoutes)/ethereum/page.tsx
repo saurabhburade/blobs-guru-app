@@ -1,9 +1,5 @@
-import CelestiaSummary from "@/views/Celestia/CelestiaSummary";
-import EthereumSummary from "@/views/Ethereum/EthereumSummary";
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { SummaryView } from "@/views/Ethereum/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "EIP 4844 | Analyze DA",
@@ -13,10 +9,12 @@ export const metadata: Metadata = {
     images: ["/summary-ethereum.jpeg"],
   },
 };
-export default function Page() {
-  return (
-    <div className="">
-      <EthereumSummary />
-    </div>
-  );
+export const revalidate = 300;
+
+export default function Page({
+  searchParams,
+}: {
+  searchParams?: { blocksPage?: string };
+}) {
+  return <SummaryView blocksPage={Number(searchParams?.blocksPage || 1)} />;
 }

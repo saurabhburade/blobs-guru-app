@@ -1,13 +1,5 @@
-import StatsDataView from "@/views/Stats/StatsDataView";
+import { redirect } from "next/navigation";
 
-type Props = {};
-
-function Statspage({}: Props) {
-  return (
-    <div>
-      <StatsDataView />
-    </div>
-  );
+export default function StatsPage() {
+  redirect("/ethereum/stats");
 }
-
-export default Statspage;

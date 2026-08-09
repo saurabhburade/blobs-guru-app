@@ -1,9 +1,5 @@
-import CelestiaSummary from "@/views/Celestia/CelestiaSummary";
-import EthereumSummary from "@/views/Ethereum/EthereumSummary";
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { SummaryView } from "@/views/Ethereum/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Blobs Guru",
@@ -16,7 +12,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <div className="">
-      <EthereumSummary />
+      <SummaryView />
     </div>
   );
 }

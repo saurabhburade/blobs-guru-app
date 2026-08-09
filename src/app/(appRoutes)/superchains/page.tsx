@@ -1,11 +1,5 @@
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
-import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default function SuperchainsPage() {
-  return (
-    <div className="">
-      <Superchains />
-    </div>
-  );
+  redirect("/ethereum/apps");
 }

@@ -2,11 +2,7 @@ import type { Metadata } from "next";
 
 import "react-tooltip/dist/react-tooltip.css";
 import "../globals.css";
-
-import { Providers } from "./providers";
 import { ThemeProvider } from "next-themes";
-import Script from "next/script";
-import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "Ethereum Blobs Explorer: Analyze L2 Transactions & EIP-4844 Data",
@@ -18,9 +14,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const GOOGLE_ANALYTICS_ID = "G-WZGPHNZWNN";
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="icon"
@@ -72,21 +67,8 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider enableSystem={false} defaultTheme="dark">
-          <Providers>{children}</Providers>
+          {children}
         </ThemeProvider>
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GOOGLE_ANALYTICS_ID}');
-          `}
-        </Script>
-        {/* <Footer /> */}
       </body>
     </html>
   );

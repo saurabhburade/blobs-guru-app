@@ -1,5 +1,5 @@
-export const runtime = 'edge';
-import SingleAvailApp from "@/views/Avail/Apps/SingleAvailApp";
+export const dynamic = "force-dynamic";
+import { AvailAppView } from "@/views/Avail/ServerViews";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
@@ -20,5 +20,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SingleAvailAppPage({ params }: Props) {
   const { appId } = await params;
-  return <SingleAvailApp appId={appId as string} />;
+  return <AvailAppView id={appId} />;
 }

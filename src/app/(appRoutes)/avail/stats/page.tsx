@@ -1,10 +1,7 @@
-import AvailAppsSummary from "@/views/Avail/Apps/AvailAppsSummary";
-import AvailSummary from "@/views/Avail/AvailSummary";
-import AvailStatsView from "@/views/Avail/Stats/AvailStatsView";
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { AvailStatsView } from "@/views/Avail/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Avail | Stats",
@@ -15,9 +12,5 @@ export const metadata: Metadata = {
   },
 };
 export default function AvailStatsPage() {
-  return (
-    <div className="">
-      <AvailStatsView />
-    </div>
-  );
+  return <AvailStatsView />;
 }

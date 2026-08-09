@@ -1,16 +1,12 @@
-"use client";
-import dynamic from "next/dynamic";
-export const runtime = 'edge';
-const SingleBlock = dynamic(() => import("@/views/Blocks/SingleBlock"), { ssr: false });
-import { useParams } from "next/navigation";
-import React from "react";
+import { redirect } from "next/navigation";
 
-type Props = {};
+export const runtime = "edge";
 
-function SingleBlockPage({ }: Props) {
-  const { _blockNumber = 1 } = useParams();
+type Props = {
+  params: Promise<{ _blockNumber: string }>;
+};
 
-  return <SingleBlock blockNumber={Number(_blockNumber)} />;
+export default async function SingleBlockPage({ params }: Props) {
+  const { _blockNumber } = await params;
+  redirect(`/ethereum/blocks/${encodeURIComponent(_blockNumber)}`);
 }
-
-export default SingleBlockPage;

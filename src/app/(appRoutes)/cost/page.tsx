@@ -1,15 +1,5 @@
-import AccountsView from "@/views/Accounts/AccountsView";
-import Blocks from "@/views/Blocks/Blocks";
-import CostView from "@/views/Cost/CostView";
-
-import SizeView from "@/views/Size/SizeView";
-import TransactionsView from "@/views/Transactions/TransactionsView";
-import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default function CostPage() {
-  return (
-    <div className="">
-      <CostView />
-    </div>
-  );
+  redirect("/ethereum/stats");
 }

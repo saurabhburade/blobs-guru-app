@@ -1,17 +1,11 @@
-"use client";
-import dynamic from "next/dynamic";
-export const runtime = 'edge';
-const SingleBlock = dynamic(() => import("@/views/Celestia/Blocks/SingleBlock"), { ssr: false });
+export const dynamic = "force-dynamic";
+import { CelestiaBlockView } from "@/views/Celestia/ServerViews";
 
-import { useParams } from "next/navigation";
-import React from "react";
+type Props = { params: Promise<{ _blockNumber: string }> };
 
-type Props = {};
-
-function SingleBlockPage({ }: Props) {
-  const { _blockNumber = 1 } = useParams();
-
-  return <SingleBlock blockNumber={Number(_blockNumber)} />;
+async function SingleBlockPage({ params }: Props) {
+  const { _blockNumber } = await params;
+  return <CelestiaBlockView id={_blockNumber} />;
 }
 
 export default SingleBlockPage;

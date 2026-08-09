@@ -1,15 +1,14 @@
-export const runtime = 'edge';
-import SingleAccount from "@/views/Ethereum/SingleAccount";
-import { Metadata, ResolvingMetadata } from "next";
-import { checksumAddress } from "viem";
+import { SingleAccountView } from "@/views/Ethereum/ServerViews";
+import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ address: string }>;
+  searchParams?: { txnPage?: string };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { address: rawAddress } = await params;
-  const address = checksumAddress(rawAddress as `0xString`, 1);
+  const address = rawAddress;
 
   return {
     title: `EIP 4844 | ${address}`,
@@ -20,8 +19,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function SingleAccPage({ params }: Props) {
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+export default async function SingleAccPage({ params, searchParams }: Props) {
   const { address } = await params;
 
-  return <SingleAccount account={checksumAddress(address as `0xString`, 1)} />;
+  return (
+    <SingleAccountView
+      account={address}
+      txnPage={Number(searchParams?.txnPage || 1)}
+    />
+  );
 }

@@ -1,7 +1,11 @@
-import { redirect } from "next/navigation";
+import { BlocksView } from "@/views/Ethereum/ServerViews";
 
-import Image from "next/image";
+export const revalidate = 300;
 
-export default function HomePage() {
-  redirect("/ethereum");
+export default async function BlocksPage({
+  searchParams,
+}: {
+  searchParams?: { page?: string };
+}) {
+  return <BlocksView page={Number(searchParams?.page || 1)} />;
 }

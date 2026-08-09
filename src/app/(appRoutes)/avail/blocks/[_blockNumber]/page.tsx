@@ -1,17 +1,11 @@
-"use client";
-import dynamic from "next/dynamic";
-export const runtime = 'edge';
-const SingleAvailBlock = dynamic(() => import("@/views/Avail/Blocks/SingleAvailBlock"), { ssr: false });
-const SingleBlock = dynamic(() => import("@/views/Blocks/SingleBlock"), { ssr: false });
-import { useParams } from "next/navigation";
-import React from "react";
+export const dynamic = "force-dynamic";
+import { AvailBlockView } from "@/views/Avail/ServerViews";
 
-type Props = {};
+type Props = { params: Promise<{ _blockNumber: string }> };
 
-function SingleAvailBlockPage({ }: Props) {
-  const { _blockNumber = 1 } = useParams();
-
-  return <SingleAvailBlock blockNumber={Number(_blockNumber)} />;
+async function SingleAvailBlockPage({ params }: Props) {
+  const { _blockNumber } = await params;
+  return <AvailBlockView id={_blockNumber} />;
 }
 
 export default SingleAvailBlockPage;

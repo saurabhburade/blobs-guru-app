@@ -1,10 +1,8 @@
 
-import AppsSummary from "@/views/Celestia/Apps/AppsSummary";
-
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { CelestiaAppsView } from "@/views/Celestia/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Celestia | Apps",
@@ -14,10 +12,10 @@ export const metadata: Metadata = {
     images: ["/summary-celestia.jpeg"],
   },
 };
-export default function AppsPage() {
-  return (
-    <div className="">
-      <AppsSummary />
-    </div>
-  );
+export default function AppsPage({
+  searchParams,
+}: {
+  searchParams?: { page?: string };
+}) {
+  return <CelestiaAppsView page={Number(searchParams?.page || 1)} />;
 }

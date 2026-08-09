@@ -1,8 +1,7 @@
-import CelestiaSummary from "@/views/Celestia/CelestiaSummary";
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { CelestiaSummaryView } from "@/views/Celestia/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Celestia | Analyze DA",
@@ -12,10 +11,12 @@ export const metadata: Metadata = {
     images: ["/summary-celestia.jpeg"],
   },
 };
-export default function Page() {
+export default function Page({
+  searchParams,
+}: {
+  searchParams?: { blocksPage?: string };
+}) {
   return (
-    <div className="">
-      <CelestiaSummary />
-    </div>
+    <CelestiaSummaryView blocksPage={Number(searchParams?.blocksPage || 1)} />
   );
 }

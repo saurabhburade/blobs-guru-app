@@ -1,9 +1,10 @@
-export const runtime = 'edge';
-import SingleAccount from "@/views/Celestia/SingleAccount";
+export const dynamic = "force-dynamic";
+import { CelestiaAccountView } from "@/views/Celestia/ServerViews";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
   params: Promise<{ address: string }>;
+  searchParams?: { txnPage?: string };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -18,7 +19,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function SingleAccPage({ params }: Props) {
+export default async function SingleAccPage({ params, searchParams }: Props) {
   const { address } = await params;
-  return <SingleAccount account={address} />;
+  return (
+    <CelestiaAccountView
+      id={address}
+      txnPage={Number(searchParams?.txnPage || 1)}
+    />
+  );
 }

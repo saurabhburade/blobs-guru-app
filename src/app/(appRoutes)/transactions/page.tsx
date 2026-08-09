@@ -1,11 +1,5 @@
-import Blocks from "@/views/Blocks/Blocks";
-import TransactionsView from "@/views/Transactions/TransactionsView";
-import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default function HomePage() {
-  return (
-    <div className="">
-      <TransactionsView />
-    </div>
-  );
+  redirect("/ethereum/txn");
 }

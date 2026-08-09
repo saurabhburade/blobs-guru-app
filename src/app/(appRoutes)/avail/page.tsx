@@ -1,8 +1,7 @@
-import AvailSummary from "@/views/Avail/AvailSummary";
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { AvailSummaryView } from "@/views/Avail/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Avail | Analyze DA",
@@ -12,10 +11,10 @@ export const metadata: Metadata = {
     images: ["/summary-avail.jpeg"],
   },
 };
-export default function AvailPage() {
-  return (
-    <div className="">
-      <AvailSummary />
-    </div>
-  );
+export default function AvailPage({
+  searchParams,
+}: {
+  searchParams?: { blocksPage?: string };
+}) {
+  return <AvailSummaryView blocksPage={Number(searchParams?.blocksPage || 1)} />;
 }

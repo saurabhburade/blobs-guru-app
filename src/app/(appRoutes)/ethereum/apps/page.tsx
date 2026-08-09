@@ -1,10 +1,5 @@
-import AppsSummary from "@/views/Celestia/Apps/AppsSummary";
-import AccountsView from "@/views/Ethereum/Accounts/AccountsView";
-
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { AccountsView } from "@/views/Ethereum/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "EIP 4844 | Rollups",
@@ -14,10 +9,12 @@ export const metadata: Metadata = {
     images: ["/summary-ethereum.jpeg"],
   },
 };
-export default function AppsPage() {
-  return (
-    <div className="">
-      <AccountsView />
-    </div>
-  );
+export const revalidate = 300;
+
+export default function AppsPage({
+  searchParams,
+}: {
+  searchParams?: { page?: string };
+}) {
+  return <AccountsView page={Number(searchParams?.page || 1)} />;
 }

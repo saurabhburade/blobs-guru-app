@@ -1,9 +1,8 @@
 
-import AccountsView from "@/views/Celestia/Accounts/AccountsView";
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { CelestiaAccountsView } from "@/views/Celestia/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Celestia | Accounts",
@@ -13,10 +12,10 @@ export const metadata: Metadata = {
     images: ["/summary-celestia.jpeg"],
   },
 };
-export default function AccountsPage() {
-  return (
-    <div className="">
-      <AccountsView />
-    </div>
-  );
+export default function AccountsPage({
+  searchParams,
+}: {
+  searchParams?: { page?: string };
+}) {
+  return <CelestiaAccountsView page={Number(searchParams?.page || 1)} />;
 }

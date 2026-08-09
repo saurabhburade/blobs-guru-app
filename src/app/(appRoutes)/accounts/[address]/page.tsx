@@ -1,18 +1,12 @@
-"use client";
-import dynamic from "next/dynamic";
-export const runtime = 'edge';
-const SingleAccount = dynamic(() => import("@/views/Accounts/SingleAccount"), { ssr: false });
-const SingleBlock = dynamic(() => import("@/views/Blocks/SingleBlock"), { ssr: false });
-const SingleTransaction = dynamic(() => import("@/views/Transactions/SingleTransaction"), { ssr: false });
-import { useParams } from "next/navigation";
-import React from "react";
+import { redirect } from "next/navigation";
 
-type Props = {};
+export const runtime = "edge";
 
-function SingleBlockPage({ }: Props) {
-  const { address = "" } = useParams();
+type Props = {
+  params: Promise<{ address: string }>;
+};
 
-  return <SingleAccount account={(address as string)?.toLowerCase()} />;
+export default async function SingleAccountPage({ params }: Props) {
+  const { address } = await params;
+  redirect(`/ethereum/${encodeURIComponent(address.toLowerCase())}`);
 }
-
-export default SingleBlockPage;

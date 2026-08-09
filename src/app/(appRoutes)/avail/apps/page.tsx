@@ -1,9 +1,7 @@
-import AvailAppsSummary from "@/views/Avail/Apps/AvailAppsSummary";
-import AvailSummary from "@/views/Avail/AvailSummary";
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { AvailAppsView } from "@/views/Avail/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Avail | Apps",
@@ -13,10 +11,10 @@ export const metadata: Metadata = {
     images: ["/summary-avail.jpeg"],
   },
 };
-export default function AvailAppsPage() {
-  return (
-    <div className="">
-      <AvailAppsSummary />
-    </div>
-  );
+export default function AvailAppsPage({
+  searchParams,
+}: {
+  searchParams?: { page?: string };
+}) {
+  return <AvailAppsView page={Number(searchParams?.page || 1)} />;
 }

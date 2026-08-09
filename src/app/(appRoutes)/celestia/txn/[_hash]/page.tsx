@@ -1,17 +1,11 @@
-"use client";
-import dynamic from "next/dynamic";
-export const runtime = 'edge';
+export const dynamic = "force-dynamic";
+import { CelestiaTxnView } from "@/views/Celestia/ServerViews";
 
-const SingleTxn = dynamic(() => import("@/views/Celestia/Txn/SingleTxn"), { ssr: false });
-import { useParams } from "next/navigation";
-import React from "react";
+type Props = { params: Promise<{ _hash: string }> };
 
-type Props = {};
-
-function SingleBlockPage({ }: Props) {
-  const { _hash = "" } = useParams();
-
-  return <SingleTxn hash={_hash as string} />;
+async function SingleBlockPage({ params }: Props) {
+  const { _hash } = await params;
+  return <CelestiaTxnView id={_hash} />;
 }
 
 export default SingleBlockPage;

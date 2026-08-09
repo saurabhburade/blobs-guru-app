@@ -1,11 +1,5 @@
-import Blocks from "@/views/Blocks/Blocks";
-import DataAvailability from "@/views/DataAvailability/DataAvailability";
-import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default function DAPage() {
-  return (
-    <div className="">
-      <DataAvailability />
-    </div>
-  );
+  redirect("/da/list");
 }

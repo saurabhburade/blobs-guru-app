@@ -1,6 +1,5 @@
-export const runtime = 'edge';
-import SingleTxn from "@/views/Ethereum/Txn/SingleTxn";
-import { Metadata, ResolvingMetadata } from "next";
+import { SingleTxnView } from "@/views/Ethereum/ServerViews";
+import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ _hash: string }>;
@@ -18,7 +17,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function SingleTxPage({ params }: Props) {
   const { _hash } = await params;
-  return <SingleTxn hash={_hash} />;
+  return <SingleTxnView hash={_hash} />;
 }

@@ -1,9 +1,10 @@
-export const runtime = 'edge';
-import SingleApp from "@/views/Celestia/Apps/SingleApp";
+export const dynamic = "force-dynamic";
+import { CelestiaAppView } from "@/views/Celestia/ServerViews";
 import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
   params: Promise<{ appId: string }>;
+  searchParams?: { txnPage?: string };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -18,7 +19,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function SingleAppPage({ params }: Props) {
+export default async function SingleAppPage({ params, searchParams }: Props) {
   const { appId } = await params;
-  return <SingleApp appId={appId as string} />;
+  return (
+    <CelestiaAppView
+      id={appId}
+      txnPage={Number(searchParams?.txnPage || 1)}
+    />
+  );
 }

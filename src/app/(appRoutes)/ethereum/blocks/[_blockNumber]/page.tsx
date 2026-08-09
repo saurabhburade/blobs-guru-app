@@ -1,6 +1,5 @@
-export const runtime = 'edge';
-import SingleBlock from "@/views/Ethereum/Blocks/SingleBlock";
-import { Metadata, ResolvingMetadata } from "next";
+import { SingleBlockView } from "@/views/Ethereum/ServerViews";
+import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ _blockNumber: string }>;
@@ -18,7 +17,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function SingleTxPage({ params }: Props) {
   const { _blockNumber } = await params;
-  return <SingleBlock blockNumber={_blockNumber} />;
+  return <SingleBlockView blockNumber={_blockNumber} />;
 }

@@ -1,8 +1,5 @@
-import StatsView from "@/views/Ethereum/Stats/StatsView";
-import Home from "@/views/Home/Home";
-import Superchains from "@/views/OP/Superchains";
+import { StatsView } from "@/views/Ethereum/ServerViews";
 import { Metadata } from "next";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "EIP 4844 | Stats",
@@ -12,10 +9,8 @@ export const metadata: Metadata = {
     images: ["/summary-ethereum.jpeg"],
   },
 };
-export default function StatsPage() {
-  return (
-    <div className="">
-      <StatsView />
-    </div>
-  );
+export const revalidate = 300;
+
+export default async function StatsPage() {
+  return <StatsView />;
 }
