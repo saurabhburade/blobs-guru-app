@@ -44,6 +44,7 @@ import {
 import { EmptyState, MetricGrid } from "./components/ServerMetrics";
 import { ServerPagination } from "@/views/DaServerView";
 import { getAppSeriesColor, getAppSeriesId } from "./Stats/DayData/chartSeries";
+import SummaryBlocksTableIsland from "./components/SummaryBlocksTableIsland";
 import { formatAddress, formatWrapedText } from "@/lib/utils";
 import AvailL2BeatServerCard from "../Avail/L2BeatServerCard";
 import { timeAgo as originalTimeAgo } from "@/lib/time";
@@ -311,15 +312,20 @@ export async function SummaryView({
           <h2 className="text-lg font-semibold">Latest blob blocks</h2>
           <Link className="link" href="/ethereum/blocks">View all</Link>
         </div>
-        <BlockTable
-          rows={nodes(blocks?.blockData)}
-          pagination={{
-            page: safeBlocksPage,
-            pageSize: blocksPageSize,
-            totalCount: number(blocks?.blockData?.totalCount),
-            basePath: "/ethereum",
-            paramName: "blocksPage",
-          }}
+        <SummaryBlocksTableIsland
+          rows={nodes(blocks?.blockData).map((row: AnyRecord) => ({
+            id: String(row.id),
+            block: integer(row.id),
+            timestamp: date(row.timestamp),
+            size: bytes(row.totalBlobSize),
+            blobTransactions: integer(row.totalBlobTransactionCount),
+            transactions: integer(row.totalTransactionCount),
+            events: integer(row.totalEventsCount),
+            fees: `${money(number(row.totalBlockFeeNatve) / 1e18)} ETH`,
+          }))}
+          page={safeBlocksPage}
+          pageSize={blocksPageSize}
+          totalCount={number(blocks?.blockData?.totalCount)}
         />
       </section>
     </EthereumShell>

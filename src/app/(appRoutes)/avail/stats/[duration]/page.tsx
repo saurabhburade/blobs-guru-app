@@ -1,7 +1,10 @@
 import { AvailStatsView } from "@/views/Avail/ServerViews";
+import { notFound } from "next/navigation";
 
 export const revalidate = 300;
-export const dynamicParams = false;
+export const dynamicParams = true;
+
+const durations = ["7d", "30d", "90d"] as const;
 
 export function generateStaticParams() {
   return [{ duration: "7d" }, { duration: "30d" }, { duration: "90d" }];
@@ -13,5 +16,6 @@ export default async function AvailDurationStatsPage({
   params: Promise<{ duration: string }>;
 }) {
   const { duration } = await params;
-  return <AvailStatsView duration={Number.parseInt(duration, 10) || 90} />;
+  if (!durations.includes(duration as (typeof durations)[number])) notFound();
+  return <AvailStatsView duration={Number.parseInt(duration, 10)} />;
 }
