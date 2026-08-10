@@ -4,7 +4,7 @@ import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
   params: Promise<{ address: string }>;
-  searchParams?: { txnPage?: string };
+  searchParams?: Promise<{ txnPage?: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -24,10 +24,12 @@ export default async function SingleAvailAccPage({
   searchParams,
 }: Props) {
   const { address } = await params;
+  const query = await searchParams;
+
   return (
     <AvailAccountView
       id={address}
-      txnPage={Number(searchParams?.txnPage || 1)}
+      txnPage={Number(query?.txnPage || 1)}
     />
   );
 }

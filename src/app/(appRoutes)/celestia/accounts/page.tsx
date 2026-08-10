@@ -12,10 +12,12 @@ export const metadata: Metadata = {
     images: ["/summary-celestia.jpeg"],
   },
 };
-export default function AccountsPage({
+export default async function AccountsPage({
   searchParams,
 }: {
-  searchParams?: { page?: string };
+  searchParams?: Promise<{ page?: string }>;
 }) {
-  return <CelestiaAccountsView page={Number(searchParams?.page || 1)} />;
+  const query = await searchParams;
+
+  return <CelestiaAccountsView page={Number(query?.page || 1)} />;
 }

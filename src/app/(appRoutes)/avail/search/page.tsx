@@ -2,6 +2,12 @@ import { AvailSearchView } from "@/views/Avail/ServerViews";
 
 export const dynamic = "force-dynamic";
 
-export default function AvailSearchPage({ searchParams }: { searchParams?: { q?: string } }) {
-  return <AvailSearchView query={searchParams} />;
+export default async function AvailSearchPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ q?: string }>;
+}) {
+  const query = await searchParams;
+
+  return <AvailSearchView query={query} />;
 }

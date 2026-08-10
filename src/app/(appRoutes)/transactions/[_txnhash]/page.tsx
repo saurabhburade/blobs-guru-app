@@ -1,7 +1,5 @@
 import { redirect } from "next/navigation";
 
-export const runtime = "edge";
-
 type Props = {
   params: Promise<{ _txnhash: string }>;
 };

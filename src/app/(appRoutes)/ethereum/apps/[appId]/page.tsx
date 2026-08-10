@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ appId: string }>;
-  searchParams?: { txnPage?: string };
+  searchParams?: Promise<{ txnPage?: string }>;
 };
 
 export const dynamic = "force-dynamic";
@@ -23,10 +23,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SingleAppPage({ params, searchParams }: Props) {
   const { appId } = await params;
+  const query = await searchParams;
   return (
     <SingleAccountView
       account={appId}
-      txnPage={Number(searchParams?.txnPage || 1)}
+      txnPage={Number(query?.txnPage || 1)}
       basePath={`/ethereum/apps/${encodeURIComponent(appId)}`}
     />
   );

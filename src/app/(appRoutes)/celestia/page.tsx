@@ -11,12 +11,14 @@ export const metadata: Metadata = {
     images: ["/summary-celestia.jpeg"],
   },
 };
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams?: { blocksPage?: string };
+  searchParams?: Promise<{ blocksPage?: string }>;
 }) {
+  const query = await searchParams;
+
   return (
-    <CelestiaSummaryView blocksPage={Number(searchParams?.blocksPage || 1)} />
+    <CelestiaSummaryView blocksPage={Number(query?.blocksPage || 1)} />
   );
 }

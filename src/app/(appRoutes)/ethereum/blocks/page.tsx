@@ -5,7 +5,8 @@ export const revalidate = 300;
 export default async function BlocksPage({
   searchParams,
 }: {
-  searchParams?: { page?: string };
+  searchParams?: Promise<{ page?: string }>;
 }) {
-  return <BlocksView page={Number(searchParams?.page || 1)} />;
+  const query = await searchParams;
+  return <BlocksView page={Number(query?.page || 1)} />;
 }

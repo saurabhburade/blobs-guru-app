@@ -11,10 +11,11 @@ export const metadata: Metadata = {
 };
 export const revalidate = 300;
 
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams?: { blocksPage?: string };
+  searchParams?: Promise<{ blocksPage?: string }>;
 }) {
-  return <SummaryView blocksPage={Number(searchParams?.blocksPage || 1)} />;
+  const query = await searchParams;
+  return <SummaryView blocksPage={Number(query?.blocksPage || 1)} />;
 }

@@ -4,7 +4,7 @@ import { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
   params: Promise<{ appId: string }>;
-  searchParams?: { txnPage?: string };
+  searchParams?: Promise<{ txnPage?: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -21,10 +21,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SingleAppPage({ params, searchParams }: Props) {
   const { appId } = await params;
+  const query = await searchParams;
+
   return (
     <CelestiaAppView
       id={appId}
-      txnPage={Number(searchParams?.txnPage || 1)}
+      txnPage={Number(query?.txnPage || 1)}
     />
   );
 }

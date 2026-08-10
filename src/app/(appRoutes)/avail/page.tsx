@@ -11,10 +11,12 @@ export const metadata: Metadata = {
     images: ["/summary-avail.jpeg"],
   },
 };
-export default function AvailPage({
+export default async function AvailPage({
   searchParams,
 }: {
-  searchParams?: { blocksPage?: string };
+  searchParams?: Promise<{ blocksPage?: string }>;
 }) {
-  return <AvailSummaryView blocksPage={Number(searchParams?.blocksPage || 1)} />;
+  const query = await searchParams;
+
+  return <AvailSummaryView blocksPage={Number(query?.blocksPage || 1)} />;
 }

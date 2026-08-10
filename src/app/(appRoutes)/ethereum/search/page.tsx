@@ -8,10 +8,11 @@ export const metadata: Metadata = {
   description: "Search Ethereum blob accounts and rollups.",
 };
 
-export default function EthereumSearchPage({
+export default async function EthereumSearchPage({
   searchParams,
 }: {
-  searchParams?: { query?: string };
+  searchParams?: Promise<{ query?: string }>;
 }) {
-  return <SummaryView query={searchParams?.query?.slice(0, 80)} />;
+  const query = await searchParams;
+  return <SummaryView query={query?.query?.slice(0, 80)} />;
 }

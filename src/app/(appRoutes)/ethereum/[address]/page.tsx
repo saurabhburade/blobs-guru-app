@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 type Props = {
   params: Promise<{ address: string }>;
-  searchParams?: { txnPage?: string };
+  searchParams?: Promise<{ txnPage?: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -24,11 +24,12 @@ export const revalidate = 0;
 
 export default async function SingleAccPage({ params, searchParams }: Props) {
   const { address } = await params;
+  const query = await searchParams;
 
   return (
     <SingleAccountView
       account={address}
-      txnPage={Number(searchParams?.txnPage || 1)}
+      txnPage={Number(query?.txnPage || 1)}
     />
   );
 }
