@@ -13,7 +13,7 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "next start",
     "lint": "lint-staged",
-    "lint:next": "next lint",
+    "lint:next": "eslint .",
     "prepare": "husky",
     "check-types": "tsc --noEmit --pretty",
     "commit": "cz"
@@ -34,7 +34,7 @@
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.447.0",
     "motion-number": "^0.1.7",
-    "next": "15.5.21",
+    "next": "16.3.0",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
@@ -57,8 +57,8 @@
     "@types/react-dom": "^18",
     "commitizen": "^4.3.0",
     "daisyui": "^4.12.12",
-    "eslint": "^8",
-    "eslint-config-next": "15.5.21",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "husky": "^9.1.5",
     "lint-staged": "^15.2.10",
@@ -67,6 +67,9 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "wrangler": "4.120.0"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   },
   "config": {
     "commitizen": {
