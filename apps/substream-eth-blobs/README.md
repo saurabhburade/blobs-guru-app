@@ -1,0 +1,2 @@
+# Substreams-powered subgraph: Blobs
+

@@ -1,0 +1,26 @@
+{
+  "name": "blobs-explorer",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "codegen": "graph codegen",
+    "deploy": "yarn build && graph deploy --studio blobs-explorer",
+    "build": "graph build",
+    "substreams:build": "cargo build --target wasm32-unknown-unknown --release",
+    "substreams:clean": "rm -rf ./target && rm -rf ./src/pb",
+    "substreams:package": "substreams pack ./substreams.yaml",
+    "substreams:prepare": "yarn substreams:protogen && yarn substreams:build && yarn substreams:package",
+    "substreams:protogen": "substreams protogen ./substreams.yaml --exclude-paths='sf/substreams,google'",
+    "substreams:stream": "substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml map_block_full -s 12292922 -t +10",
+    "protoc": "protoc --plugin=protoc-gen-as=./node_modules/.bin/as-proto-gen --as_out=src/pb/ --proto_path=./proto/ ./proto/*.proto"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "0.71.2"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-ts": "^0.35.1",
+    "as-proto": "^1.3.0",
+    "as-proto-gen": "^1.3.0",
+    "assemblyscript": "^0.27.30"
+  }
+}

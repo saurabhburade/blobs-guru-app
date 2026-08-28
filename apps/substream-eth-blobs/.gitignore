@@ -1,0 +1,9 @@
+*.spkg
+target/
+.idea
+
+node_modules/
+run.sh
+build
+generated
+replay.log

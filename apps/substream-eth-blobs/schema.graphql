@@ -1,0 +1,291 @@
+type Contract @entity {
+  id: Bytes!
+
+  "The timestamp when the contract was deployed"
+  timestamp: String!
+
+  "The block number of the contract deployment"
+  blockNumber: BigInt!
+}
+
+enum TransactionTraceStatus {
+  UNKNOWN
+  SUCCEEDED
+  FAILED
+  REVERTED
+  # Add other statuses as needed
+}
+
+type BlobTransaction @entity {
+  id: Bytes!
+  to: String!
+  nonce: BigInt!
+  gasPrice: BigDecimal
+  gasLimit: BigDecimal!
+  value: BigDecimal
+
+  status: BigDecimal!
+  currentEthPrice: BigDecimal!
+  # v: Uint8Array!
+  # r: Uint8Array!
+  # s: Uint8Array!
+  gasUsed: BigDecimal
+  cumulativeGasUsed: BigDecimal
+  totalFeeEth: BigDecimal
+  totalFeeUSD: BigDecimal!
+  totalFeeBurnedETH: BigDecimal!
+  totalFeeBurnedUSD: BigDecimal!
+  # type: String!  # Replace with actual Type if it's an enum or another type
+  # accessList: [AccessTuple!]!
+  maxFeePerGas: BigDecimal
+  maxPriorityFeePerGas: BigDecimal
+  index: BigDecimal
+  hash: String!
+  input: String
+  from: String!
+  miner: String!
+  returnData: String
+  publicKey: String
+  # beginOrdinal: u64!
+  # endOrdinal: u64!
+  # status: TransactionTraceStatus!
+  # receipt: TransactionReceipt
+  # calls: [Call!]!
+  blobGas: BigDecimal
+  blobGasFeeCap: BigDecimal
+  blobHashes: [String!]
+  blobHashesLength: BigDecimal
+  blobGasPrice: BigDecimal
+  stateRoot: String
+  blobGasEth: BigDecimal
+  blobGasUSD: BigDecimal!
+  blockNumber: BigDecimal!
+  timestamp: BigDecimal
+}
+type CollectiveData @entity {
+  id: Bytes!
+  totalBlobTransactionCount: BigDecimal!
+  avgEthPrice: BigDecimal!
+  currentEthPrice: BigDecimal!
+  totalGasEth: BigDecimal!
+  totalGasUSD: BigDecimal!
+  totalFeeEth: BigDecimal!
+  totalFeeUSD: BigDecimal!
+  totalValue: BigDecimal!
+  totalValueEth: BigDecimal!
+  totalValueUSD: BigDecimal!
+  totalFeeBurnedETH: BigDecimal!
+  totalFeeBurnedUSD: BigDecimal!
+  totalGasUsed: BigDecimal!
+  totalCumulativeGasUsed: BigDecimal!
+
+  totalBlobGas: BigDecimal!
+  totalBlobGasEth: BigDecimal!
+  totalBlobGasUSD: BigDecimal!
+  totalBlobGasFeeCap: BigDecimal!
+  totalBlobHashesCount: BigDecimal!
+  lastUpdatedBlock: BigDecimal
+  totalBlobBlocks: BigDecimal
+  totalBlobAccounts: BigDecimal
+  totalValidatorAccounts: BigDecimal
+  totalTransactionCount: BigDecimal!
+
+  totalTransactionCountLegacy: BigDecimal!
+  totalTransactionCountAccessList: BigDecimal!
+  totalTransactionCountDynamicFee: BigDecimal!
+}
+type BlobBlockData @entity {
+  id: ID!
+  totalBlobTransactionCount: BigDecimal!
+  totalTransactionCount: BigDecimal!
+  avgEthPrice: BigDecimal!
+  currentEthPrice: BigDecimal!
+  totalBlockFeeEth: BigDecimal!
+  totalBlockFeeUSD: BigDecimal!
+  totalGasEth: BigDecimal!
+  totalGasUSD: BigDecimal!
+  totalFeeEth: BigDecimal!
+  totalFeeUSD: BigDecimal!
+  totalValue: BigDecimal!
+  totalValueEth: BigDecimal!
+  totalValueUSD: BigDecimal!
+  totalFeeBurnedETH: BigDecimal!
+  totalFeeBurnedUSD: BigDecimal!
+  totalGasUsed: BigDecimal!
+  totalCumulativeGasUsed: BigDecimal!
+
+  totalBlobGas: BigDecimal!
+  totalBlobGasEth: BigDecimal!
+  totalBlobGasUSD: BigDecimal!
+  totalBlobGasFeeCap: BigDecimal!
+  totalBlobHashesCount: BigDecimal!
+  blockNumber: BigDecimal
+  timestamp: BigDecimal
+
+  size: BigDecimal
+  totalBlobAccounts: BigDecimal
+
+  totalTransactionCountLegacy: BigDecimal!
+  totalTransactionCountAccessList: BigDecimal!
+  totalTransactionCountDynamicFee: BigDecimal!
+}
+
+type BlobsDayData @entity {
+  id: ID!
+  totalBlobTransactionCount: BigDecimal!
+  avgEthPrice: BigDecimal!
+  currentEthPrice: BigDecimal!
+  totalGasEth: BigDecimal!
+  totalGasUSD: BigDecimal!
+  totalFeeEth: BigDecimal!
+  totalFeeUSD: BigDecimal!
+  totalValue: BigDecimal!
+  totalValueEth: BigDecimal!
+  totalValueUSD: BigDecimal!
+  totalFeeBurnedETH: BigDecimal!
+  totalFeeBurnedUSD: BigDecimal!
+  totalGasUsed: BigDecimal!
+  totalCumulativeGasUsed: BigDecimal!
+
+  totalBlobGas: BigDecimal!
+  totalBlobGasEth: BigDecimal!
+  totalBlobGasUSD: BigDecimal!
+  totalBlobGasFeeCap: BigDecimal!
+  totalBlobHashesCount: BigDecimal!
+  previousBlobsDayData: BlobsDayData
+  dayStartTimestamp: BigDecimal
+  dayStartBlock: BigDecimal
+  lastUpdatedBlock: BigDecimal
+  totalBlobBlocks: BigDecimal
+  totalBlobAccounts: BigDecimal
+  totalValidatorAccounts: BigDecimal
+
+  totalTransactionCount: BigDecimal!
+
+  totalTransactionCountLegacy: BigDecimal!
+  totalTransactionCountAccessList: BigDecimal!
+  totalTransactionCountDynamicFee: BigDecimal!
+}
+type BlobsHourData @entity {
+  id: ID!
+  totalBlobTransactionCount: BigDecimal!
+  avgEthPrice: BigDecimal!
+  currentEthPrice: BigDecimal!
+  totalGasEth: BigDecimal!
+  totalGasUSD: BigDecimal!
+  totalFeeEth: BigDecimal!
+  totalFeeUSD: BigDecimal!
+  totalValue: BigDecimal!
+  totalValueEth: BigDecimal!
+  totalValueUSD: BigDecimal!
+  totalFeeBurnedETH: BigDecimal!
+  totalFeeBurnedUSD: BigDecimal!
+  totalGasUsed: BigDecimal!
+  totalCumulativeGasUsed: BigDecimal!
+
+  totalBlobGas: BigDecimal!
+  totalBlobGasEth: BigDecimal!
+  totalBlobGasUSD: BigDecimal!
+  totalBlobGasFeeCap: BigDecimal!
+  totalBlobHashesCount: BigDecimal!
+  previousBlobsHourData: BlobsHourData
+  hourStartTimestamp: BigDecimal
+  hourStartBlock: BigDecimal
+  lastUpdatedBlock: BigDecimal
+  totalBlobBlocks: BigDecimal
+  totalBlobAccounts: BigDecimal
+  totalValidatorAccounts: BigDecimal
+
+  totalTransactionCount: BigDecimal!
+  totalTransactionCountLegacy: BigDecimal!
+  totalTransactionCountAccessList: BigDecimal!
+  totalTransactionCountDynamicFee: BigDecimal!
+}
+type Account @entity {
+  id: Bytes!
+  totalBlobTransactionCount: BigDecimal!
+  type: BigInt!
+
+  currentEthPrice: BigDecimal!
+  totalGasEth: BigDecimal!
+  totalGasUSD: BigDecimal!
+  totalFeeEth: BigDecimal!
+  totalFeeUSD: BigDecimal!
+  totalValue: BigDecimal!
+  totalValueEth: BigDecimal!
+  totalValueUSD: BigDecimal!
+  totalFeeBurnedETH: BigDecimal!
+  totalFeeBurnedUSD: BigDecimal!
+  totalGasUsed: BigDecimal!
+  totalCumulativeGasUsed: BigDecimal!
+
+  totalBlobGas: BigDecimal!
+  totalBlobGasEth: BigDecimal!
+  totalBlobGasUSD: BigDecimal!
+  totalBlobGasFeeCap: BigDecimal!
+  totalBlobHashesCount: BigDecimal!
+  startBlock: BigDecimal
+  lastUpdatedBlock: BigDecimal
+  totalBlobBlocks: BigDecimal
+  accountDayData: [AccountDayData!] @derivedFrom(field: "account")
+  accountHourData: [AccountHourData!] @derivedFrom(field: "account")
+}
+type AccountDayData @entity {
+  id: ID!
+  account: Account!
+  totalBlobTransactionCount: BigDecimal!
+
+  currentEthPrice: BigDecimal!
+  totalGasEth: BigDecimal!
+  totalGasUSD: BigDecimal!
+  totalFeeEth: BigDecimal!
+  totalFeeUSD: BigDecimal!
+  totalValue: BigDecimal!
+  totalValueEth: BigDecimal!
+  totalValueUSD: BigDecimal!
+  totalFeeBurnedETH: BigDecimal!
+  totalFeeBurnedUSD: BigDecimal!
+  totalGasUsed: BigDecimal!
+  totalCumulativeGasUsed: BigDecimal!
+
+  totalBlobGas: BigDecimal!
+  totalBlobGasEth: BigDecimal!
+  totalBlobGasUSD: BigDecimal!
+  totalBlobGasFeeCap: BigDecimal!
+  totalBlobHashesCount: BigDecimal!
+  previousAccountDayData: AccountDayData
+  dayStartTimestamp: BigDecimal
+  dayStartBlock: BigDecimal
+
+  lastUpdatedBlock: BigDecimal
+  totalBlobBlocks: BigDecimal
+}
+type AccountHourData @entity {
+  id: ID!
+  account: Account!
+  totalBlobTransactionCount: BigDecimal!
+
+  currentEthPrice: BigDecimal!
+  totalGasEth: BigDecimal!
+  totalGasUSD: BigDecimal!
+  totalFeeEth: BigDecimal!
+  totalFeeUSD: BigDecimal!
+  totalValue: BigDecimal!
+  totalValueEth: BigDecimal!
+  totalValueUSD: BigDecimal!
+  totalFeeBurnedETH: BigDecimal!
+  totalFeeBurnedUSD: BigDecimal!
+  totalGasUsed: BigDecimal!
+  totalCumulativeGasUsed: BigDecimal!
+
+  totalBlobGas: BigDecimal!
+  totalBlobGasEth: BigDecimal!
+  totalBlobGasUSD: BigDecimal!
+  totalBlobGasFeeCap: BigDecimal!
+  totalBlobHashesCount: BigDecimal!
+  previousAccountHourData: AccountHourData
+  hourStartBlock: BigDecimal
+  hourStartTimestamp: BigDecimal
+  lastUpdatedBlock: BigDecimal
+  totalBlobBlocks: BigDecimal
+}
