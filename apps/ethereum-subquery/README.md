@@ -16,6 +16,10 @@ pnpm dev:ethereum-subquery
 The `dev` command generates types, builds the project, and starts PostgreSQL,
 the Ethereum SubQuery node, and the GraphQL service through Docker Compose.
 
+Copy `.env.example` to `.env`, set `POSTGRES_PASSWORD`, and optionally set
+`ETH_RPC` to prepend a private endpoint to the public fallback list. Do not
+commit populated environment files.
+
 ## Project files
 
 - `project.ts` configures the Ethereum network and block handler.

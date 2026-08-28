@@ -1,19 +1,25 @@
-"use strict";
+import fetch from "node-fetch";
 // @ts-nocheck
 import { PriceFeedMinute } from "../../types";
 import { OneinchABIAbi__factory } from "../../types/contracts";
 import { ORACLE_ADDRESS } from "../helper";
-import { CorrectSubstrateBlock } from "../mappingHandlers";
-import fetch from "node-fetch";
-const ETH_RPC =
-  process.env.ETH_RPC ||
-  "https://lb.drpc.org/ogrpc?network=ethereum&dkey=At2bhbEKA0nUjDj8Pdkc2m37qqBIxBsR768wIlZWwHzR";
+import type { CorrectSubstrateBlock } from "../mappingHandlers";
+
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`${name} environment variable is required`);
+  }
+  return value;
+}
+
+const ETH_RPC = requireEnv("ETH_RPC");
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const DEX_GURU_API_KEY =
-  process.env.DEX_GURU_API_KEY || "mzwVQMz5AN7Rj4UCm_wl-QsvqqpoLG6v6fjCIRfV6JU";
+const DEX_GURU_API_KEY = requireEnv("DEX_GURU_API_KEY");
+const ETHERSCAN_API_KEY = requireEnv("ETHERSCAN_API_KEY");
 
 async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
   const response = await fetch(url, {
@@ -89,17 +95,17 @@ export async function handleNewPriceMinute({
     // CHECK SAVED PRICES
     logger.info(`MAY SAVE PRICES FROM FILES :: minuteId: ${minuteId} `);
     if (minuteId <= 29164030) {
-      let priceFeedThisMinute;
+      let priceFeedThisMinute: PriceFeedMinute | undefined;
 
       let fileIdx = 0;
       for (const file of CONSTANT_PRICE_FEED_FILES) {
         const data = await fetchWithTimeout(
           `https://raw.githubusercontent.com/saurabhburade/multi-chain-subquery/refs/heads/dev/src/mappings/pricefeed/saved/${file}.json`,
-          {}
+          {},
         );
         logger.info(`FETCHED PRICE DATA FROM FILE :: ${file}.json`);
         const pricesToSave: PriceFeedMinute[] = [];
-        // @ts-ignore
+        // @ts-expect-error
         for (const element of data) {
           // SAVE MONTHLY DATA FROM LOCAL FILES
           const priceForMinute = PriceFeedMinute.create({
@@ -126,7 +132,7 @@ export async function handleNewPriceMinute({
           const ck = splitedChunk[index];
           await store.bulkUpdate("PriceFeedMinute", ck);
           logger.info(
-            `SAVED PRICES CHUNK :: ${index} out of ${splitedChunk.length}`
+            `SAVED PRICES CHUNK :: ${index} out of ${splitedChunk.length}`,
           );
         }
         fileIdx += 1;
@@ -135,25 +141,25 @@ export async function handleNewPriceMinute({
     }
 
     const URL = `https://api.dev.dex.guru/v1/tradingview/history?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Number(
-      block.timestamp.getTime() / 1000
+      block.timestamp.getTime() / 1000,
     ).toFixed(0)}&to=${Number(
-      (block.timestamp.getTime() + 86400000) / 1000
+      (block.timestamp.getTime() + 86400000) / 1000,
     ).toFixed(0)}&currencyCode=USD&api-key=${DEX_GURU_API_KEY}`;
     logger.info(
       `MAKE PRICE CALL :: from :: ${Number(
-        block.timestamp.getTime() / 1000
+        block.timestamp.getTime() / 1000,
       ).toFixed(0)} to ::${Number(
-        (block.timestamp.getTime() + 86400000) / 1000
+        (block.timestamp.getTime() + 86400000) / 1000,
       ).toFixed(0)} 
       
       URL:::${URL}
       
-      `
+      `,
     );
     // get one day price at once
     const res = await fetchWithTimeout(URL, {});
     const data = res;
-    // @ts-ignore
+    // @ts-expect-error
     const { t, o, c, h, l } = data;
 
     const mappedPrices = t
@@ -170,13 +176,13 @@ export async function handleNewPriceMinute({
           minuteId: minuteIdOhlc,
         };
       })
-      // @ts-ignore
+      // @ts-expect-error
       ?.filter((v) => v?.timestamp <= new Date().getTime());
     if (mappedPrices?.length <= 0) {
       throw new Error("API Error");
     }
     logger.info(`PRICE LENGTH ${mappedPrices?.length}`);
-    let priceFeedThisMinute;
+    let priceFeedThisMinute: PriceFeedMinute | undefined;
     const pricesToSave: PriceFeedMinute[] = [];
     const minuteNow = Math.floor(Number(new Date().getTime()) / 60000);
     for (let index = 0; index < mappedPrices.length; index++) {
@@ -210,11 +216,11 @@ export async function handleNewPriceMinute({
     try {
       const blockNumberApi = await fetch(
         `https://coins.llama.fi/block/ethereum/${Number(
-          Math.floor(block.timestamp.getTime() / 1000)
+          Math.floor(block.timestamp.getTime() / 1000),
         )}`,
         {
           method: "GET",
-        }
+        },
       );
       const ethBlockContextLlama: any = await blockNumberApi.json();
 
@@ -228,11 +234,11 @@ export async function handleNewPriceMinute({
         await delay(1_000);
         const blockNumberApiEtherscan = await fetch(
           `https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=${Number(
-            Math.floor(block.timestamp.getTime() / 1000)
-          )}&closest=before&apikey=QW2D5TW4VG4BYK8I5G6WMUCA9ENWGAHUYJ`,
+            Math.floor(block.timestamp.getTime() / 1000),
+          )}&closest=before&apikey=${ETHERSCAN_API_KEY}`,
           {
             method: "GET",
-          }
+          },
         );
         const ethBlockContextEtherescan: any =
           await blockNumberApiEtherscan.json();
@@ -249,11 +255,11 @@ export async function handleNewPriceMinute({
         await delay(1_000);
         const blockNumberApiEtherscan = await fetch(
           `https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=${Number(
-            Math.floor(block.timestamp.getTime() / 1000)
-          )}&closest=before&apikey=QW2D5TW4VG4BYK8I5G6WMUCA9ENWGAHUYJ`,
+            Math.floor(block.timestamp.getTime() / 1000),
+          )}&closest=before&apikey=${ETHERSCAN_API_KEY}`,
           {
             method: "GET",
-          }
+          },
         );
         const ethBlockContextEtherescan: any =
           await blockNumberApiEtherscan.json();
@@ -262,7 +268,7 @@ export async function handleNewPriceMinute({
             height: Number(ethBlockContextEtherescan.result),
             timestamp: Number(block.timestamp.getTime() / 1000),
             blockHex: `0x${Number(ethBlockContextEtherescan.result).toString(
-              16
+              16,
             )}`,
           };
         }
@@ -314,7 +320,7 @@ export async function handleNewPriceMinute({
                 to: ORACLE_ADDRESS,
                 data: encodedEth,
               },
-              // @ts-ignore
+              // @ts-expect-error
               `0x${ethBlockContext.height.toString(16)}`,
             ],
           }),
@@ -331,7 +337,7 @@ export async function handleNewPriceMinute({
                 to: ORACLE_ADDRESS,
                 data: encodedAvail,
               },
-              // @ts-ignore
+              // @ts-expect-error
               `0x${ethBlockContext.height.toString(16)}`,
             ],
           }),
@@ -345,11 +351,11 @@ export async function handleNewPriceMinute({
         // }
         const decodedEth = ife.decodeFunctionResult(
           "getRate",
-          ethResultRaw.result
+          ethResultRaw.result,
         );
         const decodedAvail = ife.decodeFunctionResult(
           "getRate",
-          availResultRaw.result
+          availResultRaw.result,
         );
 
         // if (decodedEth) {
@@ -362,9 +368,9 @@ export async function handleNewPriceMinute({
         const availPrice = Number(decodedAvail.toString()) / 1e6;
         const ethPrice = Number(decodedEth.toString()) / 1e6;
         const availDate = blockDate;
-        // @ts-ignore
+        // @ts-expect-error
         const ethBlock = Number(ethBlockContext.height);
-        // @ts-ignore
+        // @ts-expect-error
         const ethDate = new Date(Number(ethBlockContext.timestamp) * 1000);
         priceFeedMinute = PriceFeedMinute.create({
           id: minuteId.toString(),

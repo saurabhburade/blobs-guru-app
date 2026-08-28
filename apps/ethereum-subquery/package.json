@@ -20,7 +20,6 @@
     "project.yaml"
   ],
   "author": "SubQuery Team",
-  "license": "MIT",
   "dependencies": {
     "@subql/types-core": "^2.2.0",
     "@subql/types-ethereum": "latest",

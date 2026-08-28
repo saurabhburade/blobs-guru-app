@@ -1,7 +1,7 @@
 import {
-  EthereumProject,
   EthereumDatasourceKind,
   EthereumHandlerKind,
+  type EthereumProject,
 } from "@subql/types-ethereum";
 
 // Can expand the Datasource processor types via the generic param
@@ -39,20 +39,11 @@ const project: EthereumProject = {
      * These settings can be found in your docker-compose.yaml, they will slow indexing but prevent your project being rate limited
      */
     endpoint: [
-      "wss://lb.drpc.org/ogws?network=ethereum&dkey=ArT8p5S52UM0rgz3Qb99bmsedepYUR8R8JLJrqRhf0fE",
-      "https://rpc.ankr.com/eth/f966ebe407abe74ead6049b91d40bc36aa908b2b6209b041fb0584ec3c96d927",
-      "wss://eth-mainnet.blastapi.io/c6fa55f7-bd66-415d-a0df-a03d0ab010db",
+      ...(process.env.ETH_RPC ? [process.env.ETH_RPC] : []),
       "https://eth-mainnet.public.blastapi.io",
       "https://ethereum-rpc.publicnode.com",
       "https://eth.drpc.org",
       "https://1.rpc.hypersync.xyz",
-      "https://1.rpc.hypersync.xyz",
-      "https://1.rpc.hypersync.xyz",
-      "https://1.rpc.hypersync.xyz",
-      "https://eth-traces.rpc.hypersync.xyz",
-      "https://eth-traces.rpc.hypersync.xyz",
-      "https://eth-traces.rpc.hypersync.xyz",
-      "https://eth-traces.rpc.hypersync.xyz",
       "https://eth-traces.rpc.hypersync.xyz",
     ],
   },

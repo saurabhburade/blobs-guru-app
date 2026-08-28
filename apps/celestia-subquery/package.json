@@ -20,7 +20,6 @@
     "project.yaml"
   ],
   "author": "SubQuery Team",
-  "license": "MIT",
   "devDependencies": {
     "@cosmjs/stargate": "^0.28.9",
     "@subql/cli": "latest",

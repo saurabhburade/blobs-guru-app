@@ -55,7 +55,7 @@ Shared repository tooling lives at the root: `biome.json` supplies general
 formatting and linting, `tsconfig.subquery.json` supplies the common SubQuery
 TypeScript baseline, and `.gitignore` covers generated files for every app.
 Next-specific ESLint rules and network-specific Docker helpers remain local to
-the apps that need them. See [`LICENSES.md`](LICENSES.md) for the license map.
+the apps that need them. The root `LICENSE` applies to the monorepo.
 
 ## Common commands
 

@@ -1,10 +1,6 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
-const subgraphUrl =
-  // "https://api.studio.thegraph.com/query/90545/blobs-explorer/vt1.5(np)";
-  // "https://api.studio.thegraph.com/query/90545/blobs-explorer/vt1.6.24";
-  "https://ethapi.blobs.guru/";
-// const availUrl = "https://wd.blobs.guru/";
-// const availUrl = "http://161.97.94.52:3000";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+
+const subgraphUrl = "https://ethapi.blobs.guru/";
 const availUrl = "https://availapi.blobs.guru/";
 const celestiaUrl = "https://celestiaapi.blobs.guru/";
 

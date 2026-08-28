@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   postgres:
     build:
@@ -27,6 +25,7 @@ services:
       DB_DATABASE: postgres
       DB_HOST: postgres
       DB_PORT: 5432
+      ETH_RPC: ${ETH_RPC:-}
     volumes:
       - ./:/app
     command:
