@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   const GOOGLE_ANALYTICS_ID = "G-WZGPHNZWNN";
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="icon"
@@ -66,7 +66,7 @@ export default function RootLayout({
           content="https://blobs.guru/summary.jpeg"
         /> */}
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider enableSystem={false} defaultTheme="dark">
           <Providers>{children}</Providers>
         </ThemeProvider>

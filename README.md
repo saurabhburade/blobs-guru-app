@@ -4,6 +4,8 @@ Blobs Guru is a pnpm and Turborepo monorepo containing the web explorer, the
 active SubQuery apps that provide its Ethereum, Avail, and Celestia data, and a
 deprecated Ethereum Substreams implementation retained for reference.
 
+![Blobs Guru dashboard](docs/images/blobs-guru-dashboard.jpg)
+
 The active indexers are built with [SubQuery](https://subquery.network/). Use
 the SubQuery website as the reference for framework concepts, manifests, and
 deployment guidance.
