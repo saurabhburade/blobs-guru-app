@@ -3,10 +3,10 @@ import type { Metadata } from "next";
 import "react-tooltip/dist/react-tooltip.css";
 import "../globals.css";
 
-import { Providers } from "./providers";
-import { ThemeProvider } from "next-themes";
 import Script from "next/script";
+import { ThemeProvider } from "next-themes";
 import Footer from "@/components/Footer/Footer";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Ethereum Blobs Explorer: Analyze L2 Transactions & EIP-4844 Data",
@@ -29,11 +29,7 @@ export default function RootLayout({
           sizes="48x48"
         />
 
-        <link
-          rel="icon"
-          type="image/svg+xml"
-          href="https://blobs.guru/favicon.svg?v=2"
-        />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
 
         <link
           rel="apple-touch-icon"
