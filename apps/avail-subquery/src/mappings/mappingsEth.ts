@@ -1,9 +1,4 @@
-import { EthereumBlock } from "@subql/types-ethereum";
-import { OneinchABIAbi__factory } from "../types/contracts";
-import { ethers } from "ethers";
-import { PriceFeed, PriceFeedMinute } from "../types";
-
-const ORACLE_ADDRESS = "0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8";
+import type { EthereumBlock } from "@subql/types-ethereum";
 
 export async function handleEthBlock(block: EthereumBlock): Promise<void> {
   // // logger.info(`New BLOCK ETHEREUM ::::::  ${block.number.toString()}`);
@@ -14,7 +9,7 @@ export async function handleEthBlock(block: EthereumBlock): Promise<void> {
   // //   );
   // const oracleContract = OneinchABIAbi__factory.connect(
   //   ORACLE_ADDRESS,
-  //   // @ts-ignore
+  //   // @ts-expect-error
   //   api as any
   // );
   // const eth = await oracleContract.getRate(
@@ -49,11 +44,11 @@ export async function handleEthBlock(block: EthereumBlock): Promise<void> {
 }
 
 export async function handleOraclePricePerMinute(
-  block: EthereumBlock
+  block: EthereumBlock,
 ): Promise<void> {
   // const oracleContract = OneinchABIAbi__factory.connect(
   //   ORACLE_ADDRESS,
-  //   // @ts-ignore
+  //   // @ts-expect-error
   //   api as any
   // );
   // const eth = await oracleContract.getRate(
@@ -81,7 +76,6 @@ export async function handleOraclePricePerMinute(
   // priceFeedMinute.availPrice = avail.toNumber();
   // priceFeedMinute.ethPrice = eth.toNumber();
   // priceFeedMinute.blockNumber = block.number;
-
   // priceFeedMinute.date = new Date(Number(block.timestamp) * 1000);
   // // logger.info(
   // //   `New ETH Price Feed Minute::::::  ${priceFeedMinute.ethPrice.toString()} :: ID:: ${minuteId} :: AT:: ${blockDate}`
@@ -89,6 +83,5 @@ export async function handleOraclePricePerMinute(
   // // logger.info(
   // //   `New AVAIL Price Feed Minute::::::  ${priceFeedMinute.availPrice.toString()} :: ID:: ${minuteId} :: AT:: ${blockDate}`
   // // );
-
   // return await priceFeedMinute.save();
 }

@@ -1,48 +1,42 @@
-"use strict";
-
-import {
-  EventRecord,
-  Digest,
-  Header,
+import type {
   AccountId,
+  Digest,
+  EventRecord,
+  Header,
 } from "@polkadot/types/interfaces";
-import { SubstrateExtrinsic, SubstrateBlock } from "@subql/types";
+import { type SubstrateBlock, SubstrateExtrinsic } from "@subql/types";
 import {
+  type AccountEntity,
+  AppLookup,
+  Block,
+  BlockError,
+  Commitment,
+  DataSubmission,
   Event,
   Extrinsic,
-  SpecVersion,
-  Block,
-  Session,
-  Log,
   HeaderExtension,
-  Commitment,
-  AppLookup,
-  AccountEntity,
-  DataSubmission,
-  TransferEntity,
+  Log,
   PriceFeed,
-  PriceFeedMinute,
-  BlockError,
+  type PriceFeedMinute,
+  Session,
+  SpecVersion,
+  TransferEntity,
 } from "../types";
-import { transferHandler, updateAccounts } from "../utils/balances";
+import { AccounToUpdateValue } from "../types/models/AccounToUpdateValue";
 import { extractAuthor } from "../utils/author";
-import { formatInspect } from "../utils/inspect";
+import { transferHandler, updateAccounts } from "../utils/balances";
 import {
   getFeesFromEvent,
   handleDaSubmissionData,
   handleVectorExecuteMessage,
   handleVectorSendMessage,
 } from "../utils/extrinsic";
-import { AccounToUpdateValue } from "../types/models/AccounToUpdateValue";
-import { ethers } from "ethers";
-import { OneinchABIAbi__factory } from "../types/contracts";
-
-import { handleNewPriceMinute } from "./pricefeed/savePrices";
+import { formatInspect } from "../utils/inspect";
 import { handleExtrinsics } from "./entities/extrinsic";
+import { handleNewPriceMinute } from "./pricefeed/savePrices";
 
 let specVersion: SpecVersion;
 const ENABLE_LOG = true;
-const ORACLE_ADDRESS = "0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8";
 
 export const balanceEvents = [
   "balances.BalanceSet",
@@ -74,7 +68,7 @@ export interface CorrectSubstrateBlock extends SubstrateBlock {
 
 export async function handleBlock(block: CorrectSubstrateBlock): Promise<void> {
   const blockHeader = block.block.header;
-  let blockRecord = await Block.get(blockHeader.number.toString());
+  const blockRecord = await Block.get(blockHeader.number.toString());
   const blockDate = new Date(Number(block.timestamp.getTime()));
   const minuteId = Math.floor(blockDate.getTime() / 60000);
   if (blockRecord === undefined || blockRecord === null) {
@@ -84,13 +78,13 @@ export async function handleBlock(block: CorrectSubstrateBlock): Promise<void> {
         block,
       });
       logger.info(
-        `PRICE DATA SAVED ::::::  ${JSON.stringify(savedPrice.availPrice)}`
+        `PRICE DATA SAVED ::::::  ${JSON.stringify(savedPrice.availPrice)}`,
       );
       await blockHandler(block, savedPrice);
       // }
     } catch (error) {
       let blockErrorRecord = await BlockError.get(
-        blockHeader.number.toString()
+        blockHeader.number.toString(),
       );
       if (blockErrorRecord === undefined || blockErrorRecord === null) {
         blockErrorRecord = BlockError.create({
@@ -106,7 +100,7 @@ export async function handleBlock(block: CorrectSubstrateBlock): Promise<void> {
         "handleBlock  ERRORRRRRR ::::::::::::::::::" +
           block.block.header.number.toNumber() +
           "::::::::::::::::::" +
-          blockHeader.hash.toString()
+          blockHeader.hash.toString(),
       );
       logger.error("handleBlock ERRORRRRRR ::::::::::::::::::" + error);
     }
@@ -127,13 +121,13 @@ export async function handleBlock(block: CorrectSubstrateBlock): Promise<void> {
 
 export const blockHandler = async (
   block: CorrectSubstrateBlock,
-  priceFeed: PriceFeedMinute
+  priceFeed: PriceFeedMinute,
 ): Promise<void> => {
   try {
     const blockHeader = block.block.header;
     let blockRecord = await Block.get(blockHeader.number.toString());
     if (!blockRecord) {
-      let fees = {
+      const fees = {
         fee: 0,
         feesRounded: 0,
       };
@@ -147,7 +141,7 @@ export const blockHandler = async (
           //   )}`
           // );
           const parsedfee = getFeesFromEvent(
-            event.event.data.toJSON() as any[]
+            event.event.data.toJSON() as any[],
           );
           fees.fee += Number(parsedfee.fee);
           fees.feesRounded += Number(parsedfee.feeRounded);
@@ -176,7 +170,7 @@ export const blockHandler = async (
         sessionId: 1,
       });
       logger.info(
-        "BLOCK SAVED ::::::::::::::::::" + block.block.header.number.toNumber()
+        "BLOCK SAVED ::::::::::::::::::" + block.block.header.number.toNumber(),
       );
       await handleExtrinsics(block, priceFeed);
       await blockRecord.save();
@@ -195,9 +189,9 @@ export const blockHandler = async (
     //   handleExtension(blockHeader),
     // ]);
   } catch (err) {
-    throw err;
     logger.error("record block error:" + block.block.header.number.toNumber());
     logger.error("record block error detail:" + err);
+    throw err;
   }
 };
 
@@ -279,7 +273,7 @@ export function handleEvent(
   eventIdx: number,
   event: EventRecord,
   extrinsicId: number,
-  timestamp: Date
+  timestamp: Date,
 ): Event {
   try {
     const eventData = event.event;
@@ -287,7 +281,7 @@ export function handleEvent(
       `${eventData.section}_${eventData.method}` ===
       "dataAvailability_DataSubmitted"
         ? eventData.data.map((a, i) =>
-            i === 1 ? a.toString().slice(0, 64) : a.toString()
+            i === 1 ? a.toString().slice(0, 64) : a.toString(),
           )
         : eventData.data.map((a) => a.toString());
 
@@ -302,14 +296,14 @@ export function handleEvent(
       // descriptionRecord.id,
       eventData.meta.args.map((a) => a.toString()),
       argsValue,
-      timestamp
+      timestamp,
     );
     if (extrinsicId !== -1)
       newEvent.extrinsicId = `${blockNumber}-${extrinsicId}`;
     return newEvent;
   } catch (err) {
     logger.error(
-      "record event error at block number:" + blockNumber.toString()
+      "record event error at block number:" + blockNumber.toString(),
     );
     logger.error("record event error detail:" + err);
     throw err;
@@ -318,7 +312,7 @@ export function handleEvent(
 
 export const handleLogs = async (blockNumber: string, digest: Digest) => {
   for (const [i, log] of digest.logs.entries()) {
-    let engine: string | undefined = undefined;
+    let engine: string | undefined;
     let data = "";
 
     if (log.isConsensus) {
@@ -343,7 +337,7 @@ export const handleLog = async (
   index: number,
   type: string,
   engine: string | undefined,
-  data: string
+  data: string,
 ) => {
   const logRecord = new Log(`${blockNumber}-${index}`, blockNumber, type, data);
   if (engine) logRecord.engine = engine;
@@ -352,7 +346,7 @@ export const handleLog = async (
 
 export const updateSession = async (blockRecord: Block, digest: Digest) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const sessionId = await (api as any).query.session.currentIndex();
     let sessionRecord = await Session.get(sessionId.toString());
     if (!sessionRecord) {
@@ -360,7 +354,7 @@ export const updateSession = async (blockRecord: Block, digest: Digest) => {
       (api as any).query.session.validators()) as unknown as string[];
       sessionRecord = new Session(
         sessionId.toString(),
-        validators.map((x) => x.toString())
+        validators.map((x) => x.toString()),
       );
       logger.info("FOUND VALIDATORS ::: ", validators.length);
       if (Number(validators.length) > 0) {
@@ -371,23 +365,23 @@ export const updateSession = async (blockRecord: Block, digest: Digest) => {
     blockRecord.sessionId = Number(sessionRecord.id);
     const author = extractAuthor(
       digest,
-      sessionRecord.validators as unknown as AccountId[]
+      sessionRecord.validators as unknown as AccountId[],
     );
     blockRecord.author = author ? author.toString() : undefined;
   } catch (err) {
-    throw err;
     logger.error("update session error");
     logger.error("update session error detail:" + err);
+    throw err;
   }
 };
 
 export const updateSpecversion = async (
   specVersion: SpecVersion,
   blockSpecVersion: number,
-  blockNumber: bigint
+  blockNumber: bigint,
 ) => {
   if (!specVersion) {
-    let dbSpec = await SpecVersion.get(blockSpecVersion.toString());
+    const dbSpec = await SpecVersion.get(blockSpecVersion.toString());
     if (dbSpec) specVersion = dbSpec;
   }
   if (!specVersion || specVersion.id !== blockSpecVersion.toString()) {
@@ -404,7 +398,7 @@ export const handleExtension = async (blockHeader: Header) => {
 
     // Create extension
     const headerExtensionRecord = new HeaderExtension(blockNumber, blockNumber);
-    let data: any = undefined;
+    let data: any;
     if (extension.v1 !== undefined) {
       headerExtensionRecord.version = "v1";
       data = extension.v1;
@@ -423,7 +417,7 @@ export const handleExtension = async (blockHeader: Header) => {
     const commitmentRecord = new Commitment(
       blockNumber,
       blockNumber,
-      headerExtensionRecord.id
+      headerExtensionRecord.id,
     );
     commitmentRecord.rows = data.commitment.rows;
     commitmentRecord.cols = data.commitment.cols;
@@ -435,7 +429,7 @@ export const handleExtension = async (blockHeader: Header) => {
     const appLookupRecord = new AppLookup(
       blockNumber,
       blockNumber,
-      headerExtensionRecord.id
+      headerExtensionRecord.id,
     );
     appLookupRecord.size = data.appLookup.size;
     appLookupRecord.index = JSON.stringify(data.appLookup.index);
@@ -455,7 +449,7 @@ export const setAccountsAsValidators = async (accounts: string[]) => {
     [["address", "in", accounts]],
     {
       limit: accounts.length,
-    }
+    },
   );
   const accountsToSave = accountsInDb.map((x) => {
     x.validator = true;

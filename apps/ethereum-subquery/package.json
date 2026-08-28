@@ -8,7 +8,7 @@
     "build": "subql build",
     "codegen": "subql codegen",
     "start:docker": "docker compose pull && docker compose up --remove-orphans",
-    "dev": "export POSTGRES_PASSWORD=postgres_294382574923_421481399481248247 && subql codegen && subql build && docker compose pull && docker compose up --remove-orphans",
+    "dev": "pnpm run codegen && pnpm run build && docker compose pull && docker compose up --remove-orphans",
     "prepack": "rm -rf dist && pnpm run build",
     "test": "subql build && subql-node-ethereum test"
   },
@@ -24,7 +24,7 @@
     "@subql/types-core": "^2.2.0",
     "@subql/types-ethereum": "latest",
     "assert": "^2.0.0",
-    "node-fetch": "2.4",
+    "node-fetch": "^2.7.0",
     "tslib": "^2.3.1"
   },
   "devDependencies": {

@@ -17,10 +17,11 @@ done
 
 cd "${directory}"
 
-ipfs_cid=$(pnpm exec subql publish -o -f .)
+ipfs_cid=$(pnpm exec subql publish . --silent)
 
-pnpm exec subql deployment:deploy \
-  -d \
+pnpm exec subql onfinality:create-deployment \
   --ipfsCID="${ipfs_cid}" \
   --projectName="${project_name}" \
-  --org="${organization%/*}"
+  --org="${organization%/*}" \
+  --type=primary \
+  --useDefaults

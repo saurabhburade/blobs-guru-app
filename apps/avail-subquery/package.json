@@ -8,7 +8,7 @@
     "build": "subql build avail.yaml",
     "codegen": "subql codegen avail.yaml",
     "start:docker": "docker compose pull && docker compose up --remove-orphans",
-    "dev": "export POSTGRES_PASSWORD=postgres_294382574923_421481399481248247 && pnpm run codegen && pnpm run prepack && docker compose pull && docker compose up --remove-orphans",
+    "dev": "pnpm run codegen && pnpm run build && docker compose pull && docker compose up --remove-orphans",
     "prepack": "rm -rf dist && pnpm run build",
     "test": "pnpm run build && subql-node test -f avail.yaml"
   },
@@ -36,7 +36,6 @@
     "@subql/node-ethereum": "latest",
     "@subql/testing": "latest",
     "@types/bn.js": "^5.1.6",
-    "abab": "^2.0.6",
     "dotenv": "latest",
     "ethers": "^5.7.2",
     "typescript": "5.2.2"
@@ -49,7 +48,7 @@
     "@types/node-fetch": "latest",
     "axios": "^1.7.9",
     "bn.js": "^5.2.1",
-    "node-fetch": "2.4",
+    "node-fetch": "^2.7.0",
     "pino": "^7.8.0",
     "ts-proto": "^1.112.1",
     "tslib": "^2.3.1"

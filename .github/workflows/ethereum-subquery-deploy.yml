@@ -29,6 +29,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec turbo run codegen --filter=@blobs-guru/ethereum-subquery
+      - run: pnpm exec turbo run build --filter=@blobs-guru/ethereum-subquery
       - run: pnpm --filter @blobs-guru/ethereum-subquery exec subql --version
       - name: Publish and deploy
         run: >-

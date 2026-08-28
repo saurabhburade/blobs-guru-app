@@ -1,7 +1,8 @@
+import { ethers } from "ethers";
 import fetch from "node-fetch";
+import OneinchABI from "../../../abis/OneinchABI.abi.json";
 // @ts-nocheck
 import { PriceFeedMinute } from "../../types";
-import { OneinchABIAbi__factory } from "../../types/contracts";
 import { ORACLE_ADDRESS } from "../helper";
 import type { CorrectSubstrateBlock } from "../mappingHandlers";
 
@@ -105,7 +106,6 @@ export async function handleNewPriceMinute({
         );
         logger.info(`FETCHED PRICE DATA FROM FILE :: ${file}.json`);
         const pricesToSave: PriceFeedMinute[] = [];
-        // @ts-expect-error
         for (const element of data) {
           // SAVE MONTHLY DATA FROM LOCAL FILES
           const priceForMinute = PriceFeedMinute.create({
@@ -150,16 +150,11 @@ export async function handleNewPriceMinute({
         block.timestamp.getTime() / 1000,
       ).toFixed(0)} to ::${Number(
         (block.timestamp.getTime() + 86400000) / 1000,
-      ).toFixed(0)} 
-      
-      URL:::${URL}
-      
-      `,
+      ).toFixed(0)}`,
     );
     // get one day price at once
     const res = await fetchWithTimeout(URL, {});
     const data = res;
-    // @ts-expect-error
     const { t, o, c, h, l } = data;
 
     const mappedPrices = t
@@ -296,7 +291,7 @@ export async function handleNewPriceMinute({
 
       if (priceFeedMinute === undefined || priceFeedMinute === null) {
         // await delay(250);
-        const ife = OneinchABIAbi__factory.createInterface();
+        const ife = new ethers.utils.Interface(OneinchABI);
         const encodedEth = ife.encodeFunctionData("getRate", [
           "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // WETH
           "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT

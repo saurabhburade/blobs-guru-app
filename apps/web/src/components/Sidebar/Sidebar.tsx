@@ -1,24 +1,16 @@
 "use client";
-import { div } from "framer-motion/client";
+import { User } from "lucide-react";
 import Link from "next/link";
-import React from "react";
-import ThemeController from "../ThemeController/ThemeController";
-import { TbBlob } from "react-icons/tb";
-import { TiThSmall } from "react-icons/ti";
-import { LuScroll } from "react-icons/lu";
-import { TbDatabaseShare } from "react-icons/tb";
-import { TbReportMoney } from "react-icons/tb";
-import { IoStatsChart } from "react-icons/io5";
 import { BsUiChecksGrid } from "react-icons/bs";
 import { CiGrid2H } from "react-icons/ci";
 import { IoIosApps } from "react-icons/io";
+import { IoStatsChart } from "react-icons/io5";
+import { TiThSmall } from "react-icons/ti";
 
 import ImageWithFallback from "../ImageWithFallback";
-import { User } from "lucide-react";
+import ThemeController from "../ThemeController/ThemeController";
 
-type Props = {};
-
-function Sidebar({}: Props) {
+function Sidebar() {
   return (
     <div className="border-base-200 xl:border-r  opacity-80">
       <div className="flex flex-col justify-between h-screen">
@@ -228,36 +220,35 @@ function Sidebar({}: Props) {
             </div>
           </div>
         </div>
-        <div className=" p-4  justify-end flex flex-col  border-base-200  border-t">
-          <div className="bg-base-100  mx-auto  flex justify-start items-start  w-full gap-2 lg:text-base text-sm">
-            Build with ❤️ by{" "}
-            <a
-              href="https://bsaurabh.xyz"
-              target="_blank"
-              referrerPolicy="no-referrer"
-              className="text-primary underline"
+        <div className="p-4 flex items-center gap-3 border-base-200 border-t">
+          <Link
+            href="https://x.com/blobsguru"
+            target="_blank"
+            rel="noopener noreferrer"
+            referrerPolicy="no-referrer"
+            aria-label="Blobs Guru on X"
+            className="btn btn-circle btn-sm transition-all"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 16 16"
             >
-              saurabh_evm
-            </a>
-          </div>
-          <div>
-            <Link
-              href={`https://x.com/blobsguru`}
-              target="_blank"
-              referrerPolicy="no-referrer"
-              className="btn btn-circle btn-sm transition-all"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                viewBox="0 0 16 16"
-              >
-                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
-              </svg>
-            </Link>
-          </div>
+              <title>Blobs Guru on X</title>
+              <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
+            </svg>
+          </Link>
+          <a
+            href="https://bsaurabh.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            referrerPolicy="no-referrer"
+            className="text-primary underline text-sm lg:text-base"
+          >
+            @saurabh_evm
+          </a>
         </div>
       </div>
     </div>
