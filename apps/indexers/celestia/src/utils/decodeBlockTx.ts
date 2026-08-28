@@ -35,7 +35,7 @@ export const getDecodedTxData = (
   const gasWanted = tx?.gasWanted ? Number(tx.gasWanted) : 0;
 
   const decodedData = tx?.events?.reduce(
-    (acc: TxStats, v) => {
+    (acc: TxStats, v: any) => {
       acc.nEvents = tx?.events.length;
       const decodedType = v.type.toString();
       const bbs: {
@@ -44,7 +44,7 @@ export const getDecodedTxData = (
         shareVersion?: number | string;
         blob_size?: number | string;
       }[] = [];
-      const decodedAttributes = v.attributes?.map((attr) => {
+      const decodedAttributes = v.attributes?.map((attr: any) => {
         const decodeAttrKey = Buffer.from(
           attr.key.toString(),
           "base64"
@@ -107,7 +107,7 @@ export const getDecodedTxData = (
                 bbs[idx] = {
                   ...prev,
                   namespace: toHex(
-                    Buffer.from(parseCelestiaString(ns))
+                    Uint8Array.from(Buffer.from(parseCelestiaString(ns)))
                   )?.toString(),
                 };
               });

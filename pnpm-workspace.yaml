@@ -2,13 +2,18 @@ packages:
   - apps/*
   - apps/indexers/*
 
-onlyBuiltDependencies:
-  - '@scarf/scarf'
-  - bufferutil
-  - core-js
-  - core-js-pure
-  - es5-ext
-  - esbuild
-  - protobufjs
-  - sharp
-  - utf-8-validate
+allowBuilds:
+  '@cosmology/protobufjs': true
+  '@scarf/scarf': true
+  bufferutil: true
+  core-js: true
+  core-js-pure: true
+  es5-ext: true
+  esbuild: true
+  keccak: true
+  protobufjs: true
+  secp256k1: true
+  sharp: true
+  tiny-secp256k1: true
+  utf-8-validate: true
+  workerd: true

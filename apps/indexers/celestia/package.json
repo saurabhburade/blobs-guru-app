@@ -1,6 +1,7 @@
 {
-  "name": "Celestia",
+  "name": "@blobs-guru/indexer-celestia",
   "version": "0.0.2",
+  "private": true,
   "description": "desc",
   "main": "dist/index.js",
   "scripts": {
@@ -8,11 +9,11 @@
     "codegen": "subql codegen",
     "start:docker": "docker compose pull && docker compose up --remove-orphans",
     "dev": "export POSTGRES_PASSWORD=postgres_294382574923_421481399481248247 && subql codegen && subql build && docker compose pull && docker compose up --remove-orphans",
-    "prepack": "rm -rf dist && npm run build",
+    "prepack": "rm -rf dist && pnpm run build",
     "test": "subql build && subql-node-cosmos test"
   },
   "homepage": "https://github.com/subquery/cosmos-subql-starter",
-  "repository": "github:subquery/cosmos-subql-starter",
+  "repository": "github:saurabhburade/celestia-subql-starter",
   "files": [
     "dist",
     "schema.graphql",
@@ -26,14 +27,16 @@
     "@subql/node-cosmos": "5.1.0",
     "@subql/testing": "latest",
     "@types/node-fetch": "^2.6.12",
-    "typescript": "^5.2.2"
+    "typescript": "5.2.2"
   },
   "dependencies": {
     "@cosmjs/crypto": "^0.33.1",
     "@cosmjs/encoding": "^0.33.1",
     "@subql/common-cosmos": "^5.1.0",
+    "@subql/types-core": "^2.2.0",
     "@subql/types-cosmos": "latest",
     "@types/node": "^17.0.21",
+    "node-fetch": "2.4",
     "pino": "^7.8.0",
     "ts-proto": "^1.112.1",
     "tslib": "^2.3.1"

@@ -1,18 +1,19 @@
 {
-  "name": "kava-evm-cosmos-multi-chain",
+  "name": "@blobs-guru/indexer-multi-chain",
   "version": "0.0.1",
+  "private": true,
   "description": "This project tracks USDT transactions and approvals on Kava EVM Network, along with all transfers sent on Kava Cosmos Co-chain",
   "main": "dist/index.js",
   "scripts": {
     "build": "subql build",
     "codegen": "subql codegen",
     "start:docker": "docker compose pull && docker compose up --remove-orphans",
-    "dev": "export POSTGRES_PASSWORD=postgres_294382574923_421481399481248247 && subql codegen && yarn prepack && docker compose pull && docker compose up --remove-orphans",
-    "prepack": "rm -rf dist && npm run build",
+    "dev": "export POSTGRES_PASSWORD=postgres_294382574923_421481399481248247 && subql codegen && pnpm run prepack && docker compose pull && docker compose up --remove-orphans",
+    "prepack": "rm -rf dist && pnpm run build",
     "test": "subql build && subql-node-cosmos test"
   },
   "homepage": "https://github.com/subquery/cosmos-subql-starter",
-  "repository": "github:subquery/cosmos-subql-starter",
+  "repository": "github:saurabhburade/multi-chain-subquery",
   "files": [
     "dist",
     "schema.graphql",
@@ -21,22 +22,31 @@
   "author": "SubQuery Team",
   "license": "MIT",
   "devDependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/providers": "^5.7.0",
     "@polkadot/api": "^12",
+    "@polkadot/api-augment": "^12",
+    "@polkadot/types": "^12",
+    "@polkadot/util": "^13",
     "@subql/cli": "latest",
     "@subql/node": "latest",
     "@subql/node-ethereum": "latest",
     "@subql/testing": "latest",
+    "@types/bn.js": "^5.1.6",
     "abab": "^2.0.6",
     "dotenv": "latest",
     "ethers": "^5.7.2",
-    "typescript": "^5.2.2"
+    "typescript": "5.2.2"
   },
   "dependencies": {
+    "@subql/types-core": "^2.2.0",
     "@subql/types": "latest",
     "@subql/types-ethereum": "latest",
     "@types/node": "^17.0.21",
     "@types/node-fetch": "latest",
     "axios": "^1.7.9",
+    "bn.js": "^5.2.1",
+    "node-fetch": "2.4",
     "pino": "^7.8.0",
     "ts-proto": "^1.112.1",
     "tslib": "^2.3.1"
