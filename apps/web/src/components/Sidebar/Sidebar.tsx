@@ -1,0 +1,258 @@
+"use client";
+import { User } from "lucide-react";
+import Link from "next/link";
+import { BsUiChecksGrid } from "react-icons/bs";
+import { CiGrid2H } from "react-icons/ci";
+import { IoIosApps } from "react-icons/io";
+import { IoStatsChart } from "react-icons/io5";
+import { TiThSmall } from "react-icons/ti";
+
+import ImageWithFallback from "../ImageWithFallback";
+import ThemeController from "../ThemeController/ThemeController";
+
+function Sidebar() {
+  return (
+    <div className="border-base-200 xl:border-r  opacity-80">
+      <div className="flex flex-col justify-between h-screen">
+        <div className="h-[90vh] overflow-scroll">
+          <div className="p-5 flex items-center justify-between hidden xl:flex">
+            <Link href="/">
+              <div className="font-bold flex items-center gap-2">
+                <img src="/images/logo.svg" width={34} height={34} alt="" />
+                blobsguru
+              </div>
+            </Link>
+            <ThemeController />
+          </div>
+
+          <div className="">
+            <div className="collapse collapse-arrow ">
+              <input type="checkbox" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-xl font-medium ">
+                <div className="flex items-center gap-2">
+                  <ImageWithFallback
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/ethereum.png?raw=true`}
+                    width={24}
+                    height={24}
+                    alt="ethereum"
+                  />
+                  <p>Ethereum Blobs</p>
+                </div>
+              </div>
+              <div className="collapse-content ">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
+                  {/* Sidebar content here */}
+                  <li className="  ">
+                    <Link href="/ethereum">
+                      <span>
+                        <TiThSmall />
+                      </span>
+                      Summary
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/ethereum/apps">
+                      <span>
+                        <IoIosApps />
+                      </span>
+                      Rollups
+                    </Link>
+                  </li>
+                  {/* <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/ethereum/accounts">
+                      <span>
+                        <User />
+                      </span>
+                      Accounts
+                    </Link>
+                  </li> */}
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/ethereum/stats">
+                      <span>
+                        <IoStatsChart />
+                      </span>
+                      Stats
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                </ul>
+              </div>
+            </div>
+
+            <div className="collapse collapse-arrow ">
+              <input type="checkbox" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-xl font-medium ">
+                <div className="flex items-center gap-2">
+                  <ImageWithFallback
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/avail.png?raw=true`}
+                    width={24}
+                    height={24}
+                    alt="avail"
+                  />
+                  <p>Avail DA</p>
+                </div>
+              </div>
+              <div className="collapse-content ">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
+                  {/* Sidebar content here */}
+                  <li className="  ">
+                    <Link href="/avail">
+                      <span>
+                        <TiThSmall />
+                      </span>
+                      Summary
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/avail/apps">
+                      <span>
+                        <IoIosApps />
+                      </span>
+                      Apps
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/avail/accounts">
+                      <span>
+                        <User />
+                      </span>
+                      Accounts
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/avail/stats">
+                      <span>
+                        <IoStatsChart />
+                      </span>
+                      Stats
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                </ul>
+              </div>
+            </div>
+            <div className="collapse collapse-arrow ">
+              <input type="checkbox" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-xl font-medium ">
+                <div className="flex items-center gap-2">
+                  <ImageWithFallback
+                    src={`https://raw.githubusercontent.com/saurabhburade/l2beat/main/packages/frontend/static/icons/celestia.png?raw=true`}
+                    width={24}
+                    height={24}
+                    alt="celestia"
+                  />
+                  <p>Celestia DA</p>
+                </div>
+              </div>
+              <div className="collapse-content ">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
+                  {/* Sidebar content here */}
+                  <li className="  ">
+                    <Link href="/celestia">
+                      <span>
+                        <TiThSmall />
+                      </span>
+                      Summary
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/celestia/apps">
+                      <span>
+                        <IoIosApps />
+                      </span>
+                      Apps
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/celestia/accounts">
+                      <span>
+                        <User />
+                      </span>
+                      Accounts
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  <li className="  ">
+                    <Link href="/celestia/stats">
+                      <span>
+                        <IoStatsChart />
+                      </span>
+                      Stats
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                </ul>
+              </div>
+            </div>
+            <div className="collapse collapse-arrow ">
+              <input type="checkbox" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-xl font-medium">
+                <div className="flex items-center gap-2">
+                  <BsUiChecksGrid /> <p>Data Availability</p>
+                </div>
+              </div>
+              <div className="collapse-content ">
+                <ul className=" menu space-y-2 bg-base-100 text-base  border-base-200  text-base-content min-h-full">
+                  {/* Sidebar content here */}
+                  <li className="  ">
+                    <Link href="/da/list">
+                      <span>
+                        <CiGrid2H />
+                      </span>
+                      DA Providers
+                    </Link>
+                  </li>
+                  <hr className="border-base-200" />
+                  {/* <li className="  ">
+                <Link href="/accounts">DA Compare </Link>
+              </li>
+              <hr className="border-base-200" /> */}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="p-4 flex items-center gap-3 border-base-200 border-t">
+          <Link
+            href="https://x.com/blobsguru"
+            target="_blank"
+            rel="noopener noreferrer"
+            referrerPolicy="no-referrer"
+            aria-label="Blobs Guru on X"
+            className="btn btn-circle btn-sm transition-all"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <title>Blobs Guru on X</title>
+              <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
+            </svg>
+          </Link>
+          <a
+            href="https://bsaurabh.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            referrerPolicy="no-referrer"
+            className="text-primary underline text-sm lg:text-base"
+          >
+            @saurabh_evm
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Sidebar;

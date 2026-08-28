@@ -1,0 +1,72 @@
+packages:
+  - apps/*
+
+overrides:
+  '@babel/traverse': 7.23.2
+  '@coinbase/wallet-sdk': 4.3.7
+  '@modelcontextprotocol/sdk': 1.30.0
+  '@wagmi/connectors>porto': '-'
+  'axios@<1.0.0': 0.33.0
+  'axios@>=1.0.0 <2.0.0': 1.20.0
+  'brace-expansion@<2.0.0': 1.1.18
+  'brace-expansion@>=2.0.0 <3.0.0': 2.1.4
+  cross-spawn: 7.0.6
+  defu: 6.1.7
+  fast-uri: 3.1.5
+  form-data: 4.0.6
+  'glob@>=10.0.0 <11.0.0': 10.5.0
+  'h3@>=1.0.0 <2.0.0': 1.15.6
+  'immutable@>=4.0.0 <5.0.0': 4.3.9
+  js-cookie: 3.0.8
+  'js-yaml@<4.0.0': 3.15.1
+  'js-yaml@>=4.0.0 <5.0.0': 4.3.1
+  'lodash@>=4.0.0 <5.0.0': 4.18.1
+  'minimatch@>=5.0.0 <6.0.0': 5.1.8
+  'minimatch@>=9.0.0 <10.0.0': 9.0.7
+  'nanoid@>=3.0.0 <4.0.0': 3.3.18
+  node-forge: 1.4.0
+  parse-duration: 2.1.8
+  'path-to-regexp@>=6.0.0 <7.0.0': 6.3.0
+  'picomatch@>=2.0.0 <3.0.0': 2.3.2
+  'postcss@>=8.0.0 <9.0.0': 8.5.26
+  protobufjs: 7.6.6
+  'semver@>=7.0.0 <8.0.0': 7.8.5
+  sha.js: 2.4.12
+  sharp: 0.35.4
+  shell-quote: 1.10.0
+  socket.io-parser: 4.2.7
+  tar: 7.5.22
+  tmp: 0.2.7
+  'undici@<7.0.0': 6.27.0
+  'undici@>=7.0.0 <8.0.0': 7.29.0
+  vm2: 3.11.8
+  'ws@>=7.0.0 <8.0.0': 7.5.11
+  'ws@>=8.0.0 <9.0.0': 8.21.3
+
+allowBuilds:
+  '@cosmology/protobufjs': true
+  '@scarf/scarf': true
+  bufferutil: true
+  core-js: true
+  core-js-pure: true
+  es5-ext: true
+  esbuild: true
+  keccak: true
+  protobufjs: true
+  secp256k1: true
+  sharp: true
+  tiny-secp256k1: true
+  utf-8-validate: true
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - '@biomejs/biome@2.5.11'
+  - '@biomejs/cli-darwin-arm64@2.5.11'
+  - '@biomejs/cli-darwin-x64@2.5.11'
+  - '@biomejs/cli-linux-arm64-musl@2.5.11'
+  - '@biomejs/cli-linux-arm64@2.5.11'
+  - '@biomejs/cli-linux-x64-musl@2.5.11'
+  - '@biomejs/cli-linux-x64@2.5.11'
+  - '@biomejs/cli-win32-arm64@2.5.11'
+  - '@biomejs/cli-win32-x64@2.5.11'
+  - vm2@3.11.8

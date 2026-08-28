@@ -1,0 +1,2882 @@
+[
+  {
+    "avgPrice": 2.44995,
+    "timestamp": 1698768000000,
+    "timestampF": "2023-10-31T16:00:00.000Z",
+    "minuteId": 28312800
+  },
+  {
+    "avgPrice": 2.0345,
+    "timestamp": 1698768060000,
+    "timestampF": "2023-10-31T16:01:00.000Z",
+    "minuteId": 28312801
+  },
+  {
+    "avgPrice": 2.1369,
+    "timestamp": 1698768120000,
+    "timestampF": "2023-10-31T16:02:00.000Z",
+    "minuteId": 28312802
+  },
+  {
+    "avgPrice": 2.1207000000000003,
+    "timestamp": 1698768180000,
+    "timestampF": "2023-10-31T16:03:00.000Z",
+    "minuteId": 28312803
+  },
+  {
+    "avgPrice": 2.10125,
+    "timestamp": 1698768240000,
+    "timestampF": "2023-10-31T16:04:00.000Z",
+    "minuteId": 28312804
+  },
+  {
+    "avgPrice": 2.1694,
+    "timestamp": 1698768300000,
+    "timestampF": "2023-10-31T16:05:00.000Z",
+    "minuteId": 28312805
+  },
+  {
+    "avgPrice": 2.2,
+    "timestamp": 1698768360000,
+    "timestampF": "2023-10-31T16:06:00.000Z",
+    "minuteId": 28312806
+  },
+  {
+    "avgPrice": 2.1846500000000004,
+    "timestamp": 1698768420000,
+    "timestampF": "2023-10-31T16:07:00.000Z",
+    "minuteId": 28312807
+  },
+  {
+    "avgPrice": 2.2116499999999997,
+    "timestamp": 1698768480000,
+    "timestampF": "2023-10-31T16:08:00.000Z",
+    "minuteId": 28312808
+  },
+  {
+    "avgPrice": 2.24105,
+    "timestamp": 1698768540000,
+    "timestampF": "2023-10-31T16:09:00.000Z",
+    "minuteId": 28312809
+  },
+  {
+    "avgPrice": 2.2127,
+    "timestamp": 1698768600000,
+    "timestampF": "2023-10-31T16:10:00.000Z",
+    "minuteId": 28312810
+  },
+  {
+    "avgPrice": 2.1887,
+    "timestamp": 1698768660000,
+    "timestampF": "2023-10-31T16:11:00.000Z",
+    "minuteId": 28312811
+  },
+  {
+    "avgPrice": 2.20845,
+    "timestamp": 1698768720000,
+    "timestampF": "2023-10-31T16:12:00.000Z",
+    "minuteId": 28312812
+  },
+  {
+    "avgPrice": 2.2173,
+    "timestamp": 1698768780000,
+    "timestampF": "2023-10-31T16:13:00.000Z",
+    "minuteId": 28312813
+  },
+  {
+    "avgPrice": 2.2126,
+    "timestamp": 1698768840000,
+    "timestampF": "2023-10-31T16:14:00.000Z",
+    "minuteId": 28312814
+  },
+  {
+    "avgPrice": 2.2156000000000002,
+    "timestamp": 1698768900000,
+    "timestampF": "2023-10-31T16:15:00.000Z",
+    "minuteId": 28312815
+  },
+  {
+    "avgPrice": 2.23135,
+    "timestamp": 1698768960000,
+    "timestampF": "2023-10-31T16:16:00.000Z",
+    "minuteId": 28312816
+  },
+  {
+    "avgPrice": 2.2244,
+    "timestamp": 1698769020000,
+    "timestampF": "2023-10-31T16:17:00.000Z",
+    "minuteId": 28312817
+  },
+  {
+    "avgPrice": 2.2245,
+    "timestamp": 1698769080000,
+    "timestampF": "2023-10-31T16:18:00.000Z",
+    "minuteId": 28312818
+  },
+  {
+    "avgPrice": 2.22795,
+    "timestamp": 1698769140000,
+    "timestampF": "2023-10-31T16:19:00.000Z",
+    "minuteId": 28312819
+  },
+  {
+    "avgPrice": 2.24035,
+    "timestamp": 1698769200000,
+    "timestampF": "2023-10-31T16:20:00.000Z",
+    "minuteId": 28312820
+  },
+  {
+    "avgPrice": 2.2838,
+    "timestamp": 1698769260000,
+    "timestampF": "2023-10-31T16:21:00.000Z",
+    "minuteId": 28312821
+  },
+  {
+    "avgPrice": 2.3265000000000002,
+    "timestamp": 1698769320000,
+    "timestampF": "2023-10-31T16:22:00.000Z",
+    "minuteId": 28312822
+  },
+  {
+    "avgPrice": 2.34905,
+    "timestamp": 1698769380000,
+    "timestampF": "2023-10-31T16:23:00.000Z",
+    "minuteId": 28312823
+  },
+  {
+    "avgPrice": 2.3898,
+    "timestamp": 1698769440000,
+    "timestampF": "2023-10-31T16:24:00.000Z",
+    "minuteId": 28312824
+  },
+  {
+    "avgPrice": 2.3398,
+    "timestamp": 1698769500000,
+    "timestampF": "2023-10-31T16:25:00.000Z",
+    "minuteId": 28312825
+  },
+  {
+    "avgPrice": 2.36095,
+    "timestamp": 1698769560000,
+    "timestampF": "2023-10-31T16:26:00.000Z",
+    "minuteId": 28312826
+  },
+  {
+    "avgPrice": 2.37,
+    "timestamp": 1698769620000,
+    "timestampF": "2023-10-31T16:27:00.000Z",
+    "minuteId": 28312827
+  },
+  {
+    "avgPrice": 2.35945,
+    "timestamp": 1698769680000,
+    "timestampF": "2023-10-31T16:28:00.000Z",
+    "minuteId": 28312828
+  },
+  {
+    "avgPrice": 2.35865,
+    "timestamp": 1698769740000,
+    "timestampF": "2023-10-31T16:29:00.000Z",
+    "minuteId": 28312829
+  },
+  {
+    "avgPrice": 2.38845,
+    "timestamp": 1698769800000,
+    "timestampF": "2023-10-31T16:30:00.000Z",
+    "minuteId": 28312830
+  },
+  {
+    "avgPrice": 2.425,
+    "timestamp": 1698769860000,
+    "timestampF": "2023-10-31T16:31:00.000Z",
+    "minuteId": 28312831
+  },
+  {
+    "avgPrice": 2.4312,
+    "timestamp": 1698769920000,
+    "timestampF": "2023-10-31T16:32:00.000Z",
+    "minuteId": 28312832
+  },
+  {
+    "avgPrice": 2.4228,
+    "timestamp": 1698769980000,
+    "timestampF": "2023-10-31T16:33:00.000Z",
+    "minuteId": 28312833
+  },
+  {
+    "avgPrice": 2.3861,
+    "timestamp": 1698770040000,
+    "timestampF": "2023-10-31T16:34:00.000Z",
+    "minuteId": 28312834
+  },
+  {
+    "avgPrice": 2.3837,
+    "timestamp": 1698770100000,
+    "timestampF": "2023-10-31T16:35:00.000Z",
+    "minuteId": 28312835
+  },
+  {
+    "avgPrice": 2.395,
+    "timestamp": 1698770160000,
+    "timestampF": "2023-10-31T16:36:00.000Z",
+    "minuteId": 28312836
+  },
+  {
+    "avgPrice": 2.4055,
+    "timestamp": 1698770220000,
+    "timestampF": "2023-10-31T16:37:00.000Z",
+    "minuteId": 28312837
+  },
+  {
+    "avgPrice": 2.40545,
+    "timestamp": 1698770280000,
+    "timestampF": "2023-10-31T16:38:00.000Z",
+    "minuteId": 28312838
+  },
+  {
+    "avgPrice": 2.4105,
+    "timestamp": 1698770340000,
+    "timestampF": "2023-10-31T16:39:00.000Z",
+    "minuteId": 28312839
+  },
+  {
+    "avgPrice": 2.395,
+    "timestamp": 1698770400000,
+    "timestampF": "2023-10-31T16:40:00.000Z",
+    "minuteId": 28312840
+  },
+  {
+    "avgPrice": 2.3865499999999997,
+    "timestamp": 1698770460000,
+    "timestampF": "2023-10-31T16:41:00.000Z",
+    "minuteId": 28312841
+  },
+  {
+    "avgPrice": 2.36975,
+    "timestamp": 1698770520000,
+    "timestampF": "2023-10-31T16:42:00.000Z",
+    "minuteId": 28312842
+  },
+  {
+    "avgPrice": 2.3775500000000003,
+    "timestamp": 1698770580000,
+    "timestampF": "2023-10-31T16:43:00.000Z",
+    "minuteId": 28312843
+  },
+  {
+    "avgPrice": 2.36885,
+    "timestamp": 1698770640000,
+    "timestampF": "2023-10-31T16:44:00.000Z",
+    "minuteId": 28312844
+  },
+  {
+    "avgPrice": 2.3499499999999998,
+    "timestamp": 1698770700000,
+    "timestampF": "2023-10-31T16:45:00.000Z",
+    "minuteId": 28312845
+  },
+  {
+    "avgPrice": 2.3198499999999997,
+    "timestamp": 1698770760000,
+    "timestampF": "2023-10-31T16:46:00.000Z",
+    "minuteId": 28312846
+  },
+  {
+    "avgPrice": 2.3122,
+    "timestamp": 1698770820000,
+    "timestampF": "2023-10-31T16:47:00.000Z",
+    "minuteId": 28312847
+  },
+  {
+    "avgPrice": 2.317,
+    "timestamp": 1698770880000,
+    "timestampF": "2023-10-31T16:48:00.000Z",
+    "minuteId": 28312848
+  },
+  {
+    "avgPrice": 2.32555,
+    "timestamp": 1698770940000,
+    "timestampF": "2023-10-31T16:49:00.000Z",
+    "minuteId": 28312849
+  },
+  {
+    "avgPrice": 2.34495,
+    "timestamp": 1698771000000,
+    "timestampF": "2023-10-31T16:50:00.000Z",
+    "minuteId": 28312850
+  },
+  {
+    "avgPrice": 2.34145,
+    "timestamp": 1698771060000,
+    "timestampF": "2023-10-31T16:51:00.000Z",
+    "minuteId": 28312851
+  },
+  {
+    "avgPrice": 2.32435,
+    "timestamp": 1698771120000,
+    "timestampF": "2023-10-31T16:52:00.000Z",
+    "minuteId": 28312852
+  },
+  {
+    "avgPrice": 2.31095,
+    "timestamp": 1698771180000,
+    "timestampF": "2023-10-31T16:53:00.000Z",
+    "minuteId": 28312853
+  },
+  {
+    "avgPrice": 2.317,
+    "timestamp": 1698771240000,
+    "timestampF": "2023-10-31T16:54:00.000Z",
+    "minuteId": 28312854
+  },
+  {
+    "avgPrice": 2.3278499999999998,
+    "timestamp": 1698771300000,
+    "timestampF": "2023-10-31T16:55:00.000Z",
+    "minuteId": 28312855
+  },
+  {
+    "avgPrice": 2.3333000000000004,
+    "timestamp": 1698771360000,
+    "timestampF": "2023-10-31T16:56:00.000Z",
+    "minuteId": 28312856
+  },
+  {
+    "avgPrice": 2.32465,
+    "timestamp": 1698771420000,
+    "timestampF": "2023-10-31T16:57:00.000Z",
+    "minuteId": 28312857
+  },
+  {
+    "avgPrice": 2.29405,
+    "timestamp": 1698771480000,
+    "timestampF": "2023-10-31T16:58:00.000Z",
+    "minuteId": 28312858
+  },
+  {
+    "avgPrice": 2.27405,
+    "timestamp": 1698771540000,
+    "timestampF": "2023-10-31T16:59:00.000Z",
+    "minuteId": 28312859
+  },
+  {
+    "avgPrice": 2.2349,
+    "timestamp": 1698771600000,
+    "timestampF": "2023-10-31T17:00:00.000Z",
+    "minuteId": 28312860
+  },
+  {
+    "avgPrice": 2.2524499999999996,
+    "timestamp": 1698771660000,
+    "timestampF": "2023-10-31T17:01:00.000Z",
+    "minuteId": 28312861
+  },
+  {
+    "avgPrice": 2.26755,
+    "timestamp": 1698771720000,
+    "timestampF": "2023-10-31T17:02:00.000Z",
+    "minuteId": 28312862
+  },
+  {
+    "avgPrice": 2.27135,
+    "timestamp": 1698771780000,
+    "timestampF": "2023-10-31T17:03:00.000Z",
+    "minuteId": 28312863
+  },
+  {
+    "avgPrice": 2.2689,
+    "timestamp": 1698771840000,
+    "timestampF": "2023-10-31T17:04:00.000Z",
+    "minuteId": 28312864
+  },
+  {
+    "avgPrice": 2.2544000000000004,
+    "timestamp": 1698771900000,
+    "timestampF": "2023-10-31T17:05:00.000Z",
+    "minuteId": 28312865
+  },
+  {
+    "avgPrice": 2.2486,
+    "timestamp": 1698771960000,
+    "timestampF": "2023-10-31T17:06:00.000Z",
+    "minuteId": 28312866
+  },
+  {
+    "avgPrice": 2.2361000000000004,
+    "timestamp": 1698772020000,
+    "timestampF": "2023-10-31T17:07:00.000Z",
+    "minuteId": 28312867
+  },
+  {
+    "avgPrice": 2.2301,
+    "timestamp": 1698772080000,
+    "timestampF": "2023-10-31T17:08:00.000Z",
+    "minuteId": 28312868
+  },
+  {
+    "avgPrice": 2.2309,
+    "timestamp": 1698772140000,
+    "timestampF": "2023-10-31T17:09:00.000Z",
+    "minuteId": 28312869
+  },
+  {
+    "avgPrice": 2.2298999999999998,
+    "timestamp": 1698772200000,
+    "timestampF": "2023-10-31T17:10:00.000Z",
+    "minuteId": 28312870
+  },
+  {
+    "avgPrice": 2.2176,
+    "timestamp": 1698772260000,
+    "timestampF": "2023-10-31T17:11:00.000Z",
+    "minuteId": 28312871
+  },
+  {
+    "avgPrice": 2.19,
+    "timestamp": 1698772320000,
+    "timestampF": "2023-10-31T17:12:00.000Z",
+    "minuteId": 28312872
+  },
+  {
+    "avgPrice": 2.18725,
+    "timestamp": 1698772380000,
+    "timestampF": "2023-10-31T17:13:00.000Z",
+    "minuteId": 28312873
+  },
+  {
+    "avgPrice": 2.1487999999999996,
+    "timestamp": 1698772440000,
+    "timestampF": "2023-10-31T17:14:00.000Z",
+    "minuteId": 28312874
+  },
+  {
+    "avgPrice": 2.1622500000000002,
+    "timestamp": 1698772500000,
+    "timestampF": "2023-10-31T17:15:00.000Z",
+    "minuteId": 28312875
+  },
+  {
+    "avgPrice": 2.1797,
+    "timestamp": 1698772560000,
+    "timestampF": "2023-10-31T17:16:00.000Z",
+    "minuteId": 28312876
+  },
+  {
+    "avgPrice": 2.1782,
+    "timestamp": 1698772620000,
+    "timestampF": "2023-10-31T17:17:00.000Z",
+    "minuteId": 28312877
+  },
+  {
+    "avgPrice": 2.1900000000000004,
+    "timestamp": 1698772680000,
+    "timestampF": "2023-10-31T17:18:00.000Z",
+    "minuteId": 28312878
+  },
+  {
+    "avgPrice": 2.19645,
+    "timestamp": 1698772740000,
+    "timestampF": "2023-10-31T17:19:00.000Z",
+    "minuteId": 28312879
+  },
+  {
+    "avgPrice": 2.2161,
+    "timestamp": 1698772800000,
+    "timestampF": "2023-10-31T17:20:00.000Z",
+    "minuteId": 28312880
+  },
+  {
+    "avgPrice": 2.2029,
+    "timestamp": 1698772860000,
+    "timestampF": "2023-10-31T17:21:00.000Z",
+    "minuteId": 28312881
+  },
+  {
+    "avgPrice": 2.1875,
+    "timestamp": 1698772920000,
+    "timestampF": "2023-10-31T17:22:00.000Z",
+    "minuteId": 28312882
+  },
+  {
+    "avgPrice": 2.18945,
+    "timestamp": 1698772980000,
+    "timestampF": "2023-10-31T17:23:00.000Z",
+    "minuteId": 28312883
+  },
+  {
+    "avgPrice": 2.1847000000000003,
+    "timestamp": 1698773040000,
+    "timestampF": "2023-10-31T17:24:00.000Z",
+    "minuteId": 28312884
+  },
+  {
+    "avgPrice": 2.17375,
+    "timestamp": 1698773100000,
+    "timestampF": "2023-10-31T17:25:00.000Z",
+    "minuteId": 28312885
+  },
+  {
+    "avgPrice": 2.1783,
+    "timestamp": 1698773160000,
+    "timestampF": "2023-10-31T17:26:00.000Z",
+    "minuteId": 28312886
+  },
+  {
+    "avgPrice": 2.161,
+    "timestamp": 1698773220000,
+    "timestampF": "2023-10-31T17:27:00.000Z",
+    "minuteId": 28312887
+  },
+  {
+    "avgPrice": 2.1752000000000002,
+    "timestamp": 1698773280000,
+    "timestampF": "2023-10-31T17:28:00.000Z",
+    "minuteId": 28312888
+  },
+  {
+    "avgPrice": 2.1882,
+    "timestamp": 1698773340000,
+    "timestampF": "2023-10-31T17:29:00.000Z",
+    "minuteId": 28312889
+  },
+  {
+    "avgPrice": 2.197,
+    "timestamp": 1698773400000,
+    "timestampF": "2023-10-31T17:30:00.000Z",
+    "minuteId": 28312890
+  },
+  {
+    "avgPrice": 2.2145,
+    "timestamp": 1698773460000,
+    "timestampF": "2023-10-31T17:31:00.000Z",
+    "minuteId": 28312891
+  },
+  {
+    "avgPrice": 2.21225,
+    "timestamp": 1698773520000,
+    "timestampF": "2023-10-31T17:32:00.000Z",
+    "minuteId": 28312892
+  },
+  {
+    "avgPrice": 2.2275,
+    "timestamp": 1698773580000,
+    "timestampF": "2023-10-31T17:33:00.000Z",
+    "minuteId": 28312893
+  },
+  {
+    "avgPrice": 2.23605,
+    "timestamp": 1698773640000,
+    "timestampF": "2023-10-31T17:34:00.000Z",
+    "minuteId": 28312894
+  },
+  {
+    "avgPrice": 2.2403,
+    "timestamp": 1698773700000,
+    "timestampF": "2023-10-31T17:35:00.000Z",
+    "minuteId": 28312895
+  },
+  {
+    "avgPrice": 2.23065,
+    "timestamp": 1698773760000,
+    "timestampF": "2023-10-31T17:36:00.000Z",
+    "minuteId": 28312896
+  },
+  {
+    "avgPrice": 2.21385,
+    "timestamp": 1698773820000,
+    "timestampF": "2023-10-31T17:37:00.000Z",
+    "minuteId": 28312897
+  },
+  {
+    "avgPrice": 2.20725,
+    "timestamp": 1698773880000,
+    "timestampF": "2023-10-31T17:38:00.000Z",
+    "minuteId": 28312898
+  },
+  {
+    "avgPrice": 2.2056,
+    "timestamp": 1698773940000,
+    "timestampF": "2023-10-31T17:39:00.000Z",
+    "minuteId": 28312899
+  },
+  {
+    "avgPrice": 2.2115,
+    "timestamp": 1698774000000,
+    "timestampF": "2023-10-31T17:40:00.000Z",
+    "minuteId": 28312900
+  },
+  {
+    "avgPrice": 2.20505,
+    "timestamp": 1698774060000,
+    "timestampF": "2023-10-31T17:41:00.000Z",
+    "minuteId": 28312901
+  },
+  {
+    "avgPrice": 2.19465,
+    "timestamp": 1698774120000,
+    "timestampF": "2023-10-31T17:42:00.000Z",
+    "minuteId": 28312902
+  },
+  {
+    "avgPrice": 2.2036,
+    "timestamp": 1698774180000,
+    "timestampF": "2023-10-31T17:43:00.000Z",
+    "minuteId": 28312903
+  },
+  {
+    "avgPrice": 2.20025,
+    "timestamp": 1698774240000,
+    "timestampF": "2023-10-31T17:44:00.000Z",
+    "minuteId": 28312904
+  },
+  {
+    "avgPrice": 2.2013,
+    "timestamp": 1698774300000,
+    "timestampF": "2023-10-31T17:45:00.000Z",
+    "minuteId": 28312905
+  },
+  {
+    "avgPrice": 2.19615,
+    "timestamp": 1698774360000,
+    "timestampF": "2023-10-31T17:46:00.000Z",
+    "minuteId": 28312906
+  },
+  {
+    "avgPrice": 2.19275,
+    "timestamp": 1698774420000,
+    "timestampF": "2023-10-31T17:47:00.000Z",
+    "minuteId": 28312907
+  },
+  {
+    "avgPrice": 2.1873500000000003,
+    "timestamp": 1698774480000,
+    "timestampF": "2023-10-31T17:48:00.000Z",
+    "minuteId": 28312908
+  },
+  {
+    "avgPrice": 2.1837,
+    "timestamp": 1698774540000,
+    "timestampF": "2023-10-31T17:49:00.000Z",
+    "minuteId": 28312909
+  },
+  {
+    "avgPrice": 2.1788,
+    "timestamp": 1698774600000,
+    "timestampF": "2023-10-31T17:50:00.000Z",
+    "minuteId": 28312910
+  },
+  {
+    "avgPrice": 2.17285,
+    "timestamp": 1698774660000,
+    "timestampF": "2023-10-31T17:51:00.000Z",
+    "minuteId": 28312911
+  },
+  {
+    "avgPrice": 2.17795,
+    "timestamp": 1698774720000,
+    "timestampF": "2023-10-31T17:52:00.000Z",
+    "minuteId": 28312912
+  },
+  {
+    "avgPrice": 2.1925499999999998,
+    "timestamp": 1698774780000,
+    "timestampF": "2023-10-31T17:53:00.000Z",
+    "minuteId": 28312913
+  },
+  {
+    "avgPrice": 2.2094,
+    "timestamp": 1698774840000,
+    "timestampF": "2023-10-31T17:54:00.000Z",
+    "minuteId": 28312914
+  },
+  {
+    "avgPrice": 2.2093,
+    "timestamp": 1698774900000,
+    "timestampF": "2023-10-31T17:55:00.000Z",
+    "minuteId": 28312915
+  },
+  {
+    "avgPrice": 2.20315,
+    "timestamp": 1698774960000,
+    "timestampF": "2023-10-31T17:56:00.000Z",
+    "minuteId": 28312916
+  },
+  {
+    "avgPrice": 2.1861,
+    "timestamp": 1698775020000,
+    "timestampF": "2023-10-31T17:57:00.000Z",
+    "minuteId": 28312917
+  },
+  {
+    "avgPrice": 2.1851000000000003,
+    "timestamp": 1698775080000,
+    "timestampF": "2023-10-31T17:58:00.000Z",
+    "minuteId": 28312918
+  },
+  {
+    "avgPrice": 2.1925,
+    "timestamp": 1698775140000,
+    "timestampF": "2023-10-31T17:59:00.000Z",
+    "minuteId": 28312919
+  },
+  {
+    "avgPrice": 2.197,
+    "timestamp": 1698775200000,
+    "timestampF": "2023-10-31T18:00:00.000Z",
+    "minuteId": 28312920
+  },
+  {
+    "avgPrice": 2.19175,
+    "timestamp": 1698775260000,
+    "timestampF": "2023-10-31T18:01:00.000Z",
+    "minuteId": 28312921
+  },
+  {
+    "avgPrice": 2.1908000000000003,
+    "timestamp": 1698775320000,
+    "timestampF": "2023-10-31T18:02:00.000Z",
+    "minuteId": 28312922
+  },
+  {
+    "avgPrice": 2.20215,
+    "timestamp": 1698775380000,
+    "timestampF": "2023-10-31T18:03:00.000Z",
+    "minuteId": 28312923
+  },
+  {
+    "avgPrice": 2.19925,
+    "timestamp": 1698775440000,
+    "timestampF": "2023-10-31T18:04:00.000Z",
+    "minuteId": 28312924
+  },
+  {
+    "avgPrice": 2.2014500000000004,
+    "timestamp": 1698775500000,
+    "timestampF": "2023-10-31T18:05:00.000Z",
+    "minuteId": 28312925
+  },
+  {
+    "avgPrice": 2.20055,
+    "timestamp": 1698775560000,
+    "timestampF": "2023-10-31T18:06:00.000Z",
+    "minuteId": 28312926
+  },
+  {
+    "avgPrice": 2.18235,
+    "timestamp": 1698775620000,
+    "timestampF": "2023-10-31T18:07:00.000Z",
+    "minuteId": 28312927
+  },
+  {
+    "avgPrice": 2.18045,
+    "timestamp": 1698775680000,
+    "timestampF": "2023-10-31T18:08:00.000Z",
+    "minuteId": 28312928
+  },
+  {
+    "avgPrice": 2.1866,
+    "timestamp": 1698775740000,
+    "timestampF": "2023-10-31T18:09:00.000Z",
+    "minuteId": 28312929
+  },
+  {
+    "avgPrice": 2.1799999999999997,
+    "timestamp": 1698775800000,
+    "timestampF": "2023-10-31T18:10:00.000Z",
+    "minuteId": 28312930
+  },
+  {
+    "avgPrice": 2.19135,
+    "timestamp": 1698775860000,
+    "timestampF": "2023-10-31T18:11:00.000Z",
+    "minuteId": 28312931
+  },
+  {
+    "avgPrice": 2.18605,
+    "timestamp": 1698775920000,
+    "timestampF": "2023-10-31T18:12:00.000Z",
+    "minuteId": 28312932
+  },
+  {
+    "avgPrice": 2.1799,
+    "timestamp": 1698775980000,
+    "timestampF": "2023-10-31T18:13:00.000Z",
+    "minuteId": 28312933
+  },
+  {
+    "avgPrice": 2.176,
+    "timestamp": 1698776040000,
+    "timestampF": "2023-10-31T18:14:00.000Z",
+    "minuteId": 28312934
+  },
+  {
+    "avgPrice": 2.1807499999999997,
+    "timestamp": 1698776100000,
+    "timestampF": "2023-10-31T18:15:00.000Z",
+    "minuteId": 28312935
+  },
+  {
+    "avgPrice": 2.1863,
+    "timestamp": 1698776160000,
+    "timestampF": "2023-10-31T18:16:00.000Z",
+    "minuteId": 28312936
+  },
+  {
+    "avgPrice": 2.1739499999999996,
+    "timestamp": 1698776220000,
+    "timestampF": "2023-10-31T18:17:00.000Z",
+    "minuteId": 28312937
+  },
+  {
+    "avgPrice": 2.1647999999999996,
+    "timestamp": 1698776280000,
+    "timestampF": "2023-10-31T18:18:00.000Z",
+    "minuteId": 28312938
+  },
+  {
+    "avgPrice": 2.15785,
+    "timestamp": 1698776340000,
+    "timestampF": "2023-10-31T18:19:00.000Z",
+    "minuteId": 28312939
+  },
+  {
+    "avgPrice": 2.1368,
+    "timestamp": 1698776400000,
+    "timestampF": "2023-10-31T18:20:00.000Z",
+    "minuteId": 28312940
+  },
+  {
+    "avgPrice": 2.1634,
+    "timestamp": 1698776460000,
+    "timestampF": "2023-10-31T18:21:00.000Z",
+    "minuteId": 28312941
+  },
+  {
+    "avgPrice": 2.1950000000000003,
+    "timestamp": 1698776520000,
+    "timestampF": "2023-10-31T18:22:00.000Z",
+    "minuteId": 28312942
+  },
+  {
+    "avgPrice": 2.18515,
+    "timestamp": 1698776580000,
+    "timestampF": "2023-10-31T18:23:00.000Z",
+    "minuteId": 28312943
+  },
+  {
+    "avgPrice": 2.1808,
+    "timestamp": 1698776640000,
+    "timestampF": "2023-10-31T18:24:00.000Z",
+    "minuteId": 28312944
+  },
+  {
+    "avgPrice": 2.1874000000000002,
+    "timestamp": 1698776700000,
+    "timestampF": "2023-10-31T18:25:00.000Z",
+    "minuteId": 28312945
+  },
+  {
+    "avgPrice": 2.215,
+    "timestamp": 1698776760000,
+    "timestampF": "2023-10-31T18:26:00.000Z",
+    "minuteId": 28312946
+  },
+  {
+    "avgPrice": 2.2348,
+    "timestamp": 1698776820000,
+    "timestampF": "2023-10-31T18:27:00.000Z",
+    "minuteId": 28312947
+  },
+  {
+    "avgPrice": 2.2215499999999997,
+    "timestamp": 1698776880000,
+    "timestampF": "2023-10-31T18:28:00.000Z",
+    "minuteId": 28312948
+  },
+  {
+    "avgPrice": 2.21115,
+    "timestamp": 1698776940000,
+    "timestampF": "2023-10-31T18:29:00.000Z",
+    "minuteId": 28312949
+  },
+  {
+    "avgPrice": 2.2196,
+    "timestamp": 1698777000000,
+    "timestampF": "2023-10-31T18:30:00.000Z",
+    "minuteId": 28312950
+  },
+  {
+    "avgPrice": 2.24315,
+    "timestamp": 1698777060000,
+    "timestampF": "2023-10-31T18:31:00.000Z",
+    "minuteId": 28312951
+  },
+  {
+    "avgPrice": 2.2448499999999996,
+    "timestamp": 1698777120000,
+    "timestampF": "2023-10-31T18:32:00.000Z",
+    "minuteId": 28312952
+  },
+  {
+    "avgPrice": 2.25305,
+    "timestamp": 1698777180000,
+    "timestampF": "2023-10-31T18:33:00.000Z",
+    "minuteId": 28312953
+  },
+  {
+    "avgPrice": 2.2646499999999996,
+    "timestamp": 1698777240000,
+    "timestampF": "2023-10-31T18:34:00.000Z",
+    "minuteId": 28312954
+  },
+  {
+    "avgPrice": 2.2795,
+    "timestamp": 1698777300000,
+    "timestampF": "2023-10-31T18:35:00.000Z",
+    "minuteId": 28312955
+  },
+  {
+    "avgPrice": 2.29235,
+    "timestamp": 1698777360000,
+    "timestampF": "2023-10-31T18:36:00.000Z",
+    "minuteId": 28312956
+  },
+  {
+    "avgPrice": 2.2847999999999997,
+    "timestamp": 1698777420000,
+    "timestampF": "2023-10-31T18:37:00.000Z",
+    "minuteId": 28312957
+  },
+  {
+    "avgPrice": 2.2858,
+    "timestamp": 1698777480000,
+    "timestampF": "2023-10-31T18:38:00.000Z",
+    "minuteId": 28312958
+  },
+  {
+    "avgPrice": 2.29,
+    "timestamp": 1698777540000,
+    "timestampF": "2023-10-31T18:39:00.000Z",
+    "minuteId": 28312959
+  },
+  {
+    "avgPrice": 2.3155,
+    "timestamp": 1698777600000,
+    "timestampF": "2023-10-31T18:40:00.000Z",
+    "minuteId": 28312960
+  },
+  {
+    "avgPrice": 2.33805,
+    "timestamp": 1698777660000,
+    "timestampF": "2023-10-31T18:41:00.000Z",
+    "minuteId": 28312961
+  },
+  {
+    "avgPrice": 2.3257,
+    "timestamp": 1698777720000,
+    "timestampF": "2023-10-31T18:42:00.000Z",
+    "minuteId": 28312962
+  },
+  {
+    "avgPrice": 2.27555,
+    "timestamp": 1698777780000,
+    "timestampF": "2023-10-31T18:43:00.000Z",
+    "minuteId": 28312963
+  },
+  {
+    "avgPrice": 2.28105,
+    "timestamp": 1698777840000,
+    "timestampF": "2023-10-31T18:44:00.000Z",
+    "minuteId": 28312964
+  },
+  {
+    "avgPrice": 2.3001,
+    "timestamp": 1698777900000,
+    "timestampF": "2023-10-31T18:45:00.000Z",
+    "minuteId": 28312965
+  },
+  {
+    "avgPrice": 2.3118,
+    "timestamp": 1698777960000,
+    "timestampF": "2023-10-31T18:46:00.000Z",
+    "minuteId": 28312966
+  },
+  {
+    "avgPrice": 2.295,
+    "timestamp": 1698778020000,
+    "timestampF": "2023-10-31T18:47:00.000Z",
+    "minuteId": 28312967
+  },
+  {
+    "avgPrice": 2.29575,
+    "timestamp": 1698778080000,
+    "timestampF": "2023-10-31T18:48:00.000Z",
+    "minuteId": 28312968
+  },
+  {
+    "avgPrice": 2.27635,
+    "timestamp": 1698778140000,
+    "timestampF": "2023-10-31T18:49:00.000Z",
+    "minuteId": 28312969
+  },
+  {
+    "avgPrice": 2.26945,
+    "timestamp": 1698778200000,
+    "timestampF": "2023-10-31T18:50:00.000Z",
+    "minuteId": 28312970
+  },
+  {
+    "avgPrice": 2.2872000000000003,
+    "timestamp": 1698778260000,
+    "timestampF": "2023-10-31T18:51:00.000Z",
+    "minuteId": 28312971
+  },
+  {
+    "avgPrice": 2.2923999999999998,
+    "timestamp": 1698778320000,
+    "timestampF": "2023-10-31T18:52:00.000Z",
+    "minuteId": 28312972
+  },
+  {
+    "avgPrice": 2.29325,
+    "timestamp": 1698778380000,
+    "timestampF": "2023-10-31T18:53:00.000Z",
+    "minuteId": 28312973
+  },
+  {
+    "avgPrice": 2.3095,
+    "timestamp": 1698778440000,
+    "timestampF": "2023-10-31T18:54:00.000Z",
+    "minuteId": 28312974
+  },
+  {
+    "avgPrice": 2.3182,
+    "timestamp": 1698778500000,
+    "timestampF": "2023-10-31T18:55:00.000Z",
+    "minuteId": 28312975
+  },
+  {
+    "avgPrice": 2.31615,
+    "timestamp": 1698778560000,
+    "timestampF": "2023-10-31T18:56:00.000Z",
+    "minuteId": 28312976
+  },
+  {
+    "avgPrice": 2.31865,
+    "timestamp": 1698778620000,
+    "timestampF": "2023-10-31T18:57:00.000Z",
+    "minuteId": 28312977
+  },
+  {
+    "avgPrice": 2.3019,
+    "timestamp": 1698778680000,
+    "timestampF": "2023-10-31T18:58:00.000Z",
+    "minuteId": 28312978
+  },
+  {
+    "avgPrice": 2.2889999999999997,
+    "timestamp": 1698778740000,
+    "timestampF": "2023-10-31T18:59:00.000Z",
+    "minuteId": 28312979
+  },
+  {
+    "avgPrice": 2.2805999999999997,
+    "timestamp": 1698778800000,
+    "timestampF": "2023-10-31T19:00:00.000Z",
+    "minuteId": 28312980
+  },
+  {
+    "avgPrice": 2.29145,
+    "timestamp": 1698778860000,
+    "timestampF": "2023-10-31T19:01:00.000Z",
+    "minuteId": 28312981
+  },
+  {
+    "avgPrice": 2.2851999999999997,
+    "timestamp": 1698778920000,
+    "timestampF": "2023-10-31T19:02:00.000Z",
+    "minuteId": 28312982
+  },
+  {
+    "avgPrice": 2.2466999999999997,
+    "timestamp": 1698778980000,
+    "timestampF": "2023-10-31T19:03:00.000Z",
+    "minuteId": 28312983
+  },
+  {
+    "avgPrice": 2.2363,
+    "timestamp": 1698779040000,
+    "timestampF": "2023-10-31T19:04:00.000Z",
+    "minuteId": 28312984
+  },
+  {
+    "avgPrice": 2.2244,
+    "timestamp": 1698779100000,
+    "timestampF": "2023-10-31T19:05:00.000Z",
+    "minuteId": 28312985
+  },
+  {
+    "avgPrice": 2.247,
+    "timestamp": 1698779160000,
+    "timestampF": "2023-10-31T19:06:00.000Z",
+    "minuteId": 28312986
+  },
+  {
+    "avgPrice": 2.2756,
+    "timestamp": 1698779220000,
+    "timestampF": "2023-10-31T19:07:00.000Z",
+    "minuteId": 28312987
+  },
+  {
+    "avgPrice": 2.3057,
+    "timestamp": 1698779280000,
+    "timestampF": "2023-10-31T19:08:00.000Z",
+    "minuteId": 28312988
+  },
+  {
+    "avgPrice": 2.31935,
+    "timestamp": 1698779340000,
+    "timestampF": "2023-10-31T19:09:00.000Z",
+    "minuteId": 28312989
+  },
+  {
+    "avgPrice": 2.32995,
+    "timestamp": 1698779400000,
+    "timestampF": "2023-10-31T19:10:00.000Z",
+    "minuteId": 28312990
+  },
+  {
+    "avgPrice": 2.3217499999999998,
+    "timestamp": 1698779460000,
+    "timestampF": "2023-10-31T19:11:00.000Z",
+    "minuteId": 28312991
+  },
+  {
+    "avgPrice": 2.3362,
+    "timestamp": 1698779520000,
+    "timestampF": "2023-10-31T19:12:00.000Z",
+    "minuteId": 28312992
+  },
+  {
+    "avgPrice": 2.347,
+    "timestamp": 1698779580000,
+    "timestampF": "2023-10-31T19:13:00.000Z",
+    "minuteId": 28312993
+  },
+  {
+    "avgPrice": 2.3545,
+    "timestamp": 1698779640000,
+    "timestampF": "2023-10-31T19:14:00.000Z",
+    "minuteId": 28312994
+  },
+  {
+    "avgPrice": 2.35895,
+    "timestamp": 1698779700000,
+    "timestampF": "2023-10-31T19:15:00.000Z",
+    "minuteId": 28312995
+  },
+  {
+    "avgPrice": 2.37005,
+    "timestamp": 1698779760000,
+    "timestampF": "2023-10-31T19:16:00.000Z",
+    "minuteId": 28312996
+  },
+  {
+    "avgPrice": 2.3705,
+    "timestamp": 1698779820000,
+    "timestampF": "2023-10-31T19:17:00.000Z",
+    "minuteId": 28312997
+  },
+  {
+    "avgPrice": 2.3533,
+    "timestamp": 1698779880000,
+    "timestampF": "2023-10-31T19:18:00.000Z",
+    "minuteId": 28312998
+  },
+  {
+    "avgPrice": 2.33205,
+    "timestamp": 1698779940000,
+    "timestampF": "2023-10-31T19:19:00.000Z",
+    "minuteId": 28312999
+  },
+  {
+    "avgPrice": 2.3612,
+    "timestamp": 1698780000000,
+    "timestampF": "2023-10-31T19:20:00.000Z",
+    "minuteId": 28313000
+  },
+  {
+    "avgPrice": 2.3791,
+    "timestamp": 1698780060000,
+    "timestampF": "2023-10-31T19:21:00.000Z",
+    "minuteId": 28313001
+  },
+  {
+    "avgPrice": 2.3886000000000003,
+    "timestamp": 1698780120000,
+    "timestampF": "2023-10-31T19:22:00.000Z",
+    "minuteId": 28313002
+  },
+  {
+    "avgPrice": 2.388,
+    "timestamp": 1698780180000,
+    "timestampF": "2023-10-31T19:23:00.000Z",
+    "minuteId": 28313003
+  },
+  {
+    "avgPrice": 2.39295,
+    "timestamp": 1698780240000,
+    "timestampF": "2023-10-31T19:24:00.000Z",
+    "minuteId": 28313004
+  },
+  {
+    "avgPrice": 2.41175,
+    "timestamp": 1698780300000,
+    "timestampF": "2023-10-31T19:25:00.000Z",
+    "minuteId": 28313005
+  },
+  {
+    "avgPrice": 2.4226,
+    "timestamp": 1698780360000,
+    "timestampF": "2023-10-31T19:26:00.000Z",
+    "minuteId": 28313006
+  },
+  {
+    "avgPrice": 2.39755,
+    "timestamp": 1698780420000,
+    "timestampF": "2023-10-31T19:27:00.000Z",
+    "minuteId": 28313007
+  },
+  {
+    "avgPrice": 2.4090499999999997,
+    "timestamp": 1698780480000,
+    "timestampF": "2023-10-31T19:28:00.000Z",
+    "minuteId": 28313008
+  },
+  {
+    "avgPrice": 2.4122500000000002,
+    "timestamp": 1698780540000,
+    "timestampF": "2023-10-31T19:29:00.000Z",
+    "minuteId": 28313009
+  },
+  {
+    "avgPrice": 2.4015,
+    "timestamp": 1698780600000,
+    "timestampF": "2023-10-31T19:30:00.000Z",
+    "minuteId": 28313010
+  },
+  {
+    "avgPrice": 2.4025,
+    "timestamp": 1698780660000,
+    "timestampF": "2023-10-31T19:31:00.000Z",
+    "minuteId": 28313011
+  },
+  {
+    "avgPrice": 2.42035,
+    "timestamp": 1698780720000,
+    "timestampF": "2023-10-31T19:32:00.000Z",
+    "minuteId": 28313012
+  },
+  {
+    "avgPrice": 2.44245,
+    "timestamp": 1698780780000,
+    "timestampF": "2023-10-31T19:33:00.000Z",
+    "minuteId": 28313013
+  },
+  {
+    "avgPrice": 2.45855,
+    "timestamp": 1698780840000,
+    "timestampF": "2023-10-31T19:34:00.000Z",
+    "minuteId": 28313014
+  },
+  {
+    "avgPrice": 2.4504,
+    "timestamp": 1698780900000,
+    "timestampF": "2023-10-31T19:35:00.000Z",
+    "minuteId": 28313015
+  },
+  {
+    "avgPrice": 2.4497,
+    "timestamp": 1698780960000,
+    "timestampF": "2023-10-31T19:36:00.000Z",
+    "minuteId": 28313016
+  },
+  {
+    "avgPrice": 2.4619999999999997,
+    "timestamp": 1698781020000,
+    "timestampF": "2023-10-31T19:37:00.000Z",
+    "minuteId": 28313017
+  },
+  {
+    "avgPrice": 2.4455999999999998,
+    "timestamp": 1698781080000,
+    "timestampF": "2023-10-31T19:38:00.000Z",
+    "minuteId": 28313018
+  },
+  {
+    "avgPrice": 2.44095,
+    "timestamp": 1698781140000,
+    "timestampF": "2023-10-31T19:39:00.000Z",
+    "minuteId": 28313019
+  },
+  {
+    "avgPrice": 2.4505,
+    "timestamp": 1698781200000,
+    "timestampF": "2023-10-31T19:40:00.000Z",
+    "minuteId": 28313020
+  },
+  {
+    "avgPrice": 2.4640000000000004,
+    "timestamp": 1698781260000,
+    "timestampF": "2023-10-31T19:41:00.000Z",
+    "minuteId": 28313021
+  },
+  {
+    "avgPrice": 2.45435,
+    "timestamp": 1698781320000,
+    "timestampF": "2023-10-31T19:42:00.000Z",
+    "minuteId": 28313022
+  },
+  {
+    "avgPrice": 2.4545500000000002,
+    "timestamp": 1698781380000,
+    "timestampF": "2023-10-31T19:43:00.000Z",
+    "minuteId": 28313023
+  },
+  {
+    "avgPrice": 2.4588,
+    "timestamp": 1698781440000,
+    "timestampF": "2023-10-31T19:44:00.000Z",
+    "minuteId": 28313024
+  },
+  {
+    "avgPrice": 2.4639,
+    "timestamp": 1698781500000,
+    "timestampF": "2023-10-31T19:45:00.000Z",
+    "minuteId": 28313025
+  },
+  {
+    "avgPrice": 2.459,
+    "timestamp": 1698781560000,
+    "timestampF": "2023-10-31T19:46:00.000Z",
+    "minuteId": 28313026
+  },
+  {
+    "avgPrice": 2.4593,
+    "timestamp": 1698781620000,
+    "timestampF": "2023-10-31T19:47:00.000Z",
+    "minuteId": 28313027
+  },
+  {
+    "avgPrice": 2.4583,
+    "timestamp": 1698781680000,
+    "timestampF": "2023-10-31T19:48:00.000Z",
+    "minuteId": 28313028
+  },
+  {
+    "avgPrice": 2.43335,
+    "timestamp": 1698781740000,
+    "timestampF": "2023-10-31T19:49:00.000Z",
+    "minuteId": 28313029
+  },
+  {
+    "avgPrice": 2.43635,
+    "timestamp": 1698781800000,
+    "timestampF": "2023-10-31T19:50:00.000Z",
+    "minuteId": 28313030
+  },
+  {
+    "avgPrice": 2.4539999999999997,
+    "timestamp": 1698781860000,
+    "timestampF": "2023-10-31T19:51:00.000Z",
+    "minuteId": 28313031
+  },
+  {
+    "avgPrice": 2.4419500000000003,
+    "timestamp": 1698781920000,
+    "timestampF": "2023-10-31T19:52:00.000Z",
+    "minuteId": 28313032
+  },
+  {
+    "avgPrice": 2.4257999999999997,
+    "timestamp": 1698781980000,
+    "timestampF": "2023-10-31T19:53:00.000Z",
+    "minuteId": 28313033
+  },
+  {
+    "avgPrice": 2.3964499999999997,
+    "timestamp": 1698782040000,
+    "timestampF": "2023-10-31T19:54:00.000Z",
+    "minuteId": 28313034
+  },
+  {
+    "avgPrice": 2.4040999999999997,
+    "timestamp": 1698782100000,
+    "timestampF": "2023-10-31T19:55:00.000Z",
+    "minuteId": 28313035
+  },
+  {
+    "avgPrice": 2.4156000000000004,
+    "timestamp": 1698782160000,
+    "timestampF": "2023-10-31T19:56:00.000Z",
+    "minuteId": 28313036
+  },
+  {
+    "avgPrice": 2.41955,
+    "timestamp": 1698782220000,
+    "timestampF": "2023-10-31T19:57:00.000Z",
+    "minuteId": 28313037
+  },
+  {
+    "avgPrice": 2.43335,
+    "timestamp": 1698782280000,
+    "timestampF": "2023-10-31T19:58:00.000Z",
+    "minuteId": 28313038
+  },
+  {
+    "avgPrice": 2.44365,
+    "timestamp": 1698782340000,
+    "timestampF": "2023-10-31T19:59:00.000Z",
+    "minuteId": 28313039
+  },
+  {
+    "avgPrice": 2.4490499999999997,
+    "timestamp": 1698782400000,
+    "timestampF": "2023-10-31T20:00:00.000Z",
+    "minuteId": 28313040
+  },
+  {
+    "avgPrice": 2.4382,
+    "timestamp": 1698782460000,
+    "timestampF": "2023-10-31T20:01:00.000Z",
+    "minuteId": 28313041
+  },
+  {
+    "avgPrice": 2.4294000000000002,
+    "timestamp": 1698782520000,
+    "timestampF": "2023-10-31T20:02:00.000Z",
+    "minuteId": 28313042
+  },
+  {
+    "avgPrice": 2.4424,
+    "timestamp": 1698782580000,
+    "timestampF": "2023-10-31T20:03:00.000Z",
+    "minuteId": 28313043
+  },
+  {
+    "avgPrice": 2.4448499999999997,
+    "timestamp": 1698782640000,
+    "timestampF": "2023-10-31T20:04:00.000Z",
+    "minuteId": 28313044
+  },
+  {
+    "avgPrice": 2.44935,
+    "timestamp": 1698782700000,
+    "timestampF": "2023-10-31T20:05:00.000Z",
+    "minuteId": 28313045
+  },
+  {
+    "avgPrice": 2.455,
+    "timestamp": 1698782760000,
+    "timestampF": "2023-10-31T20:06:00.000Z",
+    "minuteId": 28313046
+  },
+  {
+    "avgPrice": 2.4604999999999997,
+    "timestamp": 1698782820000,
+    "timestampF": "2023-10-31T20:07:00.000Z",
+    "minuteId": 28313047
+  },
+  {
+    "avgPrice": 2.47105,
+    "timestamp": 1698782880000,
+    "timestampF": "2023-10-31T20:08:00.000Z",
+    "minuteId": 28313048
+  },
+  {
+    "avgPrice": 2.48065,
+    "timestamp": 1698782940000,
+    "timestampF": "2023-10-31T20:09:00.000Z",
+    "minuteId": 28313049
+  },
+  {
+    "avgPrice": 2.4905999999999997,
+    "timestamp": 1698783000000,
+    "timestampF": "2023-10-31T20:10:00.000Z",
+    "minuteId": 28313050
+  },
+  {
+    "avgPrice": 2.4978499999999997,
+    "timestamp": 1698783060000,
+    "timestampF": "2023-10-31T20:11:00.000Z",
+    "minuteId": 28313051
+  },
+  {
+    "avgPrice": 2.4734,
+    "timestamp": 1698783120000,
+    "timestampF": "2023-10-31T20:12:00.000Z",
+    "minuteId": 28313052
+  },
+  {
+    "avgPrice": 2.4643,
+    "timestamp": 1698783180000,
+    "timestampF": "2023-10-31T20:13:00.000Z",
+    "minuteId": 28313053
+  },
+  {
+    "avgPrice": 2.43585,
+    "timestamp": 1698783240000,
+    "timestampF": "2023-10-31T20:14:00.000Z",
+    "minuteId": 28313054
+  },
+  {
+    "avgPrice": 2.4475,
+    "timestamp": 1698783300000,
+    "timestampF": "2023-10-31T20:15:00.000Z",
+    "minuteId": 28313055
+  },
+  {
+    "avgPrice": 2.4398,
+    "timestamp": 1698783360000,
+    "timestampF": "2023-10-31T20:16:00.000Z",
+    "minuteId": 28313056
+  },
+  {
+    "avgPrice": 2.4436,
+    "timestamp": 1698783420000,
+    "timestampF": "2023-10-31T20:17:00.000Z",
+    "minuteId": 28313057
+  },
+  {
+    "avgPrice": 2.4463999999999997,
+    "timestamp": 1698783480000,
+    "timestampF": "2023-10-31T20:18:00.000Z",
+    "minuteId": 28313058
+  },
+  {
+    "avgPrice": 2.4638999999999998,
+    "timestamp": 1698783540000,
+    "timestampF": "2023-10-31T20:19:00.000Z",
+    "minuteId": 28313059
+  },
+  {
+    "avgPrice": 2.4617,
+    "timestamp": 1698783600000,
+    "timestampF": "2023-10-31T20:20:00.000Z",
+    "minuteId": 28313060
+  },
+  {
+    "avgPrice": 2.4546,
+    "timestamp": 1698783660000,
+    "timestampF": "2023-10-31T20:21:00.000Z",
+    "minuteId": 28313061
+  },
+  {
+    "avgPrice": 2.4128,
+    "timestamp": 1698783720000,
+    "timestampF": "2023-10-31T20:22:00.000Z",
+    "minuteId": 28313062
+  },
+  {
+    "avgPrice": 2.39685,
+    "timestamp": 1698783780000,
+    "timestampF": "2023-10-31T20:23:00.000Z",
+    "minuteId": 28313063
+  },
+  {
+    "avgPrice": 2.39795,
+    "timestamp": 1698783840000,
+    "timestampF": "2023-10-31T20:24:00.000Z",
+    "minuteId": 28313064
+  },
+  {
+    "avgPrice": 2.40355,
+    "timestamp": 1698783900000,
+    "timestampF": "2023-10-31T20:25:00.000Z",
+    "minuteId": 28313065
+  },
+  {
+    "avgPrice": 2.40685,
+    "timestamp": 1698783960000,
+    "timestampF": "2023-10-31T20:26:00.000Z",
+    "minuteId": 28313066
+  },
+  {
+    "avgPrice": 2.4078,
+    "timestamp": 1698784020000,
+    "timestampF": "2023-10-31T20:27:00.000Z",
+    "minuteId": 28313067
+  },
+  {
+    "avgPrice": 2.4042,
+    "timestamp": 1698784080000,
+    "timestampF": "2023-10-31T20:28:00.000Z",
+    "minuteId": 28313068
+  },
+  {
+    "avgPrice": 2.398,
+    "timestamp": 1698784140000,
+    "timestampF": "2023-10-31T20:29:00.000Z",
+    "minuteId": 28313069
+  },
+  {
+    "avgPrice": 2.35615,
+    "timestamp": 1698784200000,
+    "timestampF": "2023-10-31T20:30:00.000Z",
+    "minuteId": 28313070
+  },
+  {
+    "avgPrice": 2.3322,
+    "timestamp": 1698784260000,
+    "timestampF": "2023-10-31T20:31:00.000Z",
+    "minuteId": 28313071
+  },
+  {
+    "avgPrice": 2.34575,
+    "timestamp": 1698784320000,
+    "timestampF": "2023-10-31T20:32:00.000Z",
+    "minuteId": 28313072
+  },
+  {
+    "avgPrice": 2.35615,
+    "timestamp": 1698784380000,
+    "timestampF": "2023-10-31T20:33:00.000Z",
+    "minuteId": 28313073
+  },
+  {
+    "avgPrice": 2.3426,
+    "timestamp": 1698784440000,
+    "timestampF": "2023-10-31T20:34:00.000Z",
+    "minuteId": 28313074
+  },
+  {
+    "avgPrice": 2.34295,
+    "timestamp": 1698784500000,
+    "timestampF": "2023-10-31T20:35:00.000Z",
+    "minuteId": 28313075
+  },
+  {
+    "avgPrice": 2.3394500000000003,
+    "timestamp": 1698784560000,
+    "timestampF": "2023-10-31T20:36:00.000Z",
+    "minuteId": 28313076
+  },
+  {
+    "avgPrice": 2.3587,
+    "timestamp": 1698784620000,
+    "timestampF": "2023-10-31T20:37:00.000Z",
+    "minuteId": 28313077
+  },
+  {
+    "avgPrice": 2.3626500000000004,
+    "timestamp": 1698784680000,
+    "timestampF": "2023-10-31T20:38:00.000Z",
+    "minuteId": 28313078
+  },
+  {
+    "avgPrice": 2.3779500000000002,
+    "timestamp": 1698784740000,
+    "timestampF": "2023-10-31T20:39:00.000Z",
+    "minuteId": 28313079
+  },
+  {
+    "avgPrice": 2.3828,
+    "timestamp": 1698784800000,
+    "timestampF": "2023-10-31T20:40:00.000Z",
+    "minuteId": 28313080
+  },
+  {
+    "avgPrice": 2.3936,
+    "timestamp": 1698784860000,
+    "timestampF": "2023-10-31T20:41:00.000Z",
+    "minuteId": 28313081
+  },
+  {
+    "avgPrice": 2.40595,
+    "timestamp": 1698784920000,
+    "timestampF": "2023-10-31T20:42:00.000Z",
+    "minuteId": 28313082
+  },
+  {
+    "avgPrice": 2.40165,
+    "timestamp": 1698784980000,
+    "timestampF": "2023-10-31T20:43:00.000Z",
+    "minuteId": 28313083
+  },
+  {
+    "avgPrice": 2.38755,
+    "timestamp": 1698785040000,
+    "timestampF": "2023-10-31T20:44:00.000Z",
+    "minuteId": 28313084
+  },
+  {
+    "avgPrice": 2.3918,
+    "timestamp": 1698785100000,
+    "timestampF": "2023-10-31T20:45:00.000Z",
+    "minuteId": 28313085
+  },
+  {
+    "avgPrice": 2.39665,
+    "timestamp": 1698785160000,
+    "timestampF": "2023-10-31T20:46:00.000Z",
+    "minuteId": 28313086
+  },
+  {
+    "avgPrice": 2.36155,
+    "timestamp": 1698785220000,
+    "timestampF": "2023-10-31T20:47:00.000Z",
+    "minuteId": 28313087
+  },
+  {
+    "avgPrice": 2.3624,
+    "timestamp": 1698785280000,
+    "timestampF": "2023-10-31T20:48:00.000Z",
+    "minuteId": 28313088
+  },
+  {
+    "avgPrice": 2.3764000000000003,
+    "timestamp": 1698785340000,
+    "timestampF": "2023-10-31T20:49:00.000Z",
+    "minuteId": 28313089
+  },
+  {
+    "avgPrice": 2.37425,
+    "timestamp": 1698785400000,
+    "timestampF": "2023-10-31T20:50:00.000Z",
+    "minuteId": 28313090
+  },
+  {
+    "avgPrice": 2.3710500000000003,
+    "timestamp": 1698785460000,
+    "timestampF": "2023-10-31T20:51:00.000Z",
+    "minuteId": 28313091
+  },
+  {
+    "avgPrice": 2.3761,
+    "timestamp": 1698785520000,
+    "timestampF": "2023-10-31T20:52:00.000Z",
+    "minuteId": 28313092
+  },
+  {
+    "avgPrice": 2.37875,
+    "timestamp": 1698785580000,
+    "timestampF": "2023-10-31T20:53:00.000Z",
+    "minuteId": 28313093
+  },
+  {
+    "avgPrice": 2.38865,
+    "timestamp": 1698785640000,
+    "timestampF": "2023-10-31T20:54:00.000Z",
+    "minuteId": 28313094
+  },
+  {
+    "avgPrice": 2.3878,
+    "timestamp": 1698785700000,
+    "timestampF": "2023-10-31T20:55:00.000Z",
+    "minuteId": 28313095
+  },
+  {
+    "avgPrice": 2.3649,
+    "timestamp": 1698785760000,
+    "timestampF": "2023-10-31T20:56:00.000Z",
+    "minuteId": 28313096
+  },
+  {
+    "avgPrice": 2.36585,
+    "timestamp": 1698785820000,
+    "timestampF": "2023-10-31T20:57:00.000Z",
+    "minuteId": 28313097
+  },
+  {
+    "avgPrice": 2.3697,
+    "timestamp": 1698785880000,
+    "timestampF": "2023-10-31T20:58:00.000Z",
+    "minuteId": 28313098
+  },
+  {
+    "avgPrice": 2.362,
+    "timestamp": 1698785940000,
+    "timestampF": "2023-10-31T20:59:00.000Z",
+    "minuteId": 28313099
+  },
+  {
+    "avgPrice": 2.3681,
+    "timestamp": 1698786000000,
+    "timestampF": "2023-10-31T21:00:00.000Z",
+    "minuteId": 28313100
+  },
+  {
+    "avgPrice": 2.3752500000000003,
+    "timestamp": 1698786060000,
+    "timestampF": "2023-10-31T21:01:00.000Z",
+    "minuteId": 28313101
+  },
+  {
+    "avgPrice": 2.38,
+    "timestamp": 1698786120000,
+    "timestampF": "2023-10-31T21:02:00.000Z",
+    "minuteId": 28313102
+  },
+  {
+    "avgPrice": 2.378,
+    "timestamp": 1698786180000,
+    "timestampF": "2023-10-31T21:03:00.000Z",
+    "minuteId": 28313103
+  },
+  {
+    "avgPrice": 2.35805,
+    "timestamp": 1698786240000,
+    "timestampF": "2023-10-31T21:04:00.000Z",
+    "minuteId": 28313104
+  },
+  {
+    "avgPrice": 2.36635,
+    "timestamp": 1698786300000,
+    "timestampF": "2023-10-31T21:05:00.000Z",
+    "minuteId": 28313105
+  },
+  {
+    "avgPrice": 2.3716999999999997,
+    "timestamp": 1698786360000,
+    "timestampF": "2023-10-31T21:06:00.000Z",
+    "minuteId": 28313106
+  },
+  {
+    "avgPrice": 2.37955,
+    "timestamp": 1698786420000,
+    "timestampF": "2023-10-31T21:07:00.000Z",
+    "minuteId": 28313107
+  },
+  {
+    "avgPrice": 2.38185,
+    "timestamp": 1698786480000,
+    "timestampF": "2023-10-31T21:08:00.000Z",
+    "minuteId": 28313108
+  },
+  {
+    "avgPrice": 2.37545,
+    "timestamp": 1698786540000,
+    "timestampF": "2023-10-31T21:09:00.000Z",
+    "minuteId": 28313109
+  },
+  {
+    "avgPrice": 2.3731999999999998,
+    "timestamp": 1698786600000,
+    "timestampF": "2023-10-31T21:10:00.000Z",
+    "minuteId": 28313110
+  },
+  {
+    "avgPrice": 2.3715,
+    "timestamp": 1698786660000,
+    "timestampF": "2023-10-31T21:11:00.000Z",
+    "minuteId": 28313111
+  },
+  {
+    "avgPrice": 2.36435,
+    "timestamp": 1698786720000,
+    "timestampF": "2023-10-31T21:12:00.000Z",
+    "minuteId": 28313112
+  },
+  {
+    "avgPrice": 2.3536,
+    "timestamp": 1698786780000,
+    "timestampF": "2023-10-31T21:13:00.000Z",
+    "minuteId": 28313113
+  },
+  {
+    "avgPrice": 2.3649,
+    "timestamp": 1698786840000,
+    "timestampF": "2023-10-31T21:14:00.000Z",
+    "minuteId": 28313114
+  },
+  {
+    "avgPrice": 2.37265,
+    "timestamp": 1698786900000,
+    "timestampF": "2023-10-31T21:15:00.000Z",
+    "minuteId": 28313115
+  },
+  {
+    "avgPrice": 2.36475,
+    "timestamp": 1698786960000,
+    "timestampF": "2023-10-31T21:16:00.000Z",
+    "minuteId": 28313116
+  },
+  {
+    "avgPrice": 2.3695500000000003,
+    "timestamp": 1698787020000,
+    "timestampF": "2023-10-31T21:17:00.000Z",
+    "minuteId": 28313117
+  },
+  {
+    "avgPrice": 2.37495,
+    "timestamp": 1698787080000,
+    "timestampF": "2023-10-31T21:18:00.000Z",
+    "minuteId": 28313118
+  },
+  {
+    "avgPrice": 2.4036,
+    "timestamp": 1698787140000,
+    "timestampF": "2023-10-31T21:19:00.000Z",
+    "minuteId": 28313119
+  },
+  {
+    "avgPrice": 2.41555,
+    "timestamp": 1698787200000,
+    "timestampF": "2023-10-31T21:20:00.000Z",
+    "minuteId": 28313120
+  },
+  {
+    "avgPrice": 2.4270500000000004,
+    "timestamp": 1698787260000,
+    "timestampF": "2023-10-31T21:21:00.000Z",
+    "minuteId": 28313121
+  },
+  {
+    "avgPrice": 2.42685,
+    "timestamp": 1698787320000,
+    "timestampF": "2023-10-31T21:22:00.000Z",
+    "minuteId": 28313122
+  },
+  {
+    "avgPrice": 2.4173,
+    "timestamp": 1698787380000,
+    "timestampF": "2023-10-31T21:23:00.000Z",
+    "minuteId": 28313123
+  },
+  {
+    "avgPrice": 2.42245,
+    "timestamp": 1698787440000,
+    "timestampF": "2023-10-31T21:24:00.000Z",
+    "minuteId": 28313124
+  },
+  {
+    "avgPrice": 2.41625,
+    "timestamp": 1698787500000,
+    "timestampF": "2023-10-31T21:25:00.000Z",
+    "minuteId": 28313125
+  },
+  {
+    "avgPrice": 2.4288,
+    "timestamp": 1698787560000,
+    "timestampF": "2023-10-31T21:26:00.000Z",
+    "minuteId": 28313126
+  },
+  {
+    "avgPrice": 2.435,
+    "timestamp": 1698787620000,
+    "timestampF": "2023-10-31T21:27:00.000Z",
+    "minuteId": 28313127
+  },
+  {
+    "avgPrice": 2.4421,
+    "timestamp": 1698787680000,
+    "timestampF": "2023-10-31T21:28:00.000Z",
+    "minuteId": 28313128
+  },
+  {
+    "avgPrice": 2.4335,
+    "timestamp": 1698787740000,
+    "timestampF": "2023-10-31T21:29:00.000Z",
+    "minuteId": 28313129
+  },
+  {
+    "avgPrice": 2.4327500000000004,
+    "timestamp": 1698787800000,
+    "timestampF": "2023-10-31T21:30:00.000Z",
+    "minuteId": 28313130
+  },
+  {
+    "avgPrice": 2.4354,
+    "timestamp": 1698787860000,
+    "timestampF": "2023-10-31T21:31:00.000Z",
+    "minuteId": 28313131
+  },
+  {
+    "avgPrice": 2.43995,
+    "timestamp": 1698787920000,
+    "timestampF": "2023-10-31T21:32:00.000Z",
+    "minuteId": 28313132
+  },
+  {
+    "avgPrice": 2.44555,
+    "timestamp": 1698787980000,
+    "timestampF": "2023-10-31T21:33:00.000Z",
+    "minuteId": 28313133
+  },
+  {
+    "avgPrice": 2.4537,
+    "timestamp": 1698788040000,
+    "timestampF": "2023-10-31T21:34:00.000Z",
+    "minuteId": 28313134
+  },
+  {
+    "avgPrice": 2.4541500000000003,
+    "timestamp": 1698788100000,
+    "timestampF": "2023-10-31T21:35:00.000Z",
+    "minuteId": 28313135
+  },
+  {
+    "avgPrice": 2.4501999999999997,
+    "timestamp": 1698788160000,
+    "timestampF": "2023-10-31T21:36:00.000Z",
+    "minuteId": 28313136
+  },
+  {
+    "avgPrice": 2.45175,
+    "timestamp": 1698788220000,
+    "timestampF": "2023-10-31T21:37:00.000Z",
+    "minuteId": 28313137
+  },
+  {
+    "avgPrice": 2.4387499999999998,
+    "timestamp": 1698788280000,
+    "timestampF": "2023-10-31T21:38:00.000Z",
+    "minuteId": 28313138
+  },
+  {
+    "avgPrice": 2.42905,
+    "timestamp": 1698788340000,
+    "timestampF": "2023-10-31T21:39:00.000Z",
+    "minuteId": 28313139
+  },
+  {
+    "avgPrice": 2.4318999999999997,
+    "timestamp": 1698788400000,
+    "timestampF": "2023-10-31T21:40:00.000Z",
+    "minuteId": 28313140
+  },
+  {
+    "avgPrice": 2.4334,
+    "timestamp": 1698788460000,
+    "timestampF": "2023-10-31T21:41:00.000Z",
+    "minuteId": 28313141
+  },
+  {
+    "avgPrice": 2.4331,
+    "timestamp": 1698788520000,
+    "timestampF": "2023-10-31T21:42:00.000Z",
+    "minuteId": 28313142
+  },
+  {
+    "avgPrice": 2.4254,
+    "timestamp": 1698788580000,
+    "timestampF": "2023-10-31T21:43:00.000Z",
+    "minuteId": 28313143
+  },
+  {
+    "avgPrice": 2.39315,
+    "timestamp": 1698788640000,
+    "timestampF": "2023-10-31T21:44:00.000Z",
+    "minuteId": 28313144
+  },
+  {
+    "avgPrice": 2.386,
+    "timestamp": 1698788700000,
+    "timestampF": "2023-10-31T21:45:00.000Z",
+    "minuteId": 28313145
+  },
+  {
+    "avgPrice": 2.40265,
+    "timestamp": 1698788760000,
+    "timestampF": "2023-10-31T21:46:00.000Z",
+    "minuteId": 28313146
+  },
+  {
+    "avgPrice": 2.403,
+    "timestamp": 1698788820000,
+    "timestampF": "2023-10-31T21:47:00.000Z",
+    "minuteId": 28313147
+  },
+  {
+    "avgPrice": 2.3912500000000003,
+    "timestamp": 1698788880000,
+    "timestampF": "2023-10-31T21:48:00.000Z",
+    "minuteId": 28313148
+  },
+  {
+    "avgPrice": 2.3872999999999998,
+    "timestamp": 1698788940000,
+    "timestampF": "2023-10-31T21:49:00.000Z",
+    "minuteId": 28313149
+  },
+  {
+    "avgPrice": 2.39975,
+    "timestamp": 1698789000000,
+    "timestampF": "2023-10-31T21:50:00.000Z",
+    "minuteId": 28313150
+  },
+  {
+    "avgPrice": 2.39845,
+    "timestamp": 1698789060000,
+    "timestampF": "2023-10-31T21:51:00.000Z",
+    "minuteId": 28313151
+  },
+  {
+    "avgPrice": 2.4081,
+    "timestamp": 1698789120000,
+    "timestampF": "2023-10-31T21:52:00.000Z",
+    "minuteId": 28313152
+  },
+  {
+    "avgPrice": 2.4196,
+    "timestamp": 1698789180000,
+    "timestampF": "2023-10-31T21:53:00.000Z",
+    "minuteId": 28313153
+  },
+  {
+    "avgPrice": 2.43445,
+    "timestamp": 1698789240000,
+    "timestampF": "2023-10-31T21:54:00.000Z",
+    "minuteId": 28313154
+  },
+  {
+    "avgPrice": 2.4316,
+    "timestamp": 1698789300000,
+    "timestampF": "2023-10-31T21:55:00.000Z",
+    "minuteId": 28313155
+  },
+  {
+    "avgPrice": 2.42395,
+    "timestamp": 1698789360000,
+    "timestampF": "2023-10-31T21:56:00.000Z",
+    "minuteId": 28313156
+  },
+  {
+    "avgPrice": 2.4181999999999997,
+    "timestamp": 1698789420000,
+    "timestampF": "2023-10-31T21:57:00.000Z",
+    "minuteId": 28313157
+  },
+  {
+    "avgPrice": 2.4199,
+    "timestamp": 1698789480000,
+    "timestampF": "2023-10-31T21:58:00.000Z",
+    "minuteId": 28313158
+  },
+  {
+    "avgPrice": 2.42915,
+    "timestamp": 1698789540000,
+    "timestampF": "2023-10-31T21:59:00.000Z",
+    "minuteId": 28313159
+  },
+  {
+    "avgPrice": 2.4400500000000003,
+    "timestamp": 1698789600000,
+    "timestampF": "2023-10-31T22:00:00.000Z",
+    "minuteId": 28313160
+  },
+  {
+    "avgPrice": 2.4387,
+    "timestamp": 1698789660000,
+    "timestampF": "2023-10-31T22:01:00.000Z",
+    "minuteId": 28313161
+  },
+  {
+    "avgPrice": 2.4370000000000003,
+    "timestamp": 1698789720000,
+    "timestampF": "2023-10-31T22:02:00.000Z",
+    "minuteId": 28313162
+  },
+  {
+    "avgPrice": 2.4448999999999996,
+    "timestamp": 1698789780000,
+    "timestampF": "2023-10-31T22:03:00.000Z",
+    "minuteId": 28313163
+  },
+  {
+    "avgPrice": 2.448,
+    "timestamp": 1698789840000,
+    "timestampF": "2023-10-31T22:04:00.000Z",
+    "minuteId": 28313164
+  },
+  {
+    "avgPrice": 2.4388,
+    "timestamp": 1698789900000,
+    "timestampF": "2023-10-31T22:05:00.000Z",
+    "minuteId": 28313165
+  },
+  {
+    "avgPrice": 2.4371,
+    "timestamp": 1698789960000,
+    "timestampF": "2023-10-31T22:06:00.000Z",
+    "minuteId": 28313166
+  },
+  {
+    "avgPrice": 2.43325,
+    "timestamp": 1698790020000,
+    "timestampF": "2023-10-31T22:07:00.000Z",
+    "minuteId": 28313167
+  },
+  {
+    "avgPrice": 2.4302,
+    "timestamp": 1698790080000,
+    "timestampF": "2023-10-31T22:08:00.000Z",
+    "minuteId": 28313168
+  },
+  {
+    "avgPrice": 2.4411,
+    "timestamp": 1698790140000,
+    "timestampF": "2023-10-31T22:09:00.000Z",
+    "minuteId": 28313169
+  },
+  {
+    "avgPrice": 2.4423,
+    "timestamp": 1698790200000,
+    "timestampF": "2023-10-31T22:10:00.000Z",
+    "minuteId": 28313170
+  },
+  {
+    "avgPrice": 2.44035,
+    "timestamp": 1698790260000,
+    "timestampF": "2023-10-31T22:11:00.000Z",
+    "minuteId": 28313171
+  },
+  {
+    "avgPrice": 2.44015,
+    "timestamp": 1698790320000,
+    "timestampF": "2023-10-31T22:12:00.000Z",
+    "minuteId": 28313172
+  },
+  {
+    "avgPrice": 2.4404000000000003,
+    "timestamp": 1698790380000,
+    "timestampF": "2023-10-31T22:13:00.000Z",
+    "minuteId": 28313173
+  },
+  {
+    "avgPrice": 2.4320500000000003,
+    "timestamp": 1698790440000,
+    "timestampF": "2023-10-31T22:14:00.000Z",
+    "minuteId": 28313174
+  },
+  {
+    "avgPrice": 2.43315,
+    "timestamp": 1698790500000,
+    "timestampF": "2023-10-31T22:15:00.000Z",
+    "minuteId": 28313175
+  },
+  {
+    "avgPrice": 2.434,
+    "timestamp": 1698790560000,
+    "timestampF": "2023-10-31T22:16:00.000Z",
+    "minuteId": 28313176
+  },
+  {
+    "avgPrice": 2.4273,
+    "timestamp": 1698790620000,
+    "timestampF": "2023-10-31T22:17:00.000Z",
+    "minuteId": 28313177
+  },
+  {
+    "avgPrice": 2.43715,
+    "timestamp": 1698790680000,
+    "timestampF": "2023-10-31T22:18:00.000Z",
+    "minuteId": 28313178
+  },
+  {
+    "avgPrice": 2.4482,
+    "timestamp": 1698790740000,
+    "timestampF": "2023-10-31T22:19:00.000Z",
+    "minuteId": 28313179
+  },
+  {
+    "avgPrice": 2.44595,
+    "timestamp": 1698790800000,
+    "timestampF": "2023-10-31T22:20:00.000Z",
+    "minuteId": 28313180
+  },
+  {
+    "avgPrice": 2.4465,
+    "timestamp": 1698790860000,
+    "timestampF": "2023-10-31T22:21:00.000Z",
+    "minuteId": 28313181
+  },
+  {
+    "avgPrice": 2.4563,
+    "timestamp": 1698790920000,
+    "timestampF": "2023-10-31T22:22:00.000Z",
+    "minuteId": 28313182
+  },
+  {
+    "avgPrice": 2.4642999999999997,
+    "timestamp": 1698790980000,
+    "timestampF": "2023-10-31T22:23:00.000Z",
+    "minuteId": 28313183
+  },
+  {
+    "avgPrice": 2.4656000000000002,
+    "timestamp": 1698791040000,
+    "timestampF": "2023-10-31T22:24:00.000Z",
+    "minuteId": 28313184
+  },
+  {
+    "avgPrice": 2.4674500000000004,
+    "timestamp": 1698791100000,
+    "timestampF": "2023-10-31T22:25:00.000Z",
+    "minuteId": 28313185
+  },
+  {
+    "avgPrice": 2.46945,
+    "timestamp": 1698791160000,
+    "timestampF": "2023-10-31T22:26:00.000Z",
+    "minuteId": 28313186
+  },
+  {
+    "avgPrice": 2.4750500000000004,
+    "timestamp": 1698791220000,
+    "timestampF": "2023-10-31T22:27:00.000Z",
+    "minuteId": 28313187
+  },
+  {
+    "avgPrice": 2.47,
+    "timestamp": 1698791280000,
+    "timestampF": "2023-10-31T22:28:00.000Z",
+    "minuteId": 28313188
+  },
+  {
+    "avgPrice": 2.4657999999999998,
+    "timestamp": 1698791340000,
+    "timestampF": "2023-10-31T22:29:00.000Z",
+    "minuteId": 28313189
+  },
+  {
+    "avgPrice": 2.44745,
+    "timestamp": 1698791400000,
+    "timestampF": "2023-10-31T22:30:00.000Z",
+    "minuteId": 28313190
+  },
+  {
+    "avgPrice": 2.4448499999999997,
+    "timestamp": 1698791460000,
+    "timestampF": "2023-10-31T22:31:00.000Z",
+    "minuteId": 28313191
+  },
+  {
+    "avgPrice": 2.4375,
+    "timestamp": 1698791520000,
+    "timestampF": "2023-10-31T22:32:00.000Z",
+    "minuteId": 28313192
+  },
+  {
+    "avgPrice": 2.43315,
+    "timestamp": 1698791580000,
+    "timestampF": "2023-10-31T22:33:00.000Z",
+    "minuteId": 28313193
+  },
+  {
+    "avgPrice": 2.42865,
+    "timestamp": 1698791640000,
+    "timestampF": "2023-10-31T22:34:00.000Z",
+    "minuteId": 28313194
+  },
+  {
+    "avgPrice": 2.4285,
+    "timestamp": 1698791700000,
+    "timestampF": "2023-10-31T22:35:00.000Z",
+    "minuteId": 28313195
+  },
+  {
+    "avgPrice": 2.4134,
+    "timestamp": 1698791760000,
+    "timestampF": "2023-10-31T22:36:00.000Z",
+    "minuteId": 28313196
+  },
+  {
+    "avgPrice": 2.4174499999999997,
+    "timestamp": 1698791820000,
+    "timestampF": "2023-10-31T22:37:00.000Z",
+    "minuteId": 28313197
+  },
+  {
+    "avgPrice": 2.4274,
+    "timestamp": 1698791880000,
+    "timestampF": "2023-10-31T22:38:00.000Z",
+    "minuteId": 28313198
+  },
+  {
+    "avgPrice": 2.4282500000000002,
+    "timestamp": 1698791940000,
+    "timestampF": "2023-10-31T22:39:00.000Z",
+    "minuteId": 28313199
+  },
+  {
+    "avgPrice": 2.4274,
+    "timestamp": 1698792000000,
+    "timestampF": "2023-10-31T22:40:00.000Z",
+    "minuteId": 28313200
+  },
+  {
+    "avgPrice": 2.42645,
+    "timestamp": 1698792060000,
+    "timestampF": "2023-10-31T22:41:00.000Z",
+    "minuteId": 28313201
+  },
+  {
+    "avgPrice": 2.42105,
+    "timestamp": 1698792120000,
+    "timestampF": "2023-10-31T22:42:00.000Z",
+    "minuteId": 28313202
+  },
+  {
+    "avgPrice": 2.41595,
+    "timestamp": 1698792180000,
+    "timestampF": "2023-10-31T22:43:00.000Z",
+    "minuteId": 28313203
+  },
+  {
+    "avgPrice": 2.4082999999999997,
+    "timestamp": 1698792240000,
+    "timestampF": "2023-10-31T22:44:00.000Z",
+    "minuteId": 28313204
+  },
+  {
+    "avgPrice": 2.4179500000000003,
+    "timestamp": 1698792300000,
+    "timestampF": "2023-10-31T22:45:00.000Z",
+    "minuteId": 28313205
+  },
+  {
+    "avgPrice": 2.4194500000000003,
+    "timestamp": 1698792360000,
+    "timestampF": "2023-10-31T22:46:00.000Z",
+    "minuteId": 28313206
+  },
+  {
+    "avgPrice": 2.41295,
+    "timestamp": 1698792420000,
+    "timestampF": "2023-10-31T22:47:00.000Z",
+    "minuteId": 28313207
+  },
+  {
+    "avgPrice": 2.41275,
+    "timestamp": 1698792480000,
+    "timestampF": "2023-10-31T22:48:00.000Z",
+    "minuteId": 28313208
+  },
+  {
+    "avgPrice": 2.4122,
+    "timestamp": 1698792540000,
+    "timestampF": "2023-10-31T22:49:00.000Z",
+    "minuteId": 28313209
+  },
+  {
+    "avgPrice": 2.4115,
+    "timestamp": 1698792600000,
+    "timestampF": "2023-10-31T22:50:00.000Z",
+    "minuteId": 28313210
+  },
+  {
+    "avgPrice": 2.36865,
+    "timestamp": 1698792660000,
+    "timestampF": "2023-10-31T22:51:00.000Z",
+    "minuteId": 28313211
+  },
+  {
+    "avgPrice": 2.36395,
+    "timestamp": 1698792720000,
+    "timestampF": "2023-10-31T22:52:00.000Z",
+    "minuteId": 28313212
+  },
+  {
+    "avgPrice": 2.3814,
+    "timestamp": 1698792780000,
+    "timestampF": "2023-10-31T22:53:00.000Z",
+    "minuteId": 28313213
+  },
+  {
+    "avgPrice": 2.387,
+    "timestamp": 1698792840000,
+    "timestampF": "2023-10-31T22:54:00.000Z",
+    "minuteId": 28313214
+  },
+  {
+    "avgPrice": 2.3760000000000003,
+    "timestamp": 1698792900000,
+    "timestampF": "2023-10-31T22:55:00.000Z",
+    "minuteId": 28313215
+  },
+  {
+    "avgPrice": 2.37835,
+    "timestamp": 1698792960000,
+    "timestampF": "2023-10-31T22:56:00.000Z",
+    "minuteId": 28313216
+  },
+  {
+    "avgPrice": 2.38445,
+    "timestamp": 1698793020000,
+    "timestampF": "2023-10-31T22:57:00.000Z",
+    "minuteId": 28313217
+  },
+  {
+    "avgPrice": 2.39895,
+    "timestamp": 1698793080000,
+    "timestampF": "2023-10-31T22:58:00.000Z",
+    "minuteId": 28313218
+  },
+  {
+    "avgPrice": 2.3891,
+    "timestamp": 1698793140000,
+    "timestampF": "2023-10-31T22:59:00.000Z",
+    "minuteId": 28313219
+  },
+  {
+    "avgPrice": 2.3911,
+    "timestamp": 1698793200000,
+    "timestampF": "2023-10-31T23:00:00.000Z",
+    "minuteId": 28313220
+  },
+  {
+    "avgPrice": 2.39525,
+    "timestamp": 1698793260000,
+    "timestampF": "2023-10-31T23:01:00.000Z",
+    "minuteId": 28313221
+  },
+  {
+    "avgPrice": 2.3925,
+    "timestamp": 1698793320000,
+    "timestampF": "2023-10-31T23:02:00.000Z",
+    "minuteId": 28313222
+  },
+  {
+    "avgPrice": 2.39605,
+    "timestamp": 1698793380000,
+    "timestampF": "2023-10-31T23:03:00.000Z",
+    "minuteId": 28313223
+  },
+  {
+    "avgPrice": 2.3991,
+    "timestamp": 1698793440000,
+    "timestampF": "2023-10-31T23:04:00.000Z",
+    "minuteId": 28313224
+  },
+  {
+    "avgPrice": 2.4085,
+    "timestamp": 1698793500000,
+    "timestampF": "2023-10-31T23:05:00.000Z",
+    "minuteId": 28313225
+  },
+  {
+    "avgPrice": 2.409,
+    "timestamp": 1698793560000,
+    "timestampF": "2023-10-31T23:06:00.000Z",
+    "minuteId": 28313226
+  },
+  {
+    "avgPrice": 2.411,
+    "timestamp": 1698793620000,
+    "timestampF": "2023-10-31T23:07:00.000Z",
+    "minuteId": 28313227
+  },
+  {
+    "avgPrice": 2.4124,
+    "timestamp": 1698793680000,
+    "timestampF": "2023-10-31T23:08:00.000Z",
+    "minuteId": 28313228
+  },
+  {
+    "avgPrice": 2.4151499999999997,
+    "timestamp": 1698793740000,
+    "timestampF": "2023-10-31T23:09:00.000Z",
+    "minuteId": 28313229
+  },
+  {
+    "avgPrice": 2.41425,
+    "timestamp": 1698793800000,
+    "timestampF": "2023-10-31T23:10:00.000Z",
+    "minuteId": 28313230
+  },
+  {
+    "avgPrice": 2.4174499999999997,
+    "timestamp": 1698793860000,
+    "timestampF": "2023-10-31T23:11:00.000Z",
+    "minuteId": 28313231
+  },
+  {
+    "avgPrice": 2.4181999999999997,
+    "timestamp": 1698793920000,
+    "timestampF": "2023-10-31T23:12:00.000Z",
+    "minuteId": 28313232
+  },
+  {
+    "avgPrice": 2.4174499999999997,
+    "timestamp": 1698793980000,
+    "timestampF": "2023-10-31T23:13:00.000Z",
+    "minuteId": 28313233
+  },
+  {
+    "avgPrice": 2.4175,
+    "timestamp": 1698794040000,
+    "timestampF": "2023-10-31T23:14:00.000Z",
+    "minuteId": 28313234
+  },
+  {
+    "avgPrice": 2.4203,
+    "timestamp": 1698794100000,
+    "timestampF": "2023-10-31T23:15:00.000Z",
+    "minuteId": 28313235
+  },
+  {
+    "avgPrice": 2.4138,
+    "timestamp": 1698794160000,
+    "timestampF": "2023-10-31T23:16:00.000Z",
+    "minuteId": 28313236
+  },
+  {
+    "avgPrice": 2.41085,
+    "timestamp": 1698794220000,
+    "timestampF": "2023-10-31T23:17:00.000Z",
+    "minuteId": 28313237
+  },
+  {
+    "avgPrice": 2.402,
+    "timestamp": 1698794280000,
+    "timestampF": "2023-10-31T23:18:00.000Z",
+    "minuteId": 28313238
+  },
+  {
+    "avgPrice": 2.4049,
+    "timestamp": 1698794340000,
+    "timestampF": "2023-10-31T23:19:00.000Z",
+    "minuteId": 28313239
+  },
+  {
+    "avgPrice": 2.3975,
+    "timestamp": 1698794400000,
+    "timestampF": "2023-10-31T23:20:00.000Z",
+    "minuteId": 28313240
+  },
+  {
+    "avgPrice": 2.4058,
+    "timestamp": 1698794460000,
+    "timestampF": "2023-10-31T23:21:00.000Z",
+    "minuteId": 28313241
+  },
+  {
+    "avgPrice": 2.4063499999999998,
+    "timestamp": 1698794520000,
+    "timestampF": "2023-10-31T23:22:00.000Z",
+    "minuteId": 28313242
+  },
+  {
+    "avgPrice": 2.4036999999999997,
+    "timestamp": 1698794580000,
+    "timestampF": "2023-10-31T23:23:00.000Z",
+    "minuteId": 28313243
+  },
+  {
+    "avgPrice": 2.4126000000000003,
+    "timestamp": 1698794640000,
+    "timestampF": "2023-10-31T23:24:00.000Z",
+    "minuteId": 28313244
+  },
+  {
+    "avgPrice": 2.41785,
+    "timestamp": 1698794700000,
+    "timestampF": "2023-10-31T23:25:00.000Z",
+    "minuteId": 28313245
+  },
+  {
+    "avgPrice": 2.4185,
+    "timestamp": 1698794760000,
+    "timestampF": "2023-10-31T23:26:00.000Z",
+    "minuteId": 28313246
+  },
+  {
+    "avgPrice": 2.41965,
+    "timestamp": 1698794820000,
+    "timestampF": "2023-10-31T23:27:00.000Z",
+    "minuteId": 28313247
+  },
+  {
+    "avgPrice": 2.4137500000000003,
+    "timestamp": 1698794880000,
+    "timestampF": "2023-10-31T23:28:00.000Z",
+    "minuteId": 28313248
+  },
+  {
+    "avgPrice": 2.4203,
+    "timestamp": 1698794940000,
+    "timestampF": "2023-10-31T23:29:00.000Z",
+    "minuteId": 28313249
+  },
+  {
+    "avgPrice": 2.41495,
+    "timestamp": 1698795000000,
+    "timestampF": "2023-10-31T23:30:00.000Z",
+    "minuteId": 28313250
+  },
+  {
+    "avgPrice": 2.4096,
+    "timestamp": 1698795060000,
+    "timestampF": "2023-10-31T23:31:00.000Z",
+    "minuteId": 28313251
+  },
+  {
+    "avgPrice": 2.4090499999999997,
+    "timestamp": 1698795120000,
+    "timestampF": "2023-10-31T23:32:00.000Z",
+    "minuteId": 28313252
+  },
+  {
+    "avgPrice": 2.4122500000000002,
+    "timestamp": 1698795180000,
+    "timestampF": "2023-10-31T23:33:00.000Z",
+    "minuteId": 28313253
+  },
+  {
+    "avgPrice": 2.4054,
+    "timestamp": 1698795240000,
+    "timestampF": "2023-10-31T23:34:00.000Z",
+    "minuteId": 28313254
+  },
+  {
+    "avgPrice": 2.39885,
+    "timestamp": 1698795300000,
+    "timestampF": "2023-10-31T23:35:00.000Z",
+    "minuteId": 28313255
+  },
+  {
+    "avgPrice": 2.39495,
+    "timestamp": 1698795360000,
+    "timestampF": "2023-10-31T23:36:00.000Z",
+    "minuteId": 28313256
+  },
+  {
+    "avgPrice": 2.3792999999999997,
+    "timestamp": 1698795420000,
+    "timestampF": "2023-10-31T23:37:00.000Z",
+    "minuteId": 28313257
+  },
+  {
+    "avgPrice": 2.3731,
+    "timestamp": 1698795480000,
+    "timestampF": "2023-10-31T23:38:00.000Z",
+    "minuteId": 28313258
+  },
+  {
+    "avgPrice": 2.3725500000000004,
+    "timestamp": 1698795540000,
+    "timestampF": "2023-10-31T23:39:00.000Z",
+    "minuteId": 28313259
+  },
+  {
+    "avgPrice": 2.37265,
+    "timestamp": 1698795600000,
+    "timestampF": "2023-10-31T23:40:00.000Z",
+    "minuteId": 28313260
+  },
+  {
+    "avgPrice": 2.37105,
+    "timestamp": 1698795660000,
+    "timestampF": "2023-10-31T23:41:00.000Z",
+    "minuteId": 28313261
+  },
+  {
+    "avgPrice": 2.3659999999999997,
+    "timestamp": 1698795720000,
+    "timestampF": "2023-10-31T23:42:00.000Z",
+    "minuteId": 28313262
+  },
+  {
+    "avgPrice": 2.35135,
+    "timestamp": 1698795780000,
+    "timestampF": "2023-10-31T23:43:00.000Z",
+    "minuteId": 28313263
+  },
+  {
+    "avgPrice": 2.3442,
+    "timestamp": 1698795840000,
+    "timestampF": "2023-10-31T23:44:00.000Z",
+    "minuteId": 28313264
+  },
+  {
+    "avgPrice": 2.30415,
+    "timestamp": 1698795900000,
+    "timestampF": "2023-10-31T23:45:00.000Z",
+    "minuteId": 28313265
+  },
+  {
+    "avgPrice": 2.258,
+    "timestamp": 1698795960000,
+    "timestampF": "2023-10-31T23:46:00.000Z",
+    "minuteId": 28313266
+  },
+  {
+    "avgPrice": 2.28425,
+    "timestamp": 1698796020000,
+    "timestampF": "2023-10-31T23:47:00.000Z",
+    "minuteId": 28313267
+  },
+  {
+    "avgPrice": 2.2982500000000003,
+    "timestamp": 1698796080000,
+    "timestampF": "2023-10-31T23:48:00.000Z",
+    "minuteId": 28313268
+  },
+  {
+    "avgPrice": 2.2969999999999997,
+    "timestamp": 1698796140000,
+    "timestampF": "2023-10-31T23:49:00.000Z",
+    "minuteId": 28313269
+  },
+  {
+    "avgPrice": 2.30405,
+    "timestamp": 1698796200000,
+    "timestampF": "2023-10-31T23:50:00.000Z",
+    "minuteId": 28313270
+  },
+  {
+    "avgPrice": 2.3047,
+    "timestamp": 1698796260000,
+    "timestampF": "2023-10-31T23:51:00.000Z",
+    "minuteId": 28313271
+  },
+  {
+    "avgPrice": 2.28705,
+    "timestamp": 1698796320000,
+    "timestampF": "2023-10-31T23:52:00.000Z",
+    "minuteId": 28313272
+  },
+  {
+    "avgPrice": 2.29375,
+    "timestamp": 1698796380000,
+    "timestampF": "2023-10-31T23:53:00.000Z",
+    "minuteId": 28313273
+  },
+  {
+    "avgPrice": 2.299,
+    "timestamp": 1698796440000,
+    "timestampF": "2023-10-31T23:54:00.000Z",
+    "minuteId": 28313274
+  },
+  {
+    "avgPrice": 2.3005,
+    "timestamp": 1698796500000,
+    "timestampF": "2023-10-31T23:55:00.000Z",
+    "minuteId": 28313275
+  },
+  {
+    "avgPrice": 2.29995,
+    "timestamp": 1698796560000,
+    "timestampF": "2023-10-31T23:56:00.000Z",
+    "minuteId": 28313276
+  },
+  {
+    "avgPrice": 2.3011,
+    "timestamp": 1698796620000,
+    "timestampF": "2023-10-31T23:57:00.000Z",
+    "minuteId": 28313277
+  },
+  {
+    "avgPrice": 2.29255,
+    "timestamp": 1698796680000,
+    "timestampF": "2023-10-31T23:58:00.000Z",
+    "minuteId": 28313278
+  },
+  {
+    "avgPrice": 2.2776,
+    "timestamp": 1698796740000,
+    "timestampF": "2023-10-31T23:59:00.000Z",
+    "minuteId": 28313279
+  }
+]

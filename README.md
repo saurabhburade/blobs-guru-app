@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blobs Guru
 
-## Getting Started
+Blobs Guru is a pnpm and Turborepo monorepo containing the web explorer, the
+active SubQuery apps that provide its Ethereum, Avail, and Celestia data, and a
+deprecated Ethereum Substreams implementation retained for reference.
 
-First, run the development server:
+The active indexers are built with [SubQuery](https://subquery.network/). Use
+the SubQuery website as the reference for framework concepts, manifests, and
+deployment guidance.
+
+## Applications
+
+| Workspace | Path | Purpose |
+| --- | --- | --- |
+| `@blobs-guru/web` | `apps/web` | Next.js web application |
+| `@blobs-guru/ethereum-subquery` | `apps/ethereum-subquery` | Ethereum SubQuery app |
+| `@blobs-guru/avail-subquery` | `apps/avail-subquery` | Avail SubQuery app |
+| `@blobs-guru/celestia-subquery` | `apps/celestia-subquery` | Celestia SubQuery app |
+| `@blobs-guru/substream-eth-blobs` | `apps/substream-eth-blobs` | Deprecated Ethereum Substreams app |
+
+## Getting started
+
+Install all workspace dependencies from the repository root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create local environment files from the committed examples, then review the
+public endpoints and fill in the required secrets:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp apps/web/.env.example apps/web/.env.local
+cp apps/ethereum-subquery/.env.example apps/ethereum-subquery/.env
+cp apps/avail-subquery/.env.example apps/avail-subquery/.env
+cp apps/celestia-subquery/.env.example apps/celestia-subquery/.env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Do not commit the populated environment files.
 
-## Learn More
+Run the web application:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Generate and build every active SubQuery app:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm codegen:subqueries
+pnpm build:subqueries
+```
 
-## Deploy on Vercel
+Run an individual indexer and its Docker services:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm dev:ethereum-subquery
+pnpm dev:avail-subquery
+pnpm dev:celestia-subquery
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Each app's own README contains its network-specific configuration and
+deployment details. Their source repositories were imported as unsquashed Git
+subtrees, so their original commits remain in this repository's commit graph.
+
+Turbo runs the workspace task graph and caches build outputs. The deprecated
+Substreams app is excluded from the default `pnpm build`; build it explicitly
+with `pnpm build:substream-eth-blobs`.
+
+Shared repository tooling lives at the root: `biome.json` supplies general
+formatting and linting, `tsconfig.subquery.json` supplies the common SubQuery
+TypeScript baseline, and `.gitignore` covers generated files for every app.
+Next-specific ESLint rules and network-specific Docker helpers remain local to
+the apps that need them. The root `LICENSE` applies to the monorepo.
+
+## Common commands
+
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Start the web application |
+| `pnpm build` | Build the web app and all active SubQuery apps with Turbo |
+| `pnpm build:web` | Build only the web application |
+| `pnpm build:subqueries` | Build all active SubQuery apps |
+| `pnpm codegen:subqueries` | Generate types for all active SubQuery apps |
+| `pnpm build:substream-eth-blobs` | Build the deprecated Substreams app |
+| `pnpm check-types` | Type-check the web application |
+| `pnpm check:biome` | Check shared configuration with Biome |
+| `pnpm format` | Format supported files with Biome |
+| `pnpm test:subqueries` | Run all SubQuery test commands |

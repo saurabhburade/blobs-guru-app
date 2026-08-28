@@ -1,0 +1,364 @@
+# To improve query performance, we strongly suggest adding indexes to any field that you plan to filter or sort by
+# Add the `@index` or `@index(unique: true)` annotation after any non-key field
+# https://academy.subquery.network/build/graphql.html#indexing-by-non-primary-key-field
+
+# type Block @entity {
+#   id: ID! # The block hash
+#   height: BigInt!
+# }
+
+# type Transaction @entity {
+#   id: ID!
+#   blockHeight: BigInt!
+#   timestamp: String!
+# }
+
+type Transfers @entity {
+  id: ID!
+  blockHeight: BigInt
+  txHash: String
+  fromAddress: String
+  toAddress: String
+  amount: String
+  denomination: String
+}
+
+type BlockData @entity {
+  id: ID!
+  hash: String!
+  height: Float!
+  proposer: String!
+  totalBlobSize: Float!
+  totalSquareSize: Float!
+
+  totalEventsCount: Float!
+
+  totalBlobTransactionCount: Float!
+
+  totalTransactionCount: Float!
+
+  avgNativePrice: Float!
+  currentNativePrice: Float!
+  totalBlockFeeNatve: Float!
+  totalBlockFeeUSD: Float!
+
+  timestamp: Float
+  transactions: [TransactionData] @derivedFrom(field: "blockHeight")
+}
+type BlobData @entity {
+  id: ID!
+  namespaceID: String
+  # namespace: AppEntity
+  data: String
+  shareVersion: String
+  namespaceVersion: String
+  transaction: TransactionData
+  commitment: String
+  size: Float
+  signer: String
+  index: Int
+}
+
+type TransactionData @entity {
+  id: ID!
+  hash: String!
+  blockHeight: BlockData
+  timestamp: Float!
+
+  signer: AccountEntity
+
+  amount: Float!
+  denomination: String!
+  messages: [String]
+  txFeeNative: Float!
+  txFeeUSD: Float!
+  nMessages: Float!
+  nEvents: Float!
+  nDataSubs: Float!
+  totalBytes: Float!
+  codespace: String
+  code: Float
+  gasUsed: Float
+  gasWanted: Float
+  index: Int
+  isBlobTransaction: Boolean!
+  blobs: [BlobData] @derivedFrom(field: "transaction")
+}
+
+type Block @entity {
+  id: ID!
+  height: Float!
+  hash: String!
+  timestamp: Date!
+  proposer: String
+  nTransactions: Int
+  nEvents: Int
+  nBlobs: Int
+  blobSize: Int
+  totalFeesNative: Float
+  totalFeesUSD: Float
+  version: String
+  nativePrice: Float!
+}
+
+type PriceFeedMinute @entity {
+  id: ID!
+  date: Date
+  nativePrice: Float!
+  nativeBlock: Int!
+  nativeDate: Date
+}
+
+type AccountEntity @entity {
+  id: ID!
+  type: Float
+  attachedAppId: String
+  app: AppEntity
+  validator: Boolean
+  validatorSessionParticipated: Float
+  createdAt: Date!
+  updatedAt: Date!
+  timestampCreation: Date!
+  address: String!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float!
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  avgNativePrice: Float
+  accountDayData: [AccountDayData] @derivedFrom(field: "account")
+  accountHourData: [AccountHourData] @derivedFrom(field: "account")
+  startBlock: Float
+  endBlock: Float
+  transactions: [TransactionData] @derivedFrom(field: "signer")
+}
+type AccountDayData @entity {
+  id: ID!
+  type: Float
+  attachedAppId: String
+  app: AppEntity
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+  prevDayData: AccountDayData
+  account: AccountEntity!
+  collectiveDayData: CollectiveDayData
+}
+type AccountHourData @entity {
+  id: ID!
+  type: Float
+  attachedAppId: String
+  app: AppEntity
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+
+  prevHourData: AccountHourData
+  account: AccountEntity!
+  collectiveHourData: CollectiveHourData
+}
+type AppEntity @entity {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  creationRawData: String
+  creationTxn: TransactionData
+  timestampCreation: Date!
+  owner: String!
+  totalByteSize: Float!
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float!
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  avgNativePrice: Float
+  appDayData: [AppDayData] @derivedFrom(field: "app")
+  appHourData: [AppHourData] @derivedFrom(field: "app")
+  startBlock: Float
+  endBlock: Float
+  name: String!
+  lastUpdatedTxnId: String!
+}
+
+type AppDayData @entity {
+  id: ID!
+  type: Float
+  attachedAppId: String
+  app: AppEntity!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+  prevDayData: AppDayData
+  lastUpdatedTxnId: String!
+  collectiveDayData: CollectiveDayData
+  collectiveHourData: CollectiveHourData
+}
+type AppHourData @entity {
+  id: ID!
+  type: Float
+  attachedAppId: String
+  app: AppEntity!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+  prevHourData: AppHourData
+  collectiveDayData: CollectiveDayData
+  lastUpdatedTxnId: String!
+  collectiveHourData: CollectiveHourData
+}
+
+type CollectiveData @entity {
+  id: ID!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  avgNativePrice: Float
+
+  endBlock: Float
+  collectiveDayData: [CollectiveDayData] @derivedFrom(field: "collectiveData")
+  collectiveHourData: [CollectiveHourData] @derivedFrom(field: "collectiveData")
+  lastUpdatedTxnId: String!
+}
+type CollectiveDayData @entity {
+  id: ID!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date!
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+
+  prevDayData: CollectiveDayData
+  appDayDataParticipant: [AppDayData] @derivedFrom(field: "collectiveDayData")
+  accountDayDataParticipant: [AccountDayData]
+    @derivedFrom(field: "collectiveDayData")
+
+  collectiveData: CollectiveData
+  lastUpdatedTxnId: String!
+}
+type CollectiveHourData @entity {
+  id: ID!
+  totalByteSize: Float!
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesNative: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalTxnCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampStart: Date!
+  timestampLast: Date!
+  startBlock: Float
+  endBlock: Float
+  avgNativePrice: Float
+
+  prevHourData: CollectiveHourData
+  appHourDataParticipant: [AppHourData]
+    @derivedFrom(field: "collectiveHourData")
+  accountHourDataParticipant: [AccountHourData]
+    @derivedFrom(field: "collectiveHourData")
+  collectiveData: CollectiveData
+  lastUpdatedTxnId: String!
+}

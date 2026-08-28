@@ -1,0 +1,60 @@
+{
+  "name": "@blobs-guru/avail-subquery",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "description": "SubQuery indexer for Avail blocks, data submissions, applications, accounts, and price data",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "subql build",
+    "codegen": "subql codegen",
+    "start:docker": "docker compose pull && docker compose up --remove-orphans",
+    "dev": "pnpm run codegen && pnpm run build && docker compose pull && docker compose up --remove-orphans",
+    "prepack": "rm -rf dist && pnpm run build",
+    "test": "pnpm run build && subql-node test -f ."
+  },
+  "homepage": "https://github.com/saurabhburade/blobs-guru-app/tree/main/apps/avail-subquery",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saurabhburade/blobs-guru-app.git",
+    "directory": "apps/avail-subquery"
+  },
+  "files": [
+    "dist",
+    "schema.graphql",
+    "project.ts"
+  ],
+  "author": "SubQuery Team",
+  "devDependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/providers": "^5.7.0",
+    "@polkadot/api": "^12",
+    "@polkadot/api-augment": "^12",
+    "@polkadot/types": "^12",
+    "@polkadot/util": "^13",
+    "@subql/cli": "latest",
+    "@subql/node": "latest",
+    "@subql/node-ethereum": "latest",
+    "@subql/testing": "latest",
+    "@types/bn.js": "^5.1.6",
+    "dotenv": "latest",
+    "ethers": "^5.7.2",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "@subql/types-core": "^2.2.0",
+    "@subql/types": "latest",
+    "@subql/types-ethereum": "latest",
+    "@types/node": "^17.0.21",
+    "@types/node-fetch": "latest",
+    "axios": "^1.7.9",
+    "bn.js": "^5.2.1",
+    "node-fetch": "^2.7.0",
+    "pino": "^7.8.0",
+    "ts-proto": "^1.112.1",
+    "tslib": "^2.3.1"
+  },
+  "exports": {
+    "chaintypes": "src/chaintypes.ts"
+  }
+}

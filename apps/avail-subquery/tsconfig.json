@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.subquery.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "target": "es2017"
+  },
+  "include": ["src/**/*", "node_modules/@subql/types-core/dist/global.d.ts"]
+}

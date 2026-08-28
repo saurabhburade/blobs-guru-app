@@ -1,38 +1,70 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules/
+.turbo/
 /.pnp
 .pnp.js
+.yarn/
 .yarn/install-state.gz
+yarn.lock
+package-lock.json
 
 # testing
-/coverage
+coverage/
+TEST*.xml
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
-/build
+build/
+dist/
+target/
+generated/
+*.spkg
 
 # misc
 .DS_Store
+Thumbs.db
+.idea/
 *.pem
+*.class
+*.py[cod]
+*.jar
+*.app
+*.exe
+*.war
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
+replay.log
 
 # local env files
 .env*.local
+.env
 
 # vercel
-.vercel
+.vercel/
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
 certificates
+
+# SubQuery generated files and local data
+apps/*-subquery/src/types/
+apps/*-subquery/project.yaml
+apps/*-subquery/.data/
+apps/substream-eth-blobs/run.sh

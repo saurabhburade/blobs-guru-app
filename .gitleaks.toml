@@ -1,0 +1,11 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Base64-encoded Celestia event attribute names"
+regexTarget = "secret"
+regexes = [
+  '''^cmVjaXBpZW50$''',
+  '''^bmFtZXNwYWNlcw==$''',
+  '''^YmxvYl9zaXplcw==$''',
+]

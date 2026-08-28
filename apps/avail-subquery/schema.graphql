@@ -1,0 +1,498 @@
+# To improve query performance, we strongly suggest adding indexes to any field that you plan to filter or sort by
+# Add the `@index` or `@index(unique: true)` annotation after any non-key field
+# https://academy.subquery.network/build/graphql.html#indexing-by-non-primary-key-field
+
+type PriceFeed @entity {
+  id: ID!
+
+  blockNumber: Float!
+
+  date: Date
+
+  ethPrice: Float!
+  availPrice: Float!
+}
+type PriceFeedMinute @entity {
+  id: ID!
+  date: Date
+  ethPrice: Float!
+  availPrice: Float!
+  ethBlock: Float!
+  availBlock: Float!
+  ethDate: Date
+  availDate: Date
+}
+type PriceFeedHour @entity {
+  id: ID!
+
+  blockNumber: Float!
+
+  date: Date
+
+  ethPrice: Float!
+  availPrice: Float!
+}
+type PriceFeedDay @entity {
+  id: ID!
+
+  blockNumber: Float!
+
+  date: Date
+
+  ethPrice: Float!
+  availPrice: Float!
+}
+type SpecVersion @entity {
+  id: ID! #specVersion
+  blockHeight: BigInt!
+}
+
+type Block @entity {
+  id: ID!
+  number: Float! @index
+  hash: String! @index
+  timestamp: Date! @index
+  parentHash: String!
+  stateRoot: String!
+  extrinsicsRoot: String!
+  runtimeVersion: Float!
+  nbExtrinsics: Float!
+  nbEvents: Float!
+  author: String @index
+  sessionId: Float @index
+  ethPrice: Float!
+  availPrice: Float!
+  ethBlock: Float!
+  blockFee: Float!
+}
+
+type Session @entity {
+  id: ID!
+  validators: [String]!
+}
+
+# As EVM Transaction
+type Extrinsic @entity {
+  id: ID!
+  block: Block!
+  txHash: String! @index
+  module: String! @index
+  call: String! @index
+  blockHeight: String! @index
+  success: Boolean!
+  isSigned: Boolean!
+  extrinsicIndex: Float!
+  hash: String! @index
+  timestamp: Date! @index
+  signer: String! @index
+  signature: String!
+  fees: String
+  feesRounded: Float @index
+  nonce: Float!
+  argsName: [String]!
+  argsValue: [String]!
+  nbEvents: Float!
+  ethPrice: Float!
+  availPrice: Float!
+  ethBlock: Float!
+}
+
+type Event @entity {
+  id: ID!
+  block: Block!
+  extrinsicId: String
+  module: String! @index
+  event: String! @index
+  blockHeight: BigInt! @index
+  eventIndex: Float!
+  call: String! @index
+  argsName: [String]!
+  argsValue: [String]!
+  timestamp: Date! @index
+}
+
+type Log @entity {
+  id: ID!
+  block: Block!
+  type: String!
+  engine: String
+  data: String!
+}
+
+type HeaderExtension @entity {
+  id: ID!
+  block: Block!
+  version: String
+}
+
+type Commitment @entity {
+  id: ID!
+  block: Block!
+  headerExtension: HeaderExtension!
+  rows: Float
+  cols: Float
+  dataRoot: String @index
+  commitment: String
+}
+
+type AppLookup @entity {
+  id: ID!
+  block: Block!
+  headerExtension: HeaderExtension!
+  size: Float
+  index: String
+  creator: String @index
+  owner: String @index
+  name: String
+}
+
+type TransferEntity @entity {
+  id: ID!
+  blockId: String! @index
+  blockHash: String!
+  extrinsicId: String!
+  timestamp: Date! @index
+  from: String! @index
+  to: String! @index
+  currency: String!
+  amount: String!
+  amountRounded: Float! @index
+}
+
+type AccountEntity @entity {
+  id: ID!
+  type: Float
+  attachedAppId: String
+  app: AppEntity
+  validator: Boolean
+  validatorSessionParticipated: Float
+  createdAt: Date!
+  updatedAt: Date!
+  timestampCreation: Date! @index
+  address: String! @index
+  totalByteSize: Float! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  accountDayData: [AccountDayData] @derivedFrom(field: "account")
+  accountHourData: [AccountHourData] @derivedFrom(field: "account")
+  startBlock: Float
+  endBlock: Float
+  accountBalance: AccountBalance @derivedFrom(field: "account")
+}
+type AppEntity @entity {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  creationRawData: String
+  creationExt: Extrinsic
+  timestampCreation: Date! @index
+  owner: String! @index
+  totalByteSize: Float! @index
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  appDayData: [AppDayData] @derivedFrom(field: "app")
+  appHourData: [AppHourData] @derivedFrom(field: "app")
+  startBlock: Float
+  endBlock: Float
+  name: String!
+}
+type AppDayData @entity {
+  id: ID!
+  app: AppEntity! @index
+  totalByteSize: Float! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float
+  endBlock: Float
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  prevDayData: AppDayData
+  collectiveDayData: CollectiveDayData
+}
+type AppHourData @entity {
+  id: ID!
+  totalByteSize: Float! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float
+  endBlock: Float
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  prevHourData: AccountHourData
+  app: AppEntity! @index
+  collectiveHourData: CollectiveHourData
+}
+
+type DataSubmission @entity {
+  id: ID!
+  extrinsicIdAttched: String!
+  timestamp: Date! @index
+  byteSize: Float! @index
+  appId: Float! @index
+  signer: String! @index
+  fees: Float
+  feesUSD: Float
+  feesPerMb: Float @index
+  priceFeed: PriceFeedMinute
+  extrinsic: Extrinsic
+  block: Block
+}
+
+type CollectiveData @entity {
+  id: ID!
+  totalByteSize: Float! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  endBlock: Float
+}
+type CollectiveDayData @entity {
+  id: ID!
+  totalByteSize: Float! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float
+  endBlock: Float
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  prevDayData: CollectiveDayData
+  appDayDataParticipant: [AppDayData] @derivedFrom(field: "collectiveDayData")
+  accountDayDataParticipant: [AccountDayData]
+    @derivedFrom(field: "collectiveDayData")
+}
+type AccountDayData @entity {
+  id: ID!
+  type: Float
+  attachedAppId: String
+  app: AppEntity
+  totalByteSize: Float! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  prevDayData: AccountDayData
+  account: AccountEntity! @index
+  collectiveDayData: CollectiveDayData
+}
+type AccountHourData @entity {
+  id: ID!
+  type: Float
+  attachedAppId: String
+  app: AppEntity
+  totalByteSize: Float! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  prevHourData: AccountHourData
+  account: AccountEntity! @index
+  collectiveHourData: CollectiveHourData
+}
+
+type CollectiveHourData @entity {
+  id: ID!
+  totalByteSize: Float! @index
+  totalFees: Float
+  totalDAFees: Float
+  totalDAFeesUSD: Float
+  totalFeesUSD: Float
+  totalFeesAvail: Float
+  totalDataSubmissionCount: Float
+  totalTransferCount: Float
+  totalExtrinsicCount: Float
+  totalBlocksCount: Float
+  totalDataBlocksCount: Float
+  totalDataAccountsCount: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampStart: Date! @index
+  timestampLast: Date! @index
+  startBlock: Float
+  endBlock: Float
+  avgAvailPrice: Float
+  avgEthPrice: Float
+  prevHourData: CollectiveHourData
+  appHourDataParticipant: [AppHourData]
+    @derivedFrom(field: "collectiveHourData")
+  accountHourDataParticipant: [AccountHourData]
+    @derivedFrom(field: "collectiveHourData")
+}
+
+type AccountBalance @entity {
+  id: ID!
+  account: AccountEntity! @index
+  amount: String
+  amountFrozen: String
+  amountTotal: String
+  amountRounded: Float
+  amountFrozenRounded: Float
+  amountTotalRounded: Float
+  balanceReserved: Float
+  balanceFree: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date! @index
+  startBlock: Float
+  endBlock: Float
+  accountBalanceDayData: [AccountBalanceDayData]
+    @derivedFrom(field: "accountBalance")
+  accountBalanceHourData: [AccountBalanceHourData]
+    @derivedFrom(field: "accountBalance")
+}
+type AccountBalanceDayData @entity {
+  id: ID!
+  account: AccountEntity! @index
+  accountBalance: AccountBalance! @index
+  amount: String
+  amountFrozen: String
+  amountTotal: String
+  amountRounded: Float
+  amountFrozenRounded: Float
+  amountTotalRounded: Float
+  balanceReserved: Float
+  balanceFree: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  prevDayData: AccountBalanceDayData
+}
+type AccountBalanceHourData @entity {
+  id: ID!
+  account: AccountEntity! @index
+  accountBalance: AccountBalance! @index
+  amount: String
+  amountFrozen: String
+  amountTotal: String
+  amountRounded: Float
+  amountFrozenRounded: Float
+  amountTotalRounded: Float
+  balanceReserved: Float
+  balanceFree: Float
+  lastPriceFeed: PriceFeedMinute
+  timestampLast: Date! @index
+  timestampStart: Date!
+  startBlock: Float
+  endBlock: Float
+  prevHourData: AccountBalanceHourData
+}
+
+type AccounToUpdateValue @entity {
+  id: ID!
+  accounts: [String]!
+}
+type BlockError @entity {
+  id: ID!
+  number: String
+  reason: String
+}
+type KeyDataRaw @entity {
+  id: ID!
+  data: String
+}
+type AppLookupBaseData @entity {
+  id: ID!
+  owner: String @index
+  name: String
+  key: Float @index
+  app: AppEntity
+}

@@ -1,0 +1,39 @@
+{
+  "name": "@blobs-guru/ethereum-subquery",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "description": "SubQuery indexer for Ethereum blobs, blocks, transactions, accounts, and price data",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "subql build",
+    "codegen": "subql codegen",
+    "start:docker": "docker compose pull && docker compose up --remove-orphans",
+    "dev": "pnpm run codegen && pnpm run build && docker compose pull && docker compose up --remove-orphans",
+    "prepack": "rm -rf dist && pnpm run build",
+    "test": "subql build && subql-node-ethereum test"
+  },
+  "homepage": "https://github.com/subquery/ethereum-subql-starter",
+  "repository": "github:saurabhburade/eth-subql-starter",
+  "files": [
+    "dist",
+    "schema.graphql",
+    "project.yaml"
+  ],
+  "author": "SubQuery Team",
+  "dependencies": {
+    "@subql/types-core": "^2.2.0",
+    "@subql/types-ethereum": "latest",
+    "assert": "^2.0.0",
+    "node-fetch": "^2.7.0",
+    "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "@subql/cli": "latest",
+    "@subql/node-ethereum": "latest",
+    "@subql/testing": "latest",
+    "@types/node-fetch": "^2.6.12",
+    "ethers": "^5.7.2",
+    "typescript": "5.2.2"
+  }
+}
