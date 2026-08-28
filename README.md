@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blobs Guru
 
-## Getting Started
+Blobs Guru is a pnpm monorepo containing the web explorer and the SubQuery
+indexers that provide its Ethereum, multi-chain, and Celestia data.
 
-First, run the development server:
+## Applications
+
+| Workspace | Path | Purpose |
+| --- | --- | --- |
+| `@blobs-guru/web` | `apps/web` | Next.js web application |
+| `@blobs-guru/indexer-ethereum` | `apps/indexers/ethereum` | Ethereum SubQuery indexer |
+| `@blobs-guru/indexer-multi-chain` | `apps/indexers/multi-chain` | Multi-chain SubQuery indexer |
+| `@blobs-guru/indexer-celestia` | `apps/indexers/celestia` | Celestia SubQuery indexer |
+
+## Getting started
+
+Install all workspace dependencies from the repository root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the web application:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Generate and build every indexer:
 
-## Learn More
+```bash
+pnpm codegen:indexers
+pnpm build:indexers
+```
 
-To learn more about Next.js, take a look at the following resources:
+Run an individual indexer and its Docker services:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm dev:indexer:ethereum
+pnpm dev:indexer:multi-chain
+pnpm dev:indexer:celestia
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Each indexer's own README contains its network-specific configuration and
+deployment details. Their source repositories were imported as unsquashed Git
+subtrees, so their original commits remain in this repository's commit graph.
 
-## Deploy on Vercel
+## Common commands
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Start the web application |
+| `pnpm build` | Build every workspace with a build script |
+| `pnpm build:web` | Build only the web application |
+| `pnpm build:indexers` | Build all indexers |
+| `pnpm codegen:indexers` | Generate types for all indexers |
+| `pnpm check-types` | Type-check the web application |
+| `pnpm test:indexers` | Run all indexer test commands |

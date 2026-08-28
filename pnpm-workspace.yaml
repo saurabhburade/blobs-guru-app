@@ -1,0 +1,14 @@
+packages:
+  - apps/*
+  - apps/indexers/*
+
+onlyBuiltDependencies:
+  - '@scarf/scarf'
+  - bufferutil
+  - core-js
+  - core-js-pure
+  - es5-ext
+  - esbuild
+  - protobufjs
+  - sharp
+  - utf-8-validate

@@ -1,5 +1,8 @@
 module.exports = {
-  "*.{js,jsx,ts,tsx}": ["eslint --fix", "eslint"],
-  "**/*.ts?(x)": () => "npm run check-types",
-  "*.json": ["prettier --write"],
+  "apps/web/**/*.{js,jsx,ts,tsx}": [
+    "pnpm --filter @blobs-guru/web exec eslint --fix",
+    "pnpm --filter @blobs-guru/web exec eslint",
+  ],
+  "apps/web/**/*.ts?(x)": () => "pnpm --filter @blobs-guru/web check-types",
+  "**/*.json": ["prettier --write"],
 };
