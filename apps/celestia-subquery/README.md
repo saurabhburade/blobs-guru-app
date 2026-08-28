@@ -15,8 +15,9 @@ pnpm dev:celestia-subquery
 
 The `dev` command generates types, builds the project, and starts PostgreSQL,
 the Celestia SubQuery node, and the GraphQL service through Docker Compose.
-Copy `.env.example` to `.env` and set `POSTGRES_PASSWORD` before starting the
-indexer. Do not commit the populated `.env` file.
+Copy `.env.example` to `.env`, set `POSTGRES_PASSWORD`, and review the RPC and
+price-feed service URLs before starting the indexer. `CELESTIA_RPC_ENDPOINTS`
+is a comma-separated endpoint list. Do not commit the populated `.env` file.
 
 ## Project files
 

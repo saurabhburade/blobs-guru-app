@@ -16,13 +16,14 @@ pnpm dev:avail-subquery
 The `dev` command generates types, builds the project, and starts PostgreSQL,
 the Avail SubQuery node, and the GraphQL service through Docker Compose.
 
-Copy `.env.example` to `.env` and provide `POSTGRES_PASSWORD`, `ETH_RPC`,
-`DEX_GURU_API_KEY`, and `ETHERSCAN_API_KEY` before starting the indexer. Do not
-commit populated environment files.
+Copy `.env.example` to `.env` and provide `POSTGRES_PASSWORD`,
+`DEX_GURU_API_KEY`, and `ETHERSCAN_API_KEY` before starting the indexer. Review
+the RPC and API URLs as well; `AVAIL_RPC_ENDPOINTS` is a comma-separated list.
+Do not commit populated environment files.
 
 ## Project files
 
-- `avail.yaml` configures the Avail network and block handler.
+- `project.ts` configures the Avail network and block handler.
 - `schema.graphql` defines the indexed entities.
 - `src/mappings` contains the indexing logic.
 - `.env.example` documents the local environment variables.

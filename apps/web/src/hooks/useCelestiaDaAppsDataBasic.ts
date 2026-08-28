@@ -1,10 +1,9 @@
-import { celestiaClient } from "@/lib/apollo/client";
-
-import { CELESTIA_BASIC_APP_DATAS_QUERY } from "@/lib/apollo/queriesCelestia";
 import { useQuery } from "@apollo/client";
 import { useQuery as useReactQuery } from "@tanstack/react-query";
-
 import _ from "lodash";
+import { joinUrl, L2BEAT_RAW_DATA_BASE_URL } from "@/configs/env";
+import { celestiaClient } from "@/lib/apollo/client";
+import { CELESTIA_BASIC_APP_DATAS_QUERY } from "@/lib/apollo/queriesCelestia";
 export interface ApplicationData {
   name: string;
   id: number;
@@ -24,7 +23,10 @@ export const useCelestiaDaAppsDataBasic = () => {
         data?.appEntities?.nodes?.map(async (agg: any) => {
           console.log(`🚀 ~ useCelestiaDaAppsDataBasic.ts:25 ~ agg:`, agg);
           return await fetch(
-            `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/with-da-id/celestia/celestia/${(agg?.name as string)?.toLowerCase()}.json`
+            joinUrl(
+              L2BEAT_RAW_DATA_BASE_URL,
+              `projects/with-da-id/celestia/celestia/${(agg?.name as string)?.toLowerCase()}.json`,
+            ),
           )
             ?.then(async (res) => {
               const result = await res.json();
@@ -40,7 +42,7 @@ export const useCelestiaDaAppsDataBasic = () => {
               return null;
             })
             .catch(() => null);
-        })
+        }),
       );
 
       return datas;
@@ -54,7 +56,7 @@ export const useCelestiaDaAppsDataBasic = () => {
   }
 
   const formattedOp = data?.appEntities?.nodes?.map((agg: any) => {
-    let decoded = agg?.id;
+    const decoded = agg?.id;
 
     const app = appDatasMap?.get((agg?.name as string)?.toLowerCase()) ?? null;
 
@@ -69,7 +71,7 @@ export const useCelestiaDaAppsDataBasic = () => {
     data: {
       formattedOp: _.take(
         _.orderBy(formattedOp, (s) => Number(s?.totalByteSize), ["desc"]),
-        4
+        4,
       ),
       totalCount: data?.dataSubmissions?.totalCount,
     },
@@ -82,7 +84,10 @@ export const useCelestiaDaAppsDataBasicSingle = (id: string) => {
     queryKey: ["l2beat-celestia-apps", id],
     queryFn: async () => {
       return await fetch(
-        `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/with-da-id/celestia/celestia/${(id as string)?.toLowerCase()}.json`
+        joinUrl(
+          L2BEAT_RAW_DATA_BASE_URL,
+          `projects/with-da-id/celestia/celestia/${(id as string)?.toLowerCase()}.json`,
+        ),
       )
         ?.then(async (res) => {
           const result = await res.json();

@@ -2,6 +2,7 @@
   "name": "@blobs-guru/celestia-subquery",
   "version": "0.0.2",
   "private": true,
+  "license": "MIT",
   "description": "SubQuery indexer for Celestia blobs, blocks, namespaces, accounts, and price data",
   "main": "dist/index.js",
   "scripts": {

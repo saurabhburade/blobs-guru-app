@@ -36,7 +36,12 @@ services:
       DB_DATABASE: postgres
       DB_HOST: postgres
       DB_PORT: 5432
-      ETH_RPC: ${ETH_RPC}
+      AVAIL_RPC_ENDPOINTS: ${AVAIL_RPC_ENDPOINTS}
+      ETH_PRICE_RPC_URL: ${ETH_PRICE_RPC_URL}
+      PRICE_FEED_ARCHIVE_BASE_URL: ${PRICE_FEED_ARCHIVE_BASE_URL}
+      DEX_GURU_API_BASE_URL: ${DEX_GURU_API_BASE_URL}
+      DEFILLAMA_API_BASE_URL: ${DEFILLAMA_API_BASE_URL}
+      ETHERSCAN_API_BASE_URL: ${ETHERSCAN_API_BASE_URL}
       DEX_GURU_API_KEY: ${DEX_GURU_API_KEY}
       ETHERSCAN_API_KEY: ${ETHERSCAN_API_KEY}
       BATCH_SIZE: ${BATCH_SIZE:-100} # Fallback to 100 if BATCH_SIZE is not set
@@ -48,7 +53,7 @@ services:
     command:
       - ${SUB_COMMAND:-} # set SUB_COMMAND env variable to "test" to run tests
       - --db-schema=avail
-      - -f=app/avail.yaml
+      - -f=/app
       - --allow-schema-migration
       - --unfinalized-blocks=false
       - --batch-size=${BATCH_SIZE:-100}

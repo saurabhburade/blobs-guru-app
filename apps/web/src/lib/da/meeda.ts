@@ -1,2 +1,6 @@
-export const rawData =
-  "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/da/memo.json";
+import { joinUrl, L2BEAT_RAW_DATA_BASE_URL } from "@/configs/env";
+
+export const rawData = joinUrl(
+  L2BEAT_RAW_DATA_BASE_URL,
+  "projects/da/memo.json",
+);

@@ -1,28 +1,25 @@
-import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
-import { apolloClient } from "@/lib/apollo/client";
-
-import { cn, formatBytes, formatWrapedText, safeBigNumber } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
-import BigNumber from "bignumber.js";
-import MotionNumber from "motion-number";
-import React from "react";
-import { useMemo } from "react";
 import { useQuery as useReactQuery } from "@tanstack/react-query";
 import axios from "axios";
+import BigNumber from "bignumber.js";
+import { div } from "framer-motion/client";
+import { InfoIcon } from "lucide-react";
+import MotionNumber from "motion-number";
+import Link from "next/link";
+import React, { useMemo } from "react";
 
 import ImageWithFallback from "@/components/ImageWithFallback";
-import Link from "next/link";
-import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
-import { useDaCostCompare } from "@/hooks/useDaCostCompare";
-import { InfoIcon } from "lucide-react";
-import { div } from "framer-motion/client";
+import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
+import { ETHEREUM_RPC_URL } from "@/configs/env";
 import { useCelestiaDaAppsDataBasic } from "@/hooks/useCelestiaDaAppsDataBasic";
-import { ETHEREUM_COLLECTIVE_STAT_QUERY } from "@/lib/apollo/queriesEthereum";
+import { useDaCostCompare } from "@/hooks/useDaCostCompare";
 import { useEthereumDaAppsDataBasic } from "@/hooks/useEthereumDaAppsDataBasic";
+import { apolloClient } from "@/lib/apollo/client";
+import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
+import { ETHEREUM_COLLECTIVE_STAT_QUERY } from "@/lib/apollo/queriesEthereum";
+import { cn, formatBytes, formatWrapedText, safeBigNumber } from "@/lib/utils";
 
-type Props = {};
-
-function ChainStats({}: Props) {
+function ChainStats() {
   const { data: appsData } = useEthereumDaAppsDataBasic();
   const { data: daCostData, loading: daCostDataLoading } = useDaCostCompare();
   const { data: rawData, loading: statsLoading } = useQuery(
@@ -30,7 +27,7 @@ function ChainStats({}: Props) {
     {
       client: apolloClient,
       pollInterval: 3_000,
-    }
+    },
   );
   const data = useMemo(() => {
     if (rawData?.collectiveData?.nodes?.length > 0) {
@@ -44,14 +41,14 @@ function ChainStats({}: Props) {
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalByteSize) {
       return formatBytes(
-        safeBigNumber(data?.collectiveData?.totalByteSize).toNumber()
+        safeBigNumber(data?.collectiveData?.totalByteSize).toNumber(),
       );
     }
     return "0 KB";
   }, [data]);
   const totalFeesNative = useMemo(() => {
     const totalFeeNativeBn = new BigNumber(
-      data?.collectiveData?.totalFeesNative
+      data?.collectiveData?.totalFeesNative,
     )
       ?.div(10 ** 18)
       .toNumber();
@@ -71,7 +68,7 @@ function ChainStats({}: Props) {
   }, [data?.collectiveData?.totalDAFeesUSD]);
   const totalDataSubmissionCount = useMemo(() => {
     return safeBigNumber(
-      data?.collectiveData?.totalDataSubmissionCount
+      data?.collectiveData?.totalDataSubmissionCount,
     ).toNumber();
   }, [data?.collectiveData?.totalDataSubmissionCount]);
   const lastPriceFeed = useMemo(() => {
@@ -93,7 +90,7 @@ function ChainStats({}: Props) {
   const blockData = useReactQuery({
     queryKey: ["ethereum-latest-block"],
     queryFn: async () => {
-      const res = await axios.post("https://eth.drpc.org", {
+      const res = await axios.post(ETHEREUM_RPC_URL, {
         jsonrpc: "2.0",
         id: 1,
         method: "eth_blockNumber",
@@ -131,10 +128,10 @@ function ChainStats({}: Props) {
             </p>
           </div>
         )}
-        {appsData?.formattedOp?.map((app, idx) => {
+        {appsData?.formattedOp?.map((app) => {
           return (
             <div
-              key={`${app?.id}----${app?.name}--${idx}`}
+              key={`${app?.id}----${app?.name}`}
               className="p-5 bg-base-200/15 rounded-lg space-y-3"
             >
               <div className="flex gap-3">
@@ -302,7 +299,7 @@ const StatCard = ({
       <div
         className={cn(
           "h-full w-full bg-base-100 border p-4  border-[0.5px]  space-y-2 border-base-200 animate-pulse",
-          className
+          className,
         )}
       >
         <p className=" text-sm opacity-50 h-5 w-20 rounded-full bg-base-200 animate-pulse"></p>
@@ -314,7 +311,7 @@ const StatCard = ({
     <div
       className={cn(
         "h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200",
-        className
+        className,
       )}
     >
       <p className=" text-sm opacity-50">{title || "Block Height"}</p>

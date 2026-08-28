@@ -3,6 +3,7 @@ import {
   EthereumHandlerKind,
   type EthereumProject,
 } from "@subql/types-ethereum";
+import { requireEnvList } from "./src/config/env";
 
 // Can expand the Datasource processor types via the generic param
 const project: EthereumProject = {
@@ -38,14 +39,7 @@ const project: EthereumProject = {
      * If you use a rate limited endpoint, adjust the --batch-size and --workers parameters
      * These settings can be found in your docker-compose.yaml, they will slow indexing but prevent your project being rate limited
      */
-    endpoint: [
-      ...(process.env.ETH_RPC ? [process.env.ETH_RPC] : []),
-      "https://eth-mainnet.public.blastapi.io",
-      "https://ethereum-rpc.publicnode.com",
-      "https://eth.drpc.org",
-      "https://1.rpc.hypersync.xyz",
-      "https://eth-traces.rpc.hypersync.xyz",
-    ],
+    endpoint: requireEnvList("ETH_RPC_ENDPOINTS"),
   },
   dataSources: [
     {

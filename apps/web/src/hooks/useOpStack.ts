@@ -1,9 +1,11 @@
 // @ts-nocheck
-import { SUPERCHAIN_BLOB_ACCOUNTS_QUERY } from "@/lib/apollo/queries";
+
 import { useQuery } from "@apollo/client";
 import { useQuery as useReactQuery } from "@tanstack/react-query";
 import axios from "axios";
 import _ from "lodash";
+import { OP_STACK_METADATA_URL } from "@/configs/env";
+import { SUPERCHAIN_BLOB_ACCOUNTS_QUERY } from "@/lib/apollo/queries";
 
 // Basic CSV to JSON conversion function
 const csvToJson = (csv) => {
@@ -29,9 +31,7 @@ export const useOpStackAccountsData = (opAccounts: any) => {
   const { data: resp, error: fetchCsvErr } = useReactQuery({
     queryKey: [],
     queryFn: async () => {
-      const res = await axios.get(
-        "https://raw.githubusercontent.com/ethereum-optimism/op-analytics/refs/heads/main/op_chains_tracking/outputs/chain_metadata.csv"
-      );
+      const res = await axios.get(OP_STACK_METADATA_URL);
       return res.data;
     },
   });
@@ -40,13 +40,13 @@ export const useOpStackAccountsData = (opAccounts: any) => {
     (s) =>
       s.is_op_chain === "True" &&
       s.da_layer === "ethereum" &&
-      s.batchinbox_from?.trim() !== ""
+      s.batchinbox_from?.trim() !== "",
   );
   const addresses = addressesFiltered?.map((s) =>
-    (s.batchinbox_from as String).toLowerCase()
+    (s.batchinbox_from as string).toLowerCase(),
   );
   const addressesFallback = opAccounts.map((s) =>
-    (s.batchinbox_from as String).toLowerCase()
+    (s.batchinbox_from as string).toLowerCase(),
   );
 
   const { data, loading, error } = useQuery(SUPERCHAIN_BLOB_ACCOUNTS_QUERY, {
@@ -92,7 +92,7 @@ export const useOpStackAccountsData = (opAccounts: any) => {
     data?.accounts?.length > 0
       ? opAccounts?.map((s) => {
           const foundResult = data?.accounts?.find(
-            (r) => (s.batchinbox_from as String).toLowerCase() === r?.id
+            (r) => (s.batchinbox_from as string).toLowerCase() === r?.id,
           );
           return {
             ...s,

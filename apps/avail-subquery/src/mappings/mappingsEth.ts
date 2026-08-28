@@ -5,7 +5,6 @@ export async function handleEthBlock(block: EthereumBlock): Promise<void> {
   // // logger.info(`New BLOCK ETHEREUM time::::::  ${block.timestamp.toString()}`);
   // // Do something with each block handler here
   // //   const provider = new ethers.providers.JsonRpcProvider(
-  // //     "https://eth.llamarpc.com"
   // //   );
   // const oracleContract = OneinchABIAbi__factory.connect(
   //   ORACLE_ADDRESS,

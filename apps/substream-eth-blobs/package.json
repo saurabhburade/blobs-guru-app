@@ -2,6 +2,7 @@
   "name": "@blobs-guru/substream-eth-blobs",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "DEPRECATED: legacy Substreams-powered Ethereum blob indexer",
   "scripts": {
     "codegen": "graph codegen",

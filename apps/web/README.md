@@ -36,28 +36,27 @@ pnpm --filter @blobs-guru/web dev
 The app queries the GraphQL APIs backed by the monorepo's active SubQuery
 indexers:
 
-| Network | GraphQL endpoint | Indexer workspace |
+| Network | Environment variable | Indexer workspace |
 | --- | --- | --- |
-| Ethereum | `https://ethapi.blobs.guru/` | [`../ethereum-subquery`](../ethereum-subquery) |
-| Avail | `https://availapi.blobs.guru/` | [`../avail-subquery`](../avail-subquery) |
-| Celestia | `https://celestiaapi.blobs.guru/` | [`../celestia-subquery`](../celestia-subquery) |
+| Ethereum | `NEXT_PUBLIC_ETHEREUM_SUBQUERY_URL` | [`../ethereum-subquery`](../ethereum-subquery) |
+| Avail | `NEXT_PUBLIC_AVAIL_SUBQUERY_URL` | [`../avail-subquery`](../avail-subquery) |
+| Celestia | `NEXT_PUBLIC_CELESTIA_SUBQUERY_URL` | [`../celestia-subquery`](../celestia-subquery) |
 
-The endpoint configuration lives in `src/lib/apollo/client.ts`. Some views
-also use public network RPCs and public APIs such as L2BEAT.
+All GraphQL, RPC, and public data API URLs are configured through environment
+variables. Some views use public services such as L2BEAT.
 
 ## Configuration
 
-The app works with its built-in defaults. To override its public runtime
-settings, create `apps/web/.env.local` and set any of the following variables:
+Copy `.env.example` to `.env.local` before starting the app. The example lists
+every required public endpoint and the optional numeric settings:
 
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `NEXT_PUBLIC_API_BASE_URL` | Empty | Optional base URL used by API helpers |
-| `NEXT_PUBLIC_MAX_BLOBS_TARGET` | `9` | Target blob count |
-| `NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_AVAIL` | `4194304` | Avail target size in bytes |
-| `NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_CELESTIA` | `8388608` | Celestia target size in bytes |
-| `NEXT_PUBLIC_MAX_BLOBS_SIZE_TARGET_ETHEREUM` | `1179648` | Ethereum target size in bytes |
-| `NEXT_PUBLIC_KB_PER_BLOB` | `128` | Ethereum blob size in KiB |
+| Variable group | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_*_SUBQUERY_URL` | Ethereum, Avail, and Celestia GraphQL endpoints |
+| `NEXT_PUBLIC_*_RPC_URL` | Ethereum, Sepolia, and Celestia RPC endpoints |
+| `NEXT_PUBLIC_*_API_URL` | Avail, L2BEAT, EigenDA, Celestia, and metadata APIs |
+| `NEXT_PUBLIC_L2BEAT_RAW_DATA_BASE_URL` | L2BEAT-derived JSON data base URL |
+| `NEXT_PUBLIC_MAX_*`, `NEXT_PUBLIC_KB_PER_BLOB` | Network capacity and blob-size settings |
 
 Only expose non-sensitive values through `NEXT_PUBLIC_*` variables because
 Next.js includes them in the browser bundle.

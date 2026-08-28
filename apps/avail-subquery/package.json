@@ -2,15 +2,16 @@
   "name": "@blobs-guru/avail-subquery",
   "version": "0.0.1",
   "private": true,
+  "license": "MIT",
   "description": "SubQuery indexer for Avail blocks, data submissions, applications, accounts, and price data",
   "main": "dist/index.js",
   "scripts": {
-    "build": "subql build avail.yaml",
-    "codegen": "subql codegen avail.yaml",
+    "build": "subql build",
+    "codegen": "subql codegen",
     "start:docker": "docker compose pull && docker compose up --remove-orphans",
     "dev": "pnpm run codegen && pnpm run build && docker compose pull && docker compose up --remove-orphans",
     "prepack": "rm -rf dist && pnpm run build",
-    "test": "pnpm run build && subql-node test -f avail.yaml"
+    "test": "pnpm run build && subql-node test -f ."
   },
   "homepage": "https://github.com/saurabhburade/blobs-guru-app/tree/main/apps/avail-subquery",
   "repository": {
@@ -21,7 +22,7 @@
   "files": [
     "dist",
     "schema.graphql",
-    "avail.yaml"
+    "project.ts"
   ],
   "author": "SubQuery Team",
   "devDependencies": {

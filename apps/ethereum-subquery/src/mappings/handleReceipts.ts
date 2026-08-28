@@ -1,11 +1,9 @@
-import { EthereumBlock } from "@subql/types-ethereum";
-import { TransactionReceipt } from "../types";
+import type { EthereumBlock } from "@subql/types-ethereum";
 import fetch from "node-fetch";
+import { requireEnvList } from "../config/env";
+import { TransactionReceipt } from "../types";
 
-const rpcUrls = [
-  "https://1.rpc.hypersync.xyz",
-  "https://eth-traces.rpc.hypersync.xyz",
-];
+const rpcUrls = requireEnvList("ETH_RPC_ENDPOINTS");
 
 // Pick a random index each process start
 const RPC_URL = rpcUrls[Math.floor(Math.random() * rpcUrls.length)];
@@ -99,7 +97,7 @@ async function getBlockReceipts(blockNumber: number): Promise<ParsedReceipt[]> {
 // Batch prefetch [startBlock, startBlock + count - 1]
 async function prefetchBlockRange(
   startBlock: number,
-  count = CACHE_WINDOW
+  count = CACHE_WINDOW,
 ): Promise<void> {
   const requests: any[] = [];
   for (let i = 0; i < count; i++) {
@@ -147,7 +145,7 @@ async function prefetchBlockRange(
 }
 
 async function getOrPrefetchBlockReceipts(
-  blockNumber: number
+  blockNumber: number,
 ): Promise<ParsedReceipt[]> {
   // Cache hit?
   const cached = receiptCache.get(blockNumber);
@@ -226,11 +224,11 @@ export async function getTxReceipts({
 
     return batchReceipt;
   } catch (error) {
-    // @ts-ignore (logger available in SubQuery runtime; ignore if not)
+    // @ts-expect-error (logger available in SubQuery runtime; ignore if not)
     logger?.error?.(
       `getTxReceipts failed for block ${String(block?.number)}: ${String(
-        error
-      )}`
+        error,
+      )}`,
     );
     return batchReceipt;
   }

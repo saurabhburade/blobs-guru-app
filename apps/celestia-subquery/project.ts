@@ -1,8 +1,9 @@
 import {
   CosmosDatasourceKind,
   CosmosHandlerKind,
-  CosmosProject,
+  type CosmosProject,
 } from "@subql/types-cosmos";
+import { requireEnvList } from "./src/config/env";
 
 // Can expand the Datasource processor types via the genreic param
 const project: CosmosProject = {
@@ -35,15 +36,7 @@ const project: CosmosProject = {
      * If you use a rate limited endpoint, adjust the --batch-size and --workers parameters
      * These settings can be found in your docker-compose.yaml, they will slow indexing but prevent your project being rate limited
      */
-    endpoint: [
-      "https://celestia.cumulo.org.es",
-      "https://public-celestia-rpc.numia.xyz",
-      "https://rpc.archive.celestia.mainnet.dteam.tech",
-      "https://celestia-mainnet-rpc.itrocket.net",
-      "https://celestia-rpc.stakeme.pro/",
-      "https://celestia-rpc.0xcryptovestor.com/",
-      "https://celestia-rpc.f5nodes.com/",
-    ],
+    endpoint: requireEnvList("CELESTIA_RPC_ENDPOINTS"),
     chaintypes: new Map([
       [
         "celestia.blob.v1",

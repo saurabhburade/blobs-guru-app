@@ -1,4 +1,9 @@
+import { useQuery } from "@apollo/client";
+import { useQuery as useReactQuery } from "@tanstack/react-query";
+import { initialize, isValidAddress } from "avail-js-sdk";
+import _ from "lodash";
 import { AVAIL_APP_BOOK } from "@/configs/availProjects";
+import { joinUrl, L2BEAT_RAW_DATA_BASE_URL } from "@/configs/env";
 import { availClient } from "@/lib/apollo/client";
 import {
   AVAIL_ACCOUNT_EXT_LIMIT_QUERY,
@@ -7,10 +12,6 @@ import {
   AVAIL_BLOCKS_WITH_LIMIT_QUERY,
   AVAIL_DA_EXT_FILTER_LIMIT_QUERY,
 } from "@/lib/apollo/queriesAvail";
-import { useQuery } from "@apollo/client";
-import { useQuery as useReactQuery } from "@tanstack/react-query";
-import { initialize, isValidAddress } from "avail-js-sdk";
-import _ from "lodash";
 export interface ApplicationData {
   name: string;
   id: number;
@@ -29,7 +30,10 @@ export const useAvailDaAppsDataBasic = () => {
       const datas = await Promise.all(
         data?.appEntities?.nodes?.map(async (agg: any) => {
           return await fetch(
-            `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/with-da-id/avail/avail/${(agg?.id as string)?.toLowerCase()}.json`
+            joinUrl(
+              L2BEAT_RAW_DATA_BASE_URL,
+              `projects/with-da-id/avail/avail/${(agg?.id as string)?.toLowerCase()}.json`,
+            ),
           )
             ?.then(async (res) => {
               const result = await res.json();
@@ -44,7 +48,7 @@ export const useAvailDaAppsDataBasic = () => {
               return null;
             })
             .catch(() => null);
-        })
+        }),
       );
 
       return datas;
@@ -57,7 +61,7 @@ export const useAvailDaAppsDataBasic = () => {
     });
   }
   const formattedOp = data?.appEntities?.nodes?.map((agg: any) => {
-    let decoded = agg?.id;
+    const decoded = agg?.id;
 
     const app =
       appDatasMap?.get((agg?.id as string)?.toLowerCase()) ??
@@ -74,7 +78,7 @@ export const useAvailDaAppsDataBasic = () => {
     data: {
       formattedOp: _.take(
         _.orderBy(formattedOp, (s) => Number(s?.totalByteSize), ["desc"]),
-        4
+        4,
       ),
       totalCount: data?.dataSubmissions?.totalCount,
     },
@@ -87,7 +91,10 @@ export const useAvailDaAppsDataBasicSingle = (id: string) => {
     queryKey: ["home-l2beat-avail-apps", id],
     queryFn: async () => {
       return await fetch(
-        `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/with-da-id/avail/avail/${(id as string)?.toLowerCase()}.json`
+        joinUrl(
+          L2BEAT_RAW_DATA_BASE_URL,
+          `projects/with-da-id/avail/avail/${(id as string)?.toLowerCase()}.json`,
+        ),
       )
         ?.then(async (res) => {
           const result = await res.json();

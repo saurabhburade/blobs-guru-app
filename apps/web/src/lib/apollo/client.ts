@@ -1,20 +1,21 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-
-const subgraphUrl = "https://ethapi.blobs.guru/";
-const availUrl = "https://availapi.blobs.guru/";
-const celestiaUrl = "https://celestiaapi.blobs.guru/";
+import {
+  AVAIL_SUBQUERY_URL,
+  CELESTIA_SUBQUERY_URL,
+  ETHEREUM_SUBQUERY_URL,
+} from "@/configs/env";
 
 export const apolloClient = new ApolloClient({
-  uri: subgraphUrl,
+  uri: ETHEREUM_SUBQUERY_URL,
   cache: new InMemoryCache(),
 });
 
 export const availClient = new ApolloClient({
-  uri: availUrl,
+  uri: AVAIL_SUBQUERY_URL,
   cache: new InMemoryCache(),
 });
 
 export const celestiaClient = new ApolloClient({
-  uri: celestiaUrl,
+  uri: CELESTIA_SUBQUERY_URL,
   cache: new InMemoryCache(),
 });

@@ -1,28 +1,26 @@
+import { useQuery } from "@apollo/client";
+import { useQuery as useReactQuery } from "@tanstack/react-query";
+import axios from "axios";
+import BigNumber from "bignumber.js";
+import { div } from "framer-motion/client";
+import { InfoIcon } from "lucide-react";
+import MotionNumber from "motion-number";
+import Link from "next/link";
+import React, { useMemo } from "react";
+import ImageWithFallback from "@/components/ImageWithFallback";
 import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
+import { AVAIL_STATS_API_URL } from "@/configs/env";
+import { useAvailDaAppsDataBasic } from "@/hooks/useAvailDaAppsDataBasic";
+import { useDaCostCompare } from "@/hooks/useDaCostCompare";
 import { availClient } from "@/lib/apollo/client";
+import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
 import {
   AVAIL_COLLECTIVE_STAT_QUERY,
   AVAIL_DA_COST_DATAS_QUERY,
 } from "@/lib/apollo/queriesAvail";
 import { cn, formatBytes, formatWrapedText, safeBigNumber } from "@/lib/utils";
-import { useQuery } from "@apollo/client";
-import BigNumber from "bignumber.js";
-import MotionNumber from "motion-number";
-import React from "react";
-import { useMemo } from "react";
-import { useQuery as useReactQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { useAvailDaAppsDataBasic } from "@/hooks/useAvailDaAppsDataBasic";
-import ImageWithFallback from "@/components/ImageWithFallback";
-import Link from "next/link";
-import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
-import { useDaCostCompare } from "@/hooks/useDaCostCompare";
-import { InfoIcon } from "lucide-react";
-import { div } from "framer-motion/client";
 
-type Props = {};
-
-function AvailStats({}: Props) {
+function AvailStats() {
   const { data: appsData } = useAvailDaAppsDataBasic();
   const { data: daCostData, loading: daCostDataLoading } = useDaCostCompare();
   const { data: rawData, loading: statsLoading } = useQuery(
@@ -30,7 +28,7 @@ function AvailStats({}: Props) {
     {
       client: availClient,
       pollInterval: 3_000,
-    }
+    },
   );
   const data = useMemo(() => {
     if (rawData?.collectiveData?.nodes?.length > 0) {
@@ -49,7 +47,7 @@ function AvailStats({}: Props) {
   }, [data]);
   const totalFeesAvail = useMemo(() => {
     const totalFeeAvailBn = new BigNumber(
-      data?.collectiveData?.totalFees
+      data?.collectiveData?.totalFees,
     ).toNumber();
     return totalFeeAvailBn || 0;
   }, [data?.collectiveData?.totalFees]);
@@ -78,16 +76,14 @@ function AvailStats({}: Props) {
   }, [data?.collectiveData?.endBlock]);
   const totalExtrinsicCount = useMemo(() => {
     const bn = new BigNumber(
-      data?.collectiveData?.totalExtrinsicCount
+      data?.collectiveData?.totalExtrinsicCount,
     ).toNumber();
     return bn || 0;
   }, [data?.collectiveData?.totalExtrinsicCount]);
   const blockData = useReactQuery({
     queryKey: ["avail-latest-block"],
     queryFn: async () => {
-      const res = await axios.get(
-        "https://api.lightclient.mainnet.avail.so/v1/latest_block"
-      );
+      const res = await axios.get(AVAIL_STATS_API_URL);
       return res.data;
     },
     refetchInterval: 10_000,
@@ -117,10 +113,10 @@ function AvailStats({}: Props) {
             </p>
           </div>
         )}
-        {appsData?.formattedOp?.map((app, idx) => {
+        {appsData?.formattedOp?.map((app) => {
           return (
             <div
-              key={`${app?.id}----${app?.name}--${idx}`}
+              key={`${app?.id}----${app?.name}`}
               className="p-5 bg-base-200/15 rounded-lg space-y-3"
             >
               <div className="flex gap-3">
@@ -331,7 +327,7 @@ const StatCard = ({
       <div
         className={cn(
           "h-full w-full bg-base-100 border p-4  border-[0.5px]  space-y-2 border-base-200 animate-pulse",
-          className
+          className,
         )}
       >
         <p className=" text-sm opacity-50 h-5 w-20 rounded-full bg-base-200 animate-pulse"></p>
@@ -343,7 +339,7 @@ const StatCard = ({
     <div
       className={cn(
         "h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200",
-        className
+        className,
       )}
     >
       <p className=" text-sm opacity-50">{title || "Block Height"}</p>

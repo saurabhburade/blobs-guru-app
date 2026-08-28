@@ -1,9 +1,10 @@
 "use client";
-import { THROUGHPUT_DATA_CELESTIA } from "@/mock/mockCelestiaAPI";
-import { THROUGHPUT_DATA_EIGENDA } from "@/mock/mockEigenAPI";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import BigNumber from "bignumber.js";
+import { CELESTIA_STATS_API_URL } from "@/configs/env";
+import { THROUGHPUT_DATA_CELESTIA } from "@/mock/mockCelestiaAPI";
+import { THROUGHPUT_DATA_EIGENDA } from "@/mock/mockEigenAPI";
 
 export const useCelestiaDaThroughput = () => {
   const res = useQuery({
@@ -13,7 +14,7 @@ export const useCelestiaDaThroughput = () => {
         parseInt((new Date().getTime() / 1000).toString()) - 86400;
 
       const r = await axios.get(
-        `https://api.celenium.io/v1/stats/series/blobs_size/hour?from=${currentTimestamp}`
+        `${CELESTIA_STATS_API_URL}?from=${currentTimestamp}`,
       );
       const formatedData = r?.data?.map(
         (d: { time: string; value: string }) => {
@@ -25,7 +26,7 @@ export const useCelestiaDaThroughput = () => {
               .div(3600)
               .toNumber(),
           };
-        }
+        },
       );
       return { series: formatedData };
     },

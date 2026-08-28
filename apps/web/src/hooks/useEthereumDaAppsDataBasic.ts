@@ -1,15 +1,14 @@
+import { useQuery } from "@apollo/client";
+import { useQuery as useReactQuery } from "@tanstack/react-query";
+import _ from "lodash";
 import {
   getAccountDetailsFromAddressBook,
   getAppDetailsFromAppBook,
 } from "@/configs/constants";
+import { joinUrl, L2BEAT_RAW_DATA_BASE_URL } from "@/configs/env";
 import { apolloClient, celestiaClient } from "@/lib/apollo/client";
-
 import { CELESTIA_BASIC_APP_DATAS_QUERY } from "@/lib/apollo/queriesCelestia";
 import { ETHEREUM_BASIC_APP_DATAS_QUERY } from "@/lib/apollo/queriesEthereum";
-import { useQuery } from "@apollo/client";
-import { useQuery as useReactQuery } from "@tanstack/react-query";
-
-import _ from "lodash";
 export interface ApplicationData {
   name: string;
   id: number;
@@ -28,7 +27,10 @@ export const useEthereumDaAppsDataBasic = () => {
       const datas = await Promise.all(
         data?.accountEntities?.nodes?.map(async (agg: any) => {
           return await fetch(
-            `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/with-da-id/ethereum/ethereum/${(agg?.id as string)?.toLowerCase()}.json`
+            joinUrl(
+              L2BEAT_RAW_DATA_BASE_URL,
+              `projects/with-da-id/ethereum/ethereum/${(agg?.id as string)?.toLowerCase()}.json`,
+            ),
           )
             ?.then(async (res) => {
               const result = await res.json();
@@ -43,7 +45,7 @@ export const useEthereumDaAppsDataBasic = () => {
               return null;
             })
             .catch(() => null);
-        })
+        }),
       );
 
       return datas;
@@ -56,7 +58,7 @@ export const useEthereumDaAppsDataBasic = () => {
     });
   }
   const formattedOp = data?.accountEntities?.nodes?.map((agg: any) => {
-    let decoded = agg?.id;
+    const decoded = agg?.id;
 
     const app =
       appDatasMap?.get((agg?.id as string)?.toLowerCase()) ??
@@ -73,7 +75,7 @@ export const useEthereumDaAppsDataBasic = () => {
     data: {
       formattedOp: _.take(
         _.orderBy(formattedOp, (s) => Number(s?.byteSize), ["asc"]),
-        4
+        4,
       ),
       totalCount: data?.dataSubmissions?.totalCount,
     },
@@ -90,7 +92,10 @@ export const useEthereumDaAppsDataBasicSingle = (id: string) => {
     queryKey: ["l2beat-ethereum-apps-list", id],
     queryFn: async () => {
       return await fetch(
-        `https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/with-da-id/ethereum/ethereum/${(id as string)?.toLowerCase()}.json`
+        joinUrl(
+          L2BEAT_RAW_DATA_BASE_URL,
+          `projects/with-da-id/ethereum/ethereum/${(id as string)?.toLowerCase()}.json`,
+        ),
       )
         ?.then(async (res) => {
           const result = await res.json();

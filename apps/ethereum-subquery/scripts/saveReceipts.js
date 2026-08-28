@@ -16,17 +16,14 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 
 // ===================== CONFIG =====================
-const RPC_URLS = [
-  "https://1.rpc.hypersync.xyz",
-  "https://1.rpc.hypersync.xyz",
-  "https://1.rpc.hypersync.xyz",
-  "https://1.rpc.hypersync.xyz",
-  "https://eth-traces.rpc.hypersync.xyz",
-  "https://eth-traces.rpc.hypersync.xyz",
-  "https://eth-traces.rpc.hypersync.xyz",
-  "https://eth-traces.rpc.hypersync.xyz",
-  "https://eth-traces.rpc.hypersync.xyz",
-];
+const RPC_URLS = (process.env.ETH_RPC_ENDPOINTS ?? "")
+  .split(",")
+  .map((url) => url.trim())
+  .filter(Boolean);
+
+if (RPC_URLS.length === 0) {
+  throw new Error("ETH_RPC_ENDPOINTS environment variable is required");
+}
 
 // Block range
 const START = 19426500n; // inclusive
@@ -168,7 +165,7 @@ async function getBlockReceiptsByNumberBatch(url, blockNumsHex) {
 
 // ===================== WRITER (async, split files) =====================
 let FILE_INDEX = 1;
-let BUFFER = [];
+const BUFFER = [];
 let pendingWrite = Promise.resolve(); // serialize actual writes (avoid contention)
 
 function nextFileName() {
@@ -244,7 +241,7 @@ async function processRange(start, end) {
 
       const { idx, batch } = item;
       const bnHexes = batch.map((bn) => toHexQuantity(bn));
-      let endpoint = pickEndpoint();
+      const endpoint = pickEndpoint();
 
       try {
         const res = await getBlockReceiptsByNumberBatch(endpoint.url, bnHexes);
@@ -291,7 +288,7 @@ async function processRange(start, end) {
         const doneBatches = Math.min(completedBatches, initialBatchCount);
         const pct = Math.min(
           100,
-          Number(((doneBatches / initialBatchCount) * 100).toFixed(1))
+          Number(((doneBatches / initialBatchCount) * 100).toFixed(1)),
         );
 
         const elapsedMs = sw.ms();

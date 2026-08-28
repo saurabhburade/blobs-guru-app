@@ -1,3 +1,5 @@
+import { joinUrl, L2BEAT_RAW_DATA_BASE_URL } from "./env";
+
 interface AppBook {
   [address: string]: any;
 }
@@ -6,15 +8,15 @@ export const AVAIL_APP_BOOK: AppBook = {
     name: "Avail",
     // logoUri:
     //   "https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/icons/sophon.png",
-    // l2beatProjectDataUrl:
-    //   "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/config/data/projects/layer2s/sophon.json",
   },
   "17": {
     name: "Sophon",
     logoUri:
       "https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/icons/sophon.png",
-    l2beatProjectDataUrl:
-      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/sophon.json",
+    l2beatProjectDataUrl: joinUrl(
+      L2BEAT_RAW_DATA_BASE_URL,
+      "projects/layer2s/sophon.json",
+    ),
   },
   "39": {
     name: "Lens Archive",
@@ -25,15 +27,19 @@ export const AVAIL_APP_BOOK: AppBook = {
     name: "Lens Mainnet",
     logoUri:
       "https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/icons/lens.png",
-    l2beatProjectDataUrl:
-      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/lens.json",
+    l2beatProjectDataUrl: joinUrl(
+      L2BEAT_RAW_DATA_BASE_URL,
+      "projects/layer2s/lens.json",
+    ),
   },
   "19": {
     name: "Skate",
     logoUri:
       "https://raw.githubusercontent.com/l2beat/l2beat/refs/heads/main/packages/frontend/static/icons/skatechain.png",
-    l2beatProjectDataUrl:
-      "https://raw.githubusercontent.com/saurabhburade/l2beat/refs/heads/main/packages/blobs-guru-raw-data/data/projects/layer2s/skatechain.json",
+    l2beatProjectDataUrl: joinUrl(
+      L2BEAT_RAW_DATA_BASE_URL,
+      "projects/layer2s/skatechain.json",
+    ),
   },
   "25": {
     name: "Rooch",

@@ -2,6 +2,7 @@
   "name": "@blobs-guru/ethereum-subquery",
   "version": "0.0.1",
   "private": true,
+  "license": "MIT",
   "description": "SubQuery indexer for Ethereum blobs, blocks, transactions, accounts, and price data",
   "main": "dist/index.js",
   "scripts": {

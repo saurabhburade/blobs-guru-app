@@ -1,20 +1,17 @@
 import { ethers } from "ethers";
 import fetch from "node-fetch";
 import OneinchABI from "../../../abis/OneinchABI.abi.json";
+import { joinUrl, requireEnv } from "../../config/env";
 // @ts-nocheck
 import { PriceFeedMinute } from "../../types";
 import { ORACLE_ADDRESS } from "../helper";
 import type { CorrectSubstrateBlock } from "../mappingHandlers";
 
-function requireEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`${name} environment variable is required`);
-  }
-  return value;
-}
-
-const ETH_RPC = requireEnv("ETH_RPC");
+const ETH_PRICE_RPC_URL = requireEnv("ETH_PRICE_RPC_URL");
+const PRICE_FEED_ARCHIVE_BASE_URL = requireEnv("PRICE_FEED_ARCHIVE_BASE_URL");
+const DEX_GURU_API_BASE_URL = requireEnv("DEX_GURU_API_BASE_URL");
+const DEFILLAMA_API_BASE_URL = requireEnv("DEFILLAMA_API_BASE_URL");
+const ETHERSCAN_API_BASE_URL = requireEnv("ETHERSCAN_API_BASE_URL");
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -101,7 +98,7 @@ export async function handleNewPriceMinute({
       let fileIdx = 0;
       for (const file of CONSTANT_PRICE_FEED_FILES) {
         const data = await fetchWithTimeout(
-          `https://raw.githubusercontent.com/saurabhburade/multi-chain-subquery/refs/heads/dev/src/mappings/pricefeed/saved/${file}.json`,
+          joinUrl(PRICE_FEED_ARCHIVE_BASE_URL, `${file}.json`),
           {},
         );
         logger.info(`FETCHED PRICE DATA FROM FILE :: ${file}.json`);
@@ -140,7 +137,7 @@ export async function handleNewPriceMinute({
       return priceFeedThisMinute!;
     }
 
-    const URL = `https://api.dev.dex.guru/v1/tradingview/history?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Number(
+    const URL = `${joinUrl(DEX_GURU_API_BASE_URL, "v1/tradingview/history")}?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Number(
       block.timestamp.getTime() / 1000,
     ).toFixed(0)}&to=${Number(
       (block.timestamp.getTime() + 86400000) / 1000,
@@ -210,9 +207,12 @@ export async function handleNewPriceMinute({
     logger.error(`ERROR API ${error}`);
     try {
       const blockNumberApi = await fetch(
-        `https://coins.llama.fi/block/ethereum/${Number(
-          Math.floor(block.timestamp.getTime() / 1000),
-        )}`,
+        joinUrl(
+          DEFILLAMA_API_BASE_URL,
+          `block/ethereum/${Number(
+            Math.floor(block.timestamp.getTime() / 1000),
+          )}`,
+        ),
         {
           method: "GET",
         },
@@ -228,7 +228,7 @@ export async function handleNewPriceMinute({
       } else {
         await delay(1_000);
         const blockNumberApiEtherscan = await fetch(
-          `https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=${Number(
+          `${joinUrl(ETHERSCAN_API_BASE_URL, "api")}?module=block&action=getblocknobytime&timestamp=${Number(
             Math.floor(block.timestamp.getTime() / 1000),
           )}&closest=before&apikey=${ETHERSCAN_API_KEY}`,
           {
@@ -249,7 +249,7 @@ export async function handleNewPriceMinute({
       try {
         await delay(1_000);
         const blockNumberApiEtherscan = await fetch(
-          `https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=${Number(
+          `${joinUrl(ETHERSCAN_API_BASE_URL, "api")}?module=block&action=getblocknobytime&timestamp=${Number(
             Math.floor(block.timestamp.getTime() / 1000),
           )}&closest=before&apikey=${ETHERSCAN_API_KEY}`,
           {
@@ -303,7 +303,7 @@ export async function handleNewPriceMinute({
           false,
         ]);
 
-        const rpcDataEth = await fetch(ETH_RPC, {
+        const rpcDataEth = await fetch(ETH_PRICE_RPC_URL, {
           method: "POST",
           headers: {},
           body: JSON.stringify({
@@ -320,7 +320,7 @@ export async function handleNewPriceMinute({
             ],
           }),
         });
-        const rpcDataAvail = await fetch(ETH_RPC, {
+        const rpcDataAvail = await fetch(ETH_PRICE_RPC_URL, {
           method: "POST",
           headers: {},
           body: JSON.stringify({

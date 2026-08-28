@@ -1,7 +1,12 @@
+import type { EthereumBlock } from "@subql/types-ethereum";
 import fetch from "node-fetch";
+import { joinUrl, requireEnv } from "../../config/env";
 import { PriceFeedMinute } from "../../types";
 
-import { EthereumBlock } from "@subql/types-ethereum";
+const PRICE_FEED_ARCHIVE_BASE_URL = requireEnv("PRICE_FEED_ARCHIVE_BASE_URL");
+const BINANCE_API_BASE_URL = requireEnv("BINANCE_API_BASE_URL");
+const REDSTONE_API_BASE_URL = requireEnv("REDSTONE_API_BASE_URL");
+const COINGECKO_API_BASE_URL = requireEnv("COINGECKO_API_BASE_URL");
 
 async function fetchData(url: string, options: any) {
   const response = await fetch(url, {
@@ -51,7 +56,7 @@ export async function handleNewPriceMinute({
   const blockDate = new Date(Number(block.timestamp) * 1000);
   const minuteId = Math.floor(blockDate.getTime() / 60000);
   const currentMinuteId = Math.floor(new Date().getTime() / 60000);
-  let ethBlockContext = {};
+  const ethBlockContext = {};
   // SKIP PRICES BEFORE GENESIS MINUTEID 28312800
   const nativeBlock = block.number;
 
@@ -69,7 +74,7 @@ export async function handleNewPriceMinute({
       return existingPrice!;
     }
     if (minuteId < 28312800) {
-      let pricesToSave: PriceFeedMinute[] = [];
+      const pricesToSave: PriceFeedMinute[] = [];
       let indexMinute = Number(minuteId);
       while (indexMinute < 28312800) {
         const priceFeedMinuteZero = PriceFeedMinute.create({
@@ -87,13 +92,13 @@ export async function handleNewPriceMinute({
       logger.info(`BULK PRICE SAVE BEFORE GENESIS :: minuteId: ${minuteId}`);
       return pricesToSave[0]!;
     }
-    let priceFeedThisMinute;
+    let priceFeedThisMinute: PriceFeedMinute | undefined;
     if (minuteId <= 29147512) {
       let fileIdx = 0;
       for (const file of CONSTANT_PRICE_FEED_FILES) {
         const data = await fetchData(
-          `https://raw.githubusercontent.com/saurabhburade/eth-subql-starter/refs/heads/dev/src/mappings/pricefeed/saveddata/${file}.json`,
-          {}
+          joinUrl(PRICE_FEED_ARCHIVE_BASE_URL, `${file}.json`),
+          {},
         );
         logger.info(`FETCHED PRICE DATA FROM FILE :: ${file}.json`);
         const pricesToSave: PriceFeedMinute[] = [];
@@ -119,7 +124,7 @@ export async function handleNewPriceMinute({
           const ck = splitedChunk[index];
           await store.bulkUpdate("PriceFeedMinute", ck);
           logger.info(
-            `SAVED PRICES CHUNK :: ${index} out of ${splitedChunk.length}`
+            `SAVED PRICES CHUNK :: ${index} out of ${splitedChunk.length}`,
           );
         }
         fileIdx += 1;
@@ -129,7 +134,7 @@ export async function handleNewPriceMinute({
     if (currentMinuteId - minuteId >= 5) {
       try {
         // if more than 5 minutes data is unavailable , fetch 5 minute prices from binance api
-        const URL = `https://api.binance.com/api/v3/klines?symbol=ETHUSDC&interval=1m&limit=1000&startTime=${blockDate.getTime()}`;
+        const URL = `${joinUrl(BINANCE_API_BASE_URL, "api/v3/klines")}?symbol=ETHUSDC&interval=1m&limit=1000&startTime=${blockDate.getTime()}`;
         const res = await fetchData(URL, {});
         if (res?.length > 0) {
           const pricesToSave: PriceFeedMinute[] = [];
@@ -167,7 +172,7 @@ export async function handleNewPriceMinute({
       try {
         // fetch latest price if minute difference is less than 5 mins
         // fetch price from chainlink oracle
-        const URL = `https://api.redstone.finance/prices?forceInflux=true&interval=1&symbols=ETH`;
+        const URL = `${joinUrl(REDSTONE_API_BASE_URL, "prices")}?forceInflux=true&interval=1&symbols=ETH`;
         const res = await fetchData(URL, {});
         if (res?.ETH) {
           const { ETH, timestamp } = res;
@@ -195,7 +200,7 @@ export async function handleNewPriceMinute({
         logger.info(`PRICE ERROR REDSTONE API ${errorR}`);
         logger.info(`TRY PRICE FROM COINGECKO`);
         // fetch price from chainlink oracle
-        const URL = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&symbols=eth&include_last_updated_at=true`;
+        const URL = `${joinUrl(COINGECKO_API_BASE_URL, "api/v3/simple/price")}?vs_currencies=usd&symbols=eth&include_last_updated_at=true`;
         const res = await fetchData(URL, {});
         if (res?.eth) {
           const { eth } = res;

@@ -4,6 +4,10 @@ Blobs Guru is a pnpm and Turborepo monorepo containing the web explorer, the
 active SubQuery apps that provide its Ethereum, Avail, and Celestia data, and a
 deprecated Ethereum Substreams implementation retained for reference.
 
+The active indexers are built with [SubQuery](https://subquery.network/). Use
+the SubQuery website as the reference for framework concepts, manifests, and
+deployment guidance.
+
 ## Applications
 
 | Workspace | Path | Purpose |
@@ -21,6 +25,18 @@ Install all workspace dependencies from the repository root:
 ```bash
 pnpm install
 ```
+
+Create local environment files from the committed examples, then review the
+public endpoints and fill in the required secrets:
+
+```bash
+cp apps/web/.env.example apps/web/.env.local
+cp apps/ethereum-subquery/.env.example apps/ethereum-subquery/.env
+cp apps/avail-subquery/.env.example apps/avail-subquery/.env
+cp apps/celestia-subquery/.env.example apps/celestia-subquery/.env
+```
+
+Do not commit the populated environment files.
 
 Run the web application:
 

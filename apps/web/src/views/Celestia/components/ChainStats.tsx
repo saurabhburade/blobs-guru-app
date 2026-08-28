@@ -1,27 +1,24 @@
-import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
-import { celestiaClient } from "@/lib/apollo/client";
-
-import { cn, formatBytes, formatWrapedText } from "@/lib/utils";
 import { useQuery } from "@apollo/client";
-import BigNumber from "bignumber.js";
-import MotionNumber from "motion-number";
-import React from "react";
-import { useMemo } from "react";
 import { useQuery as useReactQuery } from "@tanstack/react-query";
 import axios from "axios";
+import BigNumber from "bignumber.js";
+import { div } from "framer-motion/client";
+import { InfoIcon } from "lucide-react";
+import MotionNumber from "motion-number";
+import Link from "next/link";
+import React, { useMemo } from "react";
 
 import ImageWithFallback from "@/components/ImageWithFallback";
-import Link from "next/link";
-import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
-import { useDaCostCompare } from "@/hooks/useDaCostCompare";
-import { InfoIcon } from "lucide-react";
-import { div } from "framer-motion/client";
+import { BLOCK_DURATION_SEC, SYNC_START_BLOCK } from "@/configs/constants";
+import { CELESTIA_RPC_STATUS_URL } from "@/configs/env";
 import { useCelestiaDaAppsDataBasic } from "@/hooks/useCelestiaDaAppsDataBasic";
+import { useDaCostCompare } from "@/hooks/useDaCostCompare";
+import { celestiaClient } from "@/lib/apollo/client";
+import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
 import { CELESTIA_COLLECTIVE_STAT_QUERY } from "@/lib/apollo/queriesCelestia";
+import { cn, formatBytes, formatWrapedText } from "@/lib/utils";
 
-type Props = {};
-
-function ChainStats({}: Props) {
+function ChainStats() {
   const { data: appsData } = useCelestiaDaAppsDataBasic();
   const { data: daCostData, loading: daCostDataLoading } = useDaCostCompare();
   const { data: rawData, loading: statsLoading } = useQuery(
@@ -29,7 +26,7 @@ function ChainStats({}: Props) {
     {
       client: celestiaClient,
       pollInterval: 3_000,
-    }
+    },
   );
   const data = useMemo(() => {
     if (rawData?.collectiveData?.nodes?.length > 0) {
@@ -48,7 +45,7 @@ function ChainStats({}: Props) {
   }, [data]);
   const totalFeesNative = useMemo(() => {
     const totalFeeNativeBn = new BigNumber(
-      data?.collectiveData?.totalFeesNative
+      data?.collectiveData?.totalFeesNative,
     ).toNumber();
     return totalFeeNativeBn || 0;
   }, [data?.collectiveData?.totalFeesNative]);
@@ -82,9 +79,7 @@ function ChainStats({}: Props) {
   const blockData = useReactQuery({
     queryKey: ["celestia-latest-block"],
     queryFn: async () => {
-      const res = await axios.get(
-        "https://public-celestia-rpc.numia.xyz/status"
-      );
+      const res = await axios.get(CELESTIA_RPC_STATUS_URL);
       return res.data?.result?.sync_info?.latest_block_height;
     },
     refetchInterval: 10_000,
@@ -114,10 +109,10 @@ function ChainStats({}: Props) {
             </p>
           </div>
         )}
-        {appsData?.formattedOp?.map((app, idx) => {
+        {appsData?.formattedOp?.map((app) => {
           return (
             <div
-              key={`${app?.id}----${app?.name}--${idx}`}
+              key={`${app?.id}----${app?.name}`}
               className="p-5 bg-base-200/15 rounded-lg space-y-3"
             >
               <div className="flex gap-3">
@@ -282,7 +277,7 @@ const StatCard = ({
       <div
         className={cn(
           "h-full w-full bg-base-100 border p-4  border-[0.5px]  space-y-2 border-base-200 animate-pulse",
-          className
+          className,
         )}
       >
         <p className=" text-sm opacity-50 h-5 w-20 rounded-full bg-base-200 animate-pulse"></p>
@@ -294,7 +289,7 @@ const StatCard = ({
     <div
       className={cn(
         "h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200",
-        className
+        className,
       )}
     >
       <p className=" text-sm opacity-50">{title || "Block Height"}</p>
