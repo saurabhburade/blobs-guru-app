@@ -1,8 +1,8 @@
 {
-  "name": "@blobs-guru/indexer-celestia",
+  "name": "@blobs-guru/celestia-subquery",
   "version": "0.0.2",
   "private": true,
-  "description": "desc",
+  "description": "SubQuery indexer for Celestia blobs, blocks, namespaces, accounts, and price data",
   "main": "dist/index.js",
   "scripts": {
     "build": "subql build",

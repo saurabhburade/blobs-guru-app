@@ -1,0 +1,34 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": ["tsconfig.subquery.json"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "build/**",
+        "dist/**",
+        "project.yaml"
+      ]
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"],
+      "outputs": []
+    },
+    "codegen": {
+      "outputs": ["generated/**", "src/types/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "outputs": []
+    },
+    "test": {
+      "outputs": ["coverage/**"]
+    }
+  }
+}

@@ -8,9 +8,9 @@ accounts, applications, transfers, and aggregate price data for Blobs Guru.
 Run commands from the monorepo root:
 
 ```bash
-pnpm --filter @blobs-guru/indexer-celestia codegen
-pnpm --filter @blobs-guru/indexer-celestia build
-pnpm dev:indexer:celestia
+pnpm exec turbo run codegen --filter=@blobs-guru/celestia-subquery
+pnpm exec turbo run build --filter=@blobs-guru/celestia-subquery
+pnpm dev:celestia-subquery
 ```
 
 The `dev` command generates types, builds the project, and starts PostgreSQL,

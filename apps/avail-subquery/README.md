@@ -8,9 +8,9 @@ applications, accounts, balances, and aggregate price data for Blobs Guru.
 Run commands from the monorepo root:
 
 ```bash
-pnpm --filter @blobs-guru/indexer-avail codegen
-pnpm --filter @blobs-guru/indexer-avail build
-pnpm dev:indexer:avail
+pnpm exec turbo run codegen --filter=@blobs-guru/avail-subquery
+pnpm exec turbo run build --filter=@blobs-guru/avail-subquery
+pnpm dev:avail-subquery
 ```
 
 The `dev` command generates types, builds the project, and starts PostgreSQL,

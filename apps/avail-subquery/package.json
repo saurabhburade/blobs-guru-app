@@ -1,5 +1,5 @@
 {
-  "name": "@blobs-guru/indexer-avail",
+  "name": "@blobs-guru/avail-subquery",
   "version": "0.0.1",
   "private": true,
   "description": "SubQuery indexer for Avail blocks, data submissions, applications, accounts, and price data",
@@ -12,8 +12,12 @@
     "prepack": "rm -rf dist && pnpm run build",
     "test": "pnpm run build && subql-node test -f avail.yaml"
   },
-  "homepage": "https://github.com/saurabhburade/multi-chain-subquery",
-  "repository": "github:saurabhburade/multi-chain-subquery",
+  "homepage": "https://github.com/saurabhburade/blobs-guru-app/tree/main/apps/avail-subquery",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saurabhburade/blobs-guru-app.git",
+    "directory": "apps/avail-subquery"
+  },
   "files": [
     "dist",
     "schema.graphql",

@@ -1,8 +1,8 @@
 {
-  "name": "@blobs-guru/indexer-ethereum",
+  "name": "@blobs-guru/ethereum-subquery",
   "version": "0.0.1",
   "private": true,
-  "description": "This project can be use as a starting point for developing your new Ethereum SubQuery project",
+  "description": "SubQuery indexer for Ethereum blobs, blocks, transactions, accounts, and price data",
   "main": "dist/index.js",
   "scripts": {
     "build": "subql build",

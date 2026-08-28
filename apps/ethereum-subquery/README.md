@@ -8,9 +8,9 @@ and aggregate price data for Blobs Guru.
 Run commands from the monorepo root:
 
 ```bash
-pnpm --filter @blobs-guru/indexer-ethereum codegen
-pnpm --filter @blobs-guru/indexer-ethereum build
-pnpm dev:indexer:ethereum
+pnpm exec turbo run codegen --filter=@blobs-guru/ethereum-subquery
+pnpm exec turbo run build --filter=@blobs-guru/ethereum-subquery
+pnpm dev:ethereum-subquery
 ```
 
 The `dev` command generates types, builds the project, and starts PostgreSQL,

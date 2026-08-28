@@ -1,0 +1,38 @@
+name: Deploy Ethereum SubQuery
+
+on:
+  workflow_dispatch:
+    inputs:
+      projectName:
+        description: SubQuery project name
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: DEPLOYMENT
+    env:
+      SUBQL_ACCESS_TOKEN: ${{ secrets.SUBQL_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.18.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run codegen --filter=@blobs-guru/ethereum-subquery
+      - run: pnpm --filter @blobs-guru/ethereum-subquery exec subql --version
+      - name: Publish and deploy
+        run: >-
+          bash .github/scripts/publish-subquery.sh
+          -d apps/ethereum-subquery
+          -o "${{ github.repository }}"
+          -p "${{ inputs.projectName }}"

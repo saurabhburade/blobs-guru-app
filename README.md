@@ -1,16 +1,18 @@
 # Blobs Guru
 
-Blobs Guru is a pnpm monorepo containing the web explorer and the SubQuery
-indexers that provide its Ethereum, Avail, and Celestia data.
+Blobs Guru is a pnpm and Turborepo monorepo containing the web explorer, the
+active SubQuery apps that provide its Ethereum, Avail, and Celestia data, and a
+deprecated Ethereum Substreams implementation retained for reference.
 
 ## Applications
 
 | Workspace | Path | Purpose |
 | --- | --- | --- |
 | `@blobs-guru/web` | `apps/web` | Next.js web application |
-| `@blobs-guru/indexer-ethereum` | `apps/indexers/ethereum` | Ethereum SubQuery indexer |
-| `@blobs-guru/indexer-avail` | `apps/indexers/avail` | Avail SubQuery indexer |
-| `@blobs-guru/indexer-celestia` | `apps/indexers/celestia` | Celestia SubQuery indexer |
+| `@blobs-guru/ethereum-subquery` | `apps/ethereum-subquery` | Ethereum SubQuery app |
+| `@blobs-guru/avail-subquery` | `apps/avail-subquery` | Avail SubQuery app |
+| `@blobs-guru/celestia-subquery` | `apps/celestia-subquery` | Celestia SubQuery app |
+| `@blobs-guru/substream-eth-blobs` | `apps/substream-eth-blobs` | Deprecated Ethereum Substreams app |
 
 ## Getting started
 
@@ -26,33 +28,46 @@ Run the web application:
 pnpm dev
 ```
 
-Generate and build every indexer:
+Generate and build every active SubQuery app:
 
 ```bash
-pnpm codegen:indexers
-pnpm build:indexers
+pnpm codegen:subqueries
+pnpm build:subqueries
 ```
 
 Run an individual indexer and its Docker services:
 
 ```bash
-pnpm dev:indexer:ethereum
-pnpm dev:indexer:avail
-pnpm dev:indexer:celestia
+pnpm dev:ethereum-subquery
+pnpm dev:avail-subquery
+pnpm dev:celestia-subquery
 ```
 
-Each indexer's own README contains its network-specific configuration and
+Each app's own README contains its network-specific configuration and
 deployment details. Their source repositories were imported as unsquashed Git
 subtrees, so their original commits remain in this repository's commit graph.
+
+Turbo runs the workspace task graph and caches build outputs. The deprecated
+Substreams app is excluded from the default `pnpm build`; build it explicitly
+with `pnpm build:substream-eth-blobs`.
+
+Shared repository tooling lives at the root: `biome.json` supplies general
+formatting and linting, `tsconfig.subquery.json` supplies the common SubQuery
+TypeScript baseline, and `.gitignore` covers generated files for every app.
+Next-specific ESLint rules and network-specific Docker helpers remain local to
+the apps that need them. See [`LICENSES.md`](LICENSES.md) for the license map.
 
 ## Common commands
 
 | Command | Description |
 | --- | --- |
 | `pnpm dev` | Start the web application |
-| `pnpm build` | Build every workspace with a build script |
+| `pnpm build` | Build the web app and all active SubQuery apps with Turbo |
 | `pnpm build:web` | Build only the web application |
-| `pnpm build:indexers` | Build all indexers |
-| `pnpm codegen:indexers` | Generate types for all indexers |
+| `pnpm build:subqueries` | Build all active SubQuery apps |
+| `pnpm codegen:subqueries` | Generate types for all active SubQuery apps |
+| `pnpm build:substream-eth-blobs` | Build the deprecated Substreams app |
 | `pnpm check-types` | Type-check the web application |
-| `pnpm test:indexers` | Run all indexer test commands |
+| `pnpm check:biome` | Check shared configuration with Biome |
+| `pnpm format` | Format supported files with Biome |
+| `pnpm test:subqueries` | Run all SubQuery test commands |

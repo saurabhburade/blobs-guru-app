@@ -1,6 +1,6 @@
 specVersion: 1.0.0
 description: Ethereum blobs Tracking Subgraph (powered by Substreams)
-repository: https://github.com/graphprotocol/graph-tooling
+repository: https://github.com/saurabhburade/blobs-guru-app
 
 indexerHints:
   prune: never
