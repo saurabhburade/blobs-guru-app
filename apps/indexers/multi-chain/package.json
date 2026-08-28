@@ -1,0 +1,47 @@
+{
+  "name": "kava-evm-cosmos-multi-chain",
+  "version": "0.0.1",
+  "description": "This project tracks USDT transactions and approvals on Kava EVM Network, along with all transfers sent on Kava Cosmos Co-chain",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "subql build",
+    "codegen": "subql codegen",
+    "start:docker": "docker compose pull && docker compose up --remove-orphans",
+    "dev": "export POSTGRES_PASSWORD=postgres_294382574923_421481399481248247 && subql codegen && yarn prepack && docker compose pull && docker compose up --remove-orphans",
+    "prepack": "rm -rf dist && npm run build",
+    "test": "subql build && subql-node-cosmos test"
+  },
+  "homepage": "https://github.com/subquery/cosmos-subql-starter",
+  "repository": "github:subquery/cosmos-subql-starter",
+  "files": [
+    "dist",
+    "schema.graphql",
+    "project.yaml"
+  ],
+  "author": "SubQuery Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@polkadot/api": "^12",
+    "@subql/cli": "latest",
+    "@subql/node": "latest",
+    "@subql/node-ethereum": "latest",
+    "@subql/testing": "latest",
+    "abab": "^2.0.6",
+    "dotenv": "latest",
+    "ethers": "^5.7.2",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@subql/types": "latest",
+    "@subql/types-ethereum": "latest",
+    "@types/node": "^17.0.21",
+    "@types/node-fetch": "latest",
+    "axios": "^1.7.9",
+    "pino": "^7.8.0",
+    "ts-proto": "^1.112.1",
+    "tslib": "^2.3.1"
+  },
+  "exports": {
+    "chaintypes": "src/chaintypes.ts"
+  }
+}

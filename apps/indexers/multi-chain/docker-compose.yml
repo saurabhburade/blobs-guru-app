@@ -1,0 +1,106 @@
+version: "3"
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: ./docker/pg-Dockerfile
+    ports:
+      - 5432:5432
+    volumes:
+      - .data/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=512MB
+      -c work_mem=124MB
+      -c maintenance_work_mem=128MB
+      -c effective_cache_size=1GB
+      -c autovacuum_vacuum_threshold=50
+      -c autovacuum_vacuum_cost_limit=1000
+      -c log_min_duration_statement=50
+      -c log_statement='none'
+      -c track_io_timing=on
+      
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  # subquery-node-evm:
+  #   image: subquerynetwork/subql-node-ethereum:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     DB_USER: postgres
+  #     DB_PASS: postgres
+  #     DB_DATABASE: postgres
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #   volumes:
+  #     - ./:/app
+  #   command:
+  #     - ${SUB_COMMAND:-} # set SUB_COMMAND env variable to "test" to run tests
+  #     - --multi-chain
+  #     - --db-schema=multi-chain
+  #     - -f=app/ethereum.yaml
+  #     - --allow-schema-migration
+  #     - --unfinalized-blocks=false
+  #     - --unsafe
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
+  #     interval: 3s
+  #     timeout: 5s
+  #     retries: 10
+
+  subquery-node-avail:
+    image: subquerynetwork/subql-node-substrate:latest
+    restart: unless-stopped
+    environment:
+      DB_USER: postgres
+      DB_PASS: ${POSTGRES_PASSWORD}
+      DB_DATABASE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      BATCH_SIZE: ${BATCH_SIZE:-100} # Fallback to 100 if BATCH_SIZE is not set
+      WORKERS_SIZE: ${WORKERS_SIZE:-6} # Fallback to 100 if BATCH_SIZE is not set
+
+    volumes:
+      - ./:/app
+
+    command:
+      - ${SUB_COMMAND:-} # set SUB_COMMAND env variable to "test" to run tests
+      - --multi-chain
+      - --db-schema=multi-chain
+      - -f=app/avail.yaml
+      - --allow-schema-migration
+      - --unfinalized-blocks=false
+      - --batch-size=${BATCH_SIZE:-100}
+      - --scale-batch-size
+      - --unsafe
+      - --workers=${WORKERS_SIZE:-6}
+    # cpuset: "0-15" # Pin to cores 0-15 (16 physical cores)
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
+      interval: 3s
+      timeout: 60s
+      retries: 10
+
+  graphql-engine:
+    image: subquerynetwork/subql-query:latest
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      DB_USER: postgres
+      DB_PASS: ${POSTGRES_PASSWORD}
+      DB_DATABASE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+    command:
+      - --name=multi-chain
+      - --playground
