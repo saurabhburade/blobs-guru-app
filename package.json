@@ -7,7 +7,7 @@
     "dev": "pnpm --filter @blobs-guru/web dev",
     "dev:web": "pnpm --filter @blobs-guru/web dev",
     "dev:indexer:ethereum": "pnpm --filter @blobs-guru/indexer-ethereum dev",
-    "dev:indexer:multi-chain": "pnpm --filter @blobs-guru/indexer-multi-chain dev",
+    "dev:indexer:avail": "pnpm --filter @blobs-guru/indexer-avail dev",
     "dev:indexer:celestia": "pnpm --filter @blobs-guru/indexer-celestia dev",
     "build": "pnpm --recursive --if-present build",
     "build:web": "pnpm --filter @blobs-guru/web build",

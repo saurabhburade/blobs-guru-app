@@ -4,7 +4,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<EOF
 -- Enable GIST support extension
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 
--- Create GIST index on all tables in 'multi-chain' schema with a _block_range column
+-- Create GIST index on all tables in the 'avail' schema with a _block_range column
 DO \$\$
 DECLARE
   r RECORD;
@@ -13,7 +13,7 @@ BEGIN
     SELECT table_schema, table_name
     FROM information_schema.columns
     WHERE column_name = '_block_range'
-      AND table_schema = 'multi-chain'
+      AND table_schema = 'avail'
   LOOP
     EXECUTE format(
       'CREATE INDEX IF NOT EXISTS %I_block_range_idx ON "%I".%I USING GIST (_block_range);',

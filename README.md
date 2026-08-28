@@ -1,7 +1,7 @@
 # Blobs Guru
 
 Blobs Guru is a pnpm monorepo containing the web explorer and the SubQuery
-indexers that provide its Ethereum, multi-chain, and Celestia data.
+indexers that provide its Ethereum, Avail, and Celestia data.
 
 ## Applications
 
@@ -9,7 +9,7 @@ indexers that provide its Ethereum, multi-chain, and Celestia data.
 | --- | --- | --- |
 | `@blobs-guru/web` | `apps/web` | Next.js web application |
 | `@blobs-guru/indexer-ethereum` | `apps/indexers/ethereum` | Ethereum SubQuery indexer |
-| `@blobs-guru/indexer-multi-chain` | `apps/indexers/multi-chain` | Multi-chain SubQuery indexer |
+| `@blobs-guru/indexer-avail` | `apps/indexers/avail` | Avail SubQuery indexer |
 | `@blobs-guru/indexer-celestia` | `apps/indexers/celestia` | Celestia SubQuery indexer |
 
 ## Getting started
@@ -37,7 +37,7 @@ Run an individual indexer and its Docker services:
 
 ```bash
 pnpm dev:indexer:ethereum
-pnpm dev:indexer:multi-chain
+pnpm dev:indexer:avail
 pnpm dev:indexer:celestia
 ```
 

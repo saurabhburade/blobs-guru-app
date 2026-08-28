@@ -1,23 +1,23 @@
 {
-  "name": "@blobs-guru/indexer-multi-chain",
+  "name": "@blobs-guru/indexer-avail",
   "version": "0.0.1",
   "private": true,
-  "description": "This project tracks USDT transactions and approvals on Kava EVM Network, along with all transfers sent on Kava Cosmos Co-chain",
+  "description": "SubQuery indexer for Avail blocks, data submissions, applications, accounts, and price data",
   "main": "dist/index.js",
   "scripts": {
-    "build": "subql build",
-    "codegen": "subql codegen",
+    "build": "subql build avail.yaml",
+    "codegen": "subql codegen avail.yaml",
     "start:docker": "docker compose pull && docker compose up --remove-orphans",
-    "dev": "export POSTGRES_PASSWORD=postgres_294382574923_421481399481248247 && subql codegen && pnpm run prepack && docker compose pull && docker compose up --remove-orphans",
+    "dev": "export POSTGRES_PASSWORD=postgres_294382574923_421481399481248247 && pnpm run codegen && pnpm run prepack && docker compose pull && docker compose up --remove-orphans",
     "prepack": "rm -rf dist && pnpm run build",
-    "test": "subql build && subql-node-cosmos test"
+    "test": "pnpm run build && subql-node test -f avail.yaml"
   },
-  "homepage": "https://github.com/subquery/cosmos-subql-starter",
+  "homepage": "https://github.com/saurabhburade/multi-chain-subquery",
   "repository": "github:saurabhburade/multi-chain-subquery",
   "files": [
     "dist",
     "schema.graphql",
-    "project.yaml"
+    "avail.yaml"
   ],
   "author": "SubQuery Team",
   "license": "MIT",
