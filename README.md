@@ -1,8 +1,9 @@
 # Blobs Guru
 
-Blobs Guru is a pnpm and Turborepo monorepo containing the web explorer, the
-active SubQuery apps that provide its Ethereum, Avail, and Celestia data, and a
-deprecated Ethereum Substreams implementation retained for reference.
+Blobs Guru is a multi-chain data-availability explorer for Ethereum, Avail, and
+Celestia. This monorepo contains its web application, the active SubQuery
+indexers that power it, and a deprecated Ethereum Substreams implementation
+retained for reference.
 
 ![Blobs Guru dashboard](docs/images/blobs-guru-dashboard.jpg)
 
