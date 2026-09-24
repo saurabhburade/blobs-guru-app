@@ -16,8 +16,8 @@ function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const DEX_GURU_API_KEY = requireEnv("DEX_GURU_API_KEY");
-const ETHERSCAN_API_KEY = requireEnv("ETHERSCAN_API_KEY");
+const DEX_GURU_API_KEY = process.env.DEX_GURU_API_KEY ?? "";
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY ?? "";
 
 async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
   const response = await fetch(url, {

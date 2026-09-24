@@ -1,0 +1,160 @@
+name: blobs-indexers
+
+services:
+  ethereum-node:
+    image: subquerynetwork/subql-node-ethereum:latest
+    restart: unless-stopped
+    environment:
+      DB_USER: ${ETH_DB_USER:-postgres}
+      DB_PASS: ${ETH_DB_PASSWORD:?set ETH_DB_PASSWORD in .env}
+      DB_DATABASE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      ETH_RPC_ENDPOINTS: ${ETH_RPC_ENDPOINTS:?set ETH_RPC_ENDPOINTS}
+      PRICE_FEED_ARCHIVE_BASE_URL: ${ETH_PRICE_FEED_ARCHIVE_BASE_URL:?set ETH_PRICE_FEED_ARCHIVE_BASE_URL}
+      BINANCE_API_BASE_URL: ${BINANCE_API_BASE_URL:?set BINANCE_API_BASE_URL}
+      REDSTONE_API_BASE_URL: ${REDSTONE_API_BASE_URL:?set REDSTONE_API_BASE_URL}
+      COINGECKO_API_BASE_URL: ${COINGECKO_API_BASE_URL:?set COINGECKO_API_BASE_URL}
+    volumes:
+      - ${REPO_DIR:?set REPO_DIR in .env}/apps/ethereum-subquery:/app:ro
+    command:
+      - -f=/app
+      - --db-schema=app
+      - --workers=1
+      - --batch-size=1
+      - --unsafe=true
+      - --allow-schema-migration
+      - --unfinalized-blocks=false
+      - --store-cache-threshold=100000
+      - --store-flush-interval=2000
+      - --store-cache-upper-limit=200000
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - >-
+            const http=require("http");const req=http.get("http://127.0.0.1:3000/ready",res=>{res.resume();process.exitCode=res.statusCode===200?0:1;});req.on("error",()=>{process.exitCode=1;});
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    networks: [ethereum]
+
+  ethereum-query:
+    image: subquerynetwork/subql-query:latest
+    restart: unless-stopped
+    environment:
+      DB_USER: ${ETH_DB_USER:-postgres}
+      DB_PASS: ${ETH_DB_PASSWORD:?set ETH_DB_PASSWORD in .env}
+      DB_DATABASE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+    command: [--name=app, --query-timeout=60000]
+    ports: ["127.0.0.1:3000:3000"]
+    networks: [ethereum]
+
+  celestia-node:
+    image: saurabhburade/subql-cosmos-node-test:v1.0.2
+    restart: unless-stopped
+    environment:
+      DB_USER: ${CELESTIA_DB_USER:-celestia_indexer}
+      DB_PASS: ${CELESTIA_DB_PASSWORD:?set CELESTIA_DB_PASSWORD in .env}
+      DB_DATABASE: celestia
+      DB_HOST: postgres
+      DB_PORT: 5432
+      CELESTIA_RPC_ENDPOINTS: ${CELESTIA_RPC_ENDPOINTS:?set CELESTIA_RPC_ENDPOINTS}
+      PRICE_FEED_ARCHIVE_BASE_URL: ${CELESTIA_PRICE_FEED_ARCHIVE_BASE_URL:?set CELESTIA_PRICE_FEED_ARCHIVE_BASE_URL}
+      BINANCE_API_BASE_URL: ${BINANCE_API_BASE_URL:?set BINANCE_API_BASE_URL}
+      REDSTONE_API_BASE_URL: ${REDSTONE_API_BASE_URL:?set REDSTONE_API_BASE_URL}
+      COINGECKO_API_BASE_URL: ${COINGECKO_API_BASE_URL:?set COINGECKO_API_BASE_URL}
+    volumes:
+      - ${REPO_DIR:?set REPO_DIR in .env}/apps/celestia-subquery:/app:ro
+    command:
+      - -f=/app
+      - --db-schema=app
+      - --workers=1
+      - --batch-size=5
+      - --unsafe=true
+      - --allow-schema-migration
+      - --unfinalized-blocks=false
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - >-
+            const http=require("http");const req=http.get("http://127.0.0.1:3000/ready",res=>{res.resume();process.exitCode=res.statusCode===200?0:1;});req.on("error",()=>{process.exitCode=1;});
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    networks: [ethereum]
+
+  celestia-query:
+    image: subquerynetwork/subql-query:latest
+    restart: unless-stopped
+    environment:
+      DB_USER: ${CELESTIA_DB_USER:-celestia_indexer}
+      DB_PASS: ${CELESTIA_DB_PASSWORD:?set CELESTIA_DB_PASSWORD in .env}
+      DB_DATABASE: celestia
+      DB_HOST: postgres
+      DB_PORT: 5432
+    command: [--name=app, --query-timeout=60000]
+    ports: ["127.0.0.1:3001:3000"]
+    networks: [ethereum]
+
+  avail-node:
+    image: subquerynetwork/subql-node-substrate:latest
+    restart: unless-stopped
+    environment:
+      DB_USER: ${AVAIL_DB_USER:-avail_indexer}
+      DB_PASS: ${AVAIL_DB_PASSWORD:?set AVAIL_DB_PASSWORD in .env}
+      DB_DATABASE: avail
+      DB_HOST: postgres
+      DB_PORT: 5432
+      AVAIL_RPC_ENDPOINTS: ${AVAIL_RPC_ENDPOINTS:?set AVAIL_RPC_ENDPOINTS}
+      ETH_PRICE_RPC_URL: ${ETH_PRICE_RPC_URL:?set ETH_PRICE_RPC_URL}
+      PRICE_FEED_ARCHIVE_BASE_URL: ${AVAIL_PRICE_FEED_ARCHIVE_BASE_URL:?set AVAIL_PRICE_FEED_ARCHIVE_BASE_URL}
+      DEX_GURU_API_BASE_URL: ${DEX_GURU_API_BASE_URL:?set DEX_GURU_API_BASE_URL}
+      DEFILLAMA_API_BASE_URL: ${DEFILLAMA_API_BASE_URL:?set DEFILLAMA_API_BASE_URL}
+      ETHERSCAN_API_BASE_URL: ${ETHERSCAN_API_BASE_URL:?set ETHERSCAN_API_BASE_URL}
+      DEX_GURU_API_KEY: ${DEX_GURU_API_KEY:-}
+      ETHERSCAN_API_KEY: ${ETHERSCAN_API_KEY:-}
+    volumes:
+      - ${REPO_DIR:?set REPO_DIR in .env}/apps/avail-subquery:/app:ro
+    command:
+      - -f=/app
+      - --db-schema=app
+      - --workers=1
+      - --batch-size=5
+      - --unsafe=true
+      - --allow-schema-migration
+      - --unfinalized-blocks=false
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - >-
+            const http=require("http");const req=http.get("http://127.0.0.1:3000/ready",res=>{res.resume();process.exitCode=res.statusCode===200?0:1;});req.on("error",()=>{process.exitCode=1;});
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    networks: [ethereum]
+
+  avail-query:
+    image: subquerynetwork/subql-query:latest
+    restart: unless-stopped
+    environment:
+      DB_USER: ${AVAIL_DB_USER:-avail_indexer}
+      DB_PASS: ${AVAIL_DB_PASSWORD:?set AVAIL_DB_PASSWORD in .env}
+      DB_DATABASE: avail
+      DB_HOST: postgres
+      DB_PORT: 5432
+    command: [--name=app, --query-timeout=60000]
+    ports: ["127.0.0.1:3002:3000"]
+    networks: [ethereum]
+
+networks:
+  ethereum:
+    name: eth-subql-starter_default
+    external: true

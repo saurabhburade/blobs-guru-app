@@ -1,235 +1,152 @@
 import type { EthereumBlock } from "@subql/types-ethereum";
 import fetch from "node-fetch";
-import { requireEnvList } from "../config/env";
 import { TransactionReceipt } from "../types";
 
-const rpcUrls = requireEnvList("ETH_RPC_ENDPOINTS");
+// These endpoints returned complete receipts for the stalled block in VPS checks.
+// Keep this pool separate from the SubQuery block-fetch endpoints.
+const rpcUrls = [
+  "https://ethereum-rpc.publicnode.com",
+  "https://eth.drpc.org",
+  "https://rpc.mevblocker.io",
+];
+const RPC_TIMEOUT_MS = 10000;
 
-// Pick a random index each process start
-const RPC_URL = rpcUrls[Math.floor(Math.random() * rpcUrls.length)];
-console.log("Using RPC:", RPC_URL);
-
-// ===== Simple sliding cache (blockNumber -> receipts[]) =====
-const CACHE_WINDOW = 100; // prefetch window
-const CACHE_MAX_BLOCKS = 500; // soft cap to avoid unbounded memory
-const receiptCache = new Map<number, ParsedReceipt[]>(); // key: blockNumber
-
-// ===== Helpers =====
-function toHexQuantity(n: number) {
-  return "0x" + BigInt(n).toString(16);
-}
-
-// hex -> number | undefined (safe for TS fields typed as number | undefined)
-function fromHexQuantityNumber(hex: unknown): number | undefined {
-  if (hex == null) return undefined;
-  const s = String(hex);
-  // Support hex "0x..." or decimal string
-  const bi = s.startsWith("0x") ? BigInt(s) : BigInt(s);
-  const MAX = BigInt(Number.MAX_SAFE_INTEGER);
-  if (bi > MAX) {
-    // Too large to represent precisely as JS number; drop or change schema to string
-    // logger?.warn?.(`Quantity ${s} exceeds MAX_SAFE_INTEGER; omitting`);
-    return undefined;
-  }
-  return Number(bi);
-}
-
-// ===== Types =====
-type ParsedReceipt = {
-  blockNumber: number;
-  blockHash: string;
+type ValidReceipt = {
   txHash: string;
-  gasUsed?: number; // numbers to satisfy schema with number | undefined
-  effectiveGasPrice?: number;
+  blockNumber: number;
+  gasUsed: number;
+  effectiveGasPrice: number;
 };
 
-function evictIfNeeded() {
-  if (receiptCache.size <= CACHE_MAX_BLOCKS) return;
-  const keys = Array.from(receiptCache.keys()).sort((a, b) => a - b);
-  const removeCount = receiptCache.size - CACHE_MAX_BLOCKS;
-  for (let i = 0; i < removeCount; i++) {
-    receiptCache.delete(keys[i]);
-  }
+function toHexQuantity(value: number): string {
+  return `0x${BigInt(value).toString(16)}`;
 }
 
-// ===== JSON-RPC: single and batch =====
-async function rpcCall(body: any) {
-  const res = await fetch(RPC_URL, {
+function fromHexQuantityNumber(value: unknown): number | undefined {
+  if (typeof value !== "string" || !/^0x[0-9a-f]+$/i.test(value)) {
+    return undefined;
+  }
+  const number = BigInt(value);
+  return number <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(number) : undefined;
+}
+
+async function fetchBlockReceipts(
+  rpcUrl: string,
+  blockNumber: number,
+): Promise<unknown[]> {
+  const response = await fetch(rpcUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
-}
-
-function parseBlockReceipts(result: any): ParsedReceipt[] {
-  const receipts = result || [];
-  return receipts
-    .map((r: any) => {
-      if (r.type === "0x3") {
-        return null;
-      }
-      return {
-        blockNumber: parseInt(r.blockNumber, 16),
-        blockHash: r.blockHash,
-        txHash: r.transactionHash,
-        gasUsed: fromHexQuantityNumber(r.gasUsed),
-        effectiveGasPrice: fromHexQuantityNumber(r.effectiveGasPrice),
-      };
-    })
-    ?.filter((v: any) => v);
-}
-
-// Single-block fallback
-async function getBlockReceipts(blockNumber: number): Promise<ParsedReceipt[]> {
-  const body = {
-    jsonrpc: "2.0",
-    id: `b:${blockNumber}`,
-    method: "eth_getBlockReceipts",
-    params: [toHexQuantity(blockNumber)],
-  };
-  const data = await rpcCall(body);
-  if (data?.error) throw new Error(data.error.message);
-  return parseBlockReceipts(data?.result);
-}
-
-// Batch prefetch [startBlock, startBlock + count - 1]
-async function prefetchBlockRange(
-  startBlock: number,
-  count = CACHE_WINDOW,
-): Promise<void> {
-  const requests: any[] = [];
-  for (let i = 0; i < count; i++) {
-    const bn = startBlock + i;
-    if (receiptCache.has(bn)) continue; // already cached
-    requests.push({
+    body: JSON.stringify({
       jsonrpc: "2.0",
-      id: `b:${bn}`,
+      id: `b:${blockNumber}`,
       method: "eth_getBlockReceipts",
-      params: [toHexQuantity(bn)],
-    });
+      params: [toHexQuantity(blockNumber)],
+    }),
+    timeout: RPC_TIMEOUT_MS,
+  });
+  if (!response.ok) {
+    throw new Error(`Receipt RPC returned HTTP ${response.status}`);
   }
-  if (requests.length === 0) return;
-
-  let responses: any[];
-  try {
-    const resp = await rpcCall(requests);
-    responses = Array.isArray(resp) ? resp : [resp];
-  } catch {
-    // If the batch request fails, fallback to serial single requests (best-effort)
-    for (const req of requests) {
-      const bn = Number(String(req.id).split(":")[1]);
-      try {
-        const single = await rpcCall(req);
-        if (!single?.error) {
-          receiptCache.set(bn, parseBlockReceipts(single?.result));
-        }
-      } catch {
-        // swallow; if it fails, we just won't have this block cached
-      }
-    }
-    evictIfNeeded();
-    return;
+  const payload = await response.json();
+  if (payload?.error) {
+    throw new Error(`Receipt RPC error: ${payload.error.message}`);
   }
-
-  // Responses may arrive out of order; match by id
-  for (const r of responses) {
-    if (!r || r.error) continue;
-    const id = String(r.id || "");
-    if (!id.startsWith("b:")) continue;
-    const bn = Number(id.slice(2));
-    receiptCache.set(bn, parseBlockReceipts(r.result));
+  if (!Array.isArray(payload?.result)) {
+    throw new Error("Receipt RPC returned an invalid result");
   }
-  evictIfNeeded();
+  return payload.result;
 }
 
-async function getOrPrefetchBlockReceipts(
+function parseBlobReceipt(
+  item: unknown,
   blockNumber: number,
-): Promise<ParsedReceipt[]> {
-  // Cache hit?
-  const cached = receiptCache.get(blockNumber);
-  if (cached) {
-    logger.info(`=================================================`);
-    logger.info(`CACHE HIT  ::  ${blockNumber}`);
-    logger.info(`=================================================`);
-    return cached;
+  blockHash: string,
+  blobTxHashes: Set<string>,
+): ValidReceipt | undefined {
+  if (!item || typeof item !== "object") return undefined;
+  const receipt = item as Record<string, unknown>;
+  const txHash = receipt.transactionHash;
+  if (typeof txHash !== "string" || !blobTxHashes.has(txHash.toLowerCase())) {
+    return undefined;
   }
 
-  // Prefetch blockNumber..blockNumber+49
-  try {
-    await prefetchBlockRange(blockNumber, CACHE_WINDOW);
-  } catch {
-    // ignore; we'll fallback below
+  const receiptBlockNumber = fromHexQuantityNumber(receipt.blockNumber);
+  const gasUsed = fromHexQuantityNumber(receipt.gasUsed);
+  const effectiveGasPrice = fromHexQuantityNumber(receipt.effectiveGasPrice);
+  if (
+    receiptBlockNumber !== blockNumber ||
+    typeof receipt.blockHash !== "string" ||
+    receipt.blockHash.toLowerCase() !== blockHash.toLowerCase() ||
+    gasUsed === undefined ||
+    effectiveGasPrice === undefined
+  ) {
+    return undefined;
   }
 
-  // After prefetch, try again
-  const after = receiptCache.get(blockNumber);
-  if (after) {
-    logger.info(`=================================================`);
-    logger.info(`CACHE HIT  AFTER ::  ${blockNumber}`);
-    logger.info(`=================================================`);
-    return after;
-  }
-
-  // Fallback: single-block fetch
-  const fresh = await getBlockReceipts(blockNumber);
-  receiptCache.set(blockNumber, fresh);
-  evictIfNeeded();
-  return fresh;
+  return { txHash, blockNumber, gasUsed, effectiveGasPrice };
 }
 
-// ===== Optional: chunker kept for bulk persistence later =====
-function chunkArray<T>(array: T[], chunkSize = 1000) {
-  const result: T[][] = [];
-  for (let i = 0; i < array.length; i += chunkSize) {
-    result.push(array.slice(i, i + chunkSize));
-  }
-  return result;
-}
-
-// ===== Public mapping =====
 export async function getTxReceipts({
   block,
 }: {
   block: EthereumBlock;
 }): Promise<Map<string, TransactionReceipt>> {
-  const batchReceipt = new Map<string, TransactionReceipt>();
+  const receipts = new Map<string, TransactionReceipt>();
+  const blobTxHashes = new Set(
+    block.transactions
+      .filter((transaction) => transaction.type?.toLowerCase() === "0x3")
+      .map((transaction) => transaction.hash.toLowerCase()),
+  );
+  if (blobTxHashes.size === 0) return receipts;
 
-  try {
-    const receipts = await getOrPrefetchBlockReceipts(block.number);
+  const blockNumber = Number(block.number);
+  const firstEndpoint = blockNumber % rpcUrls.length;
+  let lastError: unknown = new Error("No receipt RPC endpoint succeeded");
 
-    for (const r of receipts) {
-      if (!r?.txHash) continue;
-      const txHash = r.txHash.toLowerCase();
-
-      const newReceipt = TransactionReceipt.create({
-        id: txHash,
-        hash: r.txHash,
-        blockId: String(block.number),
-        effectiveGasPrice: r.effectiveGasPrice, // number | undefined
-        gasUsed: r.gasUsed, // number | undefined
-        transactionId: r.txHash,
-        blockNumber: r.blockNumber, // number
-      });
-
-      batchReceipt.set(txHash, newReceipt);
+  for (let attempt = 0; attempt < rpcUrls.length; attempt++) {
+    const rpcUrl = rpcUrls[(firstEndpoint + attempt) % rpcUrls.length];
+    try {
+      const result = await fetchBlockReceipts(rpcUrl, blockNumber);
+      const valid = new Map<string, ValidReceipt>();
+      for (const item of result) {
+        const receipt = parseBlobReceipt(
+          item,
+          blockNumber,
+          block.hash,
+          blobTxHashes,
+        );
+        if (receipt) valid.set(receipt.txHash.toLowerCase(), receipt);
+      }
+      if (valid.size !== blobTxHashes.size) {
+        throw new Error(
+          `Receipt RPC returned ${valid.size}/${blobTxHashes.size} blob receipts`,
+        );
+      }
+      for (const [hash, receipt] of valid) {
+        receipts.set(
+          hash,
+          TransactionReceipt.create({
+            id: hash,
+            hash: receipt.txHash,
+            blockId: String(block.number),
+            effectiveGasPrice: receipt.effectiveGasPrice,
+            gasUsed: receipt.gasUsed,
+            transactionId: receipt.txHash,
+            blockNumber: receipt.blockNumber,
+          }),
+        );
+      }
+      return receipts;
+    } catch (error) {
+      lastError = error;
+      logger.warn(
+        `Receipt RPC attempt ${attempt + 1} failed for block ${blockNumber}: ${error}`,
+      );
     }
-
-    // If you want to persist in bulk:
-    // const values = Array.from(batchReceipt.values());
-    // for (const chunk of chunkArray(values, 1000)) {
-    //   await store.bulkUpdate("TransactionReceipt", chunk);
-    // }
-
-    return batchReceipt;
-  } catch (error) {
-    // @ts-expect-error (logger available in SubQuery runtime; ignore if not)
-    logger?.error?.(
-      `getTxReceipts failed for block ${String(block?.number)}: ${String(
-        error,
-      )}`,
-    );
-    return batchReceipt;
   }
+
+  throw new Error(
+    `Could not fetch complete receipts for block ${blockNumber}: ${lastError}`,
+  );
 }
