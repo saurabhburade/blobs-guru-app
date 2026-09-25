@@ -1,12 +1,14 @@
 import type { CosmosBlock } from "@subql/types-cosmos";
-import fetch from "node-fetch";
-import { joinUrl, requireEnv } from "../../config/env";
+import { joinUrl } from "../../config/env";
+import fetch from "../../network/httpFetch";
 import { PriceFeedMinute } from "../../types";
 
-const PRICE_FEED_ARCHIVE_BASE_URL = requireEnv("PRICE_FEED_ARCHIVE_BASE_URL");
-const BINANCE_API_BASE_URL = requireEnv("BINANCE_API_BASE_URL");
-const REDSTONE_API_BASE_URL = requireEnv("REDSTONE_API_BASE_URL");
-const COINGECKO_API_BASE_URL = requireEnv("COINGECKO_API_BASE_URL");
+// Mapping workers run in a sandbox where process.env is unavailable.
+const PRICE_FEED_ARCHIVE_BASE_URL =
+  "https://raw.githubusercontent.com/saurabhburade/blobs-guru-app/refs/heads/main/apps/celestia-subquery/src/mappings/pricefeed/saveddata";
+const BINANCE_API_BASE_URL = "https://api.binance.com";
+const REDSTONE_API_BASE_URL = "https://api.redstone.finance";
+const COINGECKO_API_BASE_URL = "https://api.coingecko.com";
 
 async function fetchData(url: string, options: any) {
   const response = await fetch(url, {

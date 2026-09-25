@@ -1,8 +1,8 @@
 # Indexer schema and PostgreSQL audit — 2026-09-25
 
-This is an analysis only. No schema or database rows were removed.
+This is an analysis only. The measurements below were taken before the user-requested fresh deployment reset; the old PostgreSQL data has since been removed without a backup. No schema fields or indexes were removed.
 
-## Current Ethereum PostgreSQL footprint
+## Pre-reset Ethereum PostgreSQL footprint
 
 The VPS database uses the `app` schema. These figures are from `pg_stat_user_tables` and `pg_total_relation_size`; row estimates are not exact counts.
 
@@ -24,6 +24,7 @@ In the current `pg_stat_user_indexes` snapshot, the `blob_data.signer_id` index 
 | --- | --- | --- |
 | Ethereum | `BlockData.totalSquareSize` | Mapper always writes zero; current app does not query it. |
 | Ethereum | `TransactionData.totalFeeNatve` | Duplicates `txFeeNative`; current app uses `txFeeNative`. |
+| Ethereum | `TransactionReceipt` entity and `TransactionData.receipt` relation | The mapper uses validated receipt fields in memory but never saves a `TransactionReceipt` row. Confirm external GraphQL clients do not expect this relation before removing it. |
 | Ethereum | Zero-only `totalTransferCount` and `totalDataAccountsCount` fields | Current mapper initializes these but does not increment them. Confirm live values first. |
 | Ethereum | `BlobData.size` index | Keep the field; review whether any API client filters or orders by it. |
 | Celestia | `Transfers` entity, `BlockData.totalSquareSize`, `BlobData.data` | No active mapper/UI use for `Transfers`; `totalSquareSize` is zero; `data` is saved as an empty string. Confirm live rows. |

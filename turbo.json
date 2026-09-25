@@ -4,6 +4,11 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": [
+        "ETH_RPC_ENDPOINTS",
+        "CELESTIA_RPC_ENDPOINTS",
+        "AVAIL_RPC_ENDPOINTS"
+      ],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -17,6 +22,11 @@
       "outputs": []
     },
     "codegen": {
+      "env": [
+        "ETH_RPC_ENDPOINTS",
+        "CELESTIA_RPC_ENDPOINTS",
+        "AVAIL_RPC_ENDPOINTS"
+      ],
       "outputs": ["generated/**", "src/types/**"]
     },
     "dev": {

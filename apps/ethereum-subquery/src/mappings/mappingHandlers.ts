@@ -7,13 +7,7 @@ import {
   TransactionData,
 } from "../types";
 
-import {
-  BYTES_PER_BLOB,
-  fakeExponential,
-  ONE_BI,
-  ZERO_BD,
-  ZERO_BI,
-} from "../utils";
+import { BYTES_PER_BLOB } from "../utils";
 import {
   handleAccount,
   handleAccountDayData,
@@ -26,8 +20,6 @@ import {
 } from "./entities/collectiveData";
 import { getTxReceipts } from "./handleReceipts";
 import { handleNewPriceMinute } from "./pricefeed/savePrices";
-
-const BLOB_BASE_FEE_UPDATE_FRACTION = 3338477;
 
 export async function handleBlock(block: EthereumBlock): Promise<void> {
   const priceData = await handleNewPriceMinute({ block });
@@ -62,11 +54,6 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
     totalTransactionCount: transactions.length,
     timestamp: Number(block.timestamp) * 1000,
   });
-  const baseBlobGasPrice = fakeExponential(
-    1,
-    Number(block.excessBlobGas),
-    BLOB_BASE_FEE_UPDATE_FRACTION,
-  );
   for (let index = 0; index < transactions.length; index++) {
     const txn = transactions[index];
 
@@ -77,7 +64,8 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
       if (
         !receipt ||
         receipt.gasUsed === undefined ||
-        receipt.effectiveGasPrice === undefined
+        receipt.effectiveGasPrice === undefined ||
+        receipt.blobGasUsed !== dataSubmissionSize
       ) {
         throw new Error(
           `Missing validated receipt for blob transaction ${txn.hash}`,
@@ -85,14 +73,12 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
       }
       txn.gas = BigInt(receipt.gasUsed);
       txn.gasPrice = BigInt(receipt.effectiveGasPrice);
+      const baseBlobGasPrice = receipt.blobGasPrice;
       const fees =
         Number(receipt?.gasUsed) * Number(receipt?.effectiveGasPrice);
       const feesUSD = fees * priceData!.nativePrice;
 
-      const feesDA =
-        (baseBlobGasPrice || 1) *
-        Number(txn.blobVersionedHashes?.length) *
-        BYTES_PER_BLOB;
+      const feesDA = receipt.blobGasUsed * receipt.blobGasPrice;
       const feesUSDDA = feesDA * priceData!.nativePrice;
 
       const transactionToSave = TransactionData.create({

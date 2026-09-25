@@ -1,6 +1,5 @@
 import type { EthereumBlock } from "@subql/types-ethereum";
-import fetch from "node-fetch";
-import { TransactionReceipt } from "../types";
+import fetch from "../network/httpFetch";
 
 // These endpoints returned complete receipts for the stalled block in VPS checks.
 // Keep this pool separate from the SubQuery block-fetch endpoints.
@@ -11,11 +10,13 @@ const rpcUrls = [
 ];
 const RPC_TIMEOUT_MS = 10000;
 
-type ValidReceipt = {
+export type ValidReceipt = {
   txHash: string;
   blockNumber: number;
   gasUsed: number;
   effectiveGasPrice: number;
+  blobGasUsed: number;
+  blobGasPrice: number;
 };
 
 function toHexQuantity(value: number): string {
@@ -74,25 +75,36 @@ function parseBlobReceipt(
   const receiptBlockNumber = fromHexQuantityNumber(receipt.blockNumber);
   const gasUsed = fromHexQuantityNumber(receipt.gasUsed);
   const effectiveGasPrice = fromHexQuantityNumber(receipt.effectiveGasPrice);
+  const blobGasUsed = fromHexQuantityNumber(receipt.blobGasUsed);
+  const blobGasPrice = fromHexQuantityNumber(receipt.blobGasPrice);
   if (
     receiptBlockNumber !== blockNumber ||
     typeof receipt.blockHash !== "string" ||
     receipt.blockHash.toLowerCase() !== blockHash.toLowerCase() ||
     gasUsed === undefined ||
-    effectiveGasPrice === undefined
+    effectiveGasPrice === undefined ||
+    blobGasUsed === undefined ||
+    blobGasPrice === undefined
   ) {
     return undefined;
   }
 
-  return { txHash, blockNumber, gasUsed, effectiveGasPrice };
+  return {
+    txHash,
+    blockNumber,
+    gasUsed,
+    effectiveGasPrice,
+    blobGasUsed,
+    blobGasPrice,
+  };
 }
 
 export async function getTxReceipts({
   block,
 }: {
   block: EthereumBlock;
-}): Promise<Map<string, TransactionReceipt>> {
-  const receipts = new Map<string, TransactionReceipt>();
+}): Promise<Map<string, ValidReceipt>> {
+  const receipts = new Map<string, ValidReceipt>();
   const blobTxHashes = new Set(
     block.transactions
       .filter((transaction) => transaction.type?.toLowerCase() === "0x3")
@@ -123,20 +135,7 @@ export async function getTxReceipts({
           `Receipt RPC returned ${valid.size}/${blobTxHashes.size} blob receipts`,
         );
       }
-      for (const [hash, receipt] of valid) {
-        receipts.set(
-          hash,
-          TransactionReceipt.create({
-            id: hash,
-            hash: receipt.txHash,
-            blockId: String(block.number),
-            effectiveGasPrice: receipt.effectiveGasPrice,
-            gasUsed: receipt.gasUsed,
-            transactionId: receipt.txHash,
-            blockNumber: receipt.blockNumber,
-          }),
-        );
-      }
+      for (const [hash, receipt] of valid) receipts.set(hash, receipt);
       return receipts;
     } catch (error) {
       lastError = error;

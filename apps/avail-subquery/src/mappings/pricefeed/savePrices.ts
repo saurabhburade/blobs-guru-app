@@ -1,23 +1,25 @@
 import { ethers } from "ethers";
-import fetch from "node-fetch";
 import OneinchABI from "../../../abis/OneinchABI.abi.json";
-import { joinUrl, requireEnv } from "../../config/env";
+import { joinUrl } from "../../config/env";
+import fetch from "../../network/httpFetch";
 // @ts-nocheck
 import { PriceFeedMinute } from "../../types";
 import { ORACLE_ADDRESS } from "../helper";
 import type { CorrectSubstrateBlock } from "../mappingHandlers";
 
-const ETH_PRICE_RPC_URL = requireEnv("ETH_PRICE_RPC_URL");
-const PRICE_FEED_ARCHIVE_BASE_URL = requireEnv("PRICE_FEED_ARCHIVE_BASE_URL");
-const DEX_GURU_API_BASE_URL = requireEnv("DEX_GURU_API_BASE_URL");
-const DEFILLAMA_API_BASE_URL = requireEnv("DEFILLAMA_API_BASE_URL");
-const ETHERSCAN_API_BASE_URL = requireEnv("ETHERSCAN_API_BASE_URL");
+// Mapping workers run in a sandbox where process.env is unavailable.
+const ETH_PRICE_RPC_URL = "https://eth.drpc.org";
+const PRICE_FEED_ARCHIVE_BASE_URL =
+  "https://raw.githubusercontent.com/saurabhburade/blobs-guru-app/refs/heads/main/apps/avail-subquery/src/mappings/pricefeed/saved";
+const DEX_GURU_API_BASE_URL = "https://api.dev.dex.guru";
+const DEFILLAMA_API_BASE_URL = "https://coins.llama.fi";
+const ETHERSCAN_API_BASE_URL = "https://api.etherscan.io";
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const DEX_GURU_API_KEY = process.env.DEX_GURU_API_KEY ?? "";
-const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY ?? "";
+const DEX_GURU_API_KEY = "";
+const ETHERSCAN_API_KEY = "";
 
 async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
   const response = await fetch(url, {
