@@ -2,7 +2,6 @@ import { ethers } from "ethers";
 import OneinchABI from "../../../abis/OneinchABI.abi.json";
 import { joinUrl } from "../../config/env";
 import fetch from "../../network/httpFetch";
-// @ts-nocheck
 import { PriceFeedMinute } from "../../types";
 import { ORACLE_ADDRESS } from "../helper";
 import type { CorrectSubstrateBlock } from "../mappingHandlers";
@@ -14,31 +13,19 @@ const PRICE_FEED_ARCHIVE_BASE_URL =
 const DEX_GURU_API_BASE_URL = "https://api.dev.dex.guru";
 const DEFILLAMA_API_BASE_URL = "https://coins.llama.fi";
 const ETHERSCAN_API_BASE_URL = "https://api.etherscan.io";
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 const DEX_GURU_API_KEY = "";
 const ETHERSCAN_API_KEY = "";
 
-async function fetchWithTimeout(url: string, options: any, timeout = 50000) {
-  const response = await fetch(url, {
-    ...options,
-    //  signal: signal
-  });
-
-  if (!response?.ok) {
-    throw new Error("Fetch failed");
-  }
-
-  return await response.json();
-}
-const CONSTANT_PRICE_FEED_FILES = [
+const MS_IN_MINUTE = 60_000;
+const PRICE_BUCKET_MINUTES = 15;
+const PRICE_BUCKET_MS = PRICE_BUCKET_MINUTES * MS_IN_MINUTE;
+const SOURCE_TIMEZONE_OFFSET_MS = 330 * MS_IN_MINUTE; // Archive filenames use Asia/Kolkata months.
+const FIRST_ARCHIVED_MINUTE_ID = 28_696_059;
+const HISTORICAL_LAST_MINUTE_ID = 29_164_030;
+const HISTORICAL_FILE_CACHE_CAP = 2;
+const HISTORICAL_FILES = [
   "2024-07",
   "2024-08",
-  "2025-04",
-  "2025-05",
-  "2025-06",
   "2024-09",
   "2024-10",
   "2024-11",
@@ -46,364 +33,327 @@ const CONSTANT_PRICE_FEED_FILES = [
   "2025-01",
   "2025-02",
   "2025-03",
+  "2025-04",
+  "2025-05",
+  "2025-06",
 ];
-function chunkArray(array: PriceFeedMinute[], chunkSize = 1000) {
-  const result = [];
-  for (let i = 0; i < array.length; i += chunkSize) {
-    result.push(array.slice(i, i + chunkSize));
-  }
-  return result;
+
+const WETH_ADDRESS = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+const AVAIL_ADDRESS = "0xEeB4d8400AEefafC1B2953e0094134A887C76Bd8";
+const USDT_ADDRESS = "0xdac17f958d2ee523a2206206994597c13d831ec7";
+
+type SavedPriceRow = { minuteId: number; avgPrice: number; date: Date };
+type HistoricalPriceFile = { byBucket: Map<number, SavedPriceRow> };
+const historicalFileCache = new Map<string, Promise<HistoricalPriceFile>>();
+
+function getBucketId(timestampMs: number): number {
+  const minuteId = Math.floor(timestampMs / MS_IN_MINUTE);
+  return Math.floor(minuteId / PRICE_BUCKET_MINUTES) * PRICE_BUCKET_MINUTES;
 }
+
+function getBucketStartMs(bucketId: number): number {
+  return bucketId * MS_IN_MINUTE;
+}
+
+function createPrice(
+  block: CorrectSubstrateBlock,
+  id: string,
+  availPrice: number,
+  date: Date,
+  ethPrice = 0,
+  ethBlock = 0,
+): PriceFeedMinute {
+  return PriceFeedMinute.create({
+    id,
+    availBlock: block.block.header.number.toNumber(),
+    availPrice,
+    ethBlock,
+    ethPrice,
+    date,
+    availDate: date,
+    ethDate: date,
+  });
+}
+
+async function fetchData<T = unknown>(
+  url: string,
+  options: {
+    method?: string;
+    headers?: Record<string, string>;
+    body?: string;
+  } = {},
+): Promise<T> {
+  const response = await fetch(url, { ...options, timeout: 30_000 });
+  if (!response.ok)
+    throw new Error(`Price request returned HTTP ${response.status}`);
+  return response.json() as Promise<T>;
+}
+
+function normalizeHistoricalRows(
+  month: string,
+  payload: unknown,
+): HistoricalPriceFile {
+  if (!Array.isArray(payload))
+    throw new Error(`Historical price file ${month} is not an array`);
+  const byMinute = new Map<number, SavedPriceRow>();
+  let correctedMinutes = 0;
+  for (const rawRow of payload) {
+    if (typeof rawRow !== "object" || rawRow === null) {
+      throw new Error(`Historical price file ${month} contains an invalid row`);
+    }
+    const row = rawRow as Record<string, unknown>;
+    const minuteId = Number(row.minuteId);
+    const avgPrice = Number(row.avgPrice);
+    const timestamp = Number(row.timestamp);
+    const date = Number.isFinite(timestamp)
+      ? new Date(timestamp)
+      : new Date(String(row.timestampF));
+    if (
+      !Number.isSafeInteger(minuteId) ||
+      !Number.isFinite(avgPrice) ||
+      avgPrice <= 0 ||
+      Number.isNaN(date.getTime())
+    ) {
+      throw new Error(`Historical price file ${month} contains invalid data`);
+    }
+    const existing = byMinute.get(minuteId);
+    if (existing && existing.avgPrice !== avgPrice) {
+      correctedMinutes++;
+    }
+    // The final occurrence matches the value applied by the old importer.
+    byMinute.set(minuteId, { minuteId, avgPrice, date });
+  }
+  if (correctedMinutes > 0) {
+    logger.info(
+      `Applied ${correctedMinutes} archived price corrections for ${month}`,
+    );
+  }
+  const byBucket = new Map<number, SavedPriceRow>();
+  for (const row of byMinute.values()) {
+    const bucketId =
+      Math.floor(row.minuteId / PRICE_BUCKET_MINUTES) * PRICE_BUCKET_MINUTES;
+    const existing = byBucket.get(bucketId);
+    if (!existing || row.minuteId < existing.minuteId)
+      byBucket.set(bucketId, row);
+  }
+  return { byBucket };
+}
+
+async function loadHistoricalRows(month: string): Promise<HistoricalPriceFile> {
+  if (!HISTORICAL_FILES.includes(month))
+    throw new Error(`No saved price file for ${month}`);
+  const cached = historicalFileCache.get(month);
+  if (cached) {
+    historicalFileCache.delete(month);
+    historicalFileCache.set(month, cached);
+    return cached;
+  }
+  const request = fetchData(
+    joinUrl(PRICE_FEED_ARCHIVE_BASE_URL, `${month}.json`),
+  )
+    .then((payload) => normalizeHistoricalRows(month, payload))
+    .catch((error) => {
+      if (historicalFileCache.get(month) === request)
+        historicalFileCache.delete(month);
+      throw error;
+    });
+  historicalFileCache.set(month, request);
+  while (historicalFileCache.size > HISTORICAL_FILE_CACHE_CAP) {
+    const oldest = historicalFileCache.keys().next().value;
+    if (oldest === undefined) break;
+    historicalFileCache.delete(oldest);
+  }
+  return request;
+}
+
+async function getHistoricalPrice(
+  block: CorrectSubstrateBlock,
+  bucketId: number,
+): Promise<PriceFeedMinute | undefined> {
+  const month = new Date(getBucketStartMs(bucketId) + SOURCE_TIMEZONE_OFFSET_MS)
+    .toISOString()
+    .slice(0, 7);
+  const sourceRow = (await loadHistoricalRows(month)).byBucket.get(bucketId);
+  return sourceRow
+    ? createPrice(
+        block,
+        bucketId.toString(),
+        sourceRow.avgPrice,
+        sourceRow.date,
+      )
+    : undefined;
+}
+
+async function getDexGuruPrice(
+  block: CorrectSubstrateBlock,
+  bucketId: number,
+): Promise<PriceFeedMinute> {
+  const startMs = getBucketStartMs(bucketId);
+  const endMs = startMs + PRICE_BUCKET_MS - 1;
+  const url = `${joinUrl(DEX_GURU_API_BASE_URL, "v1/tradingview/history")}?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Math.floor(startMs / 1000)}&to=${Math.floor(endMs / 1000)}&currencyCode=USD&api-key=${DEX_GURU_API_KEY}`;
+  const response = await fetchData<{
+    t?: unknown[];
+    o?: unknown[];
+    c?: unknown[];
+  }>(url);
+  if (
+    !Array.isArray(response?.t) ||
+    !Array.isArray(response?.o) ||
+    !Array.isArray(response?.c)
+  ) {
+    throw new Error(`DexGuru returned no AVAIL price for bucket ${bucketId}`);
+  }
+  let first: { timestampMs: number; price: number } | undefined;
+  for (let index = 0; index < response.t.length; index++) {
+    const timestampMs = Number(response.t[index]) * 1000;
+    const open = Number(response.o[index]);
+    const close = Number(response.c[index]);
+    if (getBucketId(timestampMs) !== bucketId) continue;
+    if (
+      !Number.isFinite(open) ||
+      !Number.isFinite(close) ||
+      open <= 0 ||
+      close <= 0
+    )
+      continue;
+    if (!first || timestampMs < first.timestampMs)
+      first = { timestampMs, price: (open + close) / 2 };
+  }
+  if (!first)
+    throw new Error(
+      `DexGuru returned no valid AVAIL price for bucket ${bucketId}`,
+    );
+  return createPrice(
+    block,
+    bucketId.toString(),
+    first.price,
+    new Date(first.timestampMs),
+  );
+}
+
+async function getEthereumBlockAt(timestampMs: number): Promise<number> {
+  try {
+    const response = await fetchData<{ height?: unknown }>(
+      joinUrl(
+        DEFILLAMA_API_BASE_URL,
+        `block/ethereum/${Math.floor(timestampMs / 1000)}`,
+      ),
+    );
+    const height = Number(response?.height);
+    if (Number.isSafeInteger(height) && height > 0) return height;
+    throw new Error("DefiLlama returned no Ethereum block height");
+  } catch (error) {
+    if (!ETHERSCAN_API_KEY) throw error;
+    const url = `${joinUrl(ETHERSCAN_API_BASE_URL, "api")}?module=block&action=getblocknobytime&timestamp=${Math.floor(timestampMs / 1000)}&closest=before&apikey=${ETHERSCAN_API_KEY}`;
+    const response = await fetchData<{ result?: unknown }>(url);
+    const height = Number(response?.result);
+    if (!Number.isSafeInteger(height) || height <= 0)
+      throw new Error("Etherscan returned no Ethereum block height");
+    return height;
+  }
+}
+
+async function getOraclePrice(
+  block: CorrectSubstrateBlock,
+  bucketId: number,
+): Promise<PriceFeedMinute> {
+  const startMs = getBucketStartMs(bucketId);
+  const ethBlock = await getEthereumBlockAt(startMs);
+  const oracle = new ethers.utils.Interface(OneinchABI);
+  async function getRate(token: string): Promise<number> {
+    const data = oracle.encodeFunctionData("getRate", [
+      token,
+      USDT_ADDRESS,
+      false,
+    ]);
+    const response = await fetchData<{ result?: unknown; error?: unknown }>(
+      ETH_PRICE_RPC_URL,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: 1,
+          jsonrpc: "2.0",
+          method: "eth_call",
+          params: [{ to: ORACLE_ADDRESS, data }, `0x${ethBlock.toString(16)}`],
+        }),
+      },
+    );
+    if (typeof response?.result !== "string")
+      throw new Error(
+        `Ethereum oracle failed: ${JSON.stringify(response?.error)}`,
+      );
+    const rate =
+      Number(
+        oracle.decodeFunctionResult("getRate", response.result)[0].toString(),
+      ) / 1e6;
+    if (!Number.isFinite(rate) || rate <= 0)
+      throw new Error("Ethereum oracle returned an invalid price");
+    return rate;
+  }
+  const [availPrice, ethPrice] = await Promise.all([
+    getRate(AVAIL_ADDRESS),
+    getRate(WETH_ADDRESS),
+  ]);
+  return createPrice(
+    block,
+    bucketId.toString(),
+    availPrice,
+    new Date(startMs),
+    ethPrice,
+    ethBlock,
+  );
+}
+
+async function getExternalPrice(
+  block: CorrectSubstrateBlock,
+  bucketId: number,
+): Promise<PriceFeedMinute> {
+  if (!DEX_GURU_API_KEY) return getOraclePrice(block, bucketId);
+  try {
+    return await getDexGuruPrice(block, bucketId);
+  } catch (error) {
+    logger.info(`PRICE ERROR DEXGURU API ${error}`);
+    return getOraclePrice(block, bucketId);
+  }
+}
+
 export async function handleNewPriceMinute({
   block,
 }: {
   block: CorrectSubstrateBlock;
 }): Promise<PriceFeedMinute> {
-  const blockDate = new Date(Number(block.timestamp.getTime()));
-  const minuteId = Math.floor(blockDate.getTime() / 60000);
-  let ethBlockContext = {};
-  // The saved price archive starts at minute 28696059.
-  const availBlock = block.block.header.number.toNumber();
-  if (minuteId < 28696059) {
-    const priceFeedMinuteZero = PriceFeedMinute.create({
-      id: minuteId.toString(),
-      availBlock: availBlock,
-      ethBlock: 0,
-      availPrice: 0,
-      ethPrice: 0,
-      date: blockDate,
-      availDate: blockDate,
-      ethDate: blockDate,
-    });
-    await priceFeedMinuteZero.save();
-    // logger.info(`PRICE FOR THIS MINUTE EXIST :: 0 minuteId < 28696059`);
-    return priceFeedMinuteZero!;
+  const timestampMs = Number(block.timestamp.getTime());
+  if (!Number.isFinite(timestampMs))
+    throw new Error("Invalid Avail block timestamp");
+  const minuteId = Math.floor(timestampMs / MS_IN_MINUTE);
+
+  if (minuteId < FIRST_ARCHIVED_MINUTE_ID) {
+    // The first archive price arrives inside a UTC bucket. Keep one separate
+    // zero-price sentinel for earlier blocks so that bucket can have its real price.
+    const existing = await PriceFeedMinute.get("prelaunch");
+    if (existing) return existing;
+    const zero = createPrice(block, "prelaunch", 0, new Date(timestampMs));
+    await zero.save();
+    return zero;
   }
-  try {
-    const existingPrice = await PriceFeedMinute.get(minuteId.toString());
-    if (
-      existingPrice &&
-      (existingPrice !== null || existingPrice !== undefined)
-    ) {
-      // logger.info(
-      //   `PRICE FOR THIS MINUTE EXIST :: ${JSON.stringify(existingPrice)}`
-      // );
 
-      return existingPrice!;
-    }
+  const bucketId = getBucketId(timestampMs);
+  const existing = await PriceFeedMinute.get(bucketId.toString());
+  if (existing) return existing;
 
-    // CHECK SAVED PRICES
-    logger.info(`MAY SAVE PRICES FROM FILES :: minuteId: ${minuteId} `);
-    if (minuteId <= 29164030) {
-      let priceFeedThisMinute: PriceFeedMinute | undefined;
-
-      let fileIdx = 0;
-      for (const file of CONSTANT_PRICE_FEED_FILES) {
-        const data = await fetchWithTimeout(
-          joinUrl(PRICE_FEED_ARCHIVE_BASE_URL, `${file}.json`),
-          {},
-        );
-        logger.info(`FETCHED PRICE DATA FROM FILE :: ${file}.json`);
-        const pricesToSave: PriceFeedMinute[] = [];
-        for (const element of data) {
-          // SAVE MONTHLY DATA FROM LOCAL FILES
-          const priceForMinute = PriceFeedMinute.create({
-            id: element?.minuteId?.toString(),
-            availBlock: availBlock,
-            availPrice: element?.avgPrice,
-            date: element?.timestampF,
-            availDate: blockDate,
-            ethBlock: 0,
-            ethPrice: 0,
-            ethDate: blockDate,
-          });
-          pricesToSave.push(priceForMinute);
-
-          // await priceForMinute.save();
-          if (Number(element?.minuteId) === minuteId) {
-            priceFeedThisMinute = priceForMinute;
-          }
-        }
-        const splitedChunk = chunkArray(pricesToSave, 1000);
-        for (let index = 0; index < splitedChunk.length; index++) {
-          logger.info(`SAVING PRICES CHUNK`);
-
-          const ck = splitedChunk[index];
-          await store.bulkUpdate("PriceFeedMinute", ck);
-          logger.info(
-            `SAVED PRICES CHUNK :: ${index} out of ${splitedChunk.length}`,
-          );
-        }
-        fileIdx += 1;
-      }
-      return priceFeedThisMinute!;
-    }
-
-    const URL = `${joinUrl(DEX_GURU_API_BASE_URL, "v1/tradingview/history")}?symbol=0xeeb4d8400aeefafc1b2953e0094134a887c76bd8-eth_USD&resolution=1&from=${Number(
-      block.timestamp.getTime() / 1000,
-    ).toFixed(0)}&to=${Number(
-      (block.timestamp.getTime() + 86400000) / 1000,
-    ).toFixed(0)}&currencyCode=USD&api-key=${DEX_GURU_API_KEY}`;
-    logger.info(
-      `MAKE PRICE CALL :: from :: ${Number(
-        block.timestamp.getTime() / 1000,
-      ).toFixed(0)} to ::${Number(
-        (block.timestamp.getTime() + 86400000) / 1000,
-      ).toFixed(0)}`,
-    );
-    // get one day price at once
-    const res = await fetchWithTimeout(URL, {});
-    const data = res;
-    const { t, o, c, h, l } = data;
-
-    const mappedPrices = t
-      .map((timestamp: number | string, idx: number) => {
-        const hp = o[idx];
-        const lp = c[idx];
-        const avgPrice = (Number(hp) + Number(lp)) / 2;
-
-        const minuteIdOhlc = Math.floor((Number(timestamp) * 1000) / 60000);
-        return {
-          avgPrice,
-          timestamp: Number(timestamp) * 1000,
-          timestampF: new Date(new Date(Number(timestamp)).getTime() * 1000),
-          minuteId: minuteIdOhlc,
-        };
-      })
-      // @ts-expect-error
-      ?.filter((v) => v?.timestamp <= new Date().getTime());
-    if (mappedPrices?.length <= 0) {
-      throw new Error("API Error");
-    }
-    logger.info(`PRICE LENGTH ${mappedPrices?.length}`);
-    let priceFeedThisMinute: PriceFeedMinute | undefined;
-    const pricesToSave: PriceFeedMinute[] = [];
-    const minuteNow = Math.floor(Number(new Date().getTime()) / 60000);
-    for (let index = 0; index < mappedPrices.length; index++) {
-      const element = mappedPrices[index];
-      if (Number(element?.minuteId) <= Number(minuteNow)) {
-        const priceForMinute = PriceFeedMinute.create({
-          id: element?.minuteId?.toString(),
-          availBlock: availBlock,
-          ethBlock: 0,
-          availPrice: element?.avgPrice,
-          ethPrice: 0,
-          date: element?.timestampF,
-          availDate: element?.timestampF,
-          ethDate: element?.timestampF,
-        });
-        pricesToSave.push(priceForMinute);
-        if (index === 0) {
-          priceFeedThisMinute = priceForMinute;
-        }
-      }
-    }
-
-    await store.bulkUpdate("PriceFeedMinute", pricesToSave);
-
-    logger.info(`SAVING PRICES FROM DEXGURU API :: ${pricesToSave?.length}`);
-
-    await delay(200);
-    return priceFeedThisMinute!;
-  } catch (error) {
-    logger.error(`ERROR API ${error}`);
-    try {
-      const blockNumberApi = await fetch(
-        joinUrl(
-          DEFILLAMA_API_BASE_URL,
-          `block/ethereum/${Number(
-            Math.floor(block.timestamp.getTime() / 1000),
-          )}`,
-        ),
-        {
-          method: "GET",
-        },
-      );
-      const ethBlockContextLlama: any = await blockNumberApi.json();
-
-      if (ethBlockContextLlama.height) {
-        ethBlockContext = {
-          height: Number(ethBlockContextLlama.height),
-          timestamp: Number(block.timestamp.getTime() / 1000),
-          blockHex: `0x${ethBlockContextLlama.height.toString(16)}`,
-        };
-      } else {
-        await delay(1_000);
-        const blockNumberApiEtherscan = await fetch(
-          `${joinUrl(ETHERSCAN_API_BASE_URL, "api")}?module=block&action=getblocknobytime&timestamp=${Number(
-            Math.floor(block.timestamp.getTime() / 1000),
-          )}&closest=before&apikey=${ETHERSCAN_API_KEY}`,
-          {
-            method: "GET",
-          },
-        );
-        const ethBlockContextEtherescan: any =
-          await blockNumberApiEtherscan.json();
-        if (ethBlockContextEtherescan.result) {
-          ethBlockContext = {
-            height: Number(ethBlockContextEtherescan.result),
-            timestamp: Number(block.timestamp.getTime() / 1000),
-          };
-        }
-        //
-      }
-    } catch (error) {
-      try {
-        await delay(1_000);
-        const blockNumberApiEtherscan = await fetch(
-          `${joinUrl(ETHERSCAN_API_BASE_URL, "api")}?module=block&action=getblocknobytime&timestamp=${Number(
-            Math.floor(block.timestamp.getTime() / 1000),
-          )}&closest=before&apikey=${ETHERSCAN_API_KEY}`,
-          {
-            method: "GET",
-          },
-        );
-        const ethBlockContextEtherescan: any =
-          await blockNumberApiEtherscan.json();
-        if (ethBlockContextEtherescan.result) {
-          ethBlockContext = {
-            height: Number(ethBlockContextEtherescan.result),
-            timestamp: Number(block.timestamp.getTime() / 1000),
-            blockHex: `0x${Number(ethBlockContextEtherescan.result).toString(
-              16,
-            )}`,
-          };
-        }
-      } catch (error) {
-        // const priceFeedLastMinute = await PriceFeedMinute.get(
-        //   (Number(minuteId) - 1).toString()
-        // );
-        // if (priceFeedLastMinute) {
-        //   return priceFeedLastMinute!;
-        // } else {
-        return await handleNewPriceMinute({ block });
-        // throw error;
-        // }
-      }
-
-      //
-    }
-    // logger.info(
-    //   `Expected ETH BLOCK::::::  ${JSON.stringify(ethBlockContext)} AT ${Number(
-    //     block.timestamp.getTime() / 1000
-    //   )} ::: Date :: ${blockDate}`
-    // );
-    try {
-      let priceFeedMinute = await PriceFeedMinute.get(minuteId.toString());
-
-      if (priceFeedMinute === undefined || priceFeedMinute === null) {
-        // await delay(250);
-        const ife = new ethers.utils.Interface(OneinchABI);
-        const encodedEth = ife.encodeFunctionData("getRate", [
-          "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // WETH
-          "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT
-          false,
-        ]);
-        const encodedAvail = ife.encodeFunctionData("getRate", [
-          "0xEeB4d8400AEefafC1B2953e0094134A887C76Bd8", // WETH
-          "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT
-          false,
-        ]);
-
-        const rpcDataEth = await fetch(ETH_PRICE_RPC_URL, {
-          method: "POST",
-          headers: {},
-          body: JSON.stringify({
-            id: 1,
-            jsonrpc: "2.0",
-            method: "eth_call",
-            params: [
-              {
-                to: ORACLE_ADDRESS,
-                data: encodedEth,
-              },
-              // @ts-expect-error
-              `0x${ethBlockContext.height.toString(16)}`,
-            ],
-          }),
-        });
-        const rpcDataAvail = await fetch(ETH_PRICE_RPC_URL, {
-          method: "POST",
-          headers: {},
-          body: JSON.stringify({
-            id: 1,
-            jsonrpc: "2.0",
-            method: "eth_call",
-            params: [
-              {
-                to: ORACLE_ADDRESS,
-                data: encodedAvail,
-              },
-              // @ts-expect-error
-              `0x${ethBlockContext.height.toString(16)}`,
-            ],
-          }),
-        });
-        const ethResultRaw: any = await rpcDataEth.json();
-        const availResultRaw: any = await rpcDataAvail.json();
-        // if (ethResultRaw) {
-        //   logger.info(
-        //     `RAW ETH Price Feed::::::  ${JSON.stringify(ethResultRaw)}`
-        //   );
-        // }
-        const decodedEth = ife.decodeFunctionResult(
-          "getRate",
-          ethResultRaw.result,
-        );
-        const decodedAvail = ife.decodeFunctionResult(
-          "getRate",
-          availResultRaw.result,
-        );
-
-        // if (decodedEth) {
-        //   logger.info(`New ETH Price Feed::::::  ${decodedEth.toString()}`);
-        // }
-        // if (decodedAvail) {
-        //   logger.info(`New AVAIL Price Feed::::::  ${decodedAvail.toString()}`);
-        // }
-
-        const availPrice = Number(decodedAvail.toString()) / 1e6;
-        const ethPrice = Number(decodedEth.toString()) / 1e6;
-        const availDate = blockDate;
-        // @ts-expect-error
-        const ethBlock = Number(ethBlockContext.height);
-        // @ts-expect-error
-        const ethDate = new Date(Number(ethBlockContext.timestamp) * 1000);
-        priceFeedMinute = PriceFeedMinute.create({
-          id: minuteId.toString(),
-          availPrice,
-          ethPrice,
-          availBlock,
-          ethBlock,
-          availDate,
-          ethDate,
-        });
-        priceFeedMinute.availPrice = availPrice;
-        priceFeedMinute.ethPrice = ethPrice;
-        // logger.info(
-        //   `SAVING NEW PRICE MINUTE ::::  ${priceFeedMinute.ethPrice.toString()} :: ID:: ${minuteId} :: AT:: ${blockDate}`
-        // );
-        await priceFeedMinute.save();
-      } else {
-        // logger.info(
-        //   `PRICE ALREADY EXIST ::::  ${priceFeedMinute.ethPrice.toString()} :: ID:: ${minuteId} :: AT:: ${blockDate}`
-        // );
-      }
-
-      // logger.info(
-      //   `New AVAIL Price Feed Minute::::::  ${priceFeedMinute.availPrice.toString()} :: ID:: ${minuteId} :: AT:: ${blockDate}`
-      // );
-      return priceFeedMinute;
-    } catch (error) {
-      // const priceFeedLastMinute = await PriceFeedMinute.get(
-      //   (Number(minuteId) - 1).toString()
-      // );
-      // if (priceFeedLastMinute) {
-      //   return priceFeedLastMinute!;
-      // } else {
-      return await handleNewPriceMinute({ block });
-      //   throw error;
-      // }
-    }
+  let price: PriceFeedMinute;
+  if (
+    bucketId <=
+    Math.floor(HISTORICAL_LAST_MINUTE_ID / PRICE_BUCKET_MINUTES) *
+      PRICE_BUCKET_MINUTES
+  ) {
+    price =
+      (await getHistoricalPrice(block, bucketId)) ??
+      (await getExternalPrice(block, bucketId));
+  } else {
+    price = await getExternalPrice(block, bucketId);
   }
+  await price.save();
+  return price;
 }

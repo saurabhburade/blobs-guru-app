@@ -22,6 +22,6 @@ GraphQL ports bind to `127.0.0.1`; Nginx terminates HTTPS on `ethapi.blobs.guru`
 
 Ethereum starts at block 19,426,500, Celestia and Avail at block 1. The public APIs expose partial data while these fresh databases sync. All nodes start with one worker; Ethereum uses batch size 1 to avoid concurrent read-modify-write updates in its account aggregates.
 
-Ethereum stores one historical ETH price per 15-minute UTC bucket. It uses validated receipt gas values for both the execution fee and the blob fee, then rolls those values into account, hour, and day totals.
+All three indexers store one price per 15-minute UTC bucket. The legacy `PriceFeedMinute` entity name remains for API compatibility. Avail has one `prelaunch` zero-price record for blocks before its first archived price; its first priced bucket begins partway through that interval. Existing Celestia and Avail databases must be rebuilt to remove their old minute-price rows. Ethereum uses validated receipt gas values for both the execution fee and the blob fee, then rolls those values into account, hour, and day totals.
 
 See [schema-audit.md](schema-audit.md) for the storage audit. The audit does not drop any columns or indexes.
