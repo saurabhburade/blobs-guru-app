@@ -1,38 +1,48 @@
 "use client";
-import Header from "@/components/Header/Header";
-
-import {
-  formatAddress,
-  formatBytes,
-  formatEthereumValue,
-  parseEthHashString,
-} from "@/lib/utils";
 import { useQuery } from "@apollo/client";
 import { useQuery as useQueryFetch } from "@tanstack/react-query";
 import BigNumber from "bignumber.js";
 import { Box, Database, NotepadText, User } from "lucide-react";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
-import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
-import { timeAgo } from "@/lib/time";
-import Sidebar from "@/components/Sidebar/Sidebar";
+import { checksumAddress } from "viem";
 import Footer from "@/components/Footer/Footer";
-import PoweredBy from "../Home/components/PoweredBy";
-
+import Header from "@/components/Header/Header";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
 import { apolloClient } from "@/lib/apollo/client";
 import {
   ETHEREUM_ACCOUNT_SINGLE_QUERY,
   ETHEREUM_ACCOUNT_SINGLE_QUERY_V2,
   ETHEREUM_USER_TRANSACTIONS_FILTER_LIMIT_QUERY,
 } from "@/lib/apollo/queriesEthereum";
+import { timeAgo } from "@/lib/time";
+import {
+  formatAddress,
+  formatBytes,
+  formatEthereumValue,
+  parseEthHashString,
+} from "@/lib/utils";
+import PoweredBy from "../Home/components/PoweredBy";
+import L2BeatCard from "./Apps/AppStats/L2Beat/L2BeatCard";
 import AccountStatCard from "./components/AccountStats/AccountStatCard";
 import AccountStats from "./components/AccountStats/AccountStats";
-import { checksumAddress } from "viem";
-import L2BeatCard from "./Apps/AppStats/L2Beat/L2BeatCard";
 
 type Props = {
   account: string;
 };
+const SKELETON_ROW_KEYS = [
+  "row-0",
+  "row-1",
+  "row-2",
+  "row-3",
+  "row-4",
+  "row-5",
+  "row-6",
+  "row-7",
+  "row-8",
+  "row-9",
+];
 
 function SingleAccount({ account }: Props) {
   const { data, loading, error } = useQuery(ETHEREUM_ACCOUNT_SINGLE_QUERY_V2, {
@@ -116,12 +126,8 @@ function TxnRows({ account }: { account: string }) {
       </div>
       <div className="px-4  ">
         {loading &&
-          new Array(10)?.fill(1)?.map((num, idx) => {
-            return (
-              <TransactionRowSkeleton
-                key={`TransactionRowSkeleton_SINGLE_ACCOUNT_${idx}`}
-              />
-            );
+          SKELETON_ROW_KEYS.map((key) => {
+            return <TransactionRowSkeleton key={key} />;
           })}
         {!loading &&
           daData?.transactionData?.nodes?.map((txn: any) => {
@@ -131,6 +137,7 @@ function TxnRows({ account }: { account: string }) {
       <div className="flex px-4 justify-end gap-2  p-4  border-t border-base-200">
         {page > 1 && (
           <button
+            type="button"
             className="btn btn-outline btn-sm"
             onClick={() => {
               setPage((prev) => {
@@ -145,6 +152,7 @@ function TxnRows({ account }: { account: string }) {
           </button>
         )}
         <button
+          type="button"
           className="btn btn-outline btn-sm"
           onClick={() => {
             setPage((prev) => prev + 1);
@@ -158,9 +166,11 @@ function TxnRows({ account }: { account: string }) {
 }
 
 const TransactionRow = ({ txn }: any) => {
-  const txFee = useMemo(() => {
-    return new BigNumber(txn?.txFeeNative)?.div(10 ** 18).toFormat(5);
-  }, [txn?.txFeeNative]);
+  const daFee = useMemo(() => {
+    return new BigNumber(txn?.blobFeeWei ?? txn?.totalDAFeeNatve ?? 0)
+      .div(1e18)
+      .toFormat();
+  }, [txn?.blobFeeWei, txn?.totalDAFeeNatve]);
 
   return (
     <>
@@ -194,7 +204,7 @@ const TransactionRow = ({ txn }: any) => {
         </div>
 
         <div>
-          <p>{txn?.totalBytes > 0 ? txFee : 0} ETH </p>
+          <p>{daFee} ETH</p>
         </div>
       </div>
       <div className="flex md:grid md:grid-cols-3 flex-wrap xl:hidden gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
@@ -215,11 +225,11 @@ const TransactionRow = ({ txn }: any) => {
         </div>
         <div className="hidden  md:block xl:hidden text-end">
           <p className="lg:text-end ">From : {formatAddress(txn?.signerId)}</p>
-          <p className=" text-end">{txFee} ETH</p>
+          <p className=" text-end">DA fee: {daFee} ETH</p>
         </div>
         <div className="flex my-2 md:hidden  lg:my-0 justify-between  w-full  lg:col-span-1 ">
           <p className="lg:text-end ">From : {formatAddress(txn?.signerId)}</p>
-          <p className=" text-end">{txFee} ETH</p>
+          <p className=" text-end">DA fee: {daFee} ETH</p>
         </div>
       </div>
     </>
