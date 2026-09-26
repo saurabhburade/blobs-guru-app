@@ -9,7 +9,7 @@ import type { CorrectSubstrateBlock } from "../mappingHandlers";
 // Mapping workers run in a sandbox where process.env is unavailable.
 const ETH_PRICE_RPC_URL = "https://eth.drpc.org";
 const PRICE_FEED_ARCHIVE_BASE_URL =
-  "https://raw.githubusercontent.com/saurabhburade/blobs-guru-app/refs/heads/main/apps/avail-subquery/src/mappings/pricefeed/saved";
+  "https://raw.githubusercontent.com/saurabhburade/blobs-guru-app/5b755c8a56119bafc3e451b191dd1034072f98c8/apps/avail-subquery/src/mappings/pricefeed/saved";
 const DEX_GURU_API_BASE_URL = "https://api.dev.dex.guru";
 const DEFILLAMA_API_BASE_URL = "https://coins.llama.fi";
 const ETHERSCAN_API_BASE_URL = "https://api.etherscan.io";

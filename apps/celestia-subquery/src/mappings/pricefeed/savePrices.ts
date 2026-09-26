@@ -5,7 +5,7 @@ import { PriceFeedMinute } from "../../types";
 
 // Mapping workers run in a sandbox where process.env is unavailable.
 const PRICE_FEED_ARCHIVE_BASE_URL =
-  "https://raw.githubusercontent.com/saurabhburade/blobs-guru-app/refs/heads/main/apps/celestia-subquery/src/mappings/pricefeed/saveddata";
+  "https://raw.githubusercontent.com/saurabhburade/blobs-guru-app/5b755c8a56119bafc3e451b191dd1034072f98c8/apps/celestia-subquery/src/mappings/pricefeed/saveddata";
 const BINANCE_API_BASE_URL = "https://api.binance.com";
 const REDSTONE_API_BASE_URL = "https://api.redstone.finance";
 const COINGECKO_API_BASE_URL = "https://api.coingecko.com";
@@ -94,7 +94,7 @@ function createPriceFeed(
     nativeBlock: block.block.header.height,
     nativePrice,
     date,
-    nativeDate: date,
+    nativeDate: block.block.header.time,
   });
 }
 
