@@ -62,9 +62,9 @@ export async function handleNewPriceMinute({
   const blockDate = new Date(Number(block.timestamp.getTime()));
   const minuteId = Math.floor(blockDate.getTime() / 60000);
   let ethBlockContext = {};
-  // SKIP PRICES AT MINUTEID 28695899 - 28695894
+  // The saved price archive starts at minute 28696059.
   const availBlock = block.block.header.number.toNumber();
-  if (minuteId < 28696058) {
+  if (minuteId < 28696059) {
     const priceFeedMinuteZero = PriceFeedMinute.create({
       id: minuteId.toString(),
       availBlock: availBlock,
@@ -76,7 +76,7 @@ export async function handleNewPriceMinute({
       ethDate: blockDate,
     });
     await priceFeedMinuteZero.save();
-    // logger.info(`PRICE FOR THIS MINUTE EXIST :: 0 minuteId < 28696058`);
+    // logger.info(`PRICE FOR THIS MINUTE EXIST :: 0 minuteId < 28696059`);
     return priceFeedMinuteZero!;
   }
   try {
