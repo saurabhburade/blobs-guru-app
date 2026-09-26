@@ -1,19 +1,17 @@
-"use strict";
-
+import type { EthereumTransaction } from "@subql/types-ethereum";
 import {
   CollectiveData,
   CollectiveDayData,
   CollectiveHourData,
-  PriceFeedMinute,
+  type PriceFeedMinute,
 } from "../../types";
-
-import { EthereumTransaction } from "@subql/types-ethereum";
 import { BYTES_PER_BLOB } from "../../utils";
+import { addExactFees } from "../feeAccounting";
 
 export async function handleCollective(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number; baseBlobGasPrice: number }
+  block: { height: number; timestamp: number; baseBlobGasPrice: bigint },
 ) {
   try {
     const dataSubmissionSize =
@@ -38,6 +36,8 @@ export async function handleCollective(
         totalBlocksCount: 0,
         totalTxnCount: 0,
         totalFeesNative: 0,
+        executionFeesWei: 0n,
+        blobFeesWei: 0n,
         totalFeesUSD: 0,
         totalTransferCount: 0,
         lastPriceFeedId: priceFeed.id,
@@ -49,16 +49,16 @@ export async function handleCollective(
       collectiveEntity.lastUpdatedTxnId = txnId!;
       collectiveEntity.totalTxnCount! += 1;
 
-      const fees = Number(decodedTxn.gas) * Number(decodedTxn.gasPrice);
+      const feesWei = decodedTxn.gas * decodedTxn.gasPrice;
+      const blobFeesWei = block.baseBlobGasPrice * BigInt(dataSubmissionSize);
+      addExactFees(collectiveEntity, feesWei, blobFeesWei);
+      const fees = Number(feesWei);
       const feesUSD = fees * priceFeed.nativePrice;
       if (
         decodedTxn?.blobVersionedHashes &&
         decodedTxn?.blobVersionedHashes?.length > 0
       ) {
-        const feesDA =
-          (block?.baseBlobGasPrice || 1) *
-          Number(decodedTxn.blobVersionedHashes?.length) *
-          BYTES_PER_BLOB;
+        const feesDA = Number(blobFeesWei);
         const feesUSDDA = feesDA * priceFeed.nativePrice;
 
         collectiveEntity.totalDAFees = collectiveEntity.totalDAFees! + feesDA;
@@ -73,6 +73,7 @@ export async function handleCollective(
 
       collectiveEntity.totalFeesNative =
         collectiveEntity.totalFeesNative! + fees;
+      collectiveEntity.totalFees = collectiveEntity.totalFees! + fees;
 
       collectiveEntity.totalFeesUSD =
         collectiveEntity.totalFeesUSD! + Number(feesUSD);
@@ -82,12 +83,12 @@ export async function handleCollective(
     collectiveEntity.avgNativePrice =
       (collectiveEntity.avgNativePrice! + priceFeed.nativePrice) / 2;
 
-    if (collectiveEntity.endBlock!.toString() != block.height.toString()) {
+    if (collectiveEntity.endBlock!.toString() !== block.height.toString()) {
       collectiveEntity.totalDataBlocksCount =
         collectiveEntity.totalDataBlocksCount! + 1;
     }
 
-    if (collectiveEntity.endBlock!.toString() != block.height.toString()) {
+    if (collectiveEntity.endBlock!.toString() !== block.height.toString()) {
       collectiveEntity.totalBlocksCount =
         collectiveEntity.totalBlocksCount! + 1;
     }
@@ -109,7 +110,7 @@ export async function handleCollective(
         baseBlobGasPrice: block?.baseBlobGasPrice,
       },
 
-      collectiveEntity
+      collectiveEntity,
     );
     await handleCollectiveHourData(
       decodedTxn,
@@ -120,7 +121,7 @@ export async function handleCollective(
         baseBlobGasPrice: block?.baseBlobGasPrice,
       },
 
-      collectiveEntity
+      collectiveEntity,
     );
   } catch (error) {
     logger.error(` COLLECTIVE SAVE ERROR::::::  ${error}`);
@@ -131,8 +132,8 @@ export async function handleCollective(
 export async function handleCollectiveDayData(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number; baseBlobGasPrice: number },
-  collectiveEntity: CollectiveData
+  block: { height: number; timestamp: number; baseBlobGasPrice: bigint },
+  collectiveEntity: CollectiveData,
 ) {
   const blockDate = new Date(Number(block.timestamp));
   const minuteId = Math.floor(blockDate.getTime() / 60000);
@@ -168,6 +169,8 @@ export async function handleCollectiveDayData(
         totalBlocksCount: 0,
         totalTxnCount: 0,
         totalFeesNative: 0,
+        executionFeesWei: 0n,
+        blobFeesWei: 0n,
         totalFeesUSD: 0,
         totalTransferCount: 0,
         lastPriceFeedId: priceFeed.id,
@@ -180,16 +183,16 @@ export async function handleCollectiveDayData(
     if (collectiveDayEntity.lastUpdatedTxnId !== txnId) {
       collectiveDayEntity.lastUpdatedTxnId = txnId!;
       collectiveDayEntity.totalTxnCount! += 1;
-      const fees = Number(decodedTxn.gas) * Number(decodedTxn.gasPrice);
+      const feesWei = decodedTxn.gas * decodedTxn.gasPrice;
+      const blobFeesWei = block.baseBlobGasPrice * BigInt(dataSubmissionSize);
+      addExactFees(collectiveDayEntity, feesWei, blobFeesWei);
+      const fees = Number(feesWei);
       const feesUSD = fees * priceFeed.nativePrice;
       if (
         decodedTxn?.blobVersionedHashes &&
         decodedTxn?.blobVersionedHashes?.length > 0
       ) {
-        const feesDA =
-          (block?.baseBlobGasPrice || 1) *
-          Number(decodedTxn.blobVersionedHashes?.length) *
-          BYTES_PER_BLOB;
+        const feesDA = Number(blobFeesWei);
         const feesUSDDA = feesDA * priceFeed.nativePrice;
 
         collectiveDayEntity.totalDAFees =
@@ -205,6 +208,7 @@ export async function handleCollectiveDayData(
       }
       collectiveDayEntity.totalFeesNative =
         collectiveDayEntity.totalFeesNative! + fees;
+      collectiveDayEntity.totalFees = collectiveDayEntity.totalFees! + fees;
 
       collectiveDayEntity.totalFeesUSD =
         collectiveDayEntity.totalFeesUSD! + Number(feesUSD);
@@ -214,12 +218,12 @@ export async function handleCollectiveDayData(
     collectiveDayEntity.avgNativePrice =
       (collectiveDayEntity.avgNativePrice! + priceFeed.nativePrice) / 2;
 
-    if (collectiveDayEntity.endBlock!.toString() != block.height.toString()) {
+    if (collectiveDayEntity.endBlock!.toString() !== block.height.toString()) {
       collectiveDayEntity.totalDataBlocksCount =
         collectiveDayEntity.totalDataBlocksCount! + 1;
     }
 
-    if (collectiveDayEntity.endBlock!.toString() != block.height.toString()) {
+    if (collectiveDayEntity.endBlock!.toString() !== block.height.toString()) {
       collectiveDayEntity.totalBlocksCount =
         collectiveDayEntity.totalBlocksCount! + 1;
     }
@@ -240,8 +244,8 @@ export async function handleCollectiveDayData(
 export async function handleCollectiveHourData(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number; baseBlobGasPrice: number },
-  collectiveEntity: CollectiveData
+  block: { height: number; timestamp: number; baseBlobGasPrice: bigint },
+  collectiveEntity: CollectiveData,
 ) {
   const blockDate = new Date(Number(block.timestamp));
   const minuteId = Math.floor(blockDate.getTime() / 60000);
@@ -279,6 +283,8 @@ export async function handleCollectiveHourData(
         totalBlocksCount: 0,
         totalTxnCount: 0,
         totalFeesNative: 0,
+        executionFeesWei: 0n,
+        blobFeesWei: 0n,
         totalFeesUSD: 0,
         totalTransferCount: 0,
         lastPriceFeedId: priceFeed.id,
@@ -292,16 +298,16 @@ export async function handleCollectiveHourData(
       collectiveHourEntity.lastUpdatedTxnId = txnId!;
       collectiveHourEntity.totalTxnCount! += 1;
 
-      const fees = Number(decodedTxn.gas) * Number(decodedTxn.gasPrice);
+      const feesWei = decodedTxn.gas * decodedTxn.gasPrice;
+      const blobFeesWei = block.baseBlobGasPrice * BigInt(dataSubmissionSize);
+      addExactFees(collectiveHourEntity, feesWei, blobFeesWei);
+      const fees = Number(feesWei);
       const feesUSD = fees * priceFeed.nativePrice;
       if (
         decodedTxn?.blobVersionedHashes &&
         decodedTxn?.blobVersionedHashes?.length > 0
       ) {
-        const feesDA =
-          (block?.baseBlobGasPrice || 1) *
-          Number(decodedTxn.blobVersionedHashes?.length) *
-          BYTES_PER_BLOB;
+        const feesDA = Number(blobFeesWei);
         const feesUSDDA = feesDA * priceFeed.nativePrice;
         collectiveHourEntity.totalDAFees =
           collectiveHourEntity.totalDAFees! + feesDA;
@@ -316,6 +322,7 @@ export async function handleCollectiveHourData(
       }
       collectiveHourEntity.totalFeesNative =
         collectiveHourEntity.totalFeesNative! + fees;
+      collectiveHourEntity.totalFees = collectiveHourEntity.totalFees! + fees;
 
       collectiveHourEntity.totalFeesUSD =
         collectiveHourEntity.totalFeesUSD! + Number(feesUSD);
@@ -325,12 +332,12 @@ export async function handleCollectiveHourData(
     collectiveHourEntity.avgNativePrice =
       (collectiveHourEntity.avgNativePrice! + priceFeed.nativePrice) / 2;
 
-    if (collectiveHourEntity.endBlock!.toString() != block.height.toString()) {
+    if (collectiveHourEntity.endBlock!.toString() !== block.height.toString()) {
       collectiveHourEntity.totalDataBlocksCount =
         collectiveHourEntity.totalDataBlocksCount! + 1;
     }
 
-    if (collectiveHourEntity.endBlock!.toString() != block.height.toString()) {
+    if (collectiveHourEntity.endBlock!.toString() !== block.height.toString()) {
       collectiveHourEntity.totalBlocksCount =
         collectiveHourEntity.totalBlocksCount! + 1;
     }

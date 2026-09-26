@@ -1,22 +1,20 @@
-"use strict";
-
+import type { EthereumTransaction } from "@subql/types-ethereum";
 import {
   AccountDayData,
   AccountEntity,
   AccountHourData,
-  PriceFeedMinute,
+  type PriceFeedMinute,
 } from "../../types";
-
-import { EthereumTransaction } from "@subql/types-ethereum";
 import { BYTES_PER_BLOB } from "../../utils";
+import { addExactFees } from "../feeAccounting";
 
 export async function handleAccount(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number; baseBlobGasPrice: number }
+  block: { height: number; timestamp: number; baseBlobGasPrice: bigint },
 ) {
   try {
-    let dataSubmissionSize =
+    const dataSubmissionSize =
       (decodedTxn.blobVersionedHashes?.length || 0) * BYTES_PER_BLOB;
     const id = decodedTxn.from;
     let accountEntity = await AccountEntity.get(id);
@@ -37,6 +35,8 @@ export async function handleAccount(
         totalTxnCount: 0,
         totalFees: 0,
         totalFeesNative: 0,
+        executionFeesWei: 0n,
+        blobFeesWei: 0n,
         totalFeesUSD: 0,
         totalTransferCount: 0,
         lastPriceFeedId: priceFeed.id,
@@ -53,13 +53,15 @@ export async function handleAccount(
     const isDataSubmission =
       decodedTxn.blobVersionedHashes &&
       decodedTxn.blobVersionedHashes.length > 0;
-    const fees = Number(decodedTxn.gas) * Number(decodedTxn.gasPrice);
+    const feesWei = decodedTxn.gas * decodedTxn.gasPrice;
+    const blobFeesWei = isDataSubmission
+      ? block.baseBlobGasPrice * BigInt(dataSubmissionSize)
+      : 0n;
+    addExactFees(accountEntity, feesWei, blobFeesWei);
+    const fees = Number(feesWei);
     const feesUSD = fees * priceFeed.nativePrice;
     if (isDataSubmission) {
-      const feesDA =
-        (block?.baseBlobGasPrice ?? 1) *
-        Number(decodedTxn.blobVersionedHashes?.length) *
-        BYTES_PER_BLOB;
+      const feesDA = Number(blobFeesWei);
       const feesUSDDA = feesDA * priceFeed.nativePrice;
       accountEntity.totalDAFees = accountEntity.totalDAFees! + Number(feesDA)!;
       accountEntity.totalDAFeesUSD = accountEntity.totalDAFeesUSD! + feesUSDDA;
@@ -69,12 +71,12 @@ export async function handleAccount(
 
       accountEntity.totalByteSize =
         accountEntity.totalByteSize + Number(dataSubmissionSize);
-      if (accountEntity.endBlock!.toString() != block.height.toString()) {
+      if (accountEntity.endBlock!.toString() !== block.height.toString()) {
         accountEntity.totalDataBlocksCount =
           accountEntity.totalDataBlocksCount! + 1;
       }
     }
-    if (accountEntity.endBlock!.toString() != block.height.toString()) {
+    if (accountEntity.endBlock!.toString() !== block.height.toString()) {
       accountEntity.totalBlocksCount = accountEntity.totalBlocksCount! + 1;
     }
     accountEntity.totalTxnCount = accountEntity.totalTxnCount! + 1;
@@ -97,7 +99,7 @@ export async function handleAccount(
 export async function handleAccountDayData(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number; baseBlobGasPrice: number }
+  block: { height: number; timestamp: number; baseBlobGasPrice: bigint },
 ) {
   const blockDate = new Date(Number(block.timestamp));
   const minuteId = Math.floor(blockDate.getTime() / 60000);
@@ -129,6 +131,8 @@ export async function handleAccountDayData(
       totalTxnCount: 0,
       totalFees: 0,
       totalFeesNative: 0,
+      executionFeesWei: 0n,
+      blobFeesWei: 0n,
       totalFeesUSD: 0,
       totalTransferCount: 0,
       lastPriceFeedId: priceFeed.id,
@@ -144,16 +148,16 @@ export async function handleAccountDayData(
   accountDayDataRecord.avgNativePrice =
     (accountDayDataRecord.avgNativePrice! + priceFeed.nativePrice) / 2;
 
-  const fees = Number(decodedTxn.gas) * Number(decodedTxn.gasPrice);
+  const feesWei = decodedTxn.gas * decodedTxn.gasPrice;
+  const blobFeesWei = block.baseBlobGasPrice * BigInt(dataSubmissionSize);
+  addExactFees(accountDayDataRecord, feesWei, blobFeesWei);
+  const fees = Number(feesWei);
   const feesUSD = fees * priceFeed.nativePrice;
   if (
     decodedTxn?.blobVersionedHashes &&
     decodedTxn?.blobVersionedHashes?.length > 0
   ) {
-    const feesDA =
-      (block?.baseBlobGasPrice ?? 1) *
-      Number(decodedTxn.blobVersionedHashes?.length) *
-      BYTES_PER_BLOB;
+    const feesDA = Number(blobFeesWei);
     const feesUSDDA = feesDA * priceFeed.nativePrice;
     accountDayDataRecord.totalDAFees =
       accountDayDataRecord.totalDAFees! + Number(feesDA)!;
@@ -164,12 +168,12 @@ export async function handleAccountDayData(
       Number(decodedTxn.blobVersionedHashes?.length);
     accountDayDataRecord.totalByteSize =
       accountDayDataRecord.totalByteSize + Number(dataSubmissionSize);
-    if (accountDayDataRecord.endBlock!.toString() != block.height.toString()) {
+    if (accountDayDataRecord.endBlock!.toString() !== block.height.toString()) {
       accountDayDataRecord.totalDataBlocksCount =
         accountDayDataRecord.totalDataBlocksCount! + 1;
     }
   }
-  if (accountDayDataRecord.endBlock!.toString() != block.height.toString()) {
+  if (accountDayDataRecord.endBlock!.toString() !== block.height.toString()) {
     accountDayDataRecord.totalBlocksCount =
       accountDayDataRecord.totalBlocksCount! + 1;
   }
@@ -192,7 +196,7 @@ export async function handleAccountDayData(
 export async function handleAccountHourData(
   decodedTxn: EthereumTransaction,
   priceFeed: PriceFeedMinute,
-  block: { height: number; timestamp: number; baseBlobGasPrice: number }
+  block: { height: number; timestamp: number; baseBlobGasPrice: bigint },
 ) {
   const blockDate = new Date(Number(block.timestamp));
   const minuteId = Math.floor(blockDate.getTime() / 60000);
@@ -225,6 +229,8 @@ export async function handleAccountHourData(
       totalTxnCount: 0,
       totalFees: 0,
       totalFeesNative: 0,
+      executionFeesWei: 0n,
+      blobFeesWei: 0n,
       totalFeesUSD: 0,
       totalTransferCount: 0,
       lastPriceFeedId: priceFeed.id,
@@ -240,16 +246,16 @@ export async function handleAccountHourData(
   accountHourDataRecord.avgNativePrice =
     (accountHourDataRecord.avgNativePrice! + priceFeed.nativePrice) / 2;
 
-  const fees = Number(decodedTxn.gas) * Number(decodedTxn.gasPrice);
+  const feesWei = decodedTxn.gas * decodedTxn.gasPrice;
+  const blobFeesWei = block.baseBlobGasPrice * BigInt(dataSubmissionSize);
+  addExactFees(accountHourDataRecord, feesWei, blobFeesWei);
+  const fees = Number(feesWei);
   const feesUSD = fees * priceFeed.nativePrice;
   if (
     decodedTxn?.blobVersionedHashes &&
     decodedTxn?.blobVersionedHashes?.length > 0
   ) {
-    const feesDA =
-      (block?.baseBlobGasPrice || 1) *
-      Number(decodedTxn.blobVersionedHashes?.length) *
-      BYTES_PER_BLOB;
+    const feesDA = Number(blobFeesWei);
     const feesUSDDA = feesDA * priceFeed.nativePrice;
     accountHourDataRecord.totalDAFees =
       accountHourDataRecord.totalDAFees! + Number(feesDA)!;
@@ -260,12 +266,14 @@ export async function handleAccountHourData(
       Number(decodedTxn.blobVersionedHashes?.length);
     accountHourDataRecord.totalByteSize =
       accountHourDataRecord.totalByteSize + Number(dataSubmissionSize);
-    if (accountHourDataRecord.endBlock!.toString() != block.height.toString()) {
+    if (
+      accountHourDataRecord.endBlock!.toString() !== block.height.toString()
+    ) {
       accountHourDataRecord.totalDataBlocksCount =
         accountHourDataRecord.totalDataBlocksCount! + 1;
     }
   }
-  if (accountHourDataRecord.endBlock!.toString() != block.height.toString()) {
+  if (accountHourDataRecord.endBlock!.toString() !== block.height.toString()) {
     accountHourDataRecord.totalBlocksCount =
       accountHourDataRecord.totalBlocksCount! + 1;
   }

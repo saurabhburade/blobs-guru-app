@@ -16,6 +16,9 @@ TEST*.xml
 
 # next.js
 .next/
+.open-next/
+.wrangler/
+.pnpm-store/
 out/
 
 # production
