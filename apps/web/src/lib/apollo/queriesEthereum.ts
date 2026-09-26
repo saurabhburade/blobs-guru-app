@@ -8,8 +8,11 @@ export const ETHEREUM_COLLECTIVE_STAT_QUERY = gql`
         totalBlocksCount
         totalDataSubmissionCount
         totalFeesNative
+        totalFeesUSD
         totalDAFees
         totalDAFeesUSD
+        executionFeesWei
+        blobFeesWei
         totalTxnCount
         avgNativePrice
 
@@ -299,6 +302,8 @@ export const ETHEREUM_ACCOUNT_SINGLE_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesNative
+        executionFeesWei
+        blobFeesWei
       }
     }
   }
@@ -317,6 +322,8 @@ export const ETHEREUM_ACCOUNT_SINGLE_QUERY_V2 = gql`
       totalFeesUSD
       totalDAFeesUSD
       totalFeesNative
+      executionFeesWei
+      blobFeesWei
     }
   }
 `;
@@ -512,6 +519,9 @@ export const ETHEREUM_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesNative
+        totalDAFees
+        executionFeesWei
+        blobFeesWei
       }
     }
   }
@@ -578,6 +588,9 @@ export const ETHEREUM_ACCOUNT_HOUR_DATAS_WITH_DURATION_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesNative
+        totalDAFees
+        executionFeesWei
+        blobFeesWei
       }
     }
   }

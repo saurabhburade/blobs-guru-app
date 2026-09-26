@@ -13,10 +13,10 @@ const RPC_TIMEOUT_MS = 10000;
 export type ValidReceipt = {
   txHash: string;
   blockNumber: number;
-  gasUsed: number;
-  effectiveGasPrice: number;
-  blobGasUsed: number;
-  blobGasPrice: number;
+  gasUsed: bigint;
+  effectiveGasPrice: bigint;
+  blobGasUsed: bigint;
+  blobGasPrice: bigint;
 };
 
 function toHexQuantity(value: number): string {
@@ -29,6 +29,12 @@ function fromHexQuantityNumber(value: unknown): number | undefined {
   }
   const number = BigInt(value);
   return number <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(number) : undefined;
+}
+
+function fromHexQuantityBigInt(value: unknown): bigint | undefined {
+  return typeof value === "string" && /^0x[0-9a-f]+$/i.test(value)
+    ? BigInt(value)
+    : undefined;
 }
 
 async function fetchBlockReceipts(
@@ -73,10 +79,10 @@ function parseBlobReceipt(
   }
 
   const receiptBlockNumber = fromHexQuantityNumber(receipt.blockNumber);
-  const gasUsed = fromHexQuantityNumber(receipt.gasUsed);
-  const effectiveGasPrice = fromHexQuantityNumber(receipt.effectiveGasPrice);
-  const blobGasUsed = fromHexQuantityNumber(receipt.blobGasUsed);
-  const blobGasPrice = fromHexQuantityNumber(receipt.blobGasPrice);
+  const gasUsed = fromHexQuantityBigInt(receipt.gasUsed);
+  const effectiveGasPrice = fromHexQuantityBigInt(receipt.effectiveGasPrice);
+  const blobGasUsed = fromHexQuantityBigInt(receipt.blobGasUsed);
+  const blobGasPrice = fromHexQuantityBigInt(receipt.blobGasPrice);
   if (
     receiptBlockNumber !== blockNumber ||
     typeof receipt.blockHash !== "string" ||

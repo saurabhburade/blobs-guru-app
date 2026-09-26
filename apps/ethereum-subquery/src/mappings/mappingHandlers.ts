@@ -18,6 +18,7 @@ import {
   handleCollectiveDayData,
   handleCollectiveHourData,
 } from "./entities/collectiveData";
+import { calculateReceiptFees } from "./feeAccounting";
 import { getTxReceipts } from "./handleReceipts";
 import { handleNewPriceMinute } from "./pricefeed/savePrices";
 
@@ -49,6 +50,8 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
     totalBlockFeeUSD: 0,
     totalDAFeeNatve: 0,
     totalDAFeeUSD: 0,
+    executionFeesWei: 0n,
+    blobFeesWei: 0n,
     totalEventsCount: block.logs.length,
     totalSquareSize: 0,
     totalTransactionCount: transactions.length,
@@ -65,20 +68,20 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
         !receipt ||
         receipt.gasUsed === undefined ||
         receipt.effectiveGasPrice === undefined ||
-        receipt.blobGasUsed !== dataSubmissionSize
+        receipt.blobGasUsed !== BigInt(dataSubmissionSize)
       ) {
         throw new Error(
           `Missing validated receipt for blob transaction ${txn.hash}`,
         );
       }
-      txn.gas = BigInt(receipt.gasUsed);
-      txn.gasPrice = BigInt(receipt.effectiveGasPrice);
+      txn.gas = receipt.gasUsed;
+      txn.gasPrice = receipt.effectiveGasPrice;
       const baseBlobGasPrice = receipt.blobGasPrice;
-      const fees =
-        Number(receipt?.gasUsed) * Number(receipt?.effectiveGasPrice);
+      const exactFees = calculateReceiptFees(receipt);
+      const fees = Number(exactFees.executionFeeWei);
       const feesUSD = fees * priceData!.nativePrice;
 
-      const feesDA = receipt.blobGasUsed * receipt.blobGasPrice;
+      const feesDA = Number(exactFees.blobFeeWei);
       const feesUSDDA = feesDA * priceData!.nativePrice;
 
       const transactionToSave = TransactionData.create({
@@ -99,6 +102,8 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
         totalDAFeeUSD: feesUSDDA,
         totalFeeNatve: fees,
         totalFeeUSD: feesUSD,
+        executionFeeWei: exactFees.executionFeeWei,
+        blobFeeWei: exactFees.blobFeeWei,
       });
       txnRecords.push(transactionToSave);
       bdata.totalBlobSize += dataSubmissionSize;
@@ -107,6 +112,8 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
 
       bdata.totalDAFeeNatve += feesDA;
       bdata.totalDAFeeUSD += feesUSDDA;
+      bdata.executionFeesWei! += exactFees.executionFeeWei;
+      bdata.blobFeesWei! += exactFees.blobFeeWei;
       bdata.totalBlobTransactionCount += 1;
       const acc = await handleAccount(txn, priceData!, {
         height: block.number,
