@@ -16,27 +16,69 @@ import { useDaCostCompare } from "@/hooks/useDaCostCompare";
 import { useEthereumDaAppsDataBasic } from "@/hooks/useEthereumDaAppsDataBasic";
 import { apolloClient } from "@/lib/apollo/client";
 import { BLOB_TRANSACTIONS_DA_COST_QUERY } from "@/lib/apollo/queries";
-import { ETHEREUM_COLLECTIVE_STAT_QUERY } from "@/lib/apollo/queriesEthereum";
+import {
+  ETHEREUM_COLLECTIVE_CAPABILITIES_QUERY,
+  ETHEREUM_COLLECTIVE_EXACT_FEES_QUERY,
+  ETHEREUM_COLLECTIVE_STAT_QUERY,
+} from "@/lib/apollo/queriesEthereum";
 import { cn, formatBytes, formatWrapedText, safeBigNumber } from "@/lib/utils";
 
 function ChainStats() {
   const { data: appsData } = useEthereumDaAppsDataBasic();
   const { data: daCostData, loading: daCostDataLoading } = useDaCostCompare();
-  const { data: rawData, loading: statsLoading } = useQuery(
+  const {
+    data: rawData,
+    loading: statsLoading,
+    error: statsError,
+  } = useQuery(
     ETHEREUM_COLLECTIVE_STAT_QUERY,
     {
       client: apolloClient,
       pollInterval: 3_000,
     },
   );
+  const { data: capabilitiesData } = useQuery(
+    ETHEREUM_COLLECTIVE_CAPABILITIES_QUERY,
+    {
+      client: apolloClient,
+      fetchPolicy: "cache-first",
+    },
+  );
+  const exactFeesSupported = useMemo(() => {
+    const fields = capabilitiesData?.__type?.fields ?? [];
+    return (
+      fields.some((field: { name: string }) => field.name === "executionFeesWei") &&
+      fields.some((field: { name: string }) => field.name === "blobFeesWei")
+    );
+  }, [capabilitiesData]);
+  const { data: exactFeesData } = useQuery(
+    ETHEREUM_COLLECTIVE_EXACT_FEES_QUERY,
+    {
+      client: apolloClient,
+      fetchPolicy: "no-cache",
+      pollInterval: 3_000,
+      skip: !exactFeesSupported,
+    },
+  );
   const data = useMemo(() => {
-    if (rawData?.collectiveData?.nodes?.length > 0) {
+    const legacyCollectiveData = rawData?.collectiveData?.nodes?.[0];
+    if (legacyCollectiveData) {
+      const exactCollectiveData = exactFeesData?.collectiveData?.nodes?.[0];
       return {
-        collectiveData: rawData?.collectiveData?.nodes[0],
+        collectiveData: {
+          ...legacyCollectiveData,
+          ...(exactCollectiveData?.executionFeesWei != null && {
+            executionFeesWei: exactCollectiveData.executionFeesWei,
+          }),
+          ...(exactCollectiveData?.blobFeesWei != null && {
+            blobFeesWei: exactCollectiveData.blobFeesWei,
+          }),
+        },
       };
     }
     return null;
-  }, [rawData]);
+  }, [exactFeesData, rawData]);
+  const statsUnavailable = !statsLoading && !data?.collectiveData;
 
   const dataSize = useMemo(() => {
     if (data?.collectiveData?.totalByteSize) {
@@ -116,6 +158,16 @@ function ChainStats() {
   }, [blockData?.data, endBlock]);
   return (
     <>
+      {statsUnavailable && (
+        <div
+          className="alert alert-error mb-4"
+          role="alert"
+        >
+          <p>
+            {statsError?.message || "Ethereum stats are currently unavailable."}
+          </p>
+        </div>
+      )}
       <div className="grid lg:grid-cols-4  gap-4 ">
         {percent < 99.5 && (
           <div className="bg-red-400 px-4 py-3 rounded-lg text-sm flex gap-3 items-center absolute lg:bottom-4 bottom-0 right-0 lg:right-4 z-10">
@@ -186,6 +238,7 @@ function ChainStats() {
             title="Sync"
             value={percent}
             isLoading={statsLoading}
+            isUnavailable={statsUnavailable}
             after="%"
           />
         )}
@@ -194,12 +247,14 @@ function ChainStats() {
             title="Target"
             value={Number(blockData?.data)}
             isLoading={blockData?.isLoading}
+            isUnavailable={statsUnavailable}
           />
         )}
         <StatCard
           title="Last block"
           value={endBlock}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
         />
 
         {/* <StatCard
@@ -218,18 +273,21 @@ function ChainStats() {
           title="Blob Txn Gas Fees"
           value={feeTotals.executionEth}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
           after="ETH"
         />
         <StatCard
           title="Blob Txn Gas Fees USD"
           value={feeTotals.executionUsd}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
         />
 
         <StatCard
           title="Total data"
           value={dataSize?.split(" ")[0]}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
           after={dataSize?.split(" ")[1]}
         />
 
@@ -237,34 +295,40 @@ function ChainStats() {
           title="Total Txns"
           value={totalExtrinsicCount}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
         />
 
         <StatCard
           title="DA Submissions"
           value={totalDataSubmissionCount}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
         />
         <StatCard
           title="Blob DA Fees"
           value={feeTotals.blobEth}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
           after="ETH"
         />
         <StatCard
           title="Blob DA Fees USD"
           value={feeTotals.blobUsd}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
         />
         <StatCard
           title="Total Blob Txn Fees"
           value={feeTotals.combinedEth}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
           after="ETH"
         />
         <StatCard
           title="Total Blob Txn Fees USD"
           value={feeTotals.combinedUsd}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
         />
         {/* <StatCard
           title="Total DA Blocks"
@@ -275,6 +339,7 @@ function ChainStats() {
           title="Last ETH Price"
           value={safeBigNumber(lastPriceFeed?.nativePrice).toNumber()}
           isLoading={statsLoading}
+          isUnavailable={statsUnavailable}
         />
 
         {/* <StatCard
@@ -304,12 +369,14 @@ const StatCard = ({
   isLoading,
   after,
   className,
+  isUnavailable,
 }: {
   title: string;
   after?: string;
   className?: string;
   value: string | number | null;
   isLoading: boolean;
+  isUnavailable?: boolean;
 }) => {
   if (isLoading) {
     return (
@@ -321,6 +388,19 @@ const StatCard = ({
       >
         <p className=" text-sm opacity-50 h-5 w-20 rounded-full bg-base-200 animate-pulse"></p>
         <p className=" text-sm opacity-50 h-8 w-32 rounded-full bg-base-200 animate-pulse"></p>
+      </div>
+    );
+  }
+  if (isUnavailable) {
+    return (
+      <div
+        className={cn(
+          "h-full w-full bg-base-100 border-[0.5px] p-4 space-y-2 border-base-200",
+          className,
+        )}
+      >
+        <p className="text-sm opacity-50">{title || "Block Height"}</p>
+        <p className="text-2xl font-bold">Unavailable</p>
       </div>
     );
   }

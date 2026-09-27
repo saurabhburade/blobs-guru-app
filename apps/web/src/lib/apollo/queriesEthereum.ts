@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const ETHEREUM_COLLECTIVE_STAT_QUERY = gql`
-  query {
+  query EthereumCollectiveStats {
     collectiveData {
       nodes {
         totalByteSize
@@ -11,8 +11,6 @@ export const ETHEREUM_COLLECTIVE_STAT_QUERY = gql`
         totalFeesUSD
         totalDAFees
         totalDAFeesUSD
-        executionFeesWei
-        blobFeesWei
         totalTxnCount
         avgNativePrice
 
@@ -23,6 +21,25 @@ export const ETHEREUM_COLLECTIVE_STAT_QUERY = gql`
           nativePrice
         }
         endBlock
+      }
+    }
+  }
+`;
+export const ETHEREUM_COLLECTIVE_CAPABILITIES_QUERY = gql`
+  query EthereumCollectiveCapabilities {
+    __type(name: "CollectiveDatum") {
+      fields {
+        name
+      }
+    }
+  }
+`;
+export const ETHEREUM_COLLECTIVE_EXACT_FEES_QUERY = gql`
+  query EthereumCollectiveExactFees {
+    collectiveData {
+      nodes {
+        executionFeesWei
+        blobFeesWei
       }
     }
   }

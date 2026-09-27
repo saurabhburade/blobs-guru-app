@@ -102,6 +102,8 @@ services:
     depends_on:
       ethereum-postgres:
         condition: service_healthy
+      ethereum-node:
+        condition: service_healthy
     ports: ["127.0.0.1:3000:3000"]
 
   celestia-node:
