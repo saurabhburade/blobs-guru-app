@@ -1,19 +1,4 @@
 "use client";
-import Footer from "@/components/Footer/Footer";
-import Header from "@/components/Header/Header";
-import Sidebar from "@/components/Sidebar/Sidebar";
-import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
-import { ETHERSCAN_LINK } from "@/configs/constants";
-import { apolloClient } from "@/lib/apollo/client";
-
-import { timeAgo } from "@/lib/time";
-import {
-  cn,
-  formatAddress,
-  formatBytes,
-  parseEthHashString,
-} from "@/lib/utils";
-import PoweredBy from "@/views/Home/components/PoweredBy";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import Lottie from "lottie-react";
@@ -28,11 +13,37 @@ import {
 import Link from "next/link";
 import React, { useMemo } from "react";
 import blocksAnimation from "@/assets/animations/blocks.json";
+import Footer from "@/components/Footer/Footer";
+import Header from "@/components/Header/Header";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
+import { ETHERSCAN_LINK } from "@/configs/constants";
+import { apolloClient } from "@/lib/apollo/client";
 import { ETHEREUM_BLOCK_QUERY } from "@/lib/apollo/queriesEthereum";
+import { timeAgo } from "@/lib/time";
+import {
+  cn,
+  formatAddress,
+  formatBytes,
+  parseEthHashString,
+} from "@/lib/utils";
+import PoweredBy from "@/views/Home/components/PoweredBy";
 
 type Props = {
   blockNumber: number | string;
 };
+const SKELETON_ROW_KEYS = [
+  "row-0",
+  "row-1",
+  "row-2",
+  "row-3",
+  "row-4",
+  "row-5",
+  "row-6",
+  "row-7",
+  "row-8",
+  "row-9",
+];
 
 function SingleBlock({ blockNumber }: Props) {
   const { data: { blockDatum: blockData } = {}, loading: blockDataLoading } =
@@ -41,32 +52,18 @@ function SingleBlock({ blockNumber }: Props) {
       client: apolloClient,
     });
 
-  const totalData = useMemo(() => {
-    const reducedData = blockData?.transactions?.nodes.reduce(
-      (acc: any, node: any) => {
-        acc.byteSize += Number(node?.totalBytes) || 0;
-        if (Number(node?.totalBytes) > 0) {
-          acc.daFeesUSD += Number(node.txFeeUSD) / 1e18 || 0;
-          acc.txFeeNative += Number(node.txFeeNative) / 1e18 || 0;
-        }
-        acc.feesUSD += Number(node.txFeeUSD) / 1e18 || 0;
-        acc.fees += Number(node.txFeeNative) / 1e18 || 0;
-
-        acc.daCount += Number(node?.blobs?.nodes?.length) || 0;
-
-        return acc;
-      },
-      {
-        byteSize: 0,
-        daFees: 0,
-        daFeesUSD: 0,
-        feesUSD: 0,
-        fees: 0,
-        daCount: 0,
-      }
-    );
-    return reducedData;
-  }, [blockData]);
+  const totalData = {
+    byteSize: Number(blockData?.totalBlobSize ?? 0),
+    daCount: Number(blockData?.totalBlobSize ?? 0) / 131072,
+  };
+  const executionWei = new BigNumber(
+    blockData?.executionFeesWei ?? blockData?.totalBlockFeeNatve ?? 0,
+  );
+  const blobWei = new BigNumber(
+    blockData?.blobFeesWei ?? blockData?.totalDAFeeNatve ?? 0,
+  );
+  const executionUsd = new BigNumber(blockData?.totalBlockFeeUSD ?? 0);
+  const blobUsd = new BigNumber(blockData?.totalDAFeeUSD ?? 0);
 
   return (
     <div className="grid xl:grid-cols-[1.25fr_5fr] gap-0 h-screen">
@@ -95,6 +92,7 @@ function SingleBlock({ blockNumber }: Props) {
             <div className="flex items-center justify-center flex-col gap-2">
               <p> #{blockNumber} Block is not synced yet.</p>
               <button
+                type="button"
                 className="btn w-fit"
                 onClick={() => {
                   window.location.reload();
@@ -121,12 +119,15 @@ function SingleBlock({ blockNumber }: Props) {
                     {blockData && <p>{timeAgo(blockData?.timestamp)}</p>}
                   </div>
                   <Link href={`/ethereum/blocks/${Number(blockNumber) - 1}`}>
-                    <button className="btn btn-ghost btn-sm w-fit p-1">
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm w-fit p-1"
+                    >
                       <ChevronLeft />
                     </button>
                   </Link>
                   <Link href={`/ethereum/blocks/${Number(blockNumber) + 1}`}>
-                    <button className="btn btn-ghost btn-sm p-1">
+                    <button type="button" className="btn btn-ghost btn-sm p-1">
                       <ChevronRight />
                     </button>
                   </Link>
@@ -191,31 +192,23 @@ function SingleBlock({ blockNumber }: Props) {
               </div>
 
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
-                <div className="">Block Fee</div>
+                <div className="">Blob Txn Gas Fee</div>
                 {blockDataLoading && (
                   <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
                 {!blockDataLoading && blockData?.totalBlockFeeNatve && (
                   <div className="">
-                    {new BigNumber(blockData?.totalBlockFeeNatve)
-                      ?.div(1e18)
-                      ?.toString()}{" "}
-                    ETH
+                    {executionWei.div(1e18).toFormat()} ETH
                   </div>
                 )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
-                <div className="">Block Fee USD</div>
+                <div className="">Blob Txn Gas Fee USD</div>
                 {blockDataLoading && (
                   <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
                 {!blockDataLoading && blockData?.totalBlockFeeUSD && (
-                  <div className="">
-                    $
-                    {new BigNumber(blockData?.totalBlockFeeUSD)
-                      ?.div(1e18)
-                      ?.toString()}
-                  </div>
+                  <div className="">${executionUsd.div(1e18).toFormat(2)}</div>
                 )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
@@ -235,8 +228,8 @@ function SingleBlock({ blockNumber }: Props) {
                 {blockDataLoading && (
                   <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
-                {!blockDataLoading && totalData?.byteSize && (
-                  <div className="">{totalData?.txFeeNative?.toString()}</div>
+                {!blockDataLoading && blockData && (
+                  <div>{blobWei.div(1e18).toFormat()} ETH</div>
                 )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
@@ -244,8 +237,22 @@ function SingleBlock({ blockNumber }: Props) {
                 {blockDataLoading && (
                   <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
-                {!blockDataLoading && blockData?.totalBlobSize && (
-                  <div className="">{totalData?.daFeesUSD}</div>
+                {!blockDataLoading && blockData && (
+                  <div>${blobUsd.div(1e18).toFormat(2)}</div>
+                )}
+              </div>
+              <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
+                <div>Total Blob Txn Fee</div>
+                {!blockDataLoading && blockData && (
+                  <div>
+                    {executionWei.plus(blobWei).div(1e18).toFormat()} ETH
+                  </div>
+                )}
+              </div>
+              <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
+                <div>Total Blob Txn Fee USD</div>
+                {!blockDataLoading && blockData && (
+                  <div>${executionUsd.plus(blobUsd).div(1e18).toFormat(2)}</div>
                 )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
@@ -299,12 +306,8 @@ function TxnRows({ txns, loading }: any) {
       </div>
       <div className="px-4  ">
         {loading &&
-          new Array(10)?.fill(1)?.map((num, idx) => {
-            return (
-              <TransactionRowSkeleton
-                key={`TransactionRowSkeleton_SINGLE_ACCOUNT_${idx}`}
-              />
-            );
+          SKELETON_ROW_KEYS.map((key) => {
+            return <TransactionRowSkeleton key={key} />;
           })}
         {!loading &&
           txns?.map((txn: any) => {
@@ -317,8 +320,15 @@ function TxnRows({ txns, loading }: any) {
 
 const TransactionRow = ({ txn }: any) => {
   const txFee = useMemo(() => {
-    return new BigNumber(txn?.txFeeNative)?.div(10 ** 18).toFormat(5);
-  }, [txn?.txFeeNative]);
+    return new BigNumber(txn?.executionFeeWei ?? txn?.txFeeNative ?? 0)
+      .div(1e18)
+      .toFormat();
+  }, [txn?.executionFeeWei, txn?.txFeeNative]);
+  const daFee = useMemo(() => {
+    return new BigNumber(txn?.blobFeeWei ?? txn?.totalDAFeeNatve ?? 0)
+      .div(1e18)
+      .toFormat();
+  }, [txn?.blobFeeWei, txn?.totalDAFeeNatve]);
 
   return (
     <>
@@ -360,7 +370,7 @@ const TransactionRow = ({ txn }: any) => {
           <p>{txFee} ETH</p>
         </div>
         <div>
-          <p>{txn?.totalBytes > 0 ? txFee : 0} ETH </p>
+          <p>{daFee} ETH</p>
         </div>
       </div>
       <div className="flex md:grid md:grid-cols-3 flex-wrap xl:hidden gap-2 lg:gap-0 justify-between first:border-t-0 border-t py-3 border-base-200 text-sm">
@@ -381,11 +391,15 @@ const TransactionRow = ({ txn }: any) => {
         </div>
         <div className="hidden  md:block xl:hidden text-end">
           <p className="lg:text-end ">From : {formatAddress(txn?.signerId)}</p>
-          <p className=" text-end">{txFee} ETH</p>
+          <p className=" text-end">
+            Gas: {txFee} ETH · DA: {daFee} ETH
+          </p>
         </div>
         <div className="flex my-2 md:hidden  lg:my-0 justify-between  w-full  lg:col-span-1 ">
           <p className="lg:text-end ">From : {formatAddress(txn?.signerId)}</p>
-          <p className=" text-end">{txFee} ETH</p>
+          <p className=" text-end">
+            Gas: {txFee} ETH · DA: {daFee} ETH
+          </p>
         </div>
       </div>
     </>

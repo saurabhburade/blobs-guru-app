@@ -1,15 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer/Footer";
-import Header from "@/components/Header/Header";
-import Sidebar from "@/components/Sidebar/Sidebar";
-import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
-import { ETHERSCAN_LINK } from "@/configs/constants";
-import { apolloClient } from "@/lib/apollo/client";
-
-import { timeAgo } from "@/lib/time";
-import { cn, formatAddress, formatBytes } from "@/lib/utils";
-import PoweredBy from "@/views/Home/components/PoweredBy";
 import { useQuery } from "@apollo/client";
 import BigNumber from "bignumber.js";
 import Lottie from "lottie-react";
@@ -24,7 +14,16 @@ import {
 import Link from "next/link";
 import React, { useMemo } from "react";
 import blocksAnimation from "@/assets/animations/blocks.json";
+import Footer from "@/components/Footer/Footer";
+import Header from "@/components/Header/Header";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import TransactionRowSkeleton from "@/components/Skeletons/TransactionRowSkeleton";
+import { ETHERSCAN_LINK } from "@/configs/constants";
+import { apolloClient } from "@/lib/apollo/client";
 import { ETHEREUM_TXN_QUERY } from "@/lib/apollo/queriesEthereum";
+import { timeAgo } from "@/lib/time";
+import { cn, formatAddress, formatBytes } from "@/lib/utils";
+import PoweredBy from "@/views/Home/components/PoweredBy";
 
 type Props = {
   hash: string;
@@ -38,12 +37,22 @@ function SingleTxn({ hash }: Props) {
     });
 
   const totalData = useMemo(() => {
+    const executionWei = new BigNumber(
+      txnData?.executionFeeWei ?? txnData?.txFeeNative ?? 0,
+    );
+    const blobWei = new BigNumber(
+      txnData?.blobFeeWei ?? txnData?.totalDAFeeNatve ?? 0,
+    );
+    const executionUsd = new BigNumber(txnData?.txFeeUSD ?? 0).div(1e18);
+    const blobUsd = new BigNumber(txnData?.totalDAFeeUSD ?? 0).div(1e18);
     const reducedData = {
       byteSize: txnData?.totalBytes,
-      daFees: new BigNumber(txnData?.txFeeNative)?.div(1e18)?.toNumber(),
-      daFeesUSD: new BigNumber(txnData?.txFeeUSD)?.div(1e18)?.toNumber(),
-      feesUSD: new BigNumber(txnData?.txFeeUSD)?.div(1e18)?.toNumber(),
-      fees: new BigNumber(txnData?.txFeeNative)?.div(1e18)?.toNumber(),
+      daFees: blobWei.div(1e18).toFormat(),
+      daFeesUSD: blobUsd.toFormat(2),
+      feesUSD: executionUsd.toFormat(2),
+      fees: executionWei.div(1e18).toFormat(),
+      combinedFees: executionWei.plus(blobWei).div(1e18).toFormat(),
+      combinedFeesUSD: executionUsd.plus(blobUsd).toFormat(2),
       daCount: txnData?.blobs?.nodes?.length,
     };
     return reducedData;
@@ -76,6 +85,7 @@ function SingleTxn({ hash }: Props) {
             <div className="flex items-center justify-center flex-col gap-2">
               <p> #{formatAddress(hash)} is not synced yet.</p>
               <button
+                type="button"
                 className="btn w-fit"
                 onClick={() => {
                   window.location.reload();
@@ -184,7 +194,7 @@ function SingleTxn({ hash }: Props) {
               </div>
 
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
-                <div className="">Txn Fee</div>
+                <div className="">Execution Gas Fee</div>
                 {txnDataLoading && (
                   <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
@@ -193,7 +203,7 @@ function SingleTxn({ hash }: Props) {
                 )}
               </div>
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
-                <div className="">Txn Fee USD</div>
+                <div className="">Execution Gas Fee USD</div>
                 {txnDataLoading && (
                   <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
                 )}
@@ -221,6 +231,25 @@ function SingleTxn({ hash }: Props) {
               </div>
 
               <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
+                <div>Total Fee</div>
+                {txnDataLoading && (
+                  <div className="h-[1.5em] w-1/3 animate-pulse rounded-lg bg-base-200/60" />
+                )}
+                {!txnDataLoading && txnData && (
+                  <div>{totalData.combinedFees} ETH</div>
+                )}
+              </div>
+              <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
+                <div>Total Fee USD</div>
+                {txnDataLoading && (
+                  <div className="h-[1.5em] w-1/3 animate-pulse rounded-lg bg-base-200/60" />
+                )}
+                {!txnDataLoading && txnData && (
+                  <div>{totalData.combinedFeesUSD} USD</div>
+                )}
+              </div>
+
+              <div className="grid lg:grid-cols-[0.75fr_3fr] grid-cols-[1.5fr_2.5fr] gap-4 lg:gap-0 w-full p-5">
                 <div className="">ETH Price</div>
                 {txnDataLoading && (
                   <div className=" break-words w-1/3  block bg-base-200/60 h-[1.5em] animate-pulse rounded-lg"></div>
@@ -228,7 +257,7 @@ function SingleTxn({ hash }: Props) {
                 {!txnDataLoading && txnData && (
                   <div className="">
                     {new BigNumber(
-                      txnData?.blockHeight?.currentNativePrice
+                      txnData?.blockHeight?.currentNativePrice,
                     )?.toString()}
                     USD
                   </div>

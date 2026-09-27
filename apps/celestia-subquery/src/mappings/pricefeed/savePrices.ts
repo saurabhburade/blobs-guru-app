@@ -1,27 +1,22 @@
 import type { CosmosBlock } from "@subql/types-cosmos";
-import fetch from "node-fetch";
-import { joinUrl, requireEnv } from "../../config/env";
+import { joinUrl } from "../../config/env";
+import fetch from "../../network/httpFetch";
 import { PriceFeedMinute } from "../../types";
 
-const PRICE_FEED_ARCHIVE_BASE_URL = requireEnv("PRICE_FEED_ARCHIVE_BASE_URL");
-const BINANCE_API_BASE_URL = requireEnv("BINANCE_API_BASE_URL");
-const REDSTONE_API_BASE_URL = requireEnv("REDSTONE_API_BASE_URL");
-const COINGECKO_API_BASE_URL = requireEnv("COINGECKO_API_BASE_URL");
+// Mapping workers run in a sandbox where process.env is unavailable.
+const PRICE_FEED_ARCHIVE_BASE_URL =
+  "https://raw.githubusercontent.com/saurabhburade/blobs-guru-app/5b755c8a56119bafc3e451b191dd1034072f98c8/apps/celestia-subquery/src/mappings/pricefeed/saveddata";
+const BINANCE_API_BASE_URL = "https://api.binance.com";
+const REDSTONE_API_BASE_URL = "https://api.redstone.finance";
+const COINGECKO_API_BASE_URL = "https://api.coingecko.com";
 
-async function fetchData(url: string, options: any) {
-  const response = await fetch(url, {
-    ...options,
-    //  signal: signal
-  });
-  if (!response?.ok) {
-    throw new Error("Fetch failed");
-  }
-  return await response.json();
-}
-const MONTHLY_SECONDS = 2628000;
-const INITIAL_TIMESTAMP = 1748816100000;
-const MS_IN_DAY = 86400000;
-const MS_IN_MINUTE = 1000 * 60;
+const MS_IN_MINUTE = 60_000;
+const PRICE_BUCKET_MINUTES = 15;
+const PRICE_BUCKET_MS = PRICE_BUCKET_MINUTES * MS_IN_MINUTE;
+// Existing domain cutoffs, expressed in epoch-minute IDs.
+const GENESIS_MINUTE_ID = 28_312_800;
+const HISTORICAL_LAST_MINUTE_ID = 29_147_512;
+
 const CONSTANT_PRICE_FEED_FILES = [
   "2023-10",
   "2023-11",
@@ -45,195 +40,318 @@ const CONSTANT_PRICE_FEED_FILES = [
   "2025-05",
   "2025-06",
 ];
-function chunkArray(array: PriceFeedMinute[], chunkSize = 1000) {
-  const result = [];
-  for (let i = 0; i < array.length; i += chunkSize) {
-    result.push(array.slice(i, i + chunkSize));
+
+const HISTORICAL_FILE_CACHE_CAP = 2;
+
+type SavedPriceRow = {
+  minuteId: number;
+  avgPrice: number;
+  date: Date;
+};
+
+type HistoricalPriceFile = {
+  // One canonical source row per 15-minute bucket.
+  byBucket: Map<number, SavedPriceRow>;
+};
+
+// Each monthly file is several MB. Keep only the current and previous month.
+// Promises are cached so concurrent blocks share the same download and parse.
+const historicalPriceFileCache = new Map<
+  string,
+  Promise<HistoricalPriceFile>
+>();
+
+async function fetchData<T = unknown>(url: string): Promise<T> {
+  const response = await fetch(url, { timeout: 30_000 });
+  if (!response.ok) {
+    throw new Error(`Price request returned HTTP ${response.status}`);
   }
-  return result;
+  return response.json() as Promise<T>;
+}
+
+function getBucketId(timestampMs: number): number {
+  const minuteId = Math.floor(timestampMs / MS_IN_MINUTE);
+  return Math.floor(minuteId / PRICE_BUCKET_MINUTES) * PRICE_BUCKET_MINUTES;
+}
+
+function getBucketStartMs(bucketId: number): number {
+  return bucketId * MS_IN_MINUTE;
+}
+
+function getHistoricalFileMonth(bucketId: number): string {
+  // Celestia archive files follow UTC calendar months.
+  return new Date(getBucketStartMs(bucketId)).toISOString().slice(0, 7);
+}
+
+function createPriceFeed(
+  block: CosmosBlock,
+  bucketId: number,
+  nativePrice: number,
+  date: Date,
+): PriceFeedMinute {
+  return PriceFeedMinute.create({
+    id: bucketId.toString(),
+    nativeBlock: block.block.header.height,
+    nativePrice,
+    date,
+    nativeDate: block.block.header.time,
+  });
+}
+
+function normalizeHistoricalRows(
+  month: string,
+  payload: unknown,
+): HistoricalPriceFile {
+  if (!Array.isArray(payload)) {
+    throw new Error(`Historical price file ${month} is not an array`);
+  }
+
+  const byMinute = new Map<number, SavedPriceRow>();
+
+  for (const rawRow of payload) {
+    if (typeof rawRow !== "object" || rawRow === null) {
+      throw new Error(`Historical price file ${month} contains an invalid row`);
+    }
+
+    const row = rawRow as Record<string, unknown>;
+    const minuteId = Number(row.minuteId);
+    const avgPrice = Number(row.avgPrice);
+    const timestamp = Number(row.timestamp);
+    const date = Number.isFinite(timestamp)
+      ? new Date(timestamp)
+      : new Date(String(row.timestampF));
+
+    if (
+      !Number.isSafeInteger(minuteId) ||
+      !Number.isFinite(avgPrice) ||
+      avgPrice <= 0 ||
+      Number.isNaN(date.getTime())
+    ) {
+      throw new Error(`Historical price file ${month} contains invalid data`);
+    }
+
+    const existing = byMinute.get(minuteId);
+    // The June archive has one corrected duplicate minute. Its final row is
+    // the value already present in the current database.
+    if (existing && existing.avgPrice !== avgPrice) {
+      logger.info(
+        `Historical price correction for ${month} minute ${minuteId}`,
+      );
+    }
+    byMinute.set(minuteId, { minuteId, avgPrice, date });
+  }
+
+  const byBucket = new Map<number, SavedPriceRow>();
+  for (const row of byMinute.values()) {
+    const bucketId =
+      Math.floor(row.minuteId / PRICE_BUCKET_MINUTES) * PRICE_BUCKET_MINUTES;
+    const existing = byBucket.get(bucketId);
+    if (!existing || row.minuteId < existing.minuteId) {
+      byBucket.set(bucketId, row);
+    }
+  }
+
+  return { byBucket };
+}
+
+async function loadHistoricalRows(month: string): Promise<HistoricalPriceFile> {
+  if (!CONSTANT_PRICE_FEED_FILES.includes(month)) {
+    throw new Error(`No saved price file for ${month}`);
+  }
+
+  const cached = historicalPriceFileCache.get(month);
+  if (cached) {
+    // Refresh insertion order so this month is the most recently used entry.
+    historicalPriceFileCache.delete(month);
+    historicalPriceFileCache.set(month, cached);
+    return cached;
+  }
+
+  const request = fetchData(
+    joinUrl(PRICE_FEED_ARCHIVE_BASE_URL, `${month}.json`),
+  )
+    .then((payload) => normalizeHistoricalRows(month, payload))
+    .catch((error) => {
+      if (historicalPriceFileCache.get(month) === request) {
+        historicalPriceFileCache.delete(month);
+      }
+      throw error;
+    });
+
+  historicalPriceFileCache.set(month, request);
+  while (historicalPriceFileCache.size > HISTORICAL_FILE_CACHE_CAP) {
+    const oldestKey = historicalPriceFileCache.keys().next().value;
+    if (oldestKey === undefined) break;
+    historicalPriceFileCache.delete(oldestKey);
+  }
+
+  return request;
+}
+
+async function getHistoricalPrice(
+  block: CosmosBlock,
+  bucketId: number,
+): Promise<PriceFeedMinute | undefined> {
+  const month = getHistoricalFileMonth(bucketId);
+  const historicalFile = await loadHistoricalRows(month);
+  const sourceRow = historicalFile.byBucket.get(bucketId);
+
+  if (!sourceRow) {
+    // A valid file can have an intentional coverage gap. Let the caller use
+    // the bounded Binance candle fallback; do not catch file/network or
+    // validation errors here.
+    return undefined;
+  }
+
+  return createPriceFeed(block, bucketId, sourceRow.avgPrice, sourceRow.date);
+}
+
+async function getBinancePrice(
+  block: CosmosBlock,
+  bucketId: number,
+): Promise<PriceFeedMinute> {
+  const bucketStartMs = getBucketStartMs(bucketId);
+  const bucketEndMs = bucketStartMs + PRICE_BUCKET_MS - 1;
+  const url =
+    `${joinUrl(BINANCE_API_BASE_URL, "api/v3/klines")}?symbol=TIAUSDT` +
+    `&interval=15m&limit=1&startTime=${bucketStartMs}&endTime=${bucketEndMs}`;
+  const response = await fetchData(url);
+  const candle = Array.isArray(response) ? response[0] : undefined;
+
+  if (!Array.isArray(candle) || Number(candle[0]) !== bucketStartMs) {
+    throw new Error(`No Binance TIA candle for bucket ${bucketId}`);
+  }
+
+  const high = Number(candle[2]);
+  const low = Number(candle[3]);
+  if (
+    !Number.isFinite(high) ||
+    !Number.isFinite(low) ||
+    high <= 0 ||
+    low <= 0 ||
+    high < low
+  ) {
+    throw new Error(`Invalid Binance TIA candle for bucket ${bucketId}`);
+  }
+
+  return createPriceFeed(
+    block,
+    bucketId,
+    (high + low) / 2,
+    new Date(bucketStartMs),
+  );
+}
+
+function assertSameBucket(
+  sourceTimestampMs: number,
+  bucketId: number,
+  sourceName: string,
+): void {
+  if (
+    !Number.isFinite(sourceTimestampMs) ||
+    getBucketId(sourceTimestampMs) !== bucketId
+  ) {
+    throw new Error(`${sourceName} timestamp is outside bucket ${bucketId}`);
+  }
+}
+
+async function getLivePrice(
+  block: CosmosBlock,
+  bucketId: number,
+): Promise<PriceFeedMinute> {
+  try {
+    const response = await fetchData<{
+      TIA?: { value?: unknown };
+      timestamp?: unknown;
+    }>(
+      `${joinUrl(REDSTONE_API_BASE_URL, "prices")}?forceInflux=true&interval=1&symbols=TIA`,
+    );
+
+    if (!response?.TIA) {
+      throw new Error("Redstone returned no TIA price");
+    }
+
+    const sourceTimestampMs = Number(response.timestamp);
+    assertSameBucket(sourceTimestampMs, bucketId, "Redstone");
+
+    const value = Number(response.TIA.value);
+    if (!Number.isFinite(value) || value <= 0) {
+      throw new Error("Redstone returned an invalid TIA price");
+    }
+
+    return createPriceFeed(block, bucketId, value, new Date(sourceTimestampMs));
+  } catch (redstoneError) {
+    logger.info(`PRICE ERROR REDSTONE API ${redstoneError}`);
+    logger.info("TRY PRICE FROM COINGECKO");
+
+    const response = await fetchData<{
+      tia?: { usd?: unknown; last_updated_at?: unknown };
+    }>(
+      `${joinUrl(COINGECKO_API_BASE_URL, "api/v3/simple/price")}?vs_currencies=usd&symbols=tia&include_last_updated_at=true`,
+    );
+
+    if (!response?.tia) {
+      throw new Error("CoinGecko returned no TIA price");
+    }
+
+    const sourceTimestampMs = Number(response.tia.last_updated_at) * 1000;
+    assertSameBucket(sourceTimestampMs, bucketId, "CoinGecko");
+
+    const value = Number(response.tia.usd);
+    if (!Number.isFinite(value) || value <= 0) {
+      throw new Error("CoinGecko returned an invalid TIA price");
+    }
+
+    return createPriceFeed(block, bucketId, value, new Date(sourceTimestampMs));
+  }
+}
+
+async function resolvePriceForBucket(
+  block: CosmosBlock,
+  bucketId: number,
+): Promise<PriceFeedMinute> {
+  const cacheId = bucketId.toString();
+  const existingPrice = await PriceFeedMinute.get(cacheId);
+  if (existingPrice) {
+    return existingPrice;
+  }
+
+  if (bucketId < GENESIS_MINUTE_ID) {
+    const price = createPriceFeed(
+      block,
+      bucketId,
+      2.4,
+      new Date(getBucketStartMs(bucketId)),
+    );
+    await price.save();
+    return price;
+  }
+
+  let price: PriceFeedMinute;
+  if (bucketId <= HISTORICAL_LAST_MINUTE_ID) {
+    const historicalPrice = await getHistoricalPrice(block, bucketId);
+    price = historicalPrice ?? (await getBinancePrice(block, bucketId));
+  } else if (bucketId < getBucketId(Date.now())) {
+    // A completed bucket is fetched as one bounded 15-minute candle.
+    price = await getBinancePrice(block, bucketId);
+  } else {
+    price = await getLivePrice(block, bucketId);
+  }
+
+  await price.save();
+  return price;
 }
 
 export async function handleNewPriceMinute({
   block,
 }: {
   block: CosmosBlock;
-}): Promise<PriceFeedMinute | undefined> {
-  const blockDate = new Date(Number(block.block.header.time.getTime()));
-  const minuteId = Math.floor(blockDate.getTime() / 60000);
-  const currentMinuteId = Math.floor(new Date().getTime() / 60000);
-  const ethBlockContext = {};
-  // SKIP PRICES BEFORE GENESIS MINUTEID 28312800
-  const nativeBlock = block.block.header.height;
-
-  try {
-    const existingPrice = await PriceFeedMinute.get(minuteId.toString());
-    if (
-      existingPrice &&
-      (existingPrice !== null || existingPrice !== undefined)
-    ) {
-      // logger.info(
-      //   `PRICE FOR THIS MINUTE EXIST :: ${JSON.stringify(
-      //     existingPrice.nativePrice
-      //   )}`
-      // );
-      return existingPrice!;
-    }
-    if (minuteId < 28312800) {
-      const pricesToSave: PriceFeedMinute[] = [];
-      let indexMinute = Number(minuteId);
-      while (indexMinute < 28312800) {
-        const priceFeedMinuteZero = PriceFeedMinute.create({
-          id: indexMinute.toString(),
-          nativeBlock: nativeBlock,
-          nativePrice: 2.4,
-          date: blockDate,
-          nativeDate: blockDate,
-        });
-        pricesToSave.push(priceFeedMinuteZero);
-        indexMinute = Number(indexMinute) + 1;
-      }
-
-      await store.bulkUpdate("PriceFeedMinute", pricesToSave);
-      logger.info(`BULK PRICE SAVE BEFORE GENESIS :: minuteId: ${minuteId}`);
-      return pricesToSave[0]!;
-    }
-    let priceFeedThisMinute: PriceFeedMinute | undefined;
-    if (minuteId <= 29147512) {
-      let fileIdx = 0;
-      for (const file of CONSTANT_PRICE_FEED_FILES) {
-        const data = await fetchData(
-          joinUrl(PRICE_FEED_ARCHIVE_BASE_URL, `${file}.json`),
-          {},
-        );
-        logger.info(`FETCHED PRICE DATA FROM FILE :: ${file}.json`);
-        const pricesToSave: PriceFeedMinute[] = [];
-        for (const element of data) {
-          // SAVE MONTHLY DATA FROM LOCAL FILES
-          const priceForMinute = PriceFeedMinute.create({
-            id: element?.minuteId?.toString(),
-            nativeBlock: nativeBlock,
-            nativePrice: element?.avgPrice,
-            date: element?.timestampF,
-            nativeDate: blockDate,
-          });
-          pricesToSave.push(priceForMinute);
-
-          // await priceForMinute.save();
-          if (Number(element?.minuteId) === minuteId) {
-            priceFeedThisMinute = priceForMinute;
-          }
-        }
-        const splitedChunk = chunkArray(pricesToSave, 1000);
-        for (let index = 0; index < splitedChunk.length; index++) {
-          logger.info(`SAVING PRICES CHUNK`);
-
-          const ck = splitedChunk[index];
-          await store.bulkUpdate("PriceFeedMinute", ck);
-          logger.info(
-            `SAVED PRICES CHUNK :: ${index} out of ${splitedChunk.length}`,
-          );
-        }
-        fileIdx += 1;
-      }
-      return priceFeedThisMinute!;
-    }
-    if (currentMinuteId - minuteId >= 5) {
-      try {
-        // if more than 5 minutes data is unavailable , fetch 5 minute prices from binance api
-        const URL = `${joinUrl(BINANCE_API_BASE_URL, "api/v3/klines")}?symbol=TIAUSDT&interval=1m&limit=1000&startTime=${blockDate.getTime()}`;
-        const res = await fetchData(URL, {});
-        if (res?.length > 0) {
-          const pricesToSave: PriceFeedMinute[] = [];
-          for (const pricedatas of res) {
-            const [timestamp, o, h, l, c] = pricedatas;
-            const hp = h;
-            const lp = l;
-            const avgPrice = (Number(hp) + Number(lp)) / 2;
-
-            const minuteIdOhlc = Math.floor(Number(timestamp) / MS_IN_MINUTE);
-
-            const priceForMinute = PriceFeedMinute.create({
-              id: minuteIdOhlc?.toString(),
-              nativeBlock: nativeBlock,
-              nativePrice: avgPrice,
-              date: new Date(new Date(Number(timestamp)).getTime()),
-              nativeDate: blockDate,
-            });
-            pricesToSave.push(priceForMinute);
-            // consider 2 mins diff if any
-            if (
-              Number(minuteIdOhlc) === minuteId ||
-              (Number(minuteIdOhlc) < minuteId + 2 &&
-                Number(minuteIdOhlc) > minuteId)
-            ) {
-              priceFeedThisMinute = priceForMinute;
-            }
-          }
-          await store.bulkUpdate("PriceFeedMinute", pricesToSave);
-          return priceFeedThisMinute!;
-        }
-      } catch (errorb) {
-        logger.info(`PRICE ERROR BINANCE API ${errorb}`);
-      }
-    } else {
-      try {
-        // fetch latest price if minute difference is less than 5 mins
-        // fetch price from chainlink oracle
-        const URL = `${joinUrl(REDSTONE_API_BASE_URL, "prices")}?forceInflux=true&interval=1&symbols=TIA`;
-        const res = await fetchData(URL, {});
-        if (res?.TIA) {
-          const { TIA, timestamp } = res;
-          const { value } = TIA;
-          // check if price is within 3 mins range
-          if (
-            Number(timestamp) / MS_IN_MINUTE <= minuteId + 1 ||
-            Number(timestamp) / MS_IN_MINUTE >= minuteId - 1
-          ) {
-            const priceForMinute = PriceFeedMinute.create({
-              id: minuteId?.toString(),
-              nativeBlock: nativeBlock,
-              nativePrice: value,
-              date: new Date(timestamp),
-              nativeDate: blockDate,
-            });
-            await priceForMinute.save();
-            priceFeedThisMinute = priceForMinute;
-            return priceFeedThisMinute!;
-          } else {
-            throw new Error("MINUTE ID MISMATCH");
-          }
-        }
-        return priceFeedThisMinute!;
-      } catch (errorR) {
-        logger.info(`PRICE ERROR REDSTONE API ${errorR}`);
-        logger.info(`TRY PRICE FROM COINGECKO`);
-        // fetch price from chainlink oracle
-        const URL = `${joinUrl(COINGECKO_API_BASE_URL, "api/v3/simple/price")}?vs_currencies=usd&symbols=tia&include_last_updated_at=true`;
-        const res = await fetchData(URL, {});
-        if (res?.tia) {
-          const { tia } = res;
-          const { usd, last_updated_at } = tia;
-          // check if price is within 3 mins range
-          if (
-            (Number(last_updated_at) * 1000) / MS_IN_MINUTE <= minuteId + 1 ||
-            (Number(last_updated_at) * 1000) / MS_IN_MINUTE >= minuteId - 1
-          ) {
-            const priceForMinute = PriceFeedMinute.create({
-              id: minuteId?.toString(),
-              nativeBlock: nativeBlock,
-              nativePrice: usd,
-              date: new Date(Number(last_updated_at) * 1000),
-              nativeDate: blockDate,
-            });
-            await priceForMinute.save();
-            priceFeedThisMinute = priceForMinute;
-            return priceFeedThisMinute!;
-          }
-        }
-      }
-    }
-    return priceFeedThisMinute!;
-  } catch (errorF) {
-    logger.info(`PRICE ERROR FINAL CATCH ${errorF}`);
+}): Promise<PriceFeedMinute> {
+  const timestampMs = Number(block.block.header.time.getTime());
+  if (!Number.isFinite(timestampMs)) {
+    throw new Error("Invalid Celestia block timestamp");
   }
+
+  const bucketId = getBucketId(timestampMs);
+  return resolvePriceForBucket(block, bucketId);
 }

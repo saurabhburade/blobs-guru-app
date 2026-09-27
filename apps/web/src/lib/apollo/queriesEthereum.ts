@@ -8,8 +8,11 @@ export const ETHEREUM_COLLECTIVE_STAT_QUERY = gql`
         totalBlocksCount
         totalDataSubmissionCount
         totalFeesNative
+        totalFeesUSD
         totalDAFees
         totalDAFeesUSD
+        executionFeesWei
+        blobFeesWei
         totalTxnCount
         avgNativePrice
 
@@ -267,13 +270,14 @@ export const ETHEREUM_USER_TRANSACTIONS_FILTER_LIMIT_QUERY = gql`
         hash
         timestamp
         txFeeNative
+        totalDAFeeNatve
+        executionFeeWei
+        blobFeeWei
         blockHeightId
         nEvents
         id
-        txFeeNative
         totalBytes
         signerId
-        timestamp
         blobs {
           nodes {
             signerId
@@ -299,6 +303,8 @@ export const ETHEREUM_ACCOUNT_SINGLE_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesNative
+        executionFeesWei
+        blobFeesWei
       }
     }
   }
@@ -317,6 +323,8 @@ export const ETHEREUM_ACCOUNT_SINGLE_QUERY_V2 = gql`
       totalFeesUSD
       totalDAFeesUSD
       totalFeesNative
+      executionFeesWei
+      blobFeesWei
     }
   }
 `;
@@ -512,6 +520,9 @@ export const ETHEREUM_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesNative
+        totalDAFees
+        executionFeesWei
+        blobFeesWei
       }
     }
   }
@@ -578,6 +589,9 @@ export const ETHEREUM_ACCOUNT_HOUR_DATAS_WITH_DURATION_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesNative
+        totalDAFees
+        executionFeesWei
+        blobFeesWei
       }
     }
   }
@@ -660,6 +674,10 @@ export const ETHEREUM_BLOCK_QUERY = gql`
       avgNativePrice
       totalBlockFeeUSD
       totalBlockFeeNatve
+      totalDAFeeNatve
+      totalDAFeeUSD
+      executionFeesWei
+      blobFeesWei
       totalBlobSize
       totalEventsCount
       totalTransactionCount
@@ -669,11 +687,13 @@ export const ETHEREUM_BLOCK_QUERY = gql`
           hash
 
           txFeeNative
+          totalDAFeeNatve
+          executionFeeWei
+          blobFeeWei
           blockHeightId
           nEvents
           id
           txFeeUSD: totalFeeUSD
-          txFeeNative
           totalBytes
           signerId
           timestamp
@@ -694,15 +714,17 @@ export const ETHEREUM_TXN_QUERY = gql`
       hash
       timestamp
       txFeeNative
+      totalDAFeeNatve
+      totalDAFeeUSD
+      executionFeeWei
+      blobFeeWei
       blockHeightId
       nEvents
       id
 
       txFeeUSD: totalFeeUSD
-      txFeeNative
       totalBytes
       signerId
-      timestamp
       blockHeight {
         currentNativePrice
       }

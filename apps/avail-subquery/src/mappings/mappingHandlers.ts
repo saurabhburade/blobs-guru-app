@@ -9,7 +9,6 @@ import {
   type AccountEntity,
   AppLookup,
   Block,
-  BlockError,
   Commitment,
   DataSubmission,
   Event,
@@ -69,53 +68,19 @@ export interface CorrectSubstrateBlock extends SubstrateBlock {
 export async function handleBlock(block: CorrectSubstrateBlock): Promise<void> {
   const blockHeader = block.block.header;
   const blockRecord = await Block.get(blockHeader.number.toString());
-  const blockDate = new Date(Number(block.timestamp.getTime()));
-  const minuteId = Math.floor(blockDate.getTime() / 60000);
-  if (blockRecord === undefined || blockRecord === null) {
-    try {
-      // if (block.block.header.number.toNumber() === 538) {
-      const savedPrice = await handleNewPriceMinute({
-        block,
-      });
-      logger.info(
-        `PRICE DATA SAVED ::::::  ${JSON.stringify(savedPrice.availPrice)}`,
-      );
-      await blockHandler(block, savedPrice);
-      // }
-    } catch (error) {
-      let blockErrorRecord = await BlockError.get(
-        blockHeader.number.toString(),
-      );
-      if (blockErrorRecord === undefined || blockErrorRecord === null) {
-        blockErrorRecord = BlockError.create({
-          id: blockHeader.number.toString(),
-          number: blockHeader.number.toString(),
-          reason: `${error}`,
-        });
-      }
-      blockErrorRecord.reason =
-        blockErrorRecord.reason + ` ========================== ${error}`;
-      blockErrorRecord.save();
-      logger.error(
-        "handleBlock  ERRORRRRRR ::::::::::::::::::" +
-          block.block.header.number.toNumber() +
-          "::::::::::::::::::" +
-          blockHeader.hash.toString(),
-      );
-      logger.error("handleBlock ERRORRRRRR ::::::::::::::::::" + error);
-    }
-  } else {
-    let blockErrorRecord = await BlockError.get(blockHeader.number.toString());
-    if (blockErrorRecord === undefined || blockErrorRecord === null) {
-      blockErrorRecord = BlockError.create({
-        id: blockHeader.number.toString(),
-        number: blockHeader.number.toString(),
-        reason: `Already exist`,
-      });
-    }
-    blockErrorRecord.reason =
-      blockErrorRecord.reason + ` ========================== Already exist`;
-    blockErrorRecord.save();
+  if (blockRecord) return;
+
+  try {
+    const savedPrice = await handleNewPriceMinute({ block });
+    logger.info(
+      `PRICE DATA SAVED ::::::  ${JSON.stringify(savedPrice.availPrice)}`,
+    );
+    await blockHandler(block, savedPrice);
+  } catch (error) {
+    logger.error(
+      `Failed to index Avail block ${blockHeader.number.toString()} (${blockHeader.hash.toString()}): ${error}`,
+    );
+    throw error;
   }
 }
 

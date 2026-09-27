@@ -46,26 +46,26 @@ function ChainStats() {
     }
     return "0 KB";
   }, [data]);
-  const totalFeesNative = useMemo(() => {
-    const totalFeeNativeBn = new BigNumber(
-      data?.collectiveData?.totalFeesNative,
-    )
-      ?.div(10 ** 18)
-      .toNumber();
-    return safeBigNumber(totalFeeNativeBn).toNumber() || 0;
-  }, [data?.collectiveData?.totalFeesNative]);
-  const totalDAFees = useMemo(() => {
-    const bn = new BigNumber(data?.collectiveData?.totalDAFees)
-      ?.div(10 ** 18)
-      .toNumber();
-    return safeBigNumber(bn)?.toNumber() || 0;
-  }, [data?.collectiveData?.totalDAFees]);
-  const totalDAFeesUSD = useMemo(() => {
-    const bn = new BigNumber(data?.collectiveData?.totalDAFeesUSD)
-      ?.div(10 ** 18)
-      .toNumber();
-    return safeBigNumber(bn).toNumber() || 0;
-  }, [data?.collectiveData?.totalDAFeesUSD]);
+  const feeTotals = useMemo(() => {
+    const stats = data?.collectiveData;
+    const executionWei = new BigNumber(
+      stats?.executionFeesWei ?? stats?.totalFeesNative ?? 0,
+    );
+    const blobWei = new BigNumber(
+      stats?.blobFeesWei ?? stats?.totalDAFees ?? 0,
+    );
+    const combinedWei = executionWei.plus(blobWei);
+    const executionUsd = new BigNumber(stats?.totalFeesUSD ?? 0);
+    const blobUsd = new BigNumber(stats?.totalDAFeesUSD ?? 0);
+    return {
+      executionEth: executionWei.div(1e18).toNumber(),
+      blobEth: blobWei.div(1e18).toNumber(),
+      combinedEth: combinedWei.div(1e18).toNumber(),
+      executionUsd: executionUsd.div(1e18).toNumber(),
+      blobUsd: blobUsd.div(1e18).toNumber(),
+      combinedUsd: executionUsd.plus(blobUsd).div(1e18).toNumber(),
+    };
+  }, [data?.collectiveData]);
   const totalDataSubmissionCount = useMemo(() => {
     return safeBigNumber(
       data?.collectiveData?.totalDataSubmissionCount,
@@ -215,10 +215,15 @@ function ChainStats() {
         /> */}
 
         <StatCard
-          title="Txn Fees"
-          value={totalFeesNative}
+          title="Blob Txn Gas Fees"
+          value={feeTotals.executionEth}
           isLoading={statsLoading}
           after="ETH"
+        />
+        <StatCard
+          title="Blob Txn Gas Fees USD"
+          value={feeTotals.executionUsd}
+          isLoading={statsLoading}
         />
 
         <StatCard
@@ -240,13 +245,25 @@ function ChainStats() {
           isLoading={statsLoading}
         />
         <StatCard
-          title="Total DA Fees"
-          value={totalDAFees}
+          title="Blob DA Fees"
+          value={feeTotals.blobEth}
+          isLoading={statsLoading}
+          after="ETH"
+        />
+        <StatCard
+          title="Blob DA Fees USD"
+          value={feeTotals.blobUsd}
           isLoading={statsLoading}
         />
         <StatCard
-          title="Total DA Fees [usd]"
-          value={totalDAFeesUSD}
+          title="Total Blob Txn Fees"
+          value={feeTotals.combinedEth}
+          isLoading={statsLoading}
+          after="ETH"
+        />
+        <StatCard
+          title="Total Blob Txn Fees USD"
+          value={feeTotals.combinedUsd}
           isLoading={statsLoading}
         />
         {/* <StatCard

@@ -33,6 +33,8 @@ type BlockData @entity {
   totalBlockFeeUSD: Float!
   totalDAFeeNatve: Float!
   totalDAFeeUSD: Float!
+  executionFeesWei: BigInt
+  blobFeesWei: BigInt
 
   timestamp: Float
   transactions: [TransactionData] @derivedFrom(field: "blockHeight")
@@ -75,6 +77,8 @@ type TransactionData @entity {
   totalFeeUSD: Float!
   totalDAFeeNatve: Float!
   totalDAFeeUSD: Float!
+  executionFeeWei: BigInt
+  blobFeeWei: BigInt
 
   isBlobTransaction: Boolean!
   blobs: [BlobData] @derivedFrom(field: "transaction")
@@ -115,6 +119,8 @@ type AccountEntity @entity {
   totalDAFeesUSD: Float
   totalFeesUSD: Float
   totalFeesNative: Float
+  executionFeesWei: BigInt
+  blobFeesWei: BigInt
   totalDataSubmissionCount: Float @index
   totalTransferCount: Float
   totalTxnCount: Float! @index
@@ -137,6 +143,8 @@ type AccountDayData @entity {
   totalDAFeesUSD: Float
   totalFeesUSD: Float
   totalFeesNative: Float
+  executionFeesWei: BigInt
+  blobFeesWei: BigInt
   totalDataSubmissionCount: Float @index
   totalTransferCount: Float
   totalTxnCount: Float
@@ -162,6 +170,8 @@ type AccountHourData @entity {
   totalDAFeesUSD: Float
   totalFeesUSD: Float
   totalFeesNative: Float
+  executionFeesWei: BigInt
+  blobFeesWei: BigInt
   totalDataSubmissionCount: Float @index
   totalTransferCount: Float
   totalTxnCount: Float
@@ -187,6 +197,8 @@ type CollectiveData @entity {
   totalDAFeesUSD: Float @index
   totalFeesUSD: Float
   totalFeesNative: Float @index
+  executionFeesWei: BigInt
+  blobFeesWei: BigInt
   totalDataSubmissionCount: Float
   totalTransferCount: Float
   totalTxnCount: Float
@@ -210,6 +222,8 @@ type CollectiveDayData @entity {
   totalDAFeesUSD: Float
   totalFeesUSD: Float
   totalFeesNative: Float @index
+  executionFeesWei: BigInt
+  blobFeesWei: BigInt
   totalDataSubmissionCount: Float @index
   totalTransferCount: Float
   totalTxnCount: Float
@@ -239,6 +253,8 @@ type CollectiveHourData @entity {
   totalDAFeesUSD: Float
   totalFeesUSD: Float
   totalFeesNative: Float @index
+  executionFeesWei: BigInt
+  blobFeesWei: BigInt
   totalDataSubmissionCount: Float @index
   totalTransferCount: Float
   totalTxnCount: Float

@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./docker/pg-Dockerfile
     ports:
-      - 5432:5432
+      - 127.0.0.1:5432:5432
     volumes:
       - .data/postgres:/var/lib/postgresql/data
     environment:
@@ -42,9 +42,8 @@ services:
       - --allow-schema-migration
       - --scale-batch-size
       - --unfinalized-blocks=false
-      - --store-cache-threshold=100000
-      - --store-flush-interval=2000
-      - --store-cache-upper-limit=200000
+      - --store-cache-threshold=1000
+      - --store-flush-interval=5
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://subquery-node:3000/ready"]
@@ -55,7 +54,7 @@ services:
   graphql-engine:
     image: subquerynetwork/subql-query:latest
     ports:
-      - 3000:3000
+      - 127.0.0.1:3000:3000
     restart: unless-stopped
     environment:
       DB_USER: postgres

@@ -1,4 +1,4 @@
-import { EthereumBlock } from "@subql/types-ethereum";
+import type { EthereumBlock } from "@subql/types-ethereum";
 import {
   AccountEntity,
   BlobData,
@@ -7,26 +7,20 @@ import {
   TransactionData,
 } from "../types";
 
-import {
-  BYTES_PER_BLOB,
-  fakeExponential,
-  ONE_BI,
-  ZERO_BD,
-  ZERO_BI,
-} from "../utils";
+import { BYTES_PER_BLOB } from "../utils";
 import {
   handleAccount,
   handleAccountDayData,
   handleAccountHourData,
 } from "./entities/accountData";
-import { handleNewPriceMinute } from "./pricefeed/savePrices";
 import {
   handleCollective,
   handleCollectiveDayData,
   handleCollectiveHourData,
 } from "./entities/collectiveData";
+import { calculateReceiptFees } from "./feeAccounting";
 import { getTxReceipts } from "./handleReceipts";
-const BLOB_BASE_FEE_UPDATE_FRACTION = 3338477;
+import { handleNewPriceMinute } from "./pricefeed/savePrices";
 
 export async function handleBlock(block: EthereumBlock): Promise<void> {
   const priceData = await handleNewPriceMinute({ block });
@@ -41,12 +35,12 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
   // const collectiveHourDatas = [];
 
   const blobs: BlobData[] = [];
-  let txnRecords: TransactionData[] = [];
+  const txnRecords: TransactionData[] = [];
 
-  let bdata = BlockData.create({
+  const bdata = BlockData.create({
     id: block.number.toString(),
-    avgNativePrice: priceData?.nativePrice!,
-    currentNativePrice: priceData?.nativePrice!,
+    avgNativePrice: priceData.nativePrice,
+    currentNativePrice: priceData.nativePrice,
     hash: block.hash,
     height: BigInt(block.number),
     proposer: block.miner,
@@ -56,36 +50,38 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
     totalBlockFeeUSD: 0,
     totalDAFeeNatve: 0,
     totalDAFeeUSD: 0,
+    executionFeesWei: 0n,
+    blobFeesWei: 0n,
     totalEventsCount: block.logs.length,
     totalSquareSize: 0,
     totalTransactionCount: transactions.length,
     timestamp: Number(block.timestamp) * 1000,
   });
-  const baseBlobGasPrice = fakeExponential(
-    1,
-    Number(block.excessBlobGas),
-    BLOB_BASE_FEE_UPDATE_FRACTION
-  );
   for (let index = 0; index < transactions.length; index++) {
     const txn = transactions[index];
 
     if (txn.type === "0x3") {
       const dataSubmissionSize =
         (txn.blobVersionedHashes?.length || 0) * BYTES_PER_BLOB;
-      const receipt =
-        receipts?.get((txn.hash as string).toLowerCase()) ??
-        (await txn.receipt());
-      txn.gas = BigInt((receipt.gasUsed ?? 0)?.toString()) || txn.gas;
-      txn.gasPrice =
-        BigInt((receipt.effectiveGasPrice ?? 0)?.toString()) || txn.gas;
-      const fees =
-        Number(receipt?.gasUsed) * Number(receipt?.effectiveGasPrice);
+      const receipt = receipts.get((txn.hash as string).toLowerCase());
+      if (
+        !receipt ||
+        receipt.gasUsed === undefined ||
+        receipt.effectiveGasPrice === undefined ||
+        receipt.blobGasUsed !== BigInt(dataSubmissionSize)
+      ) {
+        throw new Error(
+          `Missing validated receipt for blob transaction ${txn.hash}`,
+        );
+      }
+      txn.gas = receipt.gasUsed;
+      txn.gasPrice = receipt.effectiveGasPrice;
+      const baseBlobGasPrice = receipt.blobGasPrice;
+      const exactFees = calculateReceiptFees(receipt);
+      const fees = Number(exactFees.executionFeeWei);
       const feesUSD = fees * priceData!.nativePrice;
 
-      const feesDA =
-        (baseBlobGasPrice || 1) *
-        Number(txn.blobVersionedHashes?.length) *
-        BYTES_PER_BLOB;
+      const feesDA = Number(exactFees.blobFeeWei);
       const feesUSDDA = feesDA * priceData!.nativePrice;
 
       const transactionToSave = TransactionData.create({
@@ -106,6 +102,8 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
         totalDAFeeUSD: feesUSDDA,
         totalFeeNatve: fees,
         totalFeeUSD: feesUSD,
+        executionFeeWei: exactFees.executionFeeWei,
+        blobFeeWei: exactFees.blobFeeWei,
       });
       txnRecords.push(transactionToSave);
       bdata.totalBlobSize += dataSubmissionSize;
@@ -114,6 +112,8 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
 
       bdata.totalDAFeeNatve += feesDA;
       bdata.totalDAFeeUSD += feesUSDDA;
+      bdata.executionFeesWei! += exactFees.executionFeeWei;
+      bdata.blobFeesWei! += exactFees.blobFeeWei;
       bdata.totalBlobTransactionCount += 1;
       const acc = await handleAccount(txn, priceData!, {
         height: block.number,
@@ -129,7 +129,7 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
         baseBlobGasPrice: baseBlobGasPrice,
       });
       // accountDayDatas.push(accDayData);
-      accDayData.save();
+      await accDayData.save();
       const accHourData = await handleAccountHourData(txn, priceData!, {
         height: block.number,
         timestamp: Number(block.timestamp) * 1000,
@@ -169,7 +169,7 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
       // collectiveDayDatas.push(collectiveDayData);
       // collectiveHourDatas.push(collectiveHourData);
 
-      let hashes: string[] = [];
+      const hashes: string[] = [];
 
       if (txn.blobVersionedHashes) {
         for (let index = 0; index < txn.blobVersionedHashes.length; index++) {
@@ -221,7 +221,7 @@ export async function handleBlock(block: EthereumBlock): Promise<void> {
   logger.info(
     `DATA SAVED FOR BLOCK  ::  ${block.number} :: PRICE:${
       priceData?.nativePrice
-    } :: RECEIPTS::${receipts ? receipts?.size : 0}`
+    } :: RECEIPTS::${receipts ? receipts?.size : 0}`,
   );
   logger.info(`=================================================`);
   // await Promise.all([

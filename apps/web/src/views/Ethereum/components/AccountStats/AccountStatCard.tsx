@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import {
   Coins,
   Database,
@@ -6,15 +7,11 @@ import {
   Receipt,
   User,
 } from "lucide-react";
-import React, { useMemo } from "react";
-
-import { cn, formatAddress, formatBytes } from "@/lib/utils";
-import BigNumber from "bignumber.js";
-import { getAccountDetailsFromAddressBook } from "@/configs/constants";
-
 import Link from "next/link";
-
+import React, { useMemo } from "react";
 import ImageWithFallback from "@/components/ImageWithFallback";
+import { getAccountDetailsFromAddressBook } from "@/configs/constants";
+import { cn, formatAddress, formatBytes } from "@/lib/utils";
 
 type Props = {};
 function AccountStatCard({ acc, isLoading, className }: any) {
@@ -22,12 +19,19 @@ function AccountStatCard({ acc, isLoading, className }: any) {
   const totalBlobSize = useMemo(() => {
     return formatBytes(Number(acc?.totalByteSize));
   }, [acc?.totalByteSize]);
+  const executionWei = new BigNumber(
+    acc?.executionFeesWei ?? acc?.totalFeesNative ?? 0,
+  );
+  const blobWei = new BigNumber(acc?.blobFeesWei ?? acc?.totalDAFees ?? 0);
+  const combinedWei = executionWei.plus(blobWei);
+  const executionUsd = new BigNumber(acc?.totalFeesUSD ?? 0);
+  const blobUsd = new BigNumber(acc?.totalDAFeesUSD ?? 0);
 
   return (
     <div
       className={cn(
         "bg-base-100/80 border-base-300/30 border rounded-lg ",
-        className ? className : ""
+        className ? className : "",
       )}
     >
       <div className="flex gap-2 items-center border-b border-base-200/50  h-[4em] p-4">
@@ -61,11 +65,11 @@ function AccountStatCard({ acc, isLoading, className }: any) {
       <div className=" grid lg:grid-cols-2">
         {isLoading && (
           <div className="border-r border-x-base-200/50">
-            {new Array(4).fill(1)?.map((num, idx) => {
+            {["first", "second", "third", "fourth"].map((placeholder) => {
               return (
                 <div
                   className="flex justify-between items-center p-4 py-4"
-                  key={`AccountStatCard_${idx}`}
+                  key={placeholder}
                 >
                   <div className="flex items-center gap-2">
                     <div className=" bg-base-200/50 flex justify-center rounded-xl items-center w-[2em] h-[2em] animate-pulse"></div>
@@ -107,7 +111,7 @@ function AccountStatCard({ acc, isLoading, className }: any) {
               <p className="text-xl font-bold">
                 {" "}
                 {new BigNumber(
-                  Number(acc?.totalDataSubmissionCount || 0)
+                  Number(acc?.totalDataSubmissionCount || 0),
                 )?.toFormat()}
               </p>
             </div>
@@ -120,13 +124,10 @@ function AccountStatCard({ acc, isLoading, className }: any) {
                   height={24}
                   alt="ethereum"
                 />
-                <p className=""> DA Fees</p>
+                <p className=""> Blob DA Fees</p>
               </div>
               <p className="text-xl font-bold">
-                {new BigNumber(Number(acc?.totalDAFees || 0))
-                  ?.div(10 ** 18)
-                  ?.toFormat(2)}{" "}
-                ETH
+                {blobWei.div(1e18).toFormat(2)} ETH
               </p>
             </div>
             <div className="flex justify-between items-center  py-3 p-4">
@@ -138,13 +139,34 @@ function AccountStatCard({ acc, isLoading, className }: any) {
                   alt="ethereum"
                   className="rounded-lg"
                 />
-                <p className=""> DA Fees USD</p>
+                <p className=""> Blob DA Fees USD</p>
               </div>
               <p className="text-xl font-bold">
-                $
-                {new BigNumber(Number(acc?.totalDAFeesUSD || 0))
-                  ?.div(10 ** 18)
-                  ?.toFormat(2)}{" "}
+                ${blobUsd.div(1e18).toFormat(2)}{" "}
+              </p>
+            </div>
+            <div className="flex justify-between items-center p-4">
+              <p>Blob Txn Gas Fees</p>
+              <p className="text-xl font-bold">
+                {executionWei.div(1e18).toFormat(2)} ETH
+              </p>
+            </div>
+            <div className="flex justify-between items-center p-4">
+              <p>Blob Txn Gas Fees USD</p>
+              <p className="text-xl font-bold">
+                ${executionUsd.div(1e18).toFormat(2)}
+              </p>
+            </div>
+            <div className="flex justify-between items-center p-4">
+              <p>Total Blob Txn Fees</p>
+              <p className="text-xl font-bold">
+                {combinedWei.div(1e18).toFormat(2)} ETH
+              </p>
+            </div>
+            <div className="flex justify-between items-center p-4">
+              <p>Total Blob Txn Fees USD</p>
+              <p className="text-xl font-bold">
+                ${executionUsd.plus(blobUsd).div(1e18).toFormat(2)}
               </p>
             </div>
           </div>
