@@ -275,6 +275,39 @@ export const ETHEREUM_APP_DA_TRANSACTIONS_FILTER_LIMIT_QUERY = gql`
     }
   }
 `;
+export const ETHEREUM_ACCOUNT_CAPABILITIES_QUERY = gql`
+  query EthereumAccountCapabilities {
+    account: __type(name: "AccountEntity") {
+      fields {
+        name
+      }
+    }
+    transaction: __type(name: "TransactionDatum") {
+      fields {
+        name
+      }
+    }
+  }
+`;
+const ETHEREUM_ACCOUNT_TRANSACTION_FIELDS = gql`
+  fragment EthereumAccountTransactionFields on TransactionDatum {
+    hash
+    timestamp
+    txFeeNative
+    totalDAFeeNatve
+    blockHeightId
+    nEvents
+    id
+    totalBytes
+    signerId
+    blobs {
+      nodes {
+        signerId
+        size
+      }
+    }
+  }
+`;
 export const ETHEREUM_USER_TRANSACTIONS_FILTER_LIMIT_QUERY = gql`
   query TransactionData($signerId: String!, $skip: Int, $limit: Int) {
     transactionData(
@@ -284,26 +317,27 @@ export const ETHEREUM_USER_TRANSACTIONS_FILTER_LIMIT_QUERY = gql`
       orderBy: TIMESTAMP_DESC
     ) {
       nodes {
-        hash
-        timestamp
-        txFeeNative
-        totalDAFeeNatve
-        executionFeeWei
-        blobFeeWei
-        blockHeightId
-        nEvents
-        id
-        totalBytes
-        signerId
-        blobs {
-          nodes {
-            signerId
-            size
-          }
-        }
+        ...EthereumAccountTransactionFields
       }
     }
   }
+  ${ETHEREUM_ACCOUNT_TRANSACTION_FIELDS}
+`;
+export const ETHEREUM_USER_TRANSACTIONS_EXACT_FEES_QUERY = gql`
+  query TransactionDataWithExactFees($signerId: String!, $skip: Int, $limit: Int) {
+    transactionData(
+      filter: { signerId: { equalTo: $signerId } }
+      first: $limit
+      offset: $skip
+      orderBy: TIMESTAMP_DESC
+    ) {
+      nodes {
+        ...EthereumAccountTransactionFields
+        blobFeeWei
+      }
+    }
+  }
+  ${ETHEREUM_ACCOUNT_TRANSACTION_FIELDS}
 `;
 export const ETHEREUM_ACCOUNT_SINGLE_QUERY = gql`
   query AccountEntity($id: String!) {
@@ -320,28 +354,28 @@ export const ETHEREUM_ACCOUNT_SINGLE_QUERY = gql`
         totalFeesUSD
         totalDAFeesUSD
         totalFeesNative
-        executionFeesWei
-        blobFeesWei
       }
     }
   }
 `;
 export const ETHEREUM_ACCOUNT_SINGLE_QUERY_V2 = gql`
-  query AccountEntity($id: String!) {
-    accountEntity(id: $id) {
-      id
-      totalByteSize
-      totalFees
-      totalTxnCount
-      totalDAFees
-      endBlock
-      startBlock
-      totalDataSubmissionCount
-      totalFeesUSD
-      totalDAFeesUSD
-      totalFeesNative
-      executionFeesWei
-      blobFeesWei
+  query AccountEntityWithExactFees($id: String!) {
+    accountEntities(filter: { id: { likeInsensitive: $id } }, first: 1) {
+      nodes {
+        id
+        totalByteSize
+        totalFees
+        totalTxnCount
+        totalDAFees
+        endBlock
+        startBlock
+        totalDataSubmissionCount
+        totalFeesUSD
+        totalDAFeesUSD
+        totalFeesNative
+        executionFeesWei
+        blobFeesWei
+      }
     }
   }
 `;
@@ -538,8 +572,6 @@ export const ETHEREUM_ACCOUNT_DAY_DATAS_WITH_DURATION_QUERY = gql`
         totalDAFeesUSD
         totalFeesNative
         totalDAFees
-        executionFeesWei
-        blobFeesWei
       }
     }
   }
