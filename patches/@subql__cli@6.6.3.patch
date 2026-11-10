@@ -1,0 +1,40 @@
+diff --git a/lib/controller/init-controller.js b/lib/controller/init-controller.js
+--- a/lib/controller/init-controller.js
++++ b/lib/controller/init-controller.js
+@@ -27,1 +27,1 @@
+-const simple_git_1 = tslib_1.__importDefault(require("simple-git"));
++const simple_git_1 = { default: require("simple-git").simpleGit };
+diff --git a/lib/adapters/utils.js b/lib/adapters/utils.js
+--- a/lib/adapters/utils.js
++++ b/lib/adapters/utils.js
+@@ -24,23 +24,23 @@
+ // Unrwap recursive type information to get the primitive and other information
+ function unwrap(def, unwrapInfo = { type: def, default: undefined, array: false, optional: false }) {
+     if (def instanceof zod_1.z.ZodDefault) {
+-        return unwrap(def._def.innerType, {
++        return unwrap(def.unwrap(), {
+             ...unwrapInfo,
+-            type: def._def.innerType,
+-            default: def._def.defaultValue(),
++            type: def.unwrap(),
++            default: def.parse(undefined),
+         });
+     }
+     if (def instanceof zod_1.z.ZodOptional) {
+-        return unwrap(def._def.innerType, {
++        return unwrap(def.unwrap(), {
+             ...unwrapInfo,
+-            type: def._def.innerType,
++            type: def.unwrap(),
+             optional: true,
+         });
+     }
+     if (def instanceof zod_1.z.ZodArray) {
+-        return unwrap(def._def.type, {
++        return unwrap(def.element, {
+             ...unwrapInfo,
+-            type: def._def.type,
++            type: def.element,
+             array: true,
+         });
+     }

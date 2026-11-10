@@ -5,6 +5,8 @@
   "license": "MIT",
   "packageManager": "pnpm@11.18.0",
   "scripts": {
+    "audit:deps": "pnpm audit --audit-level high",
+    "test:deps": "node --test tests/dependency-compatibility.test.cjs",
     "dev": "turbo run dev --filter=@blobs-guru/web",
     "dev:web": "turbo run dev --filter=@blobs-guru/web",
     "dev:ethereum-subquery": "turbo run dev --filter=@blobs-guru/ethereum-subquery",
